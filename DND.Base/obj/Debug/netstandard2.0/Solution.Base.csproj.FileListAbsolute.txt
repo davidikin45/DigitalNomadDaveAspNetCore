@@ -1,0 +1,6 @@
+C:\Development\DigitalNomadDaveAspNetCore\Solution.Base\bin\Debug\netstandard2.0\Solution.Base.deps.json
+C:\Development\DigitalNomadDaveAspNetCore\Solution.Base\bin\Debug\netstandard2.0\Solution.Base.dll
+C:\Development\DigitalNomadDaveAspNetCore\Solution.Base\obj\Debug\netstandard2.0\Solution.Base.csprojResolveAssemblyReference.cache
+C:\Development\DigitalNomadDaveAspNetCore\Solution.Base\obj\Debug\netstandard2.0\Solution.Base.csproj.CoreCompileInputs.cache
+C:\Development\DigitalNomadDaveAspNetCore\Solution.Base\obj\Debug\netstandard2.0\Solution.Base.AssemblyInfoInputs.cache
+C:\Development\DigitalNomadDaveAspNetCore\Solution.Base\obj\Debug\netstandard2.0\Solution.Base.AssemblyInfo.cs

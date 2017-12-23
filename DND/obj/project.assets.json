@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.7": {
+      "Microsoft.AspNetCore.All/2.0.3": {
+        "type": "package"
+      }
+    },
+    ".NETFramework,Version=v4.7/win7-x86": {
+      "Microsoft.AspNetCore.All/2.0.3": {
+        "type": "package"
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.AspNetCore.All/2.0.3": {
+      "sha512": "tS/REciEJ7MjT7SZhle8JrfZ28va/D9g0OXmDrNKP9Nr7j3kkyLH7w6kesgmj0q6HmcWR+ltZbd4kU2rBiQZdQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.all/2.0.3",
+      "files": [
+        "build/PublishWithAspNetCoreTargetManifest.targets",
+        "build/aspnetcore-store-2.0.0-common.xml",
+        "build/aspnetcore-store-2.0.0-linux-x64.xml",
+        "build/aspnetcore-store-2.0.0-osx-x64.xml",
+        "build/aspnetcore-store-2.0.0-win7-x64.xml",
+        "build/aspnetcore-store-2.0.0-win7-x86.xml",
+        "build/aspnetcore-store-2.0.3.xml",
+        "build/netcoreapp2.0/Microsoft.AspNetCore.All.targets",
+        "lib/netcoreapp2.0/_._",
+        "microsoft.aspnetcore.all.2.0.3.nupkg.sha512",
+        "microsoft.aspnetcore.all.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.7": [
+      "Microsoft.AspNetCore.All >= 2.0.3"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Dave\\.nuget\\packages\\": {},
+    "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
+    "restore": {
+      "projectUniqueName": "C:\\Development\\DigitalNomadDaveAspNetCore\\DND\\DND.csproj",
+      "projectName": "DND",
+      "projectPath": "C:\\Development\\DigitalNomadDaveAspNetCore\\DND\\DND.csproj",
+      "packagesPath": "C:\\Users\\Dave\\.nuget\\packages\\",
+      "outputPath": "C:\\Development\\DigitalNomadDaveAspNetCore\\DND\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\Dave\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net47"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net47": {
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net47": {
+        "dependencies": {
+          "Microsoft.AspNetCore.All": {
+            "target": "Package",
+            "version": "2.0.3"
+          }
+        }
+      }
+    },
+    "runtimes": {
+      "win7-x86": {
+        "#import": []
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1202",
+      "level": "Error",
+      "message": "Package Microsoft.AspNetCore.All 2.0.3 is not compatible with net47 (.NETFramework,Version=v4.7). Package Microsoft.AspNetCore.All 2.0.3 supports: netcoreapp2.0 (.NETCoreApp,Version=v2.0)",
+      "libraryId": "Microsoft.AspNetCore.All",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7"
+      ]
+    },
+    {
+      "code": "NU1202",
+      "level": "Error",
+      "message": "Package Microsoft.AspNetCore.All 2.0.3 is not compatible with net47 (.NETFramework,Version=v4.7) / win7-x86. Package Microsoft.AspNetCore.All 2.0.3 supports: netcoreapp2.0 (.NETCoreApp,Version=v2.0)",
+      "libraryId": "Microsoft.AspNetCore.All",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7/win7-x86"
+      ]
+    }
+  ]
+}

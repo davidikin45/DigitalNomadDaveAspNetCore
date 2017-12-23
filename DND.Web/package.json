@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "name": "dnd",
+  "author": {
+    "name": "David Ikin",
+    "email": "davidikin45@gmail.com"
+  },
+  "private": true,
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-less": "^3.3.2",
+    "gulp-uglify": "^3.0.0",
+    "merge-stream": "^1.0.1",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "angular2": "^2.0.0-beta.21",
+    "bootstrap": "4.0.0-beta.2",
+    "jquery": "^3.2.1",
+    "jquery-validation": "^1.17.0",
+    "jquery-validation-unobtrusive": "^3.2.6"
+  }
+}

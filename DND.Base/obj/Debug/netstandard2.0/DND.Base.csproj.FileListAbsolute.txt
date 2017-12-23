@@ -1,0 +1,6 @@
+C:\Development\DigitalNomadDaveAspNetCore\DND.Base\bin\Debug\netstandard2.0\DND.Base.deps.json
+C:\Development\DigitalNomadDaveAspNetCore\DND.Base\bin\Debug\netstandard2.0\DND.Base.dll
+C:\Development\DigitalNomadDaveAspNetCore\DND.Base\obj\Debug\netstandard2.0\DND.Base.csprojResolveAssemblyReference.cache
+C:\Development\DigitalNomadDaveAspNetCore\DND.Base\obj\Debug\netstandard2.0\DND.Base.csproj.CoreCompileInputs.cache
+C:\Development\DigitalNomadDaveAspNetCore\DND.Base\obj\Debug\netstandard2.0\DND.Base.AssemblyInfoInputs.cache
+C:\Development\DigitalNomadDaveAspNetCore\DND.Base\obj\Debug\netstandard2.0\DND.Base.AssemblyInfo.cs
