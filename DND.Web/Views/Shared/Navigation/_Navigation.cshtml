@@ -6,7 +6,7 @@
     var Settings = Configuration.GetSection("Settings");
 }
 
-<nav class="navbar fixed-top navbar-inverse navbar-expand-md scrolling-navbar @(ViewBag.NavBarTransparent == true ? "navbar-transparent" : "")">
+<nav class="navbar fixed-top navbar-dark navbar-expand-md scrolling-navbar @(ViewBag.NavBarTransparent == true ? "navbar-transparent" : "")">
     <div class="container">
         @(Html.MenuLink<HomeController>(c => c.Index(), Settings.GetValue<string>("SiteTitle"), "navbar-brand ", "", @"<img src=""" + Url.Content(Settings.GetValue<string>("SiteLogoSmall")) + @""" width=""32"" height=""32"" class=""d-inline-block align-top"" alt=""" + Settings.GetValue<string>("SiteTitle") + @""">"))
         <div class="navbar-toggler-right">

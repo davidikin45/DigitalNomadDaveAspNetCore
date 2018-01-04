@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Solution.Base.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -88,32 +89,25 @@ namespace Solution.Base.Extensions
         //Values
         public static HtmlString DisplayTextSimple(this IHtmlHelper html, string propertyName)
         {
-            return DisplayTextSimple(html.ViewData.Model, propertyName);
+            return DisplayTextSimple(html, html.ViewData.Model, propertyName);
         }
+
 
         public static HtmlString DisplayTextSimple(this IHtmlHelper html, object model, string propertyName)
         {
-            return DisplayTextSimple(model, propertyName);
-        }
-
-        public static HtmlString DisplayTextSimple(this object model, string propertyName)
-        {
-            Type type = ModelType(model);
-            var modelMetadata = ModelMetadataProvider.GetMetadataForType(type);
-
-            var propertyMetadata = (from p in modelMetadata.Properties
-                                    where p.PropertyName == propertyName
-                                    select p).FirstOrDefault<Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata>();
+            var newViewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { Model = model };
+            var modelExporer = ExpressionMetadataProvider.FromStringExpression(propertyName, newViewData, html.MetadataProvider);
 
             string value = "";
 
-            if (propertyMetadata != null)
+            if (modelExporer != null)
             {
-                value = propertyMetadata.GetDisplayName();
-                if (propertyMetadata.HtmlEncode)
-                {
-                    value = HtmlEncoder.Default.Encode(value);
-                }
+                value = modelExporer.GetSimpleDisplayText() ?? string.Empty;
+                //if (modelExporer.Metadata.HtmlEncode)
+                //{
+                //    value = HtmlEncoder.Default.Encode(value);
+                //}
+
             }
 
             return new HtmlString(value);

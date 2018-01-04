@@ -488,13 +488,13 @@ namespace Solution.Base.Middleware
 
         public Bitmap Watermark(ref Image image, ImageHelper.Watermark waterMark, string waterMarkString, ref bool applied)
         {
-            if (waterMark != ImageHelper.Watermark.None && (!System.Configuration.ConfigurationManager.AppSettings.AllKeys.Contains("ImageWatermarkEnabled") || bool.Parse(System.Configuration.ConfigurationManager.AppSettings["ImageWatermarkEnabled"])))
+            if (waterMark != ImageHelper.Watermark.None && (bool.Parse(Solution.Base.Infrastructure.ConfigurationManager.AppSettings("ImageWatermarkEnabled"))))
             {
-                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), int.Parse(System.Configuration.ConfigurationManager.AppSettings["ImageWatermarkMinHeight"]), int.Parse(System.Configuration.ConfigurationManager.AppSettings["ImageWatermarkMinWidth"]), 10, 10, System.Configuration.ConfigurationManager.AppSettings["ImageWatermark"], ref applied);
+                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), int.Parse(Solution.Base.Infrastructure.ConfigurationManager.AppSettings("ImageWatermarkMinHeight")), int.Parse(Solution.Base.Infrastructure.ConfigurationManager.AppSettings("ImageWatermarkMinWidth")), 10, 10, Solution.Base.Infrastructure.ConfigurationManager.AppSettings("ImageWatermark"), ref applied);
             }
             else if (waterMark != ImageHelper.Watermark.None && watermark)
             {
-                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), 10, 10, System.Configuration.ConfigurationManager.AppSettings["ImageWatermark"], ref applied);
+                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), 10, 10, Solution.Base.Infrastructure.ConfigurationManager.AppSettings("ImageWatermark"), ref applied);
             }
             return (Bitmap)image;
         }

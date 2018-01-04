@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Solution.Base.ViewComponents
 {
-    public class BaseViewComponent : ViewComponent
+    public abstract class BaseViewComponent : ViewComponent
     {
         protected CancellationToken ClientDisconnectedToken()
         {

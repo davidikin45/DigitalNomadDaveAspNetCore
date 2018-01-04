@@ -549,7 +549,7 @@ namespace Solution.Base.Controllers.Admin
         private List<string> GetFiles(string path, string type)
         {
             List<string> ret = new List<string>();
-            if (type == "#")
+            if (type == "#" || type is null)
                 type = "";
             string[] files = Directory.GetFiles(path);
             foreach (string f in files)

@@ -8,39 +8,8 @@ namespace DND.EFPersistance.Initializers
     {
         public static void Seed(ApplicationDbContext context)
         {
-            AddRoles(context);
-            AddUsers(context);
             AddContentHtml(context);
             context.SaveChanges();
-        }
-
-        private static void AddRoles(ApplicationDbContext context)
-        {
-            string[] roles = new string[] {};
-
-            foreach (string role in roles)
-            {
-
-
-                //if (!context.Roles.Any(r => r.Name == role))
-                //{
-                //    roleManager.Create(new IdentityRole(role));
-                //}
-            }
-        }
-
-        private static void AddUsers(ApplicationDbContext context)
-        {
-            //if (!(context.Users.Any(u => u.UserName == "admin")))
-            //{
-            //    var userStore = new UserStore<User>(context);
-            //    var userManager = new UserManager<User>(userStore);
-            //    var userToInsert = new User { UserName = "admin", Name = "admin" };
-            //    userManager.Create(userToInsert, "password");
-
-            //    var user = userManager.FindByName("admin");
-            //    userManager.AddToRole(user.Id, "admin");
-            //}
         }
 
         private static void AddContentText(ApplicationDbContext context)

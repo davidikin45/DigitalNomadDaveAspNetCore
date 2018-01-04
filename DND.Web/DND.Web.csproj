@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <Compile Remove="Models\ProjectsViewModels\ProjectsViewModels.cs" />
+    <Compile Remove="ViewComponents\BaseViewComponent.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +49,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,7 +60,6 @@
     <Folder Include="Views\Shared\Alerts\" />
     <Folder Include="Views\Shared\CRUD\" />
     <Folder Include="Views\Shared\Footer\" />
-    <Folder Include="Views\Shared\Navigation\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\FileManager\tmp\" />
     <Folder Include="wwwroot\images\" />

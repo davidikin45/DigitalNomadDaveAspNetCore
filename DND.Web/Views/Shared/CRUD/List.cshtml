@@ -12,6 +12,6 @@
         <input type="submit" value="Search" />
     </p>
 }
-@await Html.PartialAsync("_List", Model.Data, Html.ViewData)
+@HtmlHelperPartialExtensions.Partial(Html, "_List", Model.Data, Html.ViewData)
 @{Func<int, string> link = pageIndex => Url.Action("Index", new { page = pageIndex, pageSize = Model.PageSize, orderColumn = Model.OrderColumn, orderType = Model.OrderType, search = Model.Search });}
 @HtmlHelperExtensions.BootstrapPager(Html, Model.Page, link, Model.TotalItems, Model.PageSize, 5)

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace DND.Web.ViewComponents
 {
+    [ViewComponent]
     public class CarouselViewComponent : BaseViewComponent
     {
         private readonly IBlogService _blogService;

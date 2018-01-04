@@ -19,6 +19,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Solution.Base.Controllers.Admin;
 using Solution.Base.DependencyInjection.Autofac.Modules;
 using Solution.Base.Extensions;
 using Solution.Base.Filters;
@@ -108,7 +109,9 @@ namespace DND.Web
 
                 //Dashed Routing Convention
                 //options.Conventions.Add(new DashedRoutingConvention(defaultControllerName: "Home", defaultActionName: "Index"));
-            }).AddControllersAsServices();
+            }).
+            AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices();
+
             services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton(Configuration);
@@ -150,21 +153,6 @@ namespace DND.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner)
         {
-            // Migrate and seed the database during startup. Must be synchronous.
-            try
-            {
-                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                    .CreateScope())
-                {
-                    serviceScope.ServiceProvider.GetService<ApplicationIdentityDbContext>().Database.Migrate();
-                    //serviceScope.ServiceProvider.GetService<ISeedService>().SeedDatabase().Wait();
-                }
-            }
-            catch (Exception ex)
-            {
-                // I'm using Serilog here, but use the logging solution of your choice.
-                //Log.Error(ex, "Failed to migrate or seed database");
-            }
 
             if (env.IsDevelopment())
             {
@@ -220,10 +208,10 @@ namespace DND.Web
                    appBranch.UseContentHandler(publicUploadFolders);
                });
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
 
             app.UseMvc(routes =>
             {

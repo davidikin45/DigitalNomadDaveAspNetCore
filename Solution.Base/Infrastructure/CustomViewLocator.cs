@@ -11,6 +11,7 @@ namespace Solution.Base.Infrastructure
     {
         private static readonly string[] Locations =
        {
+        "~/Views/Shared/Bundles/{0}.cshtml",
         "~/Views/Shared/Sidebar/{0}.cshtml",
         "~/Views/Shared/CRUD/{0}.cshtml",
         "~/Views/Shared/Navigation/{0}.cshtml",

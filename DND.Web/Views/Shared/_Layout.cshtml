@@ -111,36 +111,11 @@
     @*@Html.GoogleFont((Settings.GetValue<String>("BodyFont")),"", true, false, true, true, true, true)
     @Html.GoogleFont((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")), false, true, true, true, true, true)*@
 
-    <environment include="Development">
-        <link rel="stylesheet" href="~/vendor/bootstrap/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/vendor/font-awesome/css/font-awesome.css" />
-        <link rel="stylesheet" href="~/vendor/magnific-popup/magnific-popup.css" />
-
-        <link rel="stylesheet" href="~/css/menu.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/modal.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/polaroid-images.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/return-to-top.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site-xs.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site-sm.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site-md.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site-lg.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site-xl.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/blog.css" asp-append-version="true" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="~/css/third-party.min.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+    @Html.Partial("_CSS")
 
     @if (ViewBag.Admin == true)
     {
-        <environment include="Development">
-            <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
-        </environment>
-        <environment exclude="Development">
-            <link rel="stylesheet" href="~/css/site.admin.min.css" asp-append-version="true" />
-        </environment>
+        @Html.Partial("_AdminCSS")
     }
     @RenderSection("styles", required: false)
     @if ((ViewBag.Admin == null || !ViewBag.Admin))
@@ -270,37 +245,11 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=@((Settings.GetValue<String>("GoogleMapsApiKey")) + "&libraries=places")"></script>
 
-    <environment include="Development">
-        <script src="~/vendor/jquery/jquery.js"></script>
-        <script src="~/vendor/jquery-validation/jquery.validate.js"></script>
-        <script src="~/vendor/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-        <script src="~/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-        <script src="~/vendor/respond.js/respond.src.js"></script>
-        <script src="~/vendor/instafeed.js/instafeed.js"></script>
-        <script src="~/vendor/infinite-scroll/infinite-scroll.pkgd.js"></script>
-        <script src="~/vendor/magnific-popup/jquery.magnific-popup.js"></script>
-
-        <script src="~/js/db-geography.js" asp-append-version="true"></script>
-        <script src="~/js/modal.js" asp-append-version="true"></script>
-        <script src="~/js/return-to-top.js" asp-append-version="true"></script>
-        <script src="~/js/scroll-position.js" asp-append-version="true"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="~/js/third-party.min.js" asp-append-version="true"></script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+    @Html.Partial("_JS")
 
     @if (ViewBag.Admin == true)
     {
-        <environment include="Development">
-            <script src="~/vendor/tinymce/tinymce.js"></script>
-
-            <script src="~/js/admin.js" asp-append-version="true"></script>
-        </environment>
-        <environment exclude="Development">
-            <script src="~/js/site.admin.min.js" asp-append-version="true"></script>
-        </environment>
+        @Html.Partial("_AdminJS")
     }
 
     @RenderSection("scripts", required: false)

@@ -1,4 +1,4 @@
-tinymce.baseURL = '/bower_components/tinymce';
+tinymce.baseURL = '/vendor/tinymce';
 
 //https://www.tinymce.com/docs/demo/full-featured/
 

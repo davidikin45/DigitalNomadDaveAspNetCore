@@ -69,7 +69,7 @@ namespace Solution.Base.Extensions
 
             Boolean hasActions = (details || edit || delete);
 
-            foreach (var prop in html.ViewData.ModelMetadata.Properties
+            foreach (var prop in html.ViewData.ModelMetadata().Properties
             .Where(p => p.ShowForDisplay && (!p.AdditionalValues.ContainsKey("ShowForGrid") || (Boolean)p.AdditionalValues["ShowForGrid"])))
             {
                 var th = new TagBuilder("th");
@@ -91,7 +91,7 @@ namespace Solution.Base.Extensions
 
                 if (enableSort)
                 {
-                    link = html.ActionLink(linkText, "Index", new { page = html.ViewBag.Page, pageSize = html.ViewBag.PageSize, search = html.ViewBag.Search, orderColumn = prop.PropertyName, orderType = orderType }).ToString();
+                    link = html.ActionLink(linkText, "Index", new { page = html.ViewBag.Page, pageSize = html.ViewBag.PageSize, search = html.ViewBag.Search, orderColumn = prop.PropertyName, orderType = orderType }).Render();
                 }
                 else
                 {
@@ -146,7 +146,7 @@ namespace Solution.Base.Extensions
                     }
                     else
                     {
-                        string value = ModelHelperExtensions.DisplayTextSimple(item, prop.PropertyName).ToString();
+                        string value = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();
                         td.InnerHtml.Append(value.Truncate(70));
                     }
 
@@ -562,7 +562,7 @@ namespace Solution.Base.Extensions
                 {
                     activeLink = new HtmlString(helper.ActionLink<TController>(expression, linkText,
                     new { @class = classNames, title = linkText }
-                    ).ToString());
+                    ).Render());
                 }
 
                 return activeLink;
@@ -583,7 +583,7 @@ namespace Solution.Base.Extensions
             {
                 link = new HtmlString(helper.ActionLink<TController>(expression, linkText,
                 new { @class = classNames, title = linkText }
-                ).ToString());
+                ).Render());
             }
 
             return link;
@@ -652,7 +652,7 @@ namespace Solution.Base.Extensions
 
         public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, TModel model)
         {
-            var newViewData = new ViewDataDictionary(viewData) { Model = model };
+            var newViewData = new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { Model = model };
 
             ViewContext newViewContext = new ViewContext(
                 viewContext,
@@ -678,7 +678,7 @@ namespace Solution.Base.Extensions
 
         public static HtmlHelper<dynamic> For(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, dynamic model)
         {
-            var newViewData = new ViewDataDictionary(viewData) { Model = model };
+            var newViewData = new ViewDataDictionary<dynamic>(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { Model = model };
 
             ViewContext newViewContext = new ViewContext(
                 viewContext,

@@ -29,9 +29,21 @@ namespace Solution.Base.Helpers
         {
             private static Lazy<object> _config = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("~/bundleconfig.json"))));
 
-            public dynamic Menu
+            public dynamic Config
             {
                 get { return _config.Value; }
+            }
+
+            public dynamic Bundle(string outputFileName)
+            {
+                foreach (var bundle in Config)
+                {
+                    if(bundle.outputFileName == outputFileName)
+                    {
+                        return bundle;
+                    }
+                }
+                return null;
             }
         }
     }
