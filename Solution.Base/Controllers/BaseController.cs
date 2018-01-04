@@ -153,5 +153,11 @@ namespace Solution.Base.Controllers
             get { return this.ControllerContext.RouteData.Values["controller"].ToString(); }
         }
 
+        protected string Title
+        {
+            get { return this.HttpContext.Request.Path; }
+        }
+
+
     }
 }

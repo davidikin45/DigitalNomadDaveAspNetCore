@@ -1,19 +1,12 @@
-﻿using DND.Core.Interfaces.Services;
-using DND.Core.Models;
-using Solution.Base.Implementation.Services;
-using Solution.Base.Implementation.Validation;
-using Solution.Base.Interfaces.UnitOfWork;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
-
-using DND.Services.Skyscanner.Model;
-using DND.Core.DTOs;
+﻿using AutoMapper;
+using DND.Domain.DTOs;
+using DND.Domain.Interfaces.Services;
 using DND.Services.SearchEngines;
-using AutoMapper;
+using Solution.Base.Implementation.Services;
+using Solution.Base.Interfaces.UnitOfWork;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DND.Services
 {

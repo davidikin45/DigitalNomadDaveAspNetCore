@@ -1,7 +1,6 @@
 ﻿using Solution.Base.Extensions;
+using Solution.Base.Implementation.Models;
 using Solution.Base.Implementation.Repository.File;
-using Solution.Base.Infrastructure;
-using Solution.Base.Model;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

@@ -17,16 +17,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="App_Data\airlines.json" />
+    <Content Remove="App_Data\airportsAll.json" />
+    <Content Remove="App_Data\countries.json" />
     <Content Remove="Views\Blog\_LatestBlogPosts.cshtml" />
     <Content Remove="Views\Shared\EditorTemplates\DestinationType.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ffmpeg\ffmpeg.exe" />
+    <None Remove="App_Data\Regions.csv" />
+    <None Remove="App_Data\ffmpeg\ffmpeg.exe" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ffmpeg\ffmpeg.exe" />
+    <Content Include="App_Data\ffmpeg\ffmpeg.exe" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +60,7 @@
     <Folder Include="Views\Shared\Footer\" />
     <Folder Include="Views\Shared\Navigation\" />
     <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\FileManager\tmp\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\vendor\" />
@@ -73,6 +78,20 @@
     <None Include="Views\Shared\Sidebar\_SidebarMailingList.cshtml" />
     <None Include="Views\Shared\Sidebar\_SidebarRSSFeed.cshtml" />
     <None Include="Views\Shared\Sidebar\_SidebarTags.cshtml" />
+    <None Include="wwwroot\FileManager\js\custom.js" />
+    <None Include="wwwroot\FileManager\js\directory.js" />
+    <None Include="wwwroot\FileManager\js\file.js" />
+    <None Include="wwwroot\FileManager\js\filetypes.js" />
+    <None Include="wwwroot\FileManager\js\jquery-1.10.2.min.js" />
+    <None Include="wwwroot\FileManager\js\jquery-1.11.1.min.js" />
+    <None Include="wwwroot\FileManager\js\jquery-2.1.1.min.js" />
+    <None Include="wwwroot\FileManager\js\jquery-dateFormat.min.js" />
+    <None Include="wwwroot\FileManager\js\jquery-ui-1.10.4.custom.min.js" />
+    <None Include="wwwroot\FileManager\js\main.js" />
+    <None Include="wwwroot\FileManager\js\main.min.js" />
+    <None Include="wwwroot\FileManager\js\mini-main.js" />
+    <None Include="wwwroot\FileManager\js\tiny_mce_popup.js" />
+    <None Include="wwwroot\FileManager\js\utils.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -84,12 +103,6 @@
 
   <ItemGroup>
     <Reference Include="System.ServiceModel" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Views\Shared\_Layout3.cshtml">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
   <Target Name="MyPreCompileTarget" BeforeTargets="Build">

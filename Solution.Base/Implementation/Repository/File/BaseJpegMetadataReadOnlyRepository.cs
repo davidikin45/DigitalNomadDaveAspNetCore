@@ -1,5 +1,5 @@
-﻿using Solution.Base.Interfaces.Repository;
-using Solution.Base.Model;
+﻿using Solution.Base.Implementation.Models;
+using Solution.Base.Interfaces.Repository;
 using System;
 using System.Collections.Generic;
 using System.IO;

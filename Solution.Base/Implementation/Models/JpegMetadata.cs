@@ -1,9 +1,12 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace Solution.Base.Model
+namespace Solution.Base.Implementation.Models
 {
     public class JpegMetadata
     {
@@ -287,7 +290,7 @@ namespace Solution.Base.Model
 
         public void SaveAs(string path, DateTime? lastWrite = null)
         {
-            if(!lastWrite.HasValue)
+            if (!lastWrite.HasValue)
             {
                 lastWrite = FileInfo.LastWriteTime;
             }

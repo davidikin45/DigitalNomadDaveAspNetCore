@@ -7,6 +7,7 @@ using Solution.Base.Interfaces.UnitOfWork;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DND.Services.SearchEngines;
 
 namespace DND.Services
 {

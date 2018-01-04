@@ -28,6 +28,19 @@ namespace Solution.Base.Helpers
             return false;
         }
 
+        public static Boolean SaveAs(this IFormFile fileUpload, string path)
+        {
+            if (fileUpload != null && fileUpload.Length > 0)
+            {
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    fileUpload.CopyTo(stream);
+                }
+                return true;
+            }
+            return false;
+        }
+
         public static string ToSlug(this string s)
         {
             return s.ToLower().Replace(" ", "-");

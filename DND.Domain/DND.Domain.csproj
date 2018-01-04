@@ -187,6 +187,8 @@
     <Compile Include="DTOs\ContentTextDTO.cs" />
     <Compile Include="DTOs\CurrencyDTO.cs" />
     <Compile Include="DTOs\FaqDTO.cs" />
+    <Compile Include="DTOs\FlightSearchRequestDTO.cs" />
+    <Compile Include="DTOs\FlightSearchResponseDTO.cs" />
     <Compile Include="DTOs\ItineraryDTO.cs" />
     <Compile Include="DTOs\LocaleDTO.cs" />
     <Compile Include="DTOs\LocationAutoSuggestRequestDTO.cs" />
@@ -218,6 +220,7 @@
     <Compile Include="Interfaces\Services\IContentTextService.cs" />
     <Compile Include="Interfaces\Services\ICurrencyService.cs" />
     <Compile Include="Interfaces\Services\IFaqService.cs" />
+    <Compile Include="Interfaces\Services\IFlightService.cs" />
     <Compile Include="Interfaces\Services\ILocaleService.cs" />
     <Compile Include="Interfaces\Services\ILocationService.cs" />
     <Compile Include="Interfaces\Services\IMailingListService.cs" />
@@ -246,6 +249,9 @@
     <Compile Include="Models\Testimonial.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\FlightSearchClientRequestForm.cs" />
+    <Compile Include="ViewModels\LocationAutoSuggestForm.cs" />
+    <Compile Include="ViewModels\LocationForm.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Solution.Base\Solution.Base.csproj">

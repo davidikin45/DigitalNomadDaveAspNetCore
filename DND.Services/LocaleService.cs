@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using DND.Core.Interfaces.Services;
 using DND.Domain.DTOs;
+using DND.Domain.Interfaces.Services;
+using DND.Services.SearchEngines;
 using Solution.Base.Implementation.Services;
 using Solution.Base.Interfaces.UnitOfWork;
 using System.Collections.Generic;

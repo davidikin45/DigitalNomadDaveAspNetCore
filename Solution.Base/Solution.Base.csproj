@@ -466,6 +466,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionResults\BetterJsonResultcs.cs" />
+    <Compile Include="ActionResults\HTMLActionResult.cs" />
     <Compile Include="ActionResults\RSSActionResult.cs" />
     <Compile Include="Alerts\Alert.cs" />
     <Compile Include="Alerts\AlertDecoratorResult.cs" />
@@ -479,8 +480,28 @@
     <Compile Include="AutoMapper\AutoMapperConfiguration.cs" />
     <Compile Include="Constants\CMS.cs" />
     <Compile Include="Constants\Folders.cs" />
+    <Compile Include="Controllers\Admin\AdminFileManagerController.cs" />
+    <Compile Include="Controllers\Admin\BaseAdminController.cs" />
+    <Compile Include="Controllers\Api\BaseEntityReadOnlyWebApiController.cs" />
+    <Compile Include="Controllers\Api\BaseEntityReadOnlyWebApiControllerAuthorize.cs" />
+    <Compile Include="Controllers\Api\BaseEntityWebApiController.cs" />
+    <Compile Include="Controllers\Api\BaseEntityWebApiControllerAuthorize.cs" />
+    <Compile Include="Controllers\Api\BaseWebApiController.cs" />
+    <Compile Include="Controllers\Api\BaseWebApiControllerAuthorize.cs" />
+    <Compile Include="Controllers\Api\TestController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BaseControllerAuthorize.cs" />
+    <Compile Include="Controllers\BaseEntityController.cs" />
+    <Compile Include="Controllers\BaseEntityControllerAuthorize.cs" />
+    <Compile Include="Controllers\BaseEntityReadOnlyController.cs" />
+    <Compile Include="Controllers\BaseEntityReadOnlyControllerAuthorize.cs" />
     <Compile Include="Controllers\BaseHomeController.cs" />
+    <Compile Include="Controllers\File\BaseFileMetadataControllerAuthorize.cs" />
+    <Compile Include="Controllers\File\BaseFileMetadataReadOnlyControllerAuthorize.cs" />
+    <Compile Include="Controllers\File\BaseJpegMetadataControllerAuthorize.cs" />
+    <Compile Include="Controllers\File\BaseJpegMetadataReadOnlyControllerAuthorize.cs" />
+    <Compile Include="Controllers\Folder\BaseFolderMetadataControllerAuthorize.cs" />
+    <Compile Include="Controllers\Folder\BaseFolderMetadataReadOnlyControllerAuthorize.cs" />
     <Compile Include="DependencyInjection\Autofac\AutofacExtensions.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsMetadataModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacTasksModule.cs" />
@@ -526,19 +547,24 @@
     <Compile Include="Helpers\BundleConfigHelper.cs" />
     <Compile Include="Helpers\NavigationMenuHelper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
+    <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Helpers\WebHelper.cs" />
     <Compile Include="Helpers\WebRequestHelper.cs" />
     <Compile Include="Helpers\YouTubeHelper.cs" />
     <Compile Include="Implementation\DTOs\BaseDTO.cs" />
+    <Compile Include="Implementation\DTOs\FolderMetadataDTO.cs" />
+    <Compile Include="Implementation\DTOs\FileMetadataDTO.cs" />
+    <Compile Include="Implementation\DTOs\JpegMetadataDTO.cs" />
+    <Compile Include="Implementation\DTOs\WebApiPagedRequestDTO.cs" />
     <Compile Include="Implementation\DTOs\WebApiPagedResponseDTO.cs" />
     <Compile Include="Implementation\Models\BaseApplicationUser.cs" />
     <Compile Include="Implementation\Models\BaseEntity.cs" />
     <Compile Include="Implementation\Models\BaseEntityAuditable.cs" />
     <Compile Include="Implementation\Models\BaseObjectValidatable.cs" />
-    <Compile Include="Implementation\Models\EnumDatasourceAttribute.cs" />
     <Compile Include="Implementation\Models\JpegMetadata.cs" />
+    <Compile Include="Implementation\Models\EnumDatasourceAttribute.cs" />
     <Compile Include="Implementation\Persistance\BaseDbConfiguration.cs" />
     <Compile Include="Implementation\Persistance\BaseDbContextTransaction.cs" />
     <Compile Include="Implementation\Persistance\BaseDbContextTransactionAspNetCore.cs" />
@@ -574,6 +600,7 @@
     <Compile Include="Implementation\Validation\ValidationErrors.cs" />
     <Compile Include="Infrastructure\Activators.cs" />
     <Compile Include="Infrastructure\AspNetCoreExtensions.cs" />
+    <Compile Include="Infrastructure\PaginatedList.cs" />
     <Compile Include="Infrastructure\ConfigurationManager.cs" />
     <Compile Include="Infrastructure\CustomModelBinderProvider.cs" />
     <Compile Include="Infrastructure\CustomViewLocator.cs" />
@@ -653,6 +680,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

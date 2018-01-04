@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
-using DND.Core.Interfaces.Services;
+using DND.Domain.DTOs;
+using DND.Domain.Interfaces.Services;
+using DND.Services.SearchEngines;
+using DND.Services.Skyscanner.Model;
 using Solution.Base.Extensions;
 using Solution.Base.Implementation.Services;
 using Solution.Base.Implementation.Validation;
