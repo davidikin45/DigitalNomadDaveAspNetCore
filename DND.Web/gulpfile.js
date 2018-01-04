@@ -107,9 +107,32 @@ var deps = {
     "bootstrap": {
         "dist/**/*": ""
     },
-    // ...
-
+    "respond.js": {
+        "dest/**/*": ""
+    },
+    "tinymce": {
+        "plugins/**/*": "plugins/",
+        "skins/**/*": "skins/",
+        "themes/**/*": "themes/",
+        "tinymce.js": "",
+        "tinymce.min.js": ""
+    },
+    "instafeed.js": {
+        "instafeed.js": "",
+        "instafeed.min.js": ""
+    },
+    "infinite-scroll": {
+        "dist/*": ""
+    },
+    "font-awesome": {
+        "css/*": "css/",
+        "fonts/*": "fonts/",
+    },
+    "magnific-popup": {
+        "dist/*": ""
+    }
 };
+
 
 gulp.task("scripts", function () {
 

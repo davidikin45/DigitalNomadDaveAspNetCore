@@ -1,0 +1,169 @@
+﻿@model BlogPostDTO
+
+@{
+    var mainPhotoVideoText = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideoOrText();
+
+    var mainImageShare = "";
+    if(mainPhotoVideoText != null)
+    {
+        if (mainPhotoVideoText.IsText())
+        {
+            var id = mainPhotoVideoText.ReadFileLine(0);
+            if (id.IsYouTube())
+            {
+                mainImageShare = id.YouTubeMaxResThumbailUrl();
+            }
+            else
+            {
+                mainImageShare = mainPhotoVideoText.ReadFileLine(1);
+            }
+        }
+        else
+        {
+            mainImageShare = mainPhotoVideoText.AbsoluteShareUrlSlug();
+        }
+    }
+
+    ViewBag.PageTitle = Model.Title;
+    ViewBag.Blog = true;
+    ViewBag.BlogFullWidth = true;
+    ViewBag.Keywords = string.Join(", ", Model.Tags.Select(t => t.Name).ToArray());
+    ViewBag.Description = Model.ShortDescription;
+    ViewBag.MainImage = mainImageShare;
+    ViewBag.Author = Model.Author.Name;
+}
+
+    <script type="application/ld+json">
+        {
+        "@@context": "http://schema.org",
+        "@@type": "BlogPosting",
+        "mainEntityOfPage": {
+        "@@type": "WebPage",
+        "@@id": "@(Url.AbsoluteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)))"
+            },
+            "headline": "@Model.Title",
+            "image": {
+            "@@type": "ImageObject",
+            "url": "@mainImageShare",
+            "height": 630,
+            "width": 1200
+            },
+            "datePublished": "@Model.DateCreated.ToString("o")",
+            "dateModified": "@if (Model.DateModified.HasValue)
+            {<text>@Model.DateModified.Value.ToString("o")</text>}
+            else
+            {<text>@Model.DateCreated.ToString("o")</text>}",
+            "author": {
+            "@@type": "Person",
+            "name": "@Model.Author.Name",
+            "url": "@Url.AbsoluteUrl(nameof(BlogController.Author), "Blog", new { authorSlug = Model.Author.UrlSlug })"
+            },
+            "publisher": {
+            "@@type": "Organization",
+            "name": "@ConfigurationManager.AppSettings("SiteTitle")",
+            "logo": {
+            "@@type": "ImageObject",
+            "url": "@ConfigurationManager.AppSettings("SiteUrl")/fav-icon196x196.png",
+            "width": 196
+            }
+            },
+            "description": "@Model.ShortDescription"
+            }
+    </script>
+
+    <div class="blog-post">
+        <div class="blog-post-meta">
+            <div class="row">
+                <!-- AddThis -->
+                <div class="col-12 blog-post-share-links">
+                    @Html.AddThisLinks(ConfigurationManager.AppSettings("SiteUrl"), Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), string.Format("{0} | {1}", (string)ViewBag.PageTitle.ToString(), (string)ConfigurationManager.AppSettings("SiteTitle")), Model.ShortDescription, mainImageShare)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="blog-post-author">
+                        <span>Author:</span> @(Html.ActionLink<BlogController>(c => c.Author(Model.Author.UrlSlug, 1), Model.Author.Name, new { title = String.Format("See all posts written by {0}", Model.Author.Name) }))
+                    </div>
+                    <div class="blog-post-category">
+                        <span>Category:</span> @(Html.ActionLink<BlogController>(c => c.Category(Model.Category.UrlSlug, 1), Model.Category.Name, new { title = String.Format("See all posts in {0}", Model.Category.Name) }))
+                    </div>
+
+                    <div class="blog-post-tags">
+                        <span>Tags:</span>
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <div class="blog-post-tags-div">
+                                @(Html.ActionLink<BlogController>(c => c.Tag(tag.UrlSlug, 1), tag.Name, new { title = String.Format("See all posts in {0}", tag.Name) }))
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-6 text-right">
+                    <div class="blog-post-posted-date">
+                        @Model.DateCreated.ToConfigLocalTimeStringNoTimezone()
+                    </div>
+                    <div class="blog-post-no-of-comments">
+
+                            @(Html.FacebookCommentCount(ConfigurationManager.AppSettings("SiteUrl"), Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug))))<text> Comments</text>
+
+                            @*@Html.DisqusCommentCount(Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)))*@
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="blog-post-body gallery">
+            @if (mainPhotoVideoText != null)
+            {
+                @Html.Partial("_Media", mainPhotoVideoText, new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { { "width", 1250 }, { "height", 600 } })
+                <br /><br />
+            }
+
+            @Html.Raw(Model.Description)
+            @if (Model.ShowPhotosInAlbum && !string.IsNullOrEmpty(Model.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album))
+            {
+                <div class="card-columns-md-2 card-spacer-bottom">
+                    @foreach (FileInfo file in Html.FileSystemRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4", ".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>
+                (nameof(FileInfo.LastWriteTime), OrderByType.Descending), null, null))
+                    {
+                        if (mainPhotoVideoText == null || mainPhotoVideoText.FullName != file.FullName)
+                        {
+                            @Html.Partial("_Media", file, new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { { "width", 800 }, { "height", 0 } })
+                            @*<div class="card-spacer">&nbsp;</div>*@
+                        }
+                    }
+                </div>
+            }
+
+            @if (Model.ShowLocationDetail)
+            {
+                foreach (LocationDTO location in Model.Locations.OrderBy(l => l.DateCreated))
+                {
+                    @Html.Partial("~/Views/Location/_Location.cshtml", location)
+                }
+            }
+
+            @if (Model.ShowLocationMap && Model.Locations.Count > 0)
+            {
+                var centre = Model.Locations.Select(l => l.GPSLocation).ToList().GetCentralGeoCoordinate();
+
+                <ng-map style="height:@(Model.MapHeight)px;" center="@centre.Latitude.ToString(),@centre.Longitude.ToString()" zoom="@Model.MapZoom" ng-controller="MapCtrl as vm">
+                    @foreach (LocationDTO location in Model.Locations)
+                {
+                        <marker position="@location.GPSLocation.Latitude.ToString(),@location.GPSLocation.Longitude.ToString()" title="@location.Name" on-click="vm.openGoogleMap(event, '@(location.PlaceId)')"></marker>
+                    }
+                </ng-map>
+            }
+        </div>
+
+        <br />
+        @Html.AddThisRelatedPosts()
+        <br />
+        @*INCLUDE DISQUS *@
+
+            @Html.FacebookCommentsThread(ConfigurationManager.AppSettings("SiteUrl"), Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), Model.Title)
+
+            @*@Html.DisqusThread(System.Configuration.ConfigurationManager.AppSettings["DisqusShortName"], System.Configuration.ConfigurationManager.AppSettings["SiteUrl"], Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), Model.Title)*@
+
+    </div>

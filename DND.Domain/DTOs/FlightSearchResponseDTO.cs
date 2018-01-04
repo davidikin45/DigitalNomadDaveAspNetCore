@@ -1,15 +1,11 @@
-﻿using DND.Base.Implementation.Models;
-using DND.Base.Infrastructure;
-using System;
+﻿using Solution.Base.Implementation.Models;
+using Solution.Base.Infrastructure;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Domain.DTOs
 {
-   public class FlightSearchResponseDTO : BaseEntity<int>
+    public class FlightSearchResponseDTO : BaseEntity<int>
     {
 
         public FlightSearchResponseDTO(IEnumerable<ItineraryDTO> source, int skip, int take,int totalCount)

@@ -1,0 +1,37 @@
+[
+  {
+    "Controller": "Blog",
+    "Action": "Posts",
+    "LinkText": "BLOG"
+  },
+  {
+    "Controller": "Gallery",
+    "Action": "Index",
+    "LinkText": "GALLERY"
+  },
+  {
+    "Controller": "Videos",
+    "Action": "Index",
+    "LinkText": "VIDEOS"
+  },
+  {
+    "Controller": "BucketList",
+    "Action": "Index",
+    "LinkText": "BUCKET LIST"
+  },
+  {
+    "Controller": "Home",
+    "Action": "About",
+    "LinkText": "ABOUT"
+  },
+  {
+    "Controller": "Home",
+    "Action": "WorkWithMe",
+    "LinkText": "WORK WITH ME"
+  },
+  {
+    "Controller": "Home",
+    "Action": "Contact",
+    "LinkText": "CONTACT"
+  }
+]

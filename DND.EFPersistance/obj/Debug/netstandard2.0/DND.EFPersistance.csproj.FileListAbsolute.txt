@@ -1,6 +1,0 @@
-C:\Development\DigitalNomadDaveAspNetCore\DND.EFPersistance\bin\Debug\netstandard2.0\DND.EFPersistance.deps.json
-C:\Development\DigitalNomadDaveAspNetCore\DND.EFPersistance\bin\Debug\netstandard2.0\DND.EFPersistance.dll
-C:\Development\DigitalNomadDaveAspNetCore\DND.EFPersistance\obj\Debug\netstandard2.0\DND.EFPersistance.csprojResolveAssemblyReference.cache
-C:\Development\DigitalNomadDaveAspNetCore\DND.EFPersistance\obj\Debug\netstandard2.0\DND.EFPersistance.csproj.CoreCompileInputs.cache
-C:\Development\DigitalNomadDaveAspNetCore\DND.EFPersistance\obj\Debug\netstandard2.0\DND.EFPersistance.AssemblyInfoInputs.cache
-C:\Development\DigitalNomadDaveAspNetCore\DND.EFPersistance\obj\Debug\netstandard2.0\DND.EFPersistance.AssemblyInfo.cs

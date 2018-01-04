@@ -1,12 +1,11 @@
-using DND.Base.Implementation.Models;
-using System;
+using Solution.Base.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DND.Domain.Models
 {
-	public class BinaryData : BaseEntityAuditable<int>
+    public class BinaryData : BaseEntityAuditable<int>
     {
         [Key, ForeignKey("File")]
         public override int Id

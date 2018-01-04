@@ -1,65 +1,338 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@inject IUrlHelper Url
+@inject IConfiguration Configuration
+@inject IHttpContextAccessor HttpContext
+@{
+    var Settings = Configuration.GetSection("Settings");
+}
+<!DOCTYPE html>
+<html lang="en" class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page")">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApplication1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>@ViewBag.Description</text>} else {@(Settings.GetValue<String>("SiteDescription"))} ">
+    <meta name="keywords" content="@if (!string.IsNullOrEmpty(ViewBag.Keywords)) {<text>@ViewBag.Keywords, </text>}@(Settings.GetValue<String>("SiteKeyWords"))">
+    <meta name="author" content="@if (!string.IsNullOrEmpty(ViewBag.Author)) {<text>@ViewBag.Author</text>} else {@(Settings.GetValue<String>("SiteAuthor"))}" />
+
+    <meta property="og:type" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>article</text>} else {<text>website</text>}" />
+    <meta property="og:site_name" content="@(Settings.GetValue<String>("SiteTitle"))">
+    <meta property="fb:app_id" content="@(Settings.GetValue<String>("FacebookAppId"))" />
+
+    @*<meta property="og:title" content="@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle</text>} else {@(Settings.GetValue<String>("SiteTitle"))}">*@
+    <meta property="og:title" content="@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle | </text>}@(Settings.GetValue<String>("SiteTitle"))">
+    <meta property="og:description" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>@ViewBag.Description</text>} else {@(Settings.GetValue<String>("SiteDescription"))} ">
+    <meta property="og:url" content="@((Settings.GetValue<String>("SiteUrl")))@(HttpContext.HttpContext.Request.Path)" />
+    @if (!string.IsNullOrEmpty(ViewBag.MainImage))
+    {
+        <meta property="og:image" content="@(ViewBag.MainImage)" />
+    }
+    else
+    {
+        <meta property="og:image" content="@(Url.Content((Settings.GetValue<String>("SiteShareImage")), true))" />
+    }
+
+    @if ((Settings.GetValue<String>("RSSFeed")) == "true")
+    {
+        <link rel="alternate" type="application/rss+xml" title="@(Settings.GetValue<String>("SiteTitle")) RSS Feed" href="/feed" />
+    }
+
+    @if (ViewBag.Admin == true || ViewBag.NoFollow == true)
+    {
+        <meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+    }
+    else
+    {
+        <meta name="ROBOTS" content="INDEX, FOLLOW">
+    }
+
+    @if ((string)ViewContext.RouteData.Values["controller"] == "Home" && (string)ViewContext.RouteData.Values["action"] == "Index")
+    {
+        <script type="application/ld+json">
+            {
+            "@@context": "http://schema.org",
+            "@@type": "WebSite",
+            "name": "@(Settings.GetValue<String>("SiteTitle"))",
+            "url": "@(Settings.GetValue<String>("SiteUrl"))",
+            "potentialAction": [{
+            "@@type": "SearchAction",
+            "target": "@(Settings.GetValue<String>("SiteUrl"))/search?s={search_term_string}",
+            "query-input": "required name=search_term_string"
+            }]
+            }
+        </script>
+    }
+
+    <script type="application/ld+json">
+        {
+        "@@context": "http://schema.org",
+        "@@type": "Organization",
+        "name": "@(Settings.GetValue<String>("SiteTitle"))",
+        "url": "@(Settings.GetValue<String>("SiteUrl"))",
+        "logo": "@(Settings.GetValue<String>("SiteUrl"))/fav-icon196x196.png",
+        "sameAs": [
+        "@(Settings.GetValue<String>("FacebookLink"))",
+        "@(Settings.GetValue<String>("InstagramLink"))",
+        "@(Settings.GetValue<String>("LinkedInLink"))"
+        ]
+        }
+    </script>
+
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="@(Settings.GetValue<String>("SiteTitle"))" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+
+    @await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = Solution.Base.Constants.CMS.ContentHtml.Head })
+
+    <base href="/">
+    <title>@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle | </text>}@(Settings.GetValue<String>("SiteTitle"))</title>
+
+    @Html.GoogleFontAsync(new List<string> { (Settings.GetValue<String>("BodyFont")), (Settings.GetValue<String>("NavBarFont")) },true, true, true,true,true,true,2000)
+    @Html.GetFontBodyCSSAsync((Settings.GetValue<String>("BodyFont")))
+    @Html.GetFontNavBarCSSAsync((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")))
+
+    @*@Html.GoogleFont((Settings.GetValue<String>("BodyFont")),"", true, false, true, true, true, true)
+    @Html.GoogleFont((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")), false, true, true, true, true, true)*@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/vendor/bootstrap/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/styles.css" />
-        <link rel="stylesheet" href="~/css/site-xs.css" />
-        <link rel="stylesheet" href="~/css/site-sm.css" />
-        <link rel="stylesheet" href="~/css/site-md.css" />
-        <link rel="stylesheet" href="~/css/site-lg.css" />
-        <link rel="stylesheet" href="~/css/site-xl.css" />
+        <link rel="stylesheet" href="~/vendor/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/vendor/magnific-popup/magnific-popup.css" />
+
+        <link rel="stylesheet" href="~/css/menu.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/modal.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/polaroid-images.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/return-to-top.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site-xs.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site-sm.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site-md.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site-lg.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site-xl.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/blog.css" asp-append-version="true" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="~/vendor/bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/third-party.min.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-            <div class="container">
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Digital Nomad Dave</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarsExample07">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
-                        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link">About</a></li>
-                        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a></li>
-                    </ul>
-                    <form class="form-inline my-2 my-md-0">
-                        <input class="form-control" type="text" placeholder="Search" aria-label="Search">
-                    </form>
+    @if (ViewBag.Admin == true)
+    {
+        <environment include="Development">
+            <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+        </environment>
+        <environment exclude="Development">
+            <link rel="stylesheet" href="~/css/site.admin.min.css" asp-append-version="true" />
+        </environment>
+    }
+    @RenderSection("styles", required: false)
+    @if ((ViewBag.Admin == null || !ViewBag.Admin))
+    {
+        @(Html.GoogleAnalyticsScript((Settings.GetValue<String>("GoogleAnalyticsTrackingId"))))
+        @(Html.GoogleAdSenseScript((Settings.GetValue<String>("GoogleAdSenseId"))))
+    }   
+</head>
+<body class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page") @(ViewBag.FullWidthPage == true ? "full-width-page" : "")">
+    @if ((ViewBag.Admin == null || !ViewBag.Admin))
+    {
+        @(Html.FacebookCommentsScript((Settings.GetValue<String>("FacebookAppId"))))
+    }
+    <div id="wrapper">
+        <!--Navbar-->
+        @Html.Partial("_Navigation")
+        <!--/.Navbar-->
+        <!--Mask-->
+        @if (ViewBag.Admin == true)
+        {
+            <div class="container-fluid">
+                <div class="row">
+                    @Html.Partial("_AdminNavigation")
+                    <main class="col-9 offset-3 col-md-10 offset-md-2 pt-3">
+                        @RenderBody()
+                    </main>
                 </div>
             </div>
-        </nav>
-    </header>
-    <main role="main" class="container">
-        @RenderBody()
-    </main>
-    <footer class="footer">
-        <div class="container">
-            <span class="text-muted">&copy; 2017 - DigitalNomadDave</span>
-        </div>
-    </footer>
+        }
+        else
+        {
+            if (ViewBag.LandingPage == true)
+            {
+                if (ViewBag.FullWidthPage == true)
+                {
+                    <div class="view view-full-screen">
+                        <div class="container-fluid container-full">
+                            @RenderBody()
+                        </div>
+                    </div>
+                }
+                else if (ViewBag.FullPageBackground == true)
+                {
+                    <div class="view view-bg hm-black-strong">
+                        <div class="full-bg-img flex-center">
+                            <div id="m" class="container-fluid container-full">
+
+                                @RenderBody()
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="container-fluid container-full">
+                        @RenderBody()
+                    </div>
+                }
+            }
+            else
+            {
+                if (ViewBag.FullWidthPage == true)
+                {
+                    <div class="container-fluid container-full">
+                        @RenderBody()
+                    </div>
+                }
+                else
+                {
+                    if (ViewBag.Blog != null && ViewBag.Blog == true)
+                    {
+                        <div class="container @if (ViewBag.BlogFullWidth != null && ViewBag.BlogFullWidth == true){<text>container-blog</text>}">
+                            <div class="row">
+                                <div class="col-lg-8 blog-main">
+                                    @if (ViewBag.c == null || ViewBag.CustomPageHeader == false)
+                                    {
+                                        <div class="page-header">
+                                            <h1>@ViewBag.PageTitle</h1>
+                                        </div>
+                                    }
+                                    @RenderBody()
+                                </div>
+                                <div class="col-lg-3 offset-lg-1 blog-sidebar">
+                                    @await Component.InvokeAsync(nameof(SidebarViewComponent).Replace("ViewComponent",""))
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    @if (ViewBag.CustomPageHeader == null || ViewBag.CustomPageHeader == false)
+                                    {
+                                        <div class="page-header">
+                                            <h1>@ViewBag.PageTitle</h1>
+                                        </div>
+                                    }
+                                    @RenderBody()
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
+
+        @RenderSection("footerContent", required: false)
+        @if (ViewBag.LandingPage == true)
+        {
+            @Html.Partial("_Footer")
+        }
+    </div>
+    @if (ViewBag.LandingPage == null || ViewBag.LandingPage == false)
+    {
+        @Html.Partial("_Footer")
+    }
+    @Html.ReturnToTop()
+    <!-- SCRIPTS -->
+    <script>
+        var InstagramUserId = '@(Settings.GetValue<String>("InstagramUserId"))';
+        var InstagramAccessToken = '@(Settings.GetValue<String>("InstagramAccessToken"))';
+        var cssUrl = '@(Url.Content("~/css/site.all.min.css"))';
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=@((Settings.GetValue<String>("GoogleMapsApiKey")) + "&libraries=places")"></script>
+
     <environment include="Development">
         <script src="~/vendor/jquery/jquery.js"></script>
-        <script src="~/vendor/bootstrap/js/bootstrap.js"></script>
+        <script src="~/vendor/jquery-validation/jquery.validate.js"></script>
+        <script src="~/vendor/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+        <script src="~/vendor/respond.js/respond.src.js"></script>
+        <script src="~/vendor/instafeed.js/instafeed.js"></script>
+        <script src="~/vendor/infinite-scroll/infinite-scroll.pkgd.js"></script>
+        <script src="~/vendor/magnific-popup/jquery.magnific-popup.js"></script>
+
+        <script src="~/js/db-geography.js" asp-append-version="true"></script>
+        <script src="~/js/modal.js" asp-append-version="true"></script>
+        <script src="~/js/return-to-top.js" asp-append-version="true"></script>
+        <script src="~/js/scroll-position.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
-        <script src="~/vendor/jquery/jquery.min.js"></script>
-        <script src="~/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="~/js/third-party.min.js" asp-append-version="true"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
-    @RenderSection("Scripts", required: false)
+    @if (ViewBag.Admin == true)
+    {
+        <environment include="Development">
+            <script src="~/vendor/tinymce/tinymce.js"></script>
+
+            <script src="~/js/admin.js" asp-append-version="true"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="~/js/site.admin.min.js" asp-append-version="true"></script>
+        </environment>
+    }
+
+    @RenderSection("scripts", required: false)
+
+    <script>
+        $('#instafeedPhotosSidebar').each(function () {
+            var userFeed = new Instafeed({
+                get: 'user',
+                limit : 6,
+                userId: InstagramUserId,
+                accessToken: InstagramAccessToken,
+                template: '<div class="card" style="display:inline-block" ><a class="card-img-top" target="_blank" href="{{link}}" title="{{caption}}"><img src="{{image}}" /></a></div>',
+                resolution: 'low_resolution',
+                target: 'instafeedPhotosSidebar'
+            });
+            userFeed.run();
+            //https://api.instagram.com/oauth/authorize/?client_id=CLIENT-ID&redirect_uri=REDIRECT-URI&response_type=token
+            //model.images.standard_resolution.url
+        });
+
+        var url = "https://api.instagram.com/v1/users/" + InstagramUserId + "?access_token=" + InstagramAccessToken + "&callback=?";
+        $.getJSON(url, function (data) {
+            $(".instagram-profile-picture").append("<img class='rounded-circle' title='" + data.data.username + "' src='" + data.data.profile_picture.replace('/s150x150','') + "' />");
+            $(".instagram-bio").append(data.data.bio.replace(/[|]/g, " | ").replace(/\n/g, "<br/>"));
+        });
+    </script>
+ 
+    @if (!String.IsNullOrEmpty((Settings.GetValue<String>("AddThisId"))) && (ViewBag.Admin == null || !ViewBag.Admin))
+    {
+        @Html.AddThisScript((Settings.GetValue<String>("AddThisId")))
+    }
+    @* TODO @Html.Partial("_Alerts")
+    @Html.Partial("_Error")*@
 </body>
 </html>

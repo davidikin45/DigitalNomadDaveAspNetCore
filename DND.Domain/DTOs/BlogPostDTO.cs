@@ -1,15 +1,13 @@
-﻿using DND.Domain.Models;
-using DND.Base.Implementation.Models;
-using DND.Base.Interfaces.Automapper;
+﻿using AutoMapper;
+using DND.Domain.Constants;
+using DND.Domain.Models;
+using Solution.Base.Implementation.Models;
+using Solution.Base.Interfaces.Automapper;
+using Solution.Base.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using DND.Base.ModelMetadata;
-using DND.Domain.Constants;
 
 namespace DND.Domain.DTOs
 {

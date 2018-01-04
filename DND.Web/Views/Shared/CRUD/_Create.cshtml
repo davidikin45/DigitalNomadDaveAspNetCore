@@ -1,0 +1,14 @@
+﻿@model  dynamic
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    //Only displays Model level validation
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel(new { EditMode = false, CreateMode = true })
+    <div class="form-group row">
+        <div class="offset-md-2 col-md-10">
+            <input type="submit" value="Save Changes" class="btn btn-primary" />
+        </div>
+    </div>
+}

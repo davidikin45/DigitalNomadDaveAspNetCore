@@ -1,0 +1,8 @@
+﻿@model WebApiPagedResponseDTO<FaqDTO>
+
+@foreach (FaqDTO item in Model.Rows)
+{
+    <p><strong>@item.Question</strong></p>
+    @Html.Raw(item.Answer)
+    <br />
+}

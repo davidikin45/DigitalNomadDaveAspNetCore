@@ -1,0 +1,46 @@
+﻿@model dynamic
+
+
+@if (!ViewData.ContainsKey("EditMode"))
+{
+    ViewBag.EditMode = false;
+    ViewBag.CreateMode = true;
+}
+
+
+@foreach (var prop in ViewData.ModelMetadata.Properties.Where(p => ((bool)ViewBag.EditMode && p.ShowForEdit) || ((bool)ViewBag.CreateMode && (!p.AdditionalValues.ContainsKey("ShowForCreate") || (bool)p.AdditionalValues["ShowForCreate"]))))
+{
+    var readOnlyHiddenInput = false;
+
+    if (((bool)ViewBag.CreateMode && prop.AdditionalValues.ContainsKey("ReadOnlyHiddenInputCreate") && (bool)prop.AdditionalValues["ReadOnlyHiddenInputCreate"]) || ((bool)ViewBag.EditMode && prop.AdditionalValues.ContainsKey("ReadOnlyHiddenInputEdit") && (bool)prop.AdditionalValues["ReadOnlyHiddenInputEdit"]))
+    {
+        readOnlyHiddenInput = true;
+    }
+
+    var hiddenInput = false;
+
+    if (prop.TemplateHint == "HiddenInput" || readOnlyHiddenInput)
+    {
+        hiddenInput = true;
+        @Html.Hidden(prop.PropertyName)
+    }
+
+    if (!hiddenInput || (prop.IsReadOnly) || readOnlyHiddenInput)
+    {
+        //Display to user
+        <div class="form-group row">
+            @Html.BootstrapLabel(prop.PropertyName)
+            <div class="col-md-10">
+                @if (readOnlyHiddenInput)
+                {
+                    @Html.Editor(prop.PropertyName, "ReadOnly")
+                }
+                else
+                {
+                    @Html.Editor(prop.PropertyName)
+                }
+                @Html.ValidationMessage(prop.PropertyName)
+            </div>
+        </div>
+    }
+}

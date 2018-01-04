@@ -1,0 +1,41 @@
+﻿@model LocationDTO
+
+<h2 display="inline-block" style="font-weight:bold">
+    @if(!ViewData.ContainsKey("HideName")){<text>@(Html.ActionLink<LocationController>( c => c.Location(Model.UrlSlug),Model.Name))</text>} @if (Model.HasGPSCoordinates())
+    {<google-map placeid="@Model.PlaceId" latitude="@Model.GPSLocation.Latitude.ToString()" longitude="@Model.GPSLocation.Longitude.ToString()"></google-map> }
+</h2>
+<p>@Model.DescriptionBody</p>
+<div class="row">
+
+    @if (!string.IsNullOrEmpty(Model.TimeRequired))
+    {
+        <div class="col-7 pr-0"><p><strong>Time Required:</strong> @Model.TimeRequired</p></div>
+    }
+    @if (!string.IsNullOrEmpty(Model.Cost))
+            {
+        <div class="col-5"><p><strong>Cost:</strong> @Model.Cost</p></div>
+
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Link))
+{
+    <p><strong>Link:</strong> <a href="@Model.Link">@(string.IsNullOrEmpty(Model.LinkText) ? Model.Link : Model.LinkText)</a></p>
+}
+
+@if (!string.IsNullOrEmpty(Model.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album))
+{
+    HashSet<string> files = new HashSet<string>();
+    <div class="card-columns-md-2">
+    @foreach (FileInfo file in Html.FileSystemRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4",".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(nameof(FileInfo.LastWriteTime), OrderByType.Descending), null, null))
+    {
+        if (!files.Contains(file.Name))
+        {
+            @Html.Partial("_Media", file, new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { { "width", 800}, { "height", 0 } })
+            files.Add(file.Name);
+        }
+        @*<div class="card-spacer">&nbsp;</div>*@
+    }
+    </div>
+}
+<br />

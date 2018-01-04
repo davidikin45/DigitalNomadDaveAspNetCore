@@ -1,0 +1,107 @@
+[
+  {
+    "Controller": "Admin",
+    "Action": "Index",
+    "LinkText": "Admin"
+  },
+  {
+    "Controller": "AdminCarouselItem",
+    "Action": "Index",
+    "LinkText": "Carousel"
+  },
+  {
+    "Controller": "AdminContentHtml",
+    "Action": "Index",
+    "LinkText": "Content Html"
+  },
+  {
+    "Controller": "AdminContentText",
+    "Action": "Index",
+    "LinkText": "Content Text"
+  },
+  {
+    "Controller": "Admin",
+    "Action": "FileManager",
+    "LinkText": "File Manager"
+  },
+  {
+    "Controller": "AdminFolderMetadata",
+    "Action": "Index",
+    "LinkText": "Folder Metadata"
+  },
+  {
+    "Controller": "AdminFileMetadata",
+    "Action": "Index",
+    "LinkText": "File Metadata"
+  },
+  {
+    "Controller": "AdminMetadata",
+    "Action": "Index",
+    "LinkText": "Image Metadata"
+  },
+  {
+    "Controller": "AdminAuthor",
+    "Action": "Index",
+    "LinkText": "Authors"
+  },
+  {
+    "Controller": "AdminBlogPost",
+    "Action": "Index",
+    "LinkText": "Posts"
+  },
+  {
+    "Controller": "AdminCategory",
+    "Action": "Index",
+    "LinkText": "Categories"
+  },
+  {
+    "Controller": "AdminTag",
+    "Action": "Index",
+    "LinkText": "Tags"
+  },
+  {
+    "Controller": "AdminLocation",
+    "Action": "Index",
+    "LinkText": "Locations"
+  },
+  {
+    "Controller": "AdminProject",
+    "Action": "Index",
+    "LinkText": "Projects"
+  },
+  {
+    "Controller": "AdminTestimonial",
+    "Action": "Index",
+    "LinkText": "Testimonials"
+  },
+  {
+    "Controller": "AdminMailingList",
+    "Action": "Index",
+    "LinkText": "Mailing List"
+  },
+  {
+    "Controller": "AdminMailingList",
+    "Action": "Email",
+    "LinkText": "Email Mailing List"
+  },
+  {
+    "Controller": "AdminFaq",
+    "Action": "Index",
+    "LinkText": "FAQ"
+  },
+  {
+    "Controller": "Admin",
+    "Action": "ClearCache",
+    "LinkText": "Clear Cache"
+  },
+  {
+    "Controller": "",
+    "Action": "/admin/hangfire",
+    "LinkText": "Jobs"
+  },
+  {
+    "Controller": "",
+    "Action": "/Glimpse.axd",
+    "LinkText": "Glimpse"
+  }
+]

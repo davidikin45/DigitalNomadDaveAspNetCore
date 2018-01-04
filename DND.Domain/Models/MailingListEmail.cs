@@ -1,4 +1,5 @@
-﻿using DND.Base.ModelMetadata;
+﻿using Solution.Base.ModelMetadataCustom;
+using Solution.Base.ModelMetadataCustom.DisplayAttributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models

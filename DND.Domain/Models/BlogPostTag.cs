@@ -1,12 +1,10 @@
-using DND.Base.Implementation.Models;
-using System;
+using Solution.Base.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DND.Domain.Models
 {
-	public class BlogPostTag : BaseEntityAuditable<int>
+    public class BlogPostTag : BaseEntityAuditable<int>
     {
         [Required]
         public int BlogPostId { get; set; }

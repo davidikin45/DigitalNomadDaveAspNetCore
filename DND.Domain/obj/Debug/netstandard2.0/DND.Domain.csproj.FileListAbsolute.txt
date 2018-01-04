@@ -1,4 +1,0 @@
-C:\Development\DigitalNomadDaveAspNetCore\DND.Domain\obj\Debug\netstandard2.0\DND.Domain.csprojResolveAssemblyReference.cache
-C:\Development\DigitalNomadDaveAspNetCore\DND.Domain\obj\Debug\netstandard2.0\DND.Domain.csproj.CoreCompileInputs.cache
-C:\Development\DigitalNomadDaveAspNetCore\DND.Domain\obj\Debug\netstandard2.0\DND.Domain.AssemblyInfoInputs.cache
-C:\Development\DigitalNomadDaveAspNetCore\DND.Domain\obj\Debug\netstandard2.0\DND.Domain.AssemblyInfo.cs

@@ -1,16 +1,12 @@
-using DND.Domain.Constants;
-using DND.Domain.Enums;
 using DND.Domain.Models;
-using DND.Base.Implementation.Models;
-using DND.Base.Interfaces.Automapper;
-using DND.Base.ModelMetadata;
-using System;
+using Solution.Base.Implementation.Models;
+using Solution.Base.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DTOs
 {
-	public class AuthorDTO : BaseEntity<int> , IMapFrom<Author>, IMapTo<Author>
+    public class AuthorDTO : BaseEntity<int> , IMapFrom<Author>, IMapTo<Author>
     {
         [Required]
 		public string Name { get; set; }

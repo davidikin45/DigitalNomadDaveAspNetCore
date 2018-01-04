@@ -1,0 +1,17 @@
+﻿
+@if (ViewBag.DisableCreate == null ? true : !ViewBag.DisableCreate)
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+@using (Html.BeginForm(Html.Action(), Html.Controller(), FormMethod.Get, new {@class="form-inline"}))
+{
+    <p>
+        Find: @Html.TextBox("search", ViewBag.Search as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+@await Html.PartialAsync("_List", Model.Data, Html.ViewData)
+@{Func<int, string> link = pageIndex => Url.Action("Index", new { page = pageIndex, pageSize = Model.PageSize, orderColumn = Model.OrderColumn, orderType = Model.OrderType, search = Model.Search });}
+@HtmlHelperExtensions.BootstrapPager(Html, Model.Page, link, Model.TotalItems, Model.PageSize, 5)

@@ -1,0 +1,10 @@
+﻿<nav class="col-3 col-md-2 bg-faded sidebar">
+    <ul class="nav nav-pills flex-column">
+        @foreach (var menuItem in Html.NavigationMenu().AdminMenu)
+        {
+            <li class="nav-item">
+                @(Html.MenuLink((string)menuItem.Controller, (string)menuItem.Action, (string)menuItem.LinkText, "nav-link"))
+            </li>
+        }
+    </ul>
+</nav>

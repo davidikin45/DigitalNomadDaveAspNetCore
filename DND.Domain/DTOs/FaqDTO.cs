@@ -1,7 +1,8 @@
-﻿using DND.Base.Implementation.Models;
-using DND.Base.Interfaces.Automapper;
-using DND.Base.ModelMetadata;
-using DND.Domain.Models;
+﻿using DND.Domain.Models;
+using Solution.Base.Implementation.Models;
+using Solution.Base.Interfaces.Automapper;
+using Solution.Base.ModelMetadataCustom;
+using Solution.Base.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +15,7 @@ namespace DND.Domain.DTOs
         public string Question { get; set; }
 
         [Required]
+    
         [MultilineText(HTML = true)]
         public string Answer { get; set; }
 

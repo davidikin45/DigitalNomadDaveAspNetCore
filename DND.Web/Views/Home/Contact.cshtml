@@ -1,17 +1,22 @@
-﻿@{
-    ViewData["Title"] = "Contact";
+﻿@model DND.Domain.Models.Contact
+@{
+    ViewBag.PageTitle = "Contact Me";
+    ViewBag.Description = "Contact Me";
+    ViewBag.Blog = true;
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+@await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = Solution.Base.Constants.CMS.ContentHtml.Contact })
+<br />
 
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    //Only displays Model level validation
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+    <div class="form-group row">
+        <div class="offset-md-2 col-md-10">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+    </div>
+}

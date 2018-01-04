@@ -1,0 +1,7 @@
+﻿@model IFormFile
+@{
+    var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
+    htmlAttributes["type"] = "file";
+    htmlAttributes["class"] = "form-control-file";
+}
+@Html.TextBoxFor(model => model, htmlAttributes)

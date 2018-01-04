@@ -1,15 +1,13 @@
-using DND.Domain.Enums;
-using DND.Base.Extensions;
-using DND.Base.Implementation.Models;
-using System;
+using Solution.Base.Enums;
+using Solution.Base.Extensions;
+using Solution.Base.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DND.Base.Enums;
 
 namespace DND.Domain.Models
 {
-	public class File : BaseEntityAuditable<int>
+    public class File : BaseEntityAuditable<int>
     {
         [Required, StringLength(255)]
         public string Description

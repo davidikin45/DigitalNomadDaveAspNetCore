@@ -22,6 +22,12 @@
     "bootstrap": "4.0.0-beta.2",
     "jquery": "^3.2.1",
     "jquery-validation": "^1.17.0",
-    "jquery-validation-unobtrusive": "^3.2.6"
+    "jquery-validation-unobtrusive": "^3.2.6",
+    "respond.js": "^1.4.2",
+    "tinymce": "^4.7.4",
+    "instafeed.js": "^1.4.1",
+    "infinite-scroll": "^3.0.2",
+    "font-awesome": "^4.7.0",
+    "magnific-popup": "^1.1.0"
   }
 }

@@ -1,10 +1,11 @@
-using DND.Base.Extensions;
-using DND.Base.Implementation.Models;
 using DND.Domain.Enums;
+using Solution.Base.Extensions;
+using Solution.Base.Implementation.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
 
 namespace DND.Domain.Models
 {

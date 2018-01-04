@@ -1,0 +1,11 @@
+﻿@model BlogWidgetViewModel
+
+@Html.Partial("_SidebarRSSFeed")
+@Html.Partial("_SidebarAboutMe")
+@Html.Partial("_SidebarCategories", Model.Categories)
+@Html.Partial("_SidebarTags", Model.Tags)
+@Html.Partial("_SidebarLatestBlogPosts", Model.LatestPosts)
+@Html.Partial("_SidebarLatestPhotos",Model.LatestPhotos)
+@Html.Partial("_SidebarInstagram")
+@Html.Partial("_SidebarMailingList")
+@Html.Partial("_SidebarAffiliates")

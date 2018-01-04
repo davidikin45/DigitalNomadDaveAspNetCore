@@ -1,10 +1,6 @@
-﻿using DND.Base.Implementation.Models;
-using System;
+﻿using Solution.Base.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Domain.Models
 {

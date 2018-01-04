@@ -1,15 +1,11 @@
-using DND.Domain.Enums;
-using DND.Base.Extensions;
-using DND.Base.Implementation.Models;
-using DND.Base.ModelMetadata;
+using Solution.Base.Implementation.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DND.Domain.Models
 {
-	public class BlogPost : BaseEntityAuditable<int>
+    public class BlogPost : BaseEntityAuditable<int>
     {
 
         [Required, StringLength(500)]

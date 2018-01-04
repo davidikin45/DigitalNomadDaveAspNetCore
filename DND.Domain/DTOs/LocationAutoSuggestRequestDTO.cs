@@ -1,12 +1,9 @@
-﻿using DND.Base.Implementation.Models;
-using System;
+﻿using Solution.Base.Extensions;
+using Solution.Base.Implementation.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
-using DND.Base.Extensions;
 
 namespace DND.Domain.DTOs
 {

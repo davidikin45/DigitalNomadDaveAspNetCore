@@ -1,12 +1,10 @@
-using DND.Base.Implementation.Models;
-using System;
+using Solution.Base.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace DND.Domain.Models
 {
-	public class Author : BaseEntityAuditable<int>
+    public class Author : BaseEntityAuditable<int>
     {
         [Required]
 		public string Name { get; set; }

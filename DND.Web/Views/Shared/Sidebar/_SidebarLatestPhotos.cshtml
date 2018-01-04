@@ -1,0 +1,15 @@
+﻿@model IList<FileInfo>
+
+<div class="sidebar-module">
+    <h3>Latest Photos</h3>
+    <div id="latestPhotosSidebar" class="instafeed card-columns gallery">
+        @foreach (FileInfo photo in Model)
+        {
+            <div class="card" style="display:inline-block">
+                <a class="card-img-top gallery-image" target="_blank" href="@photo.VirtualPathSlug(1600)" title="@photo.NameWithoutExtensionAndMain().GetStringWithSpacesAndFirstLetterUpper()">
+                    <img alt="@photo.NameWithoutExtensionAndMain().GetStringWithSpacesAndFirstLetterUpper()" src="@photo.VirtualPathSlug(0,0,0,500, 500)" />
+                </a>
+            </div>
+        }
+    </div>
+</div>

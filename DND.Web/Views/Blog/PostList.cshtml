@@ -1,0 +1,36 @@
+﻿@model DND.Web.Models.BlogPostViewModels.BlogPostListViewModel
+
+@{
+    ViewBag.Blog = true;
+}
+
+@if (Model.Posts.Count > 0)
+{
+    foreach (var post in Model.Posts)
+    {
+        @Html.Partial("_BlogPostTemplate", post)
+        <br />
+        <hr />
+    }
+}
+else
+{
+    <p>No posts found!</p>
+}
+
+@*@Html.Partial("_Pager", Model)*@
+
+@{Func<int, string> link = null;}
+@if (ViewContext.RouteData.Values["action"].ToString()
+                                                    .Equals("search", StringComparison.OrdinalIgnoreCase))
+{
+    link = pageIndex => Solution.Base.Infrastructure.HttpContext.Current.Request.Path + "?s=" + Solution.Base.Infrastructure.HttpContext.Current.Request.Query["s"] + "page=" + pageIndex.ToString();
+}
+else
+{
+   link = pageIndex => Solution.Base.Infrastructure.HttpContext.Current.Request.Path + "?page=" + pageIndex.ToString();
+}
+@HtmlHelperExtensions.BootstrapPager(Html, Model.Page, link, Model.TotalPosts, Model.PageSize, 5)
+
+
+@*@Html.DisqusCommentCountScript(System.Configuration.ConfigurationManager.AppSettings["DisqusShortName"])*@

@@ -1,0 +1,86 @@
+﻿
+@inject IConfiguration Configuration
+@inject IHttpContextAccessor HttpContext
+@{
+    var Settings = Configuration.GetSection("Settings");
+}
+ <!--Footer-->
+<footer class="page-footer center-on-small-only @(ViewBag.LandingPage == true ? "landing-page" : "content-page")">
+
+    <!--Footer Links-->
+    <div class="page-footer-image text-center">
+        <img src="@Url.Content(Settings.GetValue<String>("SiteFooterImage"))" alt="footer" />
+    </div>
+    <div class="page-footer-inner">
+        <div class="container-fluid">
+            <div class="row">
+
+                <!--First column-->
+                <div class="col-md-3 offset-md-1 ">
+                    <div class="text-md-right text-xs-center font-italic small skyscannerlink">
+                        <a title="RSS Feed" href="@(Url.Action<HomeController>(c => c.Feed()))">
+                            <img src="~/images/rss.png" alt="RSS Feed" />
+                        </a>
+                        <a title="Instagram" href="@(Settings.GetValue<String>("InstagramLink"))" target="_blank"><img src="~/images/insta.png" alt="Instagram" /></a>
+                        <a title="Facebook" href="@(Settings.GetValue<String>("FacebookLink"))" target="_blank"><img src="~/images/fb.png" alt="Facebook" /></a>
+                        <a title="LinkedIn" href="@(Settings.GetValue<String>("LinkedInLink"))" target="_blank"><img src="~/images/linkedin.png" alt="LinkedIn" /></a>
+                        <a title="GitHub" href="@(Settings.GetValue<String>("GitHubLink"))" target="_blank"><img src="~/images/github.jpg" alt="GitHub" /></a>
+                        <a title="YouTube" href="@(Settings.GetValue<String>("YouTubeLink"))" target="_blank"><img src="~/images/youtube.png" alt="YouTube" /></a>
+                        @*<a class="logo" href="http://www.skyscanner.net">Powered by <img width="211" height="47" alt="Skyscanner" src="~/images/Skyscanner-Logo-Original-white.png"></a>*@
+                    </div>
+
+                </div>
+                <!--/.First column-->
+
+                <hr class="hidden-md-up hidden-sm-down">
+
+                <!--Second column-->
+                <div class="col-md-2 offset-md-1 hidden-sm-down">
+                    <h5 class="title">Company</h5>
+                    <ul>
+                        <li><a title="About" href="@(Url.Action<HomeController>(c => c.About()))">About</a></li>
+                        <li><a title="Work With Me" href="@(Url.Action<HomeController>(c => c.WorkWithMe()))">Work With Me</a></li>
+                        @*<li><a href="@(Html.BuildUrlFromExpression<HomeController>(c => c.PrivacyPolicy()))">Privacy Policy</a></li>
+                            <li><a href="@(Html.BuildUrlFromExpression<HomeController>(c => c.TermsOfService()))">Terms of Service</a></li>*@
+                    </ul>
+                </div>
+                <!--/.Second column-->
+
+                <hr class="hidden-md-up hidden-sm-down">
+
+                <!--Third column-->
+                <div class="col-md-2 hidden-sm-down">
+                    <h5 class="title">Associates</h5>
+                    <ul>
+                        <li>Coming Soon</li>
+                        @*<li><a href="http://www.skyscanner.net" target="_blank">Skyscanner</a></li>*@
+                    </ul>
+                </div>
+                <!--/.Third column-->
+
+                <hr class="hidden-md-up hidden-sm-down">
+
+                <!--Fourth column-->
+                <div class="col-md-2 hidden-sm-down">
+                    <h5 class="title">Help</h5>
+                    <ul>
+                        <li><a href="@(Url.Action<HomeController>(c => c.HelpFAQ()))">Help/FAQ</a></li>
+                        <li><a title="Contact" href="@(Url.Action<HomeController>(c => c.Contact()))">Contact</a></li>
+                    </ul>
+                </div>
+                <!--/.Fourth column-->
+
+            </div>
+        </div>
+        <!--/.Footer Links-->
+        <!--Copyright-->
+        <div class="footer-copyright">
+            <div class="container-fluid">
+                © 2017 Copyright: <a href="@(Settings.GetValue<String>("SiteUrl"))"> @(Settings.GetValue<String>("Domain")).com </a>
+
+            </div>
+        </div>
+    </div>
+    <!--/.Copyright-->
+
+</footer>

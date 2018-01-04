@@ -1,7 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "About";
+    ViewBag.PageTitle = "About";
+    ViewBag.Description = "About Digital Nomad Dave";
+    ViewBag.Blog = true;
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
+@await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = DND.Domain.Constants.CMS.ContentHtml.About })

@@ -1,17 +1,12 @@
 ﻿using DND.Domain.Enums;
-using DND.Base.Implementation.Models;
+using Solution.Base.Implementation.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DND.Base.Extensions;
 
 namespace DND.Domain.DTOs
 {
-   public class FlightSearchRequestDTO : BaseEntity<int>
+    public class FlightSearchRequestDTO : BaseEntity<int>
     {
         public string Locale { get; set; }
         public string[] Markets { get; set; }
