@@ -86,7 +86,7 @@ namespace Solution.Base.Controllers
       
         // GET: Default/Details/5
         [Route("details/{id}")]
-        public virtual async Task<ActionResult> Details(object id)
+        public virtual async Task<ActionResult> Details(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
             TDto data = null;

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Routing;
 using Solution.Base.APIs;
 using Solution.Base.Infrastructure;
+using Solution.Base.Extensions;
 using Solution.Base.Interfaces.Persistance;
 using Solution.Base.Interfaces.Repository;
 using Solution.Base.ModelMetadataCustom.DisplayAttributes;
@@ -127,13 +128,11 @@ namespace Solution.Base.Extensions
 
                     if (prop.AdditionalValues.ContainsKey("DropdownModelType"))
                     {
-                        string value = ModelHelperExtensions.Display(html, item, prop.PropertyName).ToString();
-                        td.InnerHtml.Append(value);
+                        HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, ModelHelperExtensions.Display(html, item, prop.PropertyName));
                     }
                     else if (prop.ModelType == typeof(FileInfo))
                     {
-                        string value = ModelHelperExtensions.Display(html, item, prop.PropertyName).ToString();
-                        td.InnerHtml.Append(value);
+                        HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, ModelHelperExtensions.Display(html, item, prop.PropertyName));
                     }
                     else if (prop.ModelType == typeof(DbGeography))
                     {

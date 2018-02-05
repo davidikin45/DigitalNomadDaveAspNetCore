@@ -74,16 +74,16 @@ namespace Solution.Base.Extensions
         }
 
         //Display
-        public static string Display<T>(this IHtmlHelper html, T model, string propertyName)
+        public static IHtmlContent Display<T>(this IHtmlHelper html, T model, string propertyName)
         {
             HtmlHelper<T> newHtml = html.For<T>(model);
-            return newHtml.DisplayText(propertyName);
+            return newHtml.Display(propertyName);
         }
 
-        public static string Display(this IHtmlHelper html, dynamic model, string propertyName)
+        public static IHtmlContent Display(this IHtmlHelper html, dynamic model, string propertyName)
         {
             HtmlHelper<dynamic> newHtml = HtmlHelperExtensions.For(html, model);
-            return newHtml.DisplayText(propertyName);
+            return newHtml.Display(propertyName);
         }
 
         //Values

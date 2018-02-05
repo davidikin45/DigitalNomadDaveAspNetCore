@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.AspNetCore.ResponseCaching.Internal;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Solution.Base.Controllers.Admin;
 using Solution.Base.DependencyInjection.Autofac.Modules;
 using Solution.Base.Extensions;
@@ -35,6 +37,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace DND.Web
 {
@@ -65,6 +68,17 @@ namespace DND.Web
 
             services.AddIdentity<ApplicationIdentityDbContext, User, IdentityRole>();
 
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Configuration["Tokens:Issuer"],
+                        ValidAudience = Configuration["Tokens:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                    }
+                );
+
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.Configure<RazorViewEngineOptions>(options =>
@@ -83,6 +97,8 @@ namespace DND.Web
             services.AddHttpCacheHeaders(opt => opt.MaxAge = 600);
 
             services.AddResponseCompression();
+
+            services.AddHangfire(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
 
             // Add framework services.
             services.AddMvc(options => {
@@ -109,8 +125,18 @@ namespace DND.Web
 
                 //Dashed Routing Convention
                 //options.Conventions.Add(new DashedRoutingConvention(defaultControllerName: "Home", defaultActionName: "Index"));
-            }).
-            AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices();
+            })
+            .AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices()
+            .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddApiVersioning(option =>
+            {
+                option.ReportApiVersions = true;
+                option.ApiVersionReader = ApiVersionReader.Combine(new QueryStringApiVersionReader("api-version"), new HeaderApiVersionReader("api-version"));
+                option.DefaultApiVersion = new ApiVersion(1, 0);
+                option.AssumeDefaultVersionWhenUnspecified = true;
+            });
+
 
             services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -119,12 +145,21 @@ namespace DND.Web
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = Configuration.GetValue<string>("Settings:AssemblyPrefix") + " Api", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+
                 // Set the comments path for the Swagger JSON and UI.
                 var location = System.Reflection.Assembly.GetEntryAssembly().Location;
                 var directory = System.IO.Path.GetDirectoryName(location);
                 var xmlPath = Path.Combine(directory, "Api.xml");
-
+              
                 c.IncludeXmlComments(xmlPath);
                 c.DescribeAllEnumsAsStrings();
             });
@@ -173,6 +208,7 @@ namespace DND.Web
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API V1");
+                 c.DocExpansion("none");
             });
 
             //http://www.talkingdotnet.com/how-to-enable-gzip-compression-in-asp-net-core/
@@ -213,8 +249,18 @@ namespace DND.Web
 
             app.UseAuthentication();
 
+            app.UseHangfire();
+
             app.UseMvc(routes =>
             {
+                //Angular templates
+                //First matches url pattern and then substitutes in missing values. Always need Controller and Action
+                routes.MapRoute(
+                    name: "Templates",
+                    template: "{feature}/Template/{name}",
+                    defaults: new { controller = "Template", action = "Render" }
+                );
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

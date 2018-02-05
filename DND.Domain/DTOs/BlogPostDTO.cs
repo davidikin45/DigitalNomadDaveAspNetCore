@@ -109,6 +109,7 @@ namespace DND.Domain.DTOs
             MapZoom = 7;
             TagIds = new List<int>();
             Tags = new List<BlogPostTagDTO>();
+            LocationIds = new List<int>();
         }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)

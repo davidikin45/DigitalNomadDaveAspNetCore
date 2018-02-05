@@ -69,7 +69,7 @@ namespace Solution.Base.Helpers
 
         public static string AbsoluteShareUrlSlug(this FileInfo fileinfo)
         {
-            return AbsoluteUrlSlug(fileinfo, 1200, 630, 0, 0, 0, bool.Parse(System.Configuration.ConfigurationManager.AppSettings["ImageWatermarkShareEnabled"]));
+            return AbsoluteUrlSlug(fileinfo, 1200, 630, 0, 0, 0, bool.Parse(ConfigurationManager.AppSettings("ImageWatermarkShareEnabled")));
         }
 
         public static string AbsoluteUrlSlug(this FileInfo fileinfo, int width = 0, int height = 0, int size = 0, int maxWidth = 0, int maxHeight = 0, bool watermark = false)

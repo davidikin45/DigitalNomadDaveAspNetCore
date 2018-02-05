@@ -67,7 +67,7 @@ namespace Solution.Base.Controllers
 
         // GET: Default/Edit/5
         [Route("edit/{id}")]
-        public virtual async Task<ActionResult> Edit(object id)
+        public virtual async Task<ActionResult> Edit(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
             TDto data = null;
@@ -87,7 +87,7 @@ namespace Solution.Base.Controllers
         // POST: Default/Edit/5
         [HttpPost]
         [Route("edit/{id}")]
-        public virtual async Task<ActionResult> Edit(object id, TDto dto)
+        public virtual async Task<ActionResult> Edit(string id, TDto dto)
         {
             //dto.Id = id;
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -112,7 +112,7 @@ namespace Solution.Base.Controllers
 
         // GET: Default/Delete/5
         [Route("delete/{id}")]
-        public virtual async Task<ActionResult> Delete(object id)
+        public virtual async Task<ActionResult> Delete(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
             TDto data = null;
@@ -131,7 +131,7 @@ namespace Solution.Base.Controllers
 
         // POST: Default/Delete/5
         [HttpPost, ActionName("Delete"), Route("delete/{id}")]
-        public virtual async Task<ActionResult> DeleteConfirmed(object id)
+        public virtual async Task<ActionResult> DeleteConfirmed(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 

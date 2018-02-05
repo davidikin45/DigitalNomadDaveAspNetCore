@@ -54,7 +54,7 @@
     </div>
    @await Component.InvokeAsync(nameof(LatestblogPostsViewComponent).Replace("ViewComponent",""))
 </div>
-
+<app-root></app-root>
 <div class="section-white">
     <div class="container">
         <div class="row">
@@ -110,7 +110,7 @@
     </div>
     <div class="row margin-bottom-15">
         <div class="col-md-6 offset-md-3">
-            @(Html.Action<MailingListController>(c => c.Submit()))
+            @await Html.PartialAsync("_MailingList")
         </div>
     </div>
 </div>

@@ -7,6 +7,7 @@ using Solution.Base.Email;
 
 namespace DND.Web.Controllers.Api
 {
+    [ApiVersion("1.0")]
     [Route("api/blog-post")]
     public class BlogPostController : BaseEntityWebApiControllerAuthorize<BlogPostDTO,IBlogPostService>
     {

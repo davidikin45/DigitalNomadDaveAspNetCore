@@ -22,7 +22,7 @@ namespace Solution.Base.Extensions
             where TUser : class
             where TRole : class
         {
-            services.AddIdentity<TUser, TRole>()
+            services.AddIdentity<TUser, TRole>(cfg => cfg.User.RequireUniqueEmail = true)
                 .AddEntityFrameworkStores<TContext>()
                 .AddDefaultTokenProviders();
         }

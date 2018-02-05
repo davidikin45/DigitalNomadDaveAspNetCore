@@ -5,6 +5,7 @@ using System.Net.Http;
 
 namespace Solution.Base.Controllers.Api
 {
+    [ApiVersion("1.0")]
     [Route("api/test")]
     public class TestController : BaseWebApiControllerAuthorize
     {

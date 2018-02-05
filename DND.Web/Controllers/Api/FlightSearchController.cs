@@ -22,6 +22,7 @@ namespace DND.Controllers
 
 
     //cannot begin or end with /
+    [ApiVersion("1.0")]
     [Route("api/flight-search")]
     public class FlightSearchController : BaseWebApiController
     {
@@ -43,6 +44,7 @@ namespace DND.Controllers
 
         //[NoAsyncTimeout]
         [Route("")]
+        [HttpGet]
         [ProducesResponseType(typeof(FlightSearchResponseDTO), 200)]
         public virtual async Task<IActionResult> Search(FlightSearchClientRequestForm requestForm, CancellationToken cancellationToken = default(CancellationToken))
         {

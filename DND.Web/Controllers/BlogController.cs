@@ -2,6 +2,7 @@
 using DND.Domain.Interfaces.Services;
 using DND.Web.Models.BlogPostViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Solution.Base.Controllers;
 using Solution.Base.Helpers;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,12 @@ using System.Threading.Tasks;
 namespace DND.Web.Controllers
 {
     [Route("blog/[action]")]
-    public class BlogController : Controller
+    public class BlogController : BaseController
     {
         private readonly IBlogService _blogService;
 
         public BlogController(IBlogService blogService, IMapper mapper)
+            : base(mapper)
         {
             _blogService = blogService;
         }
@@ -27,7 +29,7 @@ namespace DND.Web.Controllers
         {
             int pageSize = 10;
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(HttpContext.RequestAborted);
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var postsTask = _blogService.BlogPostService.GetPostsAsync(page - 1, pageSize, cts.Token);
             var totalPostsTask = _blogService.BlogPostService.GetTotalPostsAsync(true, cts.Token);
@@ -53,7 +55,7 @@ namespace DND.Web.Controllers
         [Route("archive/{year}/{month}/{title}")]
         public async Task<IActionResult> Post(int year, int month, string title)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(HttpContext.RequestAborted);
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var post = await _blogService.BlogPostService.GetPostAsync(year, month, title, cts.Token);
 
@@ -72,7 +74,7 @@ namespace DND.Web.Controllers
         {
             int pageSize = 10;
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(HttpContext.RequestAborted);
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var postsTask = _blogService.BlogPostService.GetPostsForAuthorAsync(authorSlug, page - 1, pageSize, cts.Token);
             var totalPostsTask = _blogService.BlogPostService.GetTotalPostsForAuthorAsync(authorSlug, cts.Token);
@@ -107,7 +109,7 @@ namespace DND.Web.Controllers
         {
             int pageSize = 10;
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(HttpContext.RequestAborted);
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var postsTask = _blogService.BlogPostService.GetPostsForCategoryAsync(categorySlug, page - 1, pageSize, cts.Token);
             var totalPostsTask = _blogService.BlogPostService.GetTotalPostsForCategoryAsync(categorySlug, cts.Token);
@@ -142,7 +144,7 @@ namespace DND.Web.Controllers
         {
             int pageSize = 10;
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(HttpContext.RequestAborted);
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var postsTask = _blogService.BlogPostService.GetPostsForTagAsync(tagSlug, page - 1, pageSize, cts.Token);
             var totalPostsTask = _blogService.BlogPostService.GetTotalPostsForTagAsync(tagSlug, cts.Token);
@@ -176,7 +178,7 @@ namespace DND.Web.Controllers
         {
             int pageSize = 10;
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(HttpContext.RequestAborted);
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var postsTask = _blogService.BlogPostService.GetPostsForSearchAsync(s, page - 1, pageSize, cts.Token);
             var totalPostsTask = _blogService.BlogPostService.GetTotalPostsForSearchAsync(s, cts.Token);

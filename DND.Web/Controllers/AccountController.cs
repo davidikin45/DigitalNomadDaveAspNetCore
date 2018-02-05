@@ -5,14 +5,19 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Solution.Base.Interfaces.Services;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Web.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     [Route("[controller]/[action]")]
     public class AccountController : Controller
@@ -21,17 +26,20 @@ namespace DND.Web.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _configuration = configuration;
         }
 
         [TempData]

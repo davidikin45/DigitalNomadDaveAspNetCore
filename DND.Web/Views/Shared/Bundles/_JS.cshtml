@@ -4,6 +4,11 @@
         <script src="@script.Replace("wwwroot","~")" asp-append-version="true"></script>
     }
 
+    @foreach (string script in Html.BundleConfig().Bundle("wwwroot/js/angular.app.min.js").inputFiles)
+    {
+        <script src="@script.Replace("wwwroot","~")" asp-append-version="true"></script>
+    }
+
     @foreach (string script in Html.BundleConfig().Bundle("wwwroot/js/site.min.js").inputFiles)
     {
         <script src="@script.Replace("wwwroot","~")" asp-append-version="true" ></script>
@@ -11,5 +16,6 @@
 </environment>
 <environment exclude="Development">
     <script src="~/js/third-party.min.js" asp-append-version="true"></script>
+    <script src="~/js/angular.app.min.js" asp-append-version="true"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>

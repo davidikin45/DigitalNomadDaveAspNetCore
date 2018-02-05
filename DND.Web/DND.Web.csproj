@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
+    <TypeScriptToolsVersion>2.4</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -11,6 +12,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\net47\Api.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\**" />
+    <Content Remove="ClientApp\**" />
+    <EmbeddedResource Remove="ClientApp\**" />
+    <None Remove="ClientApp\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Models\ProjectsViewModels\ProjectsViewModels.cs" />
@@ -31,6 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Controllers\Api\ApiTokenController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="App_Data\ffmpeg\ffmpeg.exe" />
   </ItemGroup>
 
@@ -40,9 +52,11 @@
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.ViewCompilation" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
@@ -57,7 +71,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Shared\Alerts\" />
+    <Folder Include="Scripts_Compile\" />
+    <Folder Include="Views\TravelMap\" />
     <Folder Include="Views\Shared\CRUD\" />
     <Folder Include="Views\Shared\Footer\" />
     <Folder Include="wwwroot\css\" />
@@ -68,6 +83,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Shared\Alerts\_Alerts.cshtml" />
+    <None Include="Views\Shared\Alerts\_Error.cshtml" />
     <None Include="Views\Shared\Components\LatestBlogPosts\Default.cshtml" />
     <None Include="Views\Shared\Components\Sidebar\Default.cshtml" />
     <None Include="Views\Shared\Sidebar\_SidebarAboutMe.cshtml" />
@@ -107,6 +124,7 @@
   </ItemGroup>
 
   <Target Name="MyPreCompileTarget" BeforeTargets="Build">
+    <Exec Command="gulp clean" />
     <Exec Command="gulp less" />
     <Exec Command="gulp scripts" />
     <Exec Command="gulp min" />

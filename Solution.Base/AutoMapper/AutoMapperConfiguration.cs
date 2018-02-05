@@ -53,10 +53,9 @@ namespace Solution.Base.Automapper
         private static void LoadCustomMappings(IMapperConfigurationExpression cfg, IEnumerable<Type> types)
         {
             var maps = (from t in types
-                        from i in t.GetInterfaces()
-                        where typeof(IHaveCustomMappings).IsAssignableFrom(t) &&
+                        where t.GetInterfaces().Count(i => typeof(IHaveCustomMappings).IsAssignableFrom(t) &&
                               !t.IsAbstract &&
-                              !t.IsInterface
+                              !t.IsInterface) > 0
                         select (IHaveCustomMappings)Activator.CreateInstance(t)).ToArray();
 
             foreach (var map in maps)

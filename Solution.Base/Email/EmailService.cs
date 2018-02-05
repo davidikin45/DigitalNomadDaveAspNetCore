@@ -1,4 +1,5 @@
-﻿using Solution.Base.Infrastructure;
+﻿using Hangfire;
+using Solution.Base.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,7 +101,7 @@ namespace Solution.Base.Email
         {
            foreach(EmailMessage message in messages)
             {
-                //BackgroundJob.Enqueue(() => SendEmailMessage(message));
+                BackgroundJob.Enqueue(() => SendEmailMessage(message));
             }
             return true;
         }

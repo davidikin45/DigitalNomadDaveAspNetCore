@@ -6,6 +6,7 @@ using Solution.Base.Controllers.Api;
 using Solution.Base.Email;
 namespace DND.Web.Controllers.Api
 {
+    [ApiVersion("1.0")]
     [Route("api/location")]
     public class LocationController : BaseEntityWebApiControllerAuthorize<LocationDTO, ILocationService>
     {

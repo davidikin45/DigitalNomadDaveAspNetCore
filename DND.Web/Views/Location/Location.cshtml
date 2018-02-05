@@ -19,9 +19,9 @@
 </div>
 <div class="blog-post-body gallery">
     @Html.Partial("_Location", Model, new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { { "HideName", true } })
-    @*<ng-map style="height:400px;" center="@Model.GPSLocation.Latitude.ToString(),@Model.GPSLocation.Longitude.ToString()" zoom="@if (Model.LocationType == DND.Domain.Enums.LocationType.Country){<text>3</text>}else{<text>7</text>}" ng-controller="MapCtrl as vm">
+    <ng-map style="height:400px;" center="@Model.GPSLocation.Latitude.ToString(),@Model.GPSLocation.Longitude.ToString()" zoom="@if (Model.LocationType == DND.Domain.Enums.LocationType.Country){<text>3</text>}else{<text>7</text>}" ng-controller="MapCtrl as vm">
         <marker position="@Model.GPSLocation.Latitude.ToString(),@Model.GPSLocation.Longitude.ToString()" title="@Model.Name" on-click="vm.openGoogleMap(event, '@(Model.PlaceId)')"></marker>
-    </ng-map>*@
+    </ng-map>
 </div>
 <br />
 

@@ -64,6 +64,21 @@
     "sourceMap": false
   },
   {
+    "outputFileName": "wwwroot/js/angular.app.min.js",
+    "inputFiles": [
+      "wwwroot/js/app/app.js",
+      "wwwroot/js/app/site/googleMapDirective.js",
+      "wwwroot/js/app/utility/ArrayExtensions.js",
+      "wwwroot/js/app/utility/bootstrapAlerts.js",
+      "wwwroot/js/app/utility/ParseDateFilter.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
     "outputFileName": "wwwroot/js/site.admin.min.js",
     "inputFiles": [
       "wwwroot/vendor/tinymce/tinymce.js",
@@ -82,10 +97,14 @@
       "wwwroot/vendor/jquery-validation/jquery.validate.js",
       "wwwroot/vendor/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
       "wwwroot/vendor/bootstrap/js/bootstrap.bundle.js",
+      "wwwroot/vendor/angular/angular.js",
+      "wwwroot/vendor/angular-bootstrap/ui-bootstrap-tpls.js",
       "wwwroot/vendor/respond.js/respond.src.js",
+      "wwwroot/vendor/underscore/underscore.js",
       "wwwroot/vendor/instafeed.js/instafeed.js",
       "wwwroot/vendor/infinite-scroll/infinite-scroll.pkgd.js",
-      "wwwroot/vendor/magnific-popup/jquery.magnific-popup.js"
+      "wwwroot/vendor/magnific-popup/jquery.magnific-popup.js",
+      "wwwroot/vendor/ngmap/ng-map.js"
     ],
     "minify": {
       "enabled": true,

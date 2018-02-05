@@ -1,9 +1,9 @@
 ﻿@model MailingListDTO
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Index", "Home"))
 {
     @Html.AntiForgeryToken()
-    
+
     <div>
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group row">

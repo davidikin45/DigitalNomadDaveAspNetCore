@@ -29,22 +29,23 @@ namespace Solution.Base.Helpers
 
             public IHtmlContent BootstrapLabelFor<TProp>(Expression<Func<TModel, TProp>> property)
             {
-                return _htmlHelper.LabelFor(property, new
+                var label = _htmlHelper.LabelFor(property, null, new
                 {
                     @class = "col-md-2 form-control-label col-form-label"
                 });
-            }
 
+                return label;          
+            }
         }
 
         public static IHtmlContent BootstrapLabel(this IHtmlHelper helper, string propertyName)
         {
-            return helper.LabelForModel(propertyName, new
+            var label = helper.Label(propertyName, null, new
             {
                 @class = "col-md-2 form-control-label col-form-label"
             });
+
+            return label;
         }
-
-
     }
 }

@@ -18,6 +18,7 @@ using Solution.Base.Email;
 
 namespace Solution.Base.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public abstract class BaseController : Controller
     {
         public IMapper Mapper { get; }

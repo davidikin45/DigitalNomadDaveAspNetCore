@@ -23,6 +23,7 @@ namespace DND.Controllers
 
 
     //cannot begin or end with /
+    [ApiVersion("1.0")]
     [Route("api/currency")]
     public class CurrencyController : BaseWebApiController
     {
@@ -36,6 +37,7 @@ namespace DND.Controllers
         }
 
         [Route("")]
+        [HttpGet]
         [ProducesResponseType(typeof(List<CurrencyDTO>), 200)]
         public virtual async Task<IActionResult> Get(CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -49,6 +51,7 @@ namespace DND.Controllers
         }
 
         [Route("{id:alpha}")]
+        [HttpGet]
         [ProducesResponseType(typeof(CurrencyDTO), 200)]
         public virtual async Task<IActionResult> Get(string id, CancellationToken cancellationToken = default(CancellationToken))
         {

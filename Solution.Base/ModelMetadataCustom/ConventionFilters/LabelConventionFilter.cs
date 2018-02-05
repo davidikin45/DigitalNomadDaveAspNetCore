@@ -17,6 +17,7 @@ namespace Solution.Base.ModelMetadataCustom.ConventionFilters
             var modelMetadata = context.DisplayMetadata;
             var propertyName = context.Key.Name;
 
+
             if (IsTransformRequired(propertyName, modelMetadata, propertyAttributes))
             {
                 modelMetadata.DisplayName = () => GetStringWithSpaces(propertyName);

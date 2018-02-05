@@ -1,0 +1,15 @@
+﻿@model WebApiPagedResponseDTO<LocationDTO>
+
+@{
+    ViewBag.PageTitle = "Travel Map";
+    ViewBag.FullWidthPage = true;
+    ViewBag.LandingPage = true;
+}
+
+<ng-map class="ng-map-fullscreen" default-style="false" zoom="3" center="23.0328257962019,30.9375" map-type-id="TERRAIN" ng-controller="MapCtrl as vm">
+    @foreach (var item in Model.Data)
+    {
+        <marker position="[@item.GPSLocation.Latitude.ToString(), @item.GPSLocation.Longitude.ToString()]" @if(item.CurrentLocation){<text>animation="Animation.BOUNCE"</text>} title="@item.Name" @if (!string.IsNullOrEmpty(item.UrlSlug)){<text>on-click="vm.openLocation(event,'@item.UrlSlug')"</text>}></marker>
+    }
+</ng-map>
+@*icon="http://maps.google.com/mapfiles/ms/icons/red-dot.png"*@

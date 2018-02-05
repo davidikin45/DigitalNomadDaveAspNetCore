@@ -1,4 +1,4 @@
 ﻿<div class="sidebar-module">
     <h3>Mailing List</h3>
-    @(Html.Action<MailingListController>(c => c.Submit()))
+    @await Html.PartialAsync("_MailingList", new MailingListDTO())
 </div>

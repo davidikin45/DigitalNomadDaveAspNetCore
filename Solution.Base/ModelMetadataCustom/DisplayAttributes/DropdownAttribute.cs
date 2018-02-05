@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Solution.Base.Infrastructure;
 using Solution.Base.Interfaces.Models;
 using Solution.Base.ModelMetadataCustom.Interfaces;
 using System;
@@ -110,17 +111,17 @@ namespace Solution.Base.ModelMetadataCustom.DisplayAttributes
             modelMetadata.AdditionalValues["DropdownOrderByProperty"] = OrderByProperty;
             modelMetadata.AdditionalValues["DropdownOrderByType"] = OrderByType;
 
-            //if (!string.IsNullOrEmpty(FolderFolderId))
-            //{
-            //    PhysicalFolderPath = HttpContext.Current.Server.GetFolderPhysicalPathById(FolderFolderId);
-            //}
+            if (!string.IsNullOrEmpty(FolderFolderId))
+            {
+                PhysicalFolderPath = Server.GetWwwFolderPhysicalPathById(FolderFolderId);
+            }
 
             modelMetadata.AdditionalValues["DropdownPhysicalFolderPath"] = PhysicalFolderPath;
 
-            //if (!string.IsNullOrEmpty(FileFolderId))
-            //{
-            //    PhysicalFilePath = HttpContext.Current.Server.GetFolderPhysicalPathById(FileFolderId);
-            //}
+            if (!string.IsNullOrEmpty(FileFolderId))
+            {
+                PhysicalFilePath = Server.GetWwwFolderPhysicalPathById(FileFolderId);
+            }
 
             modelMetadata.AdditionalValues["DropdownPhysicalFilePath"] = PhysicalFilePath;
             modelMetadata.AdditionalValues["DropdownNullable"] = Nullable;

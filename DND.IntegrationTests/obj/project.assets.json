@@ -5695,7 +5695,7 @@
   },
   "packageFolders": {
     "C:\\Users\\Dave\\.nuget\\packages\\": {},
-    "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
@@ -5710,7 +5710,7 @@
       "outputPath": "C:\\Development\\DigitalNomadDaveAspNetCore\\DND.IntegrationTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\Dave\\AppData\\Roaming\\NuGet\\NuGet.Config",

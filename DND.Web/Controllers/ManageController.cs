@@ -15,6 +15,7 @@ using DND.Web.Extensions;
 
 namespace DND.Web.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     [Route("[controller]/[action]")]
     public class ManageController : Controller

@@ -11,10 +11,13 @@ var gulp = require("gulp"),
     less = require("gulp-less"),
     bundleconfig = require("./bundleconfig.json");
 
-var paths = {
-    scripts: ['Scripts/**/*.js', 'scripts/**/*.ts', 'scripts/**/*.map'],
+var angularPaths = {
+    scripts: ['Scripts_Compile/ClientAppDist/**/*'],
 };
 
+var paths = {
+    scripts: ['Scripts/**/*.js', 'Scripts/**/*.cshtml','Scripts_Compile/Scripts/**/*.js', 'Scripts/**/*.ts', 'Scripts_Compile/Scripts/**/*.map'],
+};
 
 var regex = {
     less: /\.less$/,
@@ -104,6 +107,21 @@ var deps = {
     "jquery-validation-unobtrusive": {
         "jquery.validate.unobtrusive.js": ""
     },
+    "angular": {
+        "angular.js": ""
+    },
+    "angular-bootstrap": {
+        "ui-bootstrap-tpls.js": ""
+    },
+    "angular-animate": {
+        "angular-animate.js": ""
+    },
+    "ngmap": {
+        "build/scripts/ng-map.js": ""
+    },
+    "underscore": {
+        "underscore.js": ""
+    },
     "bootstrap": {
         "dist/**/*": ""
     },
@@ -137,6 +155,7 @@ var deps = {
 gulp.task("scripts", function () {
 
     gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js'));
+    //gulp.src(angularPaths.scripts).pipe(gulp.dest('wwwroot/js/clientapp'));
 
     var streams = [];
 

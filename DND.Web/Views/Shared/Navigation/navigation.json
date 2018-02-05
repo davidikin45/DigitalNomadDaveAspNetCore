@@ -20,6 +20,11 @@
     "LinkText": "BUCKET LIST"
   },
   {
+    "Controller": "TravelMap",
+    "Action": "Index",
+    "LinkText": "TRAVEL MAP"
+  },
+  {
     "Controller": "Home",
     "Action": "About",
     "LinkText": "ABOUT"

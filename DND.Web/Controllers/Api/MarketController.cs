@@ -24,6 +24,7 @@ namespace DND.Controllers
 
 
     //cannot begin or end with /
+    [ApiVersion("1.0")]
     [Route("api/market")]
     public class MarketController : BaseWebApiController
     {
@@ -57,6 +58,7 @@ namespace DND.Controllers
         }
 
         [Route("{id:alpha}")]
+        [HttpGet]
         [ProducesResponseType(typeof(MarketDTO), 200)]
         public virtual async Task<IActionResult> Get(string id, CancellationToken cancellationToken = default(CancellationToken))
         {

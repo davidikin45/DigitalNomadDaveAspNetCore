@@ -21,6 +21,7 @@ using Solution.Base.Helpers;
 using System.IO;
 using DND.Domain.Constants;
 using Solution.Base.Middleware;
+using Solution.Base.Alerts;
 
 namespace DND.Web.Controllers
 {
@@ -31,14 +32,17 @@ namespace DND.Web.Controllers
         private IBlogService _blogService;
         private ILocationService _locationService;
         private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
+        private readonly IMailingListService _mailingListService;
 
-        public HomeController(IBlogService blogService, ILocationService locationService, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper, IEmailService emailService)
+        public HomeController(IBlogService blogService, ILocationService locationService, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper, IEmailService emailService, IMailingListService mailingListService)
             : base(mapper, emailService)
         {
             if (blogService == null) throw new ArgumentNullException("blogService");
             _blogService = blogService;
             _locationService = locationService;
             _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            _mailingListService = mailingListService;
+
         }
 
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
@@ -58,6 +62,26 @@ namespace DND.Web.Controllers
                 }
             }
             return View();
+        }
+
+        [HttpPost]
+        [Route("")]
+        public IActionResult Index(MailingListDTO dto)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _mailingListService.Create(dto);
+                    return View("Index").WithSuccess(this, "Thankyou, your subscription was successful.");
+                }
+                catch (Exception ex)
+                {
+                    HandleUpdateException(ex);
+                }
+            }
+            //error
+            return View("Index",dto);
         }
 
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Solution.Base.Hangfire;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,5 +29,23 @@ namespace Solution.Base.Middleware
         {
             return builder.UseMiddleware<ResponseCachingCustomMiddleware>();
         }
+
+        public static IServiceCollection AddHangfire(this IServiceCollection services, string connectionString)
+        {
+            return services.AddHangfire(config => config.UseSqlServerStorage(connectionString));
+        }
+
+        public static IApplicationBuilder UseHangfire(this IApplicationBuilder builder)
+        {
+
+            builder.UseHangfireDashboard("/admin/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorizationfilter() },
+                AppPath = "/admin"
+            });
+            builder.UseHangfireServer();
+            return builder;
+        }
+
     }
 }

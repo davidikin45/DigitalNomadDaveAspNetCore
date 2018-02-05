@@ -24,6 +24,7 @@ namespace DND.Controllers
 
 
     //cannot begin or end with /
+    [ApiVersion("1.0")]
     [Route("api/locale")]
     public class LocaleController : BaseWebApiController
     {
@@ -36,6 +37,7 @@ namespace DND.Controllers
         }
 
         [Route("")]
+        [HttpGet]
         [ProducesResponseType(typeof(IList<LocaleDTO>), 200)]
         public virtual async Task<IActionResult> Get(CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -49,6 +51,7 @@ namespace DND.Controllers
         }
 
         [Route("{id}")]
+        [HttpGet]
         [ProducesResponseType(typeof(LocaleDTO), 200)]
         public virtual async Task<IActionResult> Get(string id, CancellationToken cancellationToken = default(CancellationToken))
         {

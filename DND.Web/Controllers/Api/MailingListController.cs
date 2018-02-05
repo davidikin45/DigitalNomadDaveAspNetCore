@@ -7,6 +7,7 @@ using Solution.Base.Email;
 
 namespace DND.Web.Controllers.Api
 {
+    [ApiVersion("1.0")]
     [Route("api/mailing-list")]
     public class MailingListController : BaseEntityWebApiControllerAuthorize<MailingListDTO, IMailingListService>
     {
