@@ -112,7 +112,7 @@ namespace Marvin.Cache.Headers
             // otherwise we are unable to read it out (and thus cannot generate strong etags
             // correctly)
             // cfr: http://stackoverflow.com/questions/35458737/implement-http-cache-etag-in-asp-net-core-web-api
-            
+
             using (var buffer = new MemoryStream())
             {
                 // replace the context response with a temporary buffer
@@ -138,21 +138,24 @@ namespace Marvin.Cache.Headers
 
                 // reset the buffer, read out the contents & copy it to the original stream.  This
                 // will ensure our changes to the buffer are applied to the original stream.   
-                buffer.Seek(0, SeekOrigin.Begin);
-                var reader = new StreamReader(buffer);
-                using (var bufferReader = new StreamReader(buffer))
+                if (httpContext.Response.StatusCode != 304)
                 {
-                    var body = await bufferReader.ReadToEndAsync();
-
-                    // reset to the start of the stream
                     buffer.Seek(0, SeekOrigin.Begin);
+                    var reader = new StreamReader(buffer);
+                    using (var bufferReader = new StreamReader(buffer))
+                    {
+                        var body = await bufferReader.ReadToEndAsync();
 
-                    // Copy the buffer content to the original stream.
-                    // This invokes Response.OnStarting (not used)  
-                    await buffer.CopyToAsync(stream);
+                        // reset to the start of the stream
+                        buffer.Seek(0, SeekOrigin.Begin);
 
-                    // set the response body back to the original stream
-                    httpContext.Response.Body = stream;
+                        // Copy the buffer content to the original stream.
+                        // This invokes Response.OnStarting (not used)  
+                        await buffer.CopyToAsync(stream);
+
+                        // set the response body back to the original stream
+                        httpContext.Response.Body = stream;
+                    }
                 }
             }
         }

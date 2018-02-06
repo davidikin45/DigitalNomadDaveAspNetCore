@@ -40,6 +40,7 @@ namespace DND.Web
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseKestrel(c => c.AddServerHeader = false)
                 .UseAutofac()
                 .UseStartup<Startup>()
                 .Build();

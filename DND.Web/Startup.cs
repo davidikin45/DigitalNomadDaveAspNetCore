@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using DND.Domain;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
 using DND.Web.Services;
@@ -8,15 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.AspNetCore.ResponseCaching;
-using Microsoft.AspNetCore.ResponseCaching.Internal;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -29,7 +25,6 @@ using Solution.Base.Implementation.Persistance;
 using Solution.Base.Infrastructure;
 using Solution.Base.Interfaces.Services;
 using Solution.Base.Middleware;
-using Solution.Base.Routing;
 using Solution.Base.Tasks;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -113,6 +108,7 @@ namespace DND.Web
                     //VaryByQueryKeys = "", Only used for server side caching
                     Duration = 60 * 60 * 24, // 24 hour,
                     Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
+                    NoStore = false
                 });
 
                 options.CacheProfiles.Add("Cache24HourParams", new CacheProfile()
@@ -121,18 +117,32 @@ namespace DND.Web
                     VaryByQueryKeys = new string[] { "*" }, //Only used for server side caching
                     Duration = 60 * 60 * 24, // 24 hour,
                     Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
+                    NoStore = false
                 });
+
+                options.ReturnHttpNotAcceptable = true;
+
+                options.FormatterMappings.SetMediaTypeMappingForFormat(
+                                           "xml", "application/xml");
+                //Allow null 200 responses
+                //options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+
+                //XML
+                //options.InputFormatters.Add(new XmlSerializerInputFormatter());
+                //options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
 
                 //Dashed Routing Convention
                 //options.Conventions.Add(new DashedRoutingConvention(defaultControllerName: "Home", defaultActionName: "Index"));
             })
+            .AddXmlSerializerFormatters() //XML Opt out. Contract Serializer is Opt in
             .AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices()
             .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddApiVersioning(option =>
             {
                 option.ReportApiVersions = true;
-                option.ApiVersionReader = ApiVersionReader.Combine(new QueryStringApiVersionReader("api-version"), new HeaderApiVersionReader("api-version"));
+                //Header then QueryString is consistent with how Accept header/FormatFilter works.
+                option.ApiVersionReader = ApiVersionReader.Combine(new HeaderApiVersionReader("api-version"), new QueryStringApiVersionReader("api-version"));
                 option.DefaultApiVersion = new ApiVersion(1, 0);
                 option.AssumeDefaultVersionWhenUnspecified = true;
             });
@@ -162,6 +172,8 @@ namespace DND.Web
               
                 c.IncludeXmlComments(xmlPath);
                 c.DescribeAllEnumsAsStrings();
+
+                c.DescribeAllParametersInCamelCase();
             });
 
         }
@@ -208,9 +220,13 @@ namespace DND.Web
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API V1");
-                 c.DocExpansion("none");
+                c.DocExpansion("none");
             });
 
+
+            //Use Response Compression Middleware when you're:
+            //Unable to use the following server-based compression technologies:
+            //IIS Dynamic Compression module
             //http://www.talkingdotnet.com/how-to-enable-gzip-compression-in-asp-net-core/
             // General
             //"text/plain",
@@ -223,7 +239,7 @@ namespace DND.Web
             //"text/xml",
             //"application/json",
             //"text/json",
-            app.UseResponseCompression();
+            //app.UseResponseCompression();
 
             //This is Etags
             app.UseHttpCacheHeaders();
@@ -233,6 +249,7 @@ namespace DND.Web
             //Unfortunately, the built-in response caching middleware makes this very difficult. 
             //Firstly, the same cache duration is used for both client and server caches. Secondly, currently there is no easy way to invalidate cache entries.
             //app.UseResponseCaching();
+            //Request Header Cache-Control: max-age:0 or no-cache will bypass Response Caching. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
             app.UseResponseCachingCustom(); //Allows Invalidation
 
             app.MapWhen(

@@ -6,21 +6,20 @@
     ViewBag.Blog = true;
 }
 
-@using (Html.BeginForm(Html.Action(), Html.Controller(), FormMethod.Get, new { @class = "form-inline" }))
-{
+<form asp-controller="@Html.Controller()" asp-action="@Html.Action()" asp-antiforgery="false" method="get" class="form-inline">
     <div class="input-group input-group-full-width mb-2">
         @Html.TextBox("search", ViewBag.Search as string, new { placeholder = "Search", @class = "form-control" })
         <span class="input-group-btn">
             <input type="submit" value="Search" class="btn btn-primary" />
         </span>
     </div>
-}
+</form>
 
 <div id="galleries" class="card-columns card-columns-sm-1 card-columns-md-2 card-columns-lg-2 card-columns-xl-2">
 
     @if ((string.IsNullOrEmpty(Model.Search) || "instagram".Contains(Model.Search.ToLower())) && Model.Page == 1)
     {
-        <div class="card card-inverse" id="instagram-album" style="display:inline-block">     
+        <div class="card card-inverse" id="instagram-album" style="display:inline-block">
             <a class="card-img-top" title="Instagram" href="@(Url.Action("Gallery", new { name = "instagram" }))">
                 <div class="card-img-overlay card-img-overlay-hover d-flex">
                     <div class="my-auto mx-auto text-center">
@@ -34,8 +33,8 @@
     @foreach (var album in Model.Data)
     {
         <div class="card card-inverse" style="display:inline-block">
-            
-            @{ 
+
+            @{
                 var mainPhotoVideoText = album.MainPhotoOrVideo();
                 if (mainPhotoVideoText == null)
                 {
@@ -43,7 +42,7 @@
                 }
             }
             <img class="card-img-top" alt="@album.Name.PascalCase().GetStringWithSpacesAndFirstLetterUpper()" src="@mainPhotoVideoText.VirtualPathSlugOrUrl(640, 640)" />
-            <a class="card-img-top" title="@album.Name.PascalCase().GetStringWithSpacesAndFirstLetterUpper()" href="@(Url.Action("Gallery", new { name = album.Name.ToSlug() }))">            
+            <a class="card-img-top" title="@album.Name.PascalCase().GetStringWithSpacesAndFirstLetterUpper()" href="@(Url.Action("Gallery", new { name = album.Name.ToSlug() }))">
                 <div class="card-img-overlay card-img-overlay-hover d-flex">
                     <div class="my-auto mx-auto text-center">
                         <h4 class="card-title">@album.Name.PascalCase().GetStringWithSpacesAndFirstLetterUpper()</h4>
@@ -52,13 +51,13 @@
             </a>
         </div>
 
-    }
+                }
 </div>
 
 @{Func<int, string> link = pageIndex => Url.Action("Index", new { page = pageIndex, pageSize = Model.PageSize, orderColumn = Model.OrderColumn, orderType = Model.OrderType, search = Model.Search });}
 @HtmlHelperExtensions.BootstrapPager(Html, Model.Page, link, Model.TotalItems, Model.PageSize, 5)
 
-@if((string.IsNullOrEmpty(Model.Search) || "instagram".Contains(Model.Search.ToLower())) && Model.Page == 1)
+@if ((string.IsNullOrEmpty(Model.Search) || "instagram".Contains(Model.Search.ToLower())) && Model.Page == 1)
 {
     @section scripts {
         <script type="text/javascript">

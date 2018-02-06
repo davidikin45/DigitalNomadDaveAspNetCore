@@ -6,15 +6,14 @@
     ViewBag.Blog = true;
 }
 
-@using (Html.BeginForm(Html.Action(), Html.Controller(), FormMethod.Get, new { @class = "form-inline" }))
-{
+<form asp-controller="@Html.Controller()" asp-action="@Html.Action()" asp-antiforgery="false" method="get" class="form-inline">
     <div class="input-group input-group-full-width mb-2">
         @Html.TextBox("search", ViewBag.Search as string, new { placeholder = "Search", @class = "form-control" })
         <span class="input-group-btn">
             <input type="submit" value="Search" class="btn btn-primary" />
         </span>
     </div>
-}
+</form>
 
 <div class="card-columns card-columns-sm-1 card-columns-md-2 card-columns-lg-2 card-columns-xl-2">
     @foreach (var location in Model.Data.Where(l => !string.IsNullOrEmpty(l.Album) && FileHelper.GetDirectoryInfo(DND.Domain.Constants.Folders.Gallery, l.Album) != null))

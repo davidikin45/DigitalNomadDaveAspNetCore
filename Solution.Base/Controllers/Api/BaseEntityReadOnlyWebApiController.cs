@@ -36,10 +36,12 @@ namespace Solution.Base.Controllers.Api
             Service = service;
         }
 
-        [Route("{id}"), Route("get/{id}")]
+        //http://jakeydocs.readthedocs.io/en/latest/mvc/models/formatting.html
+        [FormatFilter]
+        [Route("{id}"), Route("get/{id}"),Route("{id}.{format}"), Route("get/{id}.{format}")]
         [HttpGet]
-        [ProducesResponseType(typeof(IBaseEntity),200)]
-        public virtual async Task<IActionResult> Get(int id)
+        [ProducesResponseType(typeof(object),200)]
+        public virtual async Task<IActionResult> Get(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -47,9 +49,11 @@ namespace Solution.Base.Controllers.Api
            return Success(response);
         }
 
+        [FormatFilter]
         [Route("get-all")]
+        [Route("get-all.{format}")]
         [HttpGet]
-        [ProducesResponseType(typeof(List<IBaseEntity>), 200)]
+        [ProducesResponseType(typeof(List<object>), 200)]
         public virtual async Task<IActionResult> GetAll()
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -61,9 +65,11 @@ namespace Solution.Base.Controllers.Api
             return Success(list);
         }
 
+        [FormatFilter]
         [Route("get-paged")]
+        [Route("get-paged.{format}")]
         [HttpPost]
-        [ProducesResponseType(typeof(WebApiPagedResponseDTO<IBaseEntity>), 200)]
+        [ProducesResponseType(typeof(WebApiPagedResponseDTO<object>), 200)]
         public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDTO jqParams)
         {
             if (string.IsNullOrEmpty(jqParams.OrderBy))
@@ -91,10 +97,11 @@ namespace Solution.Base.Controllers.Api
             return Success(response);
         }
 
-
+        [FormatFilter]
         [Route("get-all-paged")]
+        [Route("get-all-paged.{format}")]
         [HttpGet]
-        [ProducesResponseType(typeof(WebApiPagedResponseDTO<IBaseEntity>), 200)]
+        [ProducesResponseType(typeof(WebApiPagedResponseDTO<object>), 200)]
         public virtual async Task<IActionResult> GetAllPaged()
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -123,7 +130,9 @@ namespace Solution.Base.Controllers.Api
         /// Tagses the HTML.
         /// </summary>
         /// <returns></returns>
+        [FormatFilter]
         [Route("get-all-html")]
+        [Route("get-all-html.{format}")]
         [HttpGet]
         [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> GetAllHtml()

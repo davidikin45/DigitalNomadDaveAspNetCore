@@ -40,6 +40,8 @@ namespace DND.Web.Controllers.Api
             _configuration = configuration;
         }
 
+
+        //[FromBody]
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
