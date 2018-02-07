@@ -38,7 +38,7 @@
 
             if (mainPhoto != null)
             {
-                <div class="carousel-item @if (first){<text>active</text>}">
+                <div class="carousel-item @(@first ? "active" : "")">
                     @*@if (isVideo)
                         {
                             <video src="@mainPhoto.VirtualPathSlug()" poster="@mainPhoto.VirtualPathSlug(1600)" controls preload="none"></video>
@@ -47,7 +47,7 @@
                         {
                             <img src="@mainPhoto.VirtualPathSlug(1600)" alt="@post.Title">
                         }*@
-                    <img src="@mainPhoto.VirtualPathSlug(1908, 900)" alt="@title">
+                    <img src="@mainPhoto.VirtualPathSlug(1908, 900)" class="d-block w-100" alt="@title">
                     <div class="container">
                         <div class="hidden-xs-down carousel-caption d-none d-block text-right">
                             <h1>@title</h1>
@@ -94,7 +94,7 @@
 
             if (mainPhoto != null)
             {
-                <div class="carousel-item @if (first){<text>active</text>}">
+                <div class="carousel-item @(@first ? "active" : "")">
 
                     @*@if (isVideo)
                         {
@@ -138,7 +138,7 @@
 
                 if (mainPhoto != null)
                 {
-                <div class="carousel-item @if (first){<text>active</text>}">
+                <div class="carousel-item @(@first ? "active" : "")">
                     @*@if (isVideo)
                         {
                             <video style="height:310px" src="@mainPhoto.VirtualPathSlug()" poster="@mainPhoto.VirtualPathSlug(1600)" controls preload="none"></video>
@@ -155,11 +155,11 @@
                             {
                                 <p>@description</p>
                             }
-                            <p><a class="btn btn-lg btn-primary" @if (openInNewWindow) { <text> target="_blank" </text> } href="@link" title="@title" role="button">@linkText</a></p>
+                            <p><a class="btn btn-lg btn-primary" @(@openInNewWindow ? "target='_blank'" : "") href="@link" title="@title" role="button">@linkText</a></p>
                         </div>
                         <div class="hidden-sm-up carousel-caption d-none d-block text-right" style="bottom:0">
                             <h4>@title</h4>
-                            <p><a class="btn btn-sm btn-primary" @if (openInNewWindow) { <text> target="_blank" </text> } href="@link" title="@title" role="button">@linkText</a></p>
+                            <p><a class="btn btn-sm btn-primary" @(@openInNewWindow ? "target='_blank'" : "") href="@link" title="@title" role="button">@linkText</a></p>
                         </div>
                     </div>
                 </div>

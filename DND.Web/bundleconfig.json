@@ -104,7 +104,7 @@
       "wwwroot/vendor/instafeed.js/instafeed.js",
       "wwwroot/vendor/infinite-scroll/infinite-scroll.pkgd.js",
       "wwwroot/vendor/magnific-popup/jquery.magnific-popup.js",
-      "wwwroot/vendor/ngmap/ng-map.js"
+      "wwwroot/vendor/ngmap/ng-map.min.js"
     ],
     "minify": {
       "enabled": true,

@@ -40,11 +40,12 @@ namespace DND.EFPersistance.Identity.Initializers
 
             //Create the default Admin account and apply the Administrator role
             string user = "admin";
+            string email = "davidikin45@gmail.com";
 
             if (_userManager.FindByNameAsync(user).Result == null)
             {
                 string password = "PAssword12!";
-                var result =  _userManager.CreateAsync(new User { UserName = user, Email = user, EmailConfirmed = true }, password).Result;
+                var result =  _userManager.CreateAsync(new User { UserName = user, Email = email, EmailConfirmed = true }, password).Result;
                 var result2 = _userManager.AddToRoleAsync(_userManager.FindByNameAsync(user).Result, "admin").Result;
             }
 

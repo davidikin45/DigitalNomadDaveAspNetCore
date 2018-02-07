@@ -117,7 +117,8 @@ var deps = {
         "angular-animate.js": ""
     },
     "ngmap": {
-        "build/scripts/ng-map.js": ""
+        "build/scripts/ng-map.js": "",
+        "build/scripts/ng-map.min.js": ""
     },
     "underscore": {
         "underscore.js": ""

@@ -5,7 +5,7 @@
         if (window.alerts) {
             window.alerts.error("There was a problem with your last action.  Please reload the page, then try again.");
         } else {
-            alert("Something serious went wrong.  Please close out of Fail Tracker, then try again.");
+            alert("Something serious went wrong.  Please close browser, then try again.");
         }
     };
 
