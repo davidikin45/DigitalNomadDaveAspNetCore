@@ -51,6 +51,29 @@ namespace Solution.Base.Implementation.DTOs
         public string OrderType
         { get; set; }
 
+        public string PreviousPageLink
+        { get; set; }
+
+        public string NextPageLink
+        { get; set; }
+
+        public bool HasPrevious
+        {
+            get
+            {
+                return (Page > 1);
+            }
+        }
+
+        public bool HasNext
+        {
+            get
+            {
+                return (Page < Total);
+            }
+        }
+
+
         [JsonIgnore]
         public int Pages
         {

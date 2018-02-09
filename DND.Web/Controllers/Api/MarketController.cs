@@ -30,8 +30,8 @@ namespace DND.Controllers
     {
         private readonly IMarketService _marketService;
 
-        public MarketController(IMarketService marketService, IMapper mapper)
-             : base(mapper)
+        public MarketController(IMarketService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+             : base(mapper, emailService, urlHelper)
         {
             _marketService = marketService;
         }

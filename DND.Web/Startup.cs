@@ -173,6 +173,17 @@ namespace DND.Web
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 
+            //Url Helper for creating API resource links
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper, UrlHelper>(factory =>
+            {
+                var actionContext = factory.GetService<IActionContextAccessor>().ActionContext;
+                return new UrlHelper(actionContext);
+            });
+
+            //Used for returning only certain fields in API
+            services.AddTransient<ITypeHelperService, ITypeHelperService>();
+
             services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton(Configuration);
@@ -291,6 +302,8 @@ namespace DND.Web
             //API rate limiting
             //app.UseIpRateLimiting();
 
+
+            //Unsure about ETag and Response caching order. The pluralsight video restful api building has them the other way around.
             //This is Etags *
             app.UseHttpCacheHeaders();
 

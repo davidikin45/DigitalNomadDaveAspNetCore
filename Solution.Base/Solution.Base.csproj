@@ -517,6 +517,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionResults\BetterObjectResult.cs" />
     <Compile Include="ActionResults\BetterJsonResultcs.cs" />
     <Compile Include="ActionResults\HTMLActionResult.cs" />
     <Compile Include="ActionResults\RSSActionResult.cs" />
@@ -564,8 +565,10 @@
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Email\IEmailService.cs" />
     <Compile Include="Email\SmtpConfiguration.cs" />
+    <Compile Include="Enums\ResourceUriType.cs" />
     <Compile Include="Enums\CropType.cs" />
     <Compile Include="Extensions\AutomapperExtensions.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\ConfigurationExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\DateExtensions.cs" />
@@ -641,6 +644,7 @@
     <Compile Include="Implementation\Services\BaseBusinessService.cs" />
     <Compile Include="Implementation\Services\BaseEntityBusinessService.cs" />
     <Compile Include="Implementation\Services\BaseEntityReadOnlyBusinessService.cs" />
+    <Compile Include="Implementation\Services\TypeHelperService.cs" />
     <Compile Include="Implementation\UnitOfWork\BaseAmbientDbContextLocator.cs" />
     <Compile Include="Implementation\UnitOfWork\BaseAmbientUnitOfWorkSuppressor.cs" />
     <Compile Include="Implementation\UnitOfWork\BaseDbContextCollection.cs" />
@@ -692,6 +696,7 @@
     <Compile Include="Interfaces\Services\IBaseEntityBusinessService.cs" />
     <Compile Include="Interfaces\Services\IBaseEntityReadOnlyBusinessService.cs" />
     <Compile Include="Interfaces\Services\IEmailSender.cs" />
+    <Compile Include="Interfaces\Services\ITypeHelperService.cs" />
     <Compile Include="Interfaces\UnitOfWork\BaseUnitOfWorkScopeOption.cs" />
     <Compile Include="Interfaces\UnitOfWork\IBaseAmbientDbContextLocator.cs" />
     <Compile Include="Interfaces\UnitOfWork\IBaseUnitOfWorkContextCollection.cs" />

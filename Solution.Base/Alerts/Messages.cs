@@ -19,5 +19,7 @@ namespace Solution.Base.Alerts
 
         public const string NotFound = "Object not found.";
 
+        public const string FieldsInvalid = "One or more of the fields are invalid.";
+
     }
 }

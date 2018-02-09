@@ -4,6 +4,7 @@ using DND.Domain.Interfaces.Services;
 using DND.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
+using Solution.Base.Email;
 using Solution.Base.Helpers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,8 +29,8 @@ namespace DND.Controllers
     {
         private readonly IFlightSearchService _flightSearchService;
 
-        public FlightSearchController(IFlightSearchService flightSearchService, IMapper mapper)
-             : base(mapper)
+        public FlightSearchController(IFlightSearchService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+            : base(mapper, emailService, urlHelper)
         {
 
             _flightSearchService = flightSearchService;

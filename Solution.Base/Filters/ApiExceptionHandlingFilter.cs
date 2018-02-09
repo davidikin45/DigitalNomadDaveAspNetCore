@@ -31,7 +31,7 @@ namespace Solution.Base.Filters
 
         private void HandleEexception(ExceptionContext context)
         {
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+            int statusCode = (int)HttpStatusCode.InternalServerError;
             WebApiMessage messageObject = null;
 
             if (context.Exception is ValidationErrors)
@@ -46,7 +46,7 @@ namespace Solution.Base.Filters
                 _logger.LogInformation(Messages.RequestInvalid);
 
                 messageObject = WebApiMessage.CreateWebApiMessage(Messages.RequestInvalid, errorList);
-                statusCode = HttpStatusCode.BadRequest;
+                statusCode = 422;
             }
             else if (context.Exception is OperationCanceledException)
             {
@@ -57,7 +57,7 @@ namespace Solution.Base.Filters
                 _logger.LogInformation(Messages.RequestCancelled);
 
                 messageObject = WebApiMessage.CreateWebApiMessage(Messages.RequestCancelled, errorList);
-                statusCode = HttpStatusCode.BadRequest;
+                statusCode = (int)HttpStatusCode.BadRequest;
             }
             else
             {
@@ -74,7 +74,7 @@ namespace Solution.Base.Filters
                 _logger.LogInformation(Messages.UnknownError);
 
                 messageObject = WebApiMessage.CreateWebApiMessage(Messages.UnknownError, errorList);
-                statusCode = HttpStatusCode.InternalServerError;
+                statusCode = (int)HttpStatusCode.InternalServerError;
             }
 
             context.ExceptionHandled = true;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Email;
 using Solution.Base.Interfaces.Models;
 using Solution.Base.Interfaces.Services;
@@ -25,8 +26,8 @@ namespace Solution.Base.Controllers.Api
         where IEntityService : IBaseEntityService<TDto>
     {   
 
-        public BaseEntityWebApiControllerAuthorize(IEntityService service, IMapper mapper = null, IEmailService emailService = null)
-        : base(service, mapper , emailService)
+        public BaseEntityWebApiControllerAuthorize(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)
+        : base(service, mapper , emailService, urlHelper, typeHelperService)
         {
           
         }

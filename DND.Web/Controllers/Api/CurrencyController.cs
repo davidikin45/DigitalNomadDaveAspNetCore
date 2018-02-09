@@ -3,6 +3,7 @@ using DND.Domain.DTOs;
 using DND.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
+using Solution.Base.Email;
 using Solution.Base.Helpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +30,8 @@ namespace DND.Controllers
     {
         private readonly ICurrencyService _currencyService;
 
-        public CurrencyController(ICurrencyService currencyService, IMapper mapper)
-             : base(mapper)
+        public CurrencyController(ICurrencyService currencyService, IMapper mapper, IEmailService emailService = null, IUrlHelper urlHelper = null)
+             : base(mapper, emailService, urlHelper)
         {
 
             _currencyService = currencyService;

@@ -32,8 +32,9 @@ namespace DND.Web.Controllers.Api
             SignInManager<User> signInManager,
             IConfiguration configuration,
             IMapper mapper, 
-            IEmailService emailService)
-            :base(mapper, emailService)
+            IEmailService emailService,
+            IUrlHelper urlHelper)
+            :base(mapper, emailService, urlHelper)
         {
             _userManager = userManager;
             _signInManager = signInManager;

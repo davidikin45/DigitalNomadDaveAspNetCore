@@ -26,8 +26,8 @@ namespace Solution.Base.Controllers.Api
         where IEntityService : IBaseEntityService<TDto>
     {   
 
-        public BaseEntityWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null)
-        : base(service, mapper, emailService)
+        public BaseEntityWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)
+        : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
           
         }
@@ -42,13 +42,20 @@ namespace Solution.Base.Controllers.Api
                 return ApiErrorMessage(Messages.RequestInvalid);
             }
 
+            if(!ModelState.IsValid)
+            {
+                return ValidationErrors(ModelState);
+            }
+
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var createdDto = await Service.CreateAsync(dto, cts.Token);
-            return ApiCreatedSuccessMessage(Messages.AddSuccessful, createdDto.Id);
-
             //return CreatedAtRoute("", new { id = createdDto.Id }, createdDto);
+            //return ApiSuccessMessage(Messages.AddSuccessful, createdDto.Id);
+            return Success(createdDto);
         }
+
+
 
         [Route("update")]
         [HttpPost]
@@ -60,10 +67,16 @@ namespace Solution.Base.Controllers.Api
                 return ApiErrorMessage(Messages.RequestInvalid);
             }
 
+            if (!ModelState.IsValid)
+            {
+                return ValidationErrors(ModelState);
+            }
+
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             await Service.UpdateAsync(dto, cts.Token);
-            return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
+            //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
+            return Success(dto);
         }
 
         [Route("{id}")]
@@ -85,11 +98,19 @@ namespace Solution.Base.Controllers.Api
                 return ApiNotFoundErrorMessage(Messages.NotFound);
             }
 
-            dtoPatch.ApplyTo(dto);
+            dtoPatch.ApplyTo(dto, ModelState);
+
+            TryValidateModel(dto);
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationErrors(ModelState);
+            }
 
             await Service.UpdateAsync(dto, cts.Token);
            
-            return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
+            //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
+            return Success(dto);
         }
 
         [Route("delete")]
@@ -105,7 +126,8 @@ namespace Solution.Base.Controllers.Api
             }
 
             await Service.DeleteAsync(id, cts.Token);
-            return ApiSuccessMessage(Messages.DeleteSuccessful, id);
+            //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
+            return NoContent();
         }
 
     }

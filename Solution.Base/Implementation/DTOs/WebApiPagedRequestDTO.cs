@@ -47,6 +47,12 @@ namespace Solution.Base.Implementation.DTOs
         public string Sord
         { get; set; }
 
+        public string Search
+        { get; set; }
+
+        public string Fields
+        { get; set; }
+
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             yield break;

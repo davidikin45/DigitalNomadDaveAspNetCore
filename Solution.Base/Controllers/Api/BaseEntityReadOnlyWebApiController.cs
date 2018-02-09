@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using HtmlTags;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Solution.Base.Alerts;
 using Solution.Base.Email;
+using Solution.Base.Enums;
 using Solution.Base.Extensions;
 using Solution.Base.Helpers;
 using Solution.Base.Implementation.DTOs;
@@ -37,11 +39,13 @@ namespace Solution.Base.Controllers.Api
         where IEntityService : IBaseEntityService<TDto>
     {   
         public IEntityService Service { get; private set; }
+        public ITypeHelperService TypeHelperService { get; private set; }
 
-        public BaseEntityReadOnlyWebApiController(IEntityService service, IMapper mapper = null,  IEmailService emailService = null)
-        : base(mapper, emailService)
+        public BaseEntityReadOnlyWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService =null)
+        : base(mapper, emailService, urlHelper)
         {
             Service = service;
+            TypeHelperService = typeHelperService;
         }
 
         //http://jakeydocs.readthedocs.io/en/latest/mvc/models/formatting.html
@@ -49,8 +53,12 @@ namespace Solution.Base.Controllers.Api
         [Route("{id}"), Route("get/{id}"),Route("{id}.{format}"), Route("get/{id}.{format}")]
         [HttpGet]
         [ProducesResponseType(typeof(object),200)]
-        public virtual async Task<IActionResult> Get(string id)
+        public virtual async Task<IActionResult> Get(string id, [FromQuery] string fields)
         {
+            if(!TypeHelperService.TypeHasProperties<TDto>(fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -61,7 +69,9 @@ namespace Solution.Base.Controllers.Api
                 return ApiNotFoundErrorMessage(Messages.NotFound);
             }
 
-           return Success(response);
+           var shapedData = response.ShapeData(fields);
+
+           return Success(shapedData);
         }
 
         [FormatFilter]
@@ -109,11 +119,17 @@ namespace Solution.Base.Controllers.Api
         [Route("get-paged")]
         [Route("get-paged.{format}")]
         [HttpPost]
+        [HttpHead]
         [ProducesResponseType(typeof(WebApiPagedResponseDTO<object>), 200)]
         public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDTO jqParams)
         {
             if (string.IsNullOrEmpty(jqParams.OrderBy))
                 jqParams.OrderBy = "id";
+
+            if(!TypeHelperService.TypeHasProperties<TDto>(jqParams.Fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -126,15 +142,76 @@ namespace Solution.Base.Controllers.Api
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            var response = new WebApiPagedResponseDTO<TDto>
+            //var response = new WebApiPagedResponseDTO<TDto>
+            //{
+            //    Page = jqParams.Page,
+            //    PageSize = jqParams.PageSize,
+            //    Records = total,
+            //    Rows = data.ToList()
+            //};
+
+            var paginationMetadata = new WebApiPagedResponseDTO<TDto>
             {
                 Page = jqParams.Page,
                 PageSize = jqParams.PageSize,
                 Records = total,
-                Rows = data.ToList()
+                PreviousPageLink = null,
+                NextPageLink = null
             };
 
-            return Success(response);
+            if(paginationMetadata.HasPrevious)
+            {
+                paginationMetadata.PreviousPageLink = CreateResourceUri(jqParams, ResourceUriType.PreviousPage);
+            }
+
+            if (paginationMetadata.HasNext)
+            {
+                paginationMetadata.NextPageLink = CreateResourceUri(jqParams, ResourceUriType.NextPage);
+            }
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
+
+            var shapedData = data.ToList().ShapeData(jqParams.Fields);
+
+            return Success(shapedData);
+        }
+
+        private string CreateResourceUri(
+       WebApiPagedRequestDTO resourceParameters,
+       ResourceUriType type)
+        {
+            return null;
+            //switch (type)
+            //{
+            //    case ResourceUriType.PreviousPage:
+            //        return UrlHelper.Link("GetPaged",
+            //          new
+            //          {
+            //              fields = resourceParameters.Fields,
+            //              search = resourceParameters.Search,
+            //              page = resourceParameters.Page - 1,
+            //              pageSize = resourceParameters.PageSize
+            //          });
+            //    case ResourceUriType.NextPage:
+            //        return UrlHelper.Link("GetPaged",
+            //          new
+            //          {
+            //              fields = resourceParameters.Fields,
+            //              search = resourceParameters.Search,
+            //              page = resourceParameters.Page + 1,
+            //              pageSize = resourceParameters.PageSize
+            //          });
+
+            //    default:
+            //        return UrlHelper.Link("GetPaged",
+            //        new
+            //        {
+            //            fields = resourceParameters.Fields,
+            //            search = resourceParameters.Search,
+            //            page = resourceParameters.Page,
+            //            pageSize = resourceParameters.PageSize
+            //        });
+            //}
         }
 
         [FormatFilter]
@@ -155,15 +232,26 @@ namespace Solution.Base.Controllers.Api
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            var response = new WebApiPagedResponseDTO<TDto>
+            //var response = new WebApiPagedResponseDTO<TDto>
+            //{
+            //    CurrentPage = 1,
+            //    PageSize = total,
+            //    Records = total,
+            //    Rows = data.ToList()
+            //};
+
+            var paginationMetadata = new WebApiPagedResponseDTO<TDto>
             {
                 Page = 1,
                 PageSize = total,
                 Records = total,
-                Rows = data.ToList()
+                PreviousPageLink = "",
+                NextPageLink = ""
             };
 
-            return Success(response);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
+
+            return Success(data.ToList());
         }
 
         /// <summary>
@@ -197,6 +285,13 @@ namespace Solution.Base.Controllers.Api
             }
 
             return Html(select.ToString());
+        }
+
+        [HttpOptions]
+        public IActionResult GetOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS,POST,PATCH");
+            return Ok();
         }
 
     }

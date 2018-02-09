@@ -30,8 +30,8 @@ namespace DND.Controllers
     {
         private readonly ILocaleService _localeService;
 
-        public LocaleController(ILocaleService localeService, IMapper mapper)
-             : base(mapper)
+        public LocaleController(ILocaleService localeService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+             : base(mapper, emailService, urlHelper)
         {
             _localeService = localeService;
         }

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Solution.Base.ActionResults;
 using Solution.Base.Alerts;
 using Solution.Base.Email;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Web;
@@ -25,31 +27,41 @@ namespace Solution.Base.Controllers.Api
     {
         public IMapper Mapper { get; }
         public IEmailService EmailService { get; }
+        public IUrlHelper UrlHelper { get; }
 
         public BaseWebApiController()
         {
 
         }
 
-        public BaseWebApiController(IMapper mapper = null, IEmailService emailService = null)
+        public BaseWebApiController(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null)
         {
             Mapper = mapper;
             EmailService = emailService;
+            UrlHelper = urlHelper;
         }
 
-        //protected virtual IHttpActionResult BetterJsonError(string message, ModelStateDictionary modelState)
-        //{
-        //    var errors = modelState.Values.SelectMany(v => v.Errors);
-        //    var errorList = new List<string>();
-        //    foreach (var error in errors)
-        //    {
-        //        errorList.Add(error.ErrorMessage);
-        //    }
+        protected IActionResult ValidationErrors(ModelStateDictionary modelState)
+        {
+            return ValidationErrors(Messages.RequestInvalid, modelState);
+        }
 
-        //    var WebApiMessage = WebApiMessage.CreateWebApiMessage(message, errorList, modelState);
+        protected virtual IActionResult ValidationErrors(string message, ModelStateDictionary modelState)
+        {
+            var errors = modelState.Values.SelectMany(v => v.Errors);
+            var errorList = new List<string>();
+            foreach (var error in errors)
+            {
+                errorList.Add(error.ErrorMessage);
+            }
 
-        //    return Content(HttpStatusCode.BadRequest, WebApiMessage);
-        //}
+            var response = WebApiMessage.CreateWebApiMessage(message, errorList, modelState);
+
+            var result = new ObjectResult(response);
+            result.StatusCode = 422;
+
+            return result;
+        }
 
         //protected virtual IHttpActionResult BetterJsonError(string message, ValidationErrors errors, int errorStatusCode = 400)
         //{

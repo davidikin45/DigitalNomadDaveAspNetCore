@@ -4,6 +4,7 @@ using DND.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
 using Solution.Base.Email;
+using Solution.Base.Interfaces.Services;
 
 namespace DND.Web.Controllers.Api
 {
@@ -11,8 +12,8 @@ namespace DND.Web.Controllers.Api
     [Route("api/testimonial")]
     public class TestimonialController : BaseEntityWebApiControllerAuthorize<TestimonialDTO, ITestimonialService>
     {
-        public TestimonialController(ITestimonialService service, IMapper mapper, IEmailService emailService)
-            :base(service,mapper, emailService)
+        public TestimonialController(ITestimonialService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
+            : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
 
         }

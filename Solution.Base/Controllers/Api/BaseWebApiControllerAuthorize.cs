@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Email;
 
 namespace Solution.Base.Controllers.Api
@@ -24,8 +25,8 @@ namespace Solution.Base.Controllers.Api
 
         }
 
-        public BaseWebApiControllerAuthorize(IMapper mapper = null, IEmailService emailService = null)
-            :base(mapper, emailService)
+        public BaseWebApiControllerAuthorize(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null)
+            :base(mapper, emailService, urlHelper)
         {
            
         }
