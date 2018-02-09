@@ -32,7 +32,7 @@ namespace DND.UnitTests.Controllers.Api
 
             //var mockLogger = new Mock<ILogFactory>();
 
-            _controller = new FlightSearchController(mockService.Object, mockMapper.Object);
+            _controller = new FlightSearchController(mockService.Object, mockMapper.Object,null,null);
             //_controller.MockHttpContext("1", "d.ikin@test.com");
         }
 

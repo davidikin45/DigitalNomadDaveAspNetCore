@@ -10,41 +10,20 @@ namespace Solution.Base.Implementation.DTOs
 {
     public class WebApiPagedRequestDTO : BaseDTO
     {
-        [JsonIgnore]
-        public int PageSize
-        {
-            get { return Rows; }
-            set { Rows = value; }
-        }
-
         // no. of records to fetch
-        public int Rows
+        public int PageSize
         { get; set; }
 
         // the page index
         public int Page
         { get; set; }
 
-        [JsonIgnore]
-        public string OrderBy
-        {
-            get { return Sidx; }
-            set { Sidx = value; }
-        }
-
         // sort column name
-        public string Sidx
+        public string OrderBy
         { get; set; }
 
-        [JsonIgnore]
-        public string OrderType
-        {
-            get { return Sord; }
-            set { Sord = value; }
-        }
-
         // sort order "asc" or "desc"
-        public string Sord
+        public string OrderType
         { get; set; }
 
         public string Search

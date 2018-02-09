@@ -121,19 +121,19 @@ namespace Solution.Base.Controllers.Api
         [HttpPost]
         [HttpHead]
         [ProducesResponseType(typeof(WebApiPagedResponseDTO<object>), 200)]
-        public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDTO jqParams)
+        public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDTO resourceParameters)
         {
-            if (string.IsNullOrEmpty(jqParams.OrderBy))
-                jqParams.OrderBy = "id";
+            if (string.IsNullOrEmpty(resourceParameters.OrderBy))
+                resourceParameters.OrderBy = "id";
 
-            if(!TypeHelperService.TypeHasProperties<TDto>(jqParams.Fields))
+            if(!TypeHelperService.TypeHasProperties<TDto>(resourceParameters.Fields))
             {
                 return ApiErrorMessage(Messages.FieldsInvalid);
             }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dataTask = Service.GetAllAsync(cts.Token, LamdaHelper.GetOrderBy<TDto>(jqParams.OrderBy, jqParams.OrderType),jqParams.Page - 1, jqParams.PageSize);
+            var dataTask = Service.GetAllAsync(cts.Token, LamdaHelper.GetOrderBy<TDto>(resourceParameters.OrderBy, resourceParameters.OrderType), resourceParameters.Page - 1, resourceParameters.PageSize);
 
             var totalTask = Service.GetCountAsync(cts.Token);
 
@@ -152,8 +152,8 @@ namespace Solution.Base.Controllers.Api
 
             var paginationMetadata = new WebApiPagedResponseDTO<TDto>
             {
-                Page = jqParams.Page,
-                PageSize = jqParams.PageSize,
+                Page = resourceParameters.Page,
+                PageSize = resourceParameters.PageSize,
                 Records = total,
                 PreviousPageLink = null,
                 NextPageLink = null
@@ -161,17 +161,17 @@ namespace Solution.Base.Controllers.Api
 
             if(paginationMetadata.HasPrevious)
             {
-                paginationMetadata.PreviousPageLink = CreateResourceUri(jqParams, ResourceUriType.PreviousPage);
+                paginationMetadata.PreviousPageLink = CreateResourceUri(resourceParameters, ResourceUriType.PreviousPage);
             }
 
             if (paginationMetadata.HasNext)
             {
-                paginationMetadata.NextPageLink = CreateResourceUri(jqParams, ResourceUriType.NextPage);
+                paginationMetadata.NextPageLink = CreateResourceUri(resourceParameters, ResourceUriType.NextPage);
             }
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 
-            var shapedData = data.ToList().ShapeData(jqParams.Fields);
+            var shapedData = data.ToList().ShapeData(resourceParameters.Fields);
 
             return Success(shapedData);
         }
