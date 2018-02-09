@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     ".NETFramework,Version=v4.7": {
+      "AspNetCoreRateLimit/2.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "1.0.3"
+        },
+        "compile": {
+          "lib/net46/AspNetCoreRateLimit.dll": {}
+        },
+        "runtime": {
+          "lib/net46/AspNetCoreRateLimit.dll": {}
+        }
+      },
       "Autofac/4.6.2": {
         "type": "package",
         "frameworkAssemblies": [
@@ -2598,6 +2610,18 @@
       }
     },
     ".NETFramework,Version=v4.7/win7-x86": {
+      "AspNetCoreRateLimit/2.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "1.0.3"
+        },
+        "compile": {
+          "lib/net46/AspNetCoreRateLimit.dll": {}
+        },
+        "runtime": {
+          "lib/net46/AspNetCoreRateLimit.dll": {}
+        }
+      },
       "Autofac/4.6.2": {
         "type": "package",
         "frameworkAssemblies": [
@@ -5072,6 +5096,17 @@
     }
   },
   "libraries": {
+    "AspNetCoreRateLimit/2.1.0": {
+      "sha512": "emVk7+fPhweDWG7aIinm3ymJ5AtctGt8EqJohmNX/vS/NxOp0JH/fEDUuI8BouTZgH0dSDuyPARN2z65HpZIJQ==",
+      "type": "package",
+      "path": "aspnetcoreratelimit/2.1.0",
+      "files": [
+        "aspnetcoreratelimit.2.1.0.nupkg.sha512",
+        "aspnetcoreratelimit.nuspec",
+        "lib/net46/AspNetCoreRateLimit.dll",
+        "lib/netstandard1.6/AspNetCoreRateLimit.dll"
+      ]
+    },
     "Autofac/4.6.2": {
       "sha512": "wKI7F6+n45gqfq0T8FuB3hFzaCkuegiFo5in6uB1y2Ai9ZYcjue8yqk3yzyNEwBDS7AyvlTUGSoNovwpUuKqTw==",
       "type": "package",
@@ -9590,6 +9625,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.7": [
+      "AspNetCoreRateLimit >= 2.1.0",
       "AutoMapper >= 6.2.2",
       "Autofac >= 4.6.2",
       "Autofac.Extensions.DependencyInjection >= 4.2.0",
@@ -9687,6 +9723,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "2.0.2"
+          },
+          "AspNetCoreRateLimit": {
+            "target": "Package",
+            "version": "2.1.0"
           },
           "Autofac.Extensions.DependencyInjection": {
             "target": "Package",

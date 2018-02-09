@@ -2,12 +2,14 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Solution.Base.Controllers.Api
 {
     [ApiVersion("1.0")]
     [Route("api/test")]
-    public class TestController : BaseWebApiControllerAuthorize
+    public class TestController : BaseWebApiController
     {
         [Route("checkid/{id}")]
         [HttpGet]
@@ -53,6 +55,18 @@ namespace Solution.Base.Controllers.Api
         public IActionResult ThrowException()
         {
             throw new Exception("");
+        }
+
+        [Route("cancel-operation")]
+        [HttpGet]
+        public async Task<IActionResult> CancelOperation()
+        {
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(1000);
+
+            await Task.Run(async () => await Task.Delay(10000), cts.Token);
+
+            return Ok();
         }
     }
 }

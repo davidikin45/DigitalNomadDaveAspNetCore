@@ -19,6 +19,14 @@ namespace Solution.Base.Filters
         }
         public override void OnException(ExceptionContext context)
         {
+            if (!context.HttpContext.Request.Path.ToString().StartsWith("/api"))
+            {
+                HandleException(context);
+            }
+          }
+
+        private void HandleException(ExceptionContext context)
+        {
             if (context.Exception is OperationCanceledException)
             {
                 _logger.LogInformation("Request was cancelled");
@@ -26,5 +34,6 @@ namespace Solution.Base.Filters
                 context.Result = new StatusCodeResult(400);
             }
         }
+
     }
 }

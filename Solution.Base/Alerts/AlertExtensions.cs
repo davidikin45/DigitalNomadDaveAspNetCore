@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Collections.Generic;
+using Solution.Base.Extensions;
 
 namespace Solution.Base.Alerts
 {
@@ -12,11 +13,18 @@ namespace Solution.Base.Alerts
 		{
 			if (!tempData.ContainsKey(Alerts))
 			{
-				tempData[Alerts] = new List<Alert>();
+				tempData.Put(Alerts, new List<Alert>());
 			}
 
-			return (List<Alert>)tempData[Alerts];
+			return tempData.Get<List<Alert>>(Alerts);
 		}
+
+        public static void AddAlert(this ITempDataDictionary tempData, Alert alert)
+        {
+            var alerts = GetAlerts(tempData);
+            alerts.Add(alert);
+            tempData.Put(Alerts, alerts);
+        }
 
         //Model Errors should be shown in validationsummary not an alert
         //public static ActionResult WithModelErrors(this ActionResult result, ModelStateDictionary modelState)

@@ -91,6 +91,12 @@ namespace Solution.Base.Interfaces.Repository
         Task<TEntity> GetByIdAsync(object id)
             ;
 
+        IEnumerable<TEntity> GetById(IEnumerable<object> ids)
+           ;
+
+        Task<IEnumerable<TEntity>> GetByIdAsync(IEnumerable<object> ids)
+            ;
+
         int GetCount(Expression<Func<TEntity, bool>> filter = null)
             ;
 

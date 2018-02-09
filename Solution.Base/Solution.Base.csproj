@@ -418,6 +418,9 @@
       <HintPath>..\packages\System.Linq.Expressions.4.3.0\lib\net463\System.Linq.Expressions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reflection">
       <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
@@ -581,8 +584,10 @@
     <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
+    <Compile Include="Extensions\TempDataExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\AjaxRequestAttribute.cs" />
+    <Compile Include="Filters\ApiExceptionHandlingFilter.cs" />
     <Compile Include="Filters\OperationCancelledExceptionFilter.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationfilter.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />
@@ -650,6 +655,7 @@
     <Compile Include="Implementation\Validation\ServiceValidationErrors.cs" />
     <Compile Include="Implementation\Validation\ValidationErrors.cs" />
     <Compile Include="Infrastructure\Activators.cs" />
+    <Compile Include="Infrastructure\ArrayModelBinder.cs" />
     <Compile Include="Infrastructure\AspNetCoreExtensions.cs" />
     <Compile Include="Infrastructure\PaginatedList.cs" />
     <Compile Include="Infrastructure\ConfigurationManager.cs" />
@@ -696,6 +702,7 @@
     <Compile Include="Interfaces\Validation\IBaseError.cs" />
     <Compile Include="Interfaces\Validation\IValidationErrors.cs" />
     <Compile Include="Middleware\BaseRangeRequestHandler.cs" />
+    <Compile Include="Middleware\ApiErrorHandlingMiddleware.cs" />
     <Compile Include="Middleware\ContentHandlerMiddleware.cs" />
     <Compile Include="Middleware\MiddlewareExtensions.cs" />
     <Compile Include="Middleware\RequestTasksMiddleware.cs" />

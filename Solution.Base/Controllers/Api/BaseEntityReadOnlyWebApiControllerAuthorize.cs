@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Solution.Base.Interfaces.Models;
 using Solution.Base.Interfaces.Services;
@@ -17,7 +18,8 @@ namespace Solution.Base.Controllers.Api
     //If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
     //Otherwise, the action supports the POST method.
 
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")] // 40
     public abstract class BaseEntityReadOnlyWebApiControllerAuthorize<TDto, IEntityService> : BaseEntityReadOnlyWebApiController<TDto, IEntityService>
         where TDto : class, IBaseEntity
         where IEntityService : IBaseEntityService<TDto>

@@ -245,6 +245,29 @@ namespace Solution.Base.Implementation.Repository.EntityFramework
             return await GetQueryable(null, x => x.Id.ToString() == id.ToString(), null, null).SingleOrDefaultAsync(_cancellationToken);
         }
 
+        public virtual IEnumerable<TEntity> GetById(IEnumerable<object> ids)
+        {
+            var list = new List<string>();
+            foreach (object id in ids)
+            {
+                list.Add(id.ToString());
+            }
+
+            return GetQueryable(null, x => list.Contains(x.Id.ToString()), null, null).ToList();
+        }
+
+        public async virtual Task<IEnumerable<TEntity>> GetByIdAsync(IEnumerable<object> ids)
+        {
+
+            var list = new List<string>();
+            foreach(object id in ids)
+            {
+                list.Add(id.ToString());
+            }
+
+            return await GetQueryable(null, x => list.Contains(x.Id.ToString()), null, null).ToListAsync(_cancellationToken);
+        }
+
         public virtual int GetCount(Expression<Func<TEntity, bool>> filter = null)
         {
             return GetQueryable(null, filter).Count();

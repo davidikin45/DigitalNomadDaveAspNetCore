@@ -93,6 +93,13 @@ namespace Solution.Base.Interfaces.Services
              CancellationToken cancellationToken)
             ;
 
+        IEnumerable<TDto> GetById(IEnumerable<object> ids)
+           ;
+
+        Task<IEnumerable<TDto>> GetByIdAsync(IEnumerable<object> ids,
+             CancellationToken cancellationToken)
+            ;
+
         int GetCount(Expression<Func<TDto, bool>> filter = null)
             ;
 
@@ -119,6 +126,14 @@ namespace Solution.Base.Interfaces.Services
         Task<bool> ExistsAsync(
             CancellationToken cancellationToken,
             Expression<Func<TDto, bool>> filter = null)
+            ;
+
+        bool Exists(object id)
+           ;
+
+        Task<bool> ExistsAsync(
+            CancellationToken cancellationToken,
+            object id)
             ;
     }
 }

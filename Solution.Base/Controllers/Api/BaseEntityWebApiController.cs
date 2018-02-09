@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Alerts;
 using Solution.Base.Email;
@@ -36,10 +37,17 @@ namespace Solution.Base.Controllers.Api
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> Add(TDto dto)
         {
+            if(dto == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var id = await Service.CreateAsync(dto, cts.Token);
-            return ApiCreatedSuccessMessage(Messages.AddSuccessful, id);
+            var createdDto = await Service.CreateAsync(dto, cts.Token);
+            return ApiCreatedSuccessMessage(Messages.AddSuccessful, createdDto.Id);
+
+            //return CreatedAtRoute("", new { id = createdDto.Id }, createdDto);
         }
 
         [Route("update")]
@@ -47,9 +55,40 @@ namespace Solution.Base.Controllers.Api
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> Update(TDto dto)
         {
+            if (dto == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             await Service.UpdateAsync(dto, cts.Token);
+            return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
+        }
+
+        [Route("{id}")]
+        [HttpPatch]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> UpdatePartial(object id, JsonPatchDocument<TDto> dtoPatch)
+        {
+            if (dtoPatch == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var dto = await Service.GetByIdAsync(id, cts.Token);
+
+            if (dto == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            dtoPatch.ApplyTo(dto);
+
+            await Service.UpdateAsync(dto, cts.Token);
+           
             return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
         }
 
@@ -59,6 +98,11 @@ namespace Solution.Base.Controllers.Api
         public virtual async Task<IActionResult> Delete([FromBody]int id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            if (!(await Service.ExistsAsync(cts.Token, id)))
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
 
             await Service.DeleteAsync(id, cts.Token);
             return ApiSuccessMessage(Messages.DeleteSuccessful, id);

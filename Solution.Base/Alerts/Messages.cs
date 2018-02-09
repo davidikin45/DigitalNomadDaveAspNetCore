@@ -17,5 +17,7 @@ namespace Solution.Base.Alerts
         public const string UpdateSuccessful = "Changes saved successfully.";
         public const string DeleteSuccessful = "Delete successful.";
 
+        public const string NotFound = "Object not found.";
+
     }
 }

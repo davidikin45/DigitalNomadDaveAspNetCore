@@ -66,7 +66,7 @@ namespace Solution.Base.Controllers.Api
 
         protected virtual IActionResult Success<T>(T model)
         {
-            return new ObjectResult(model);
+            return new OkObjectResult(model);
         }
 
         [Obsolete("Do not use the standard Json helpers to return JSON data to the client.  Use either JsonSuccess or JsonError instead.")]
@@ -80,9 +80,24 @@ namespace Solution.Base.Controllers.Api
             return this.HttpContext.RequestAborted;
         }
 
+        protected IActionResult ApiBadRequest()
+        {
+            return ApiErrorMessage(Messages.RequestInvalid);
+        }
+
         protected IActionResult ApiErrorMessage(string message)
         {
-            return ApiErrorMessage("The request is invalid.", message);
+            return ApiErrorMessage(Messages.RequestInvalid, message);
+        }
+
+        protected IActionResult ApiNotFound()
+        {
+            return ApiNotFoundErrorMessage(Messages.NotFound);
+        }
+
+        protected IActionResult ApiNotFoundErrorMessage(string message)
+        {
+            return ApiErrorMessage(Messages.NotFound, message, 404);
         }
 
         protected virtual IActionResult ApiErrorMessage(string message, string errorMessage, int errorStatusCode = 400)
@@ -122,7 +137,7 @@ namespace Solution.Base.Controllers.Api
 
         protected virtual IActionResult Forbidden()
         {
-            return Forbid();
+            return ApiErrorMessage(Messages.Unauthorised, Messages.Unauthorised, 403);
         }
 
     }

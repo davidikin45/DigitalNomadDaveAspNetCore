@@ -24,15 +24,13 @@ namespace Solution.Base.Alerts
 
         public async override Task ExecuteResultAsync(ActionContext context)
         {
-            var alerts = Controller.TempData.GetAlerts();
-            alerts.Add(new Alert(AlertClass, Message));
+            Controller.TempData.AddAlert(new Alert(AlertClass, Message));
             await InnerResult.ExecuteResultAsync(context);
         }
 
         public override void ExecuteResult(ActionContext context)
 		{
-			var alerts = Controller.TempData.GetAlerts();
-			alerts.Add(new Alert(AlertClass, Message));
+            Controller.TempData.AddAlert(new Alert(AlertClass, Message));
 			InnerResult.ExecuteResult(context);
 		}
 	}

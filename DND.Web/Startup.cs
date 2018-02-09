@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using AspNetCoreRateLimit;
+using Autofac;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
 using DND.Web.Services;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Solution.Base.Alerts;
 using Solution.Base.Controllers.Admin;
 using Solution.Base.DependencyInjection.Autofac.Modules;
 using Solution.Base.Extensions;
@@ -98,6 +100,7 @@ namespace DND.Web
             // Add framework services.
             services.AddMvc(options => {
                 options.UseCustomModelBinding();
+                options.Filters.Add<ApiExceptionHandlingFilter>();
                 options.Filters.Add<OperationCancelledExceptionFilter>();
 
                 //Cache-control: no-cache = store response on client browser but recheck with server each request 
@@ -120,6 +123,7 @@ namespace DND.Web
                     NoStore = false
                 });
 
+                //Prevents returning object representation in default format when request format isn't available
                 options.ReturnHttpNotAcceptable = true;
 
                 options.FormatterMappings.SetMediaTypeMappingForFormat(
@@ -147,6 +151,27 @@ namespace DND.Web
                 option.AssumeDefaultVersionWhenUnspecified = true;
             });
 
+            //API rate limiting
+            services.AddMemoryCache();
+            services.Configure<IpRateLimitOptions>((options)=> {
+                options.GeneralRules = new List<RateLimitRule>()
+                {
+                    new RateLimitRule()
+                    {
+                        Endpoint = "*",
+                        Limit = 3,
+                        Period = "5m"
+                    },
+                     new RateLimitRule()
+                    {
+                        Endpoint = "*",
+                        Limit = 2,
+                        Period = "10s"
+                    }
+                };
+            });
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 
             services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -208,7 +233,29 @@ namespace DND.Web
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                // Non Api
+                app.UseWhen(context => !context.Request.Path.ToString().StartsWith("/api"),
+                     appBranch =>
+                     {
+                         appBranch.UseExceptionHandler("/Error");
+                     }
+                );
+
+
+                // Web Api
+                app.UseWhen(context => context.Request.Path.ToString().StartsWith("/api"),
+                    appBranch =>
+                    {
+                        appBranch.UseExceptionHandler(appBuilder =>
+                        {
+                            appBuilder.Run(async context =>
+                            {
+                                context.Response.StatusCode = 500;
+                                await context.Response.WriteAsync(Messages.UnknownError);
+                            });
+                        });
+                    }
+               );
             }
             
             app.UseRequestTasks();
@@ -241,7 +288,10 @@ namespace DND.Web
             //"text/json",
             //app.UseResponseCompression();
 
-            //This is Etags
+            //API rate limiting
+            //app.UseIpRateLimiting();
+
+            //This is Etags *
             app.UseHttpCacheHeaders();
 
             //In memory cache

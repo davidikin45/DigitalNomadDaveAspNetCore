@@ -286,6 +286,25 @@ namespace Solution.Base.Implementation.Services
             }
         }
 
+        public virtual IEnumerable<TDto> GetById(IEnumerable<object> ids)
+        {
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
+            {
+                var result = unitOfWork.Repository<TContext, TEntity>().GetById(ids);
+                return Mapper.Map<IEnumerable<TDto>>(result);
+            }
+        }
+
+        public virtual async Task<IEnumerable<TDto>> GetByIdAsync(IEnumerable<object> ids,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
+            {
+                var result = await unitOfWork.Repository<TContext, TEntity>().GetByIdAsync(ids);
+                return Mapper.Map<IEnumerable<TDto>>(result);
+            }
+        }
+
         public virtual int GetCount(
             Expression<Func<TDto, bool>> filter = null)
         {
@@ -365,6 +384,29 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 exists = await unitOfWork.Repository<TContext, TEntity>().GetExistsAsync(filterConverted);
+            }
+            return exists;
+        }
+
+        public virtual bool Exists(object id)
+        {
+            bool exists = false;
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
+            {
+                exists = unitOfWork.Repository<TContext, TEntity>().GetExists(x => x.Id.ToString() == id.ToString());
+            }
+            return exists;
+        }
+
+        public virtual async Task<bool> ExistsAsync(
+            CancellationToken cancellationToken,
+            object id
+            )
+        {
+            bool exists = false;
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
+            {
+                exists = await unitOfWork.Repository<TContext, TEntity>().GetExistsAsync(x => x.Id.ToString() == id.ToString());
             }
             return exists;
         }

@@ -113,51 +113,60 @@ namespace Marvin.Cache.Headers
             // correctly)
             // cfr: http://stackoverflow.com/questions/35458737/implement-http-cache-etag-in-asp-net-core-web-api
 
-            using (var buffer = new MemoryStream())
+            var stream = httpContext.Response.Body;
+            try
             {
-                // replace the context response with a temporary buffer
-                var stream = httpContext.Response.Body;
-                httpContext.Response.Body = buffer;
-
-                // Call the next middleware delegate in the pipeline 
-                await _next.Invoke(httpContext);
-
-                // Handle the response (expiration, validation, vary headers)
-
-                // Handle expiration: Expires & Cache-Control headers
-                // (these are also added for 304 / 412 responses)
-
-                //Cache-control - Should probably use ResponseCache attribute instead. Gives more granularity at an action level
-                //GenerateExpirationHeadersOnResponse(httpContext);
-
-                // Handle validation: ETag and Last-Modified headers
-                GenerateValidationHeadersOnResponse(httpContext);
-
-                // Generate Vary headers on the response
-                GenerateVaryHeadersOnResponse(httpContext);
-
-                // reset the buffer, read out the contents & copy it to the original stream.  This
-                // will ensure our changes to the buffer are applied to the original stream.   
-                if (httpContext.Response.StatusCode != 304)
+                using (var buffer = new MemoryStream())
                 {
-                    buffer.Seek(0, SeekOrigin.Begin);
-                    var reader = new StreamReader(buffer);
-                    using (var bufferReader = new StreamReader(buffer))
+                    // replace the context response with a temporary buffer
+                    httpContext.Response.Body = buffer;
+
+                    // Call the next middleware delegate in the pipeline 
+                    await _next.Invoke(httpContext);
+
+                    // Handle the response (expiration, validation, vary headers)
+
+                    // Handle expiration: Expires & Cache-Control headers
+                    // (these are also added for 304 / 412 responses)
+
+                    //Cache-control - Should probably use ResponseCache attribute instead. Gives more granularity at an action level
+                    //GenerateExpirationHeadersOnResponse(httpContext);
+
+                    // Handle validation: ETag and Last-Modified headers
+                    GenerateValidationHeadersOnResponse(httpContext);
+
+                    // Generate Vary headers on the response
+                    GenerateVaryHeadersOnResponse(httpContext);
+
+                    // reset the buffer, read out the contents & copy it to the original stream.  This
+                    // will ensure our changes to the buffer are applied to the original stream.   
+                    if (httpContext.Response.StatusCode != 304)
                     {
-                        var body = await bufferReader.ReadToEndAsync();
-
-                        // reset to the start of the stream
                         buffer.Seek(0, SeekOrigin.Begin);
+                        var reader = new StreamReader(buffer);
+                        using (var bufferReader = new StreamReader(buffer))
+                        {
+                            var body = await bufferReader.ReadToEndAsync();
 
-                        // Copy the buffer content to the original stream.
-                        // This invokes Response.OnStarting (not used)  
-                        await buffer.CopyToAsync(stream);
+                            // reset to the start of the stream
+                            buffer.Seek(0, SeekOrigin.Begin);
 
-                        // set the response body back to the original stream
-                        httpContext.Response.Body = stream;
+                            // Copy the buffer content to the original stream.
+                            // This invokes Response.OnStarting (not used)  
+                            await buffer.CopyToAsync(stream);
+
+                            // set the response body back to the original stream
+                            httpContext.Response.Body = stream;
+                        }
                     }
                 }
             }
+            catch
+            {
+                httpContext.Response.Body = stream;
+                throw;
+            }
+           
         }
 
         private async Task Generate412PreconditionFailedResponse(HttpContext httpContext)
