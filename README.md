@@ -13,6 +13,7 @@ A custom built Content Management System using Bootstrap 4, Angular and C# MVC C
 * [Angular](https://angular.io/) - Google JS framework
 * [Automapper](http://automapper.org/) - Convention based object-object mapper
 * [Entity Framework](https://msdn.microsoft.com/en-us/library/aa937723(v=vs.113).aspx) - Microsoft ORM framework
+* [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/) - Microsoft ORM framework
 * [MongoDB](https://www.mongodb.com) - NoSQL database
 * [NLog](http://nlog-project.org/) - Logging
 * [Autofac](http://www.autofac.org/) - Dependency injector for .NET
