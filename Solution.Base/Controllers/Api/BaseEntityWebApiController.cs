@@ -24,12 +24,12 @@ namespace Solution.Base.Controllers.Api
     public abstract class BaseEntityWebApiController<TDto, IEntityService> : BaseEntityReadOnlyWebApiController<TDto, IEntityService>
         where TDto : class, IBaseEntity
         where IEntityService : IBaseEntityService<TDto>
-    {   
+    {
 
         public BaseEntityWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)
         : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
-          
+
         }
 
         [Route("add")]
@@ -37,12 +37,12 @@ namespace Solution.Base.Controllers.Api
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> Add(TDto dto)
         {
-            if(dto == null)
+            if (dto == null)
             {
                 return ApiErrorMessage(Messages.RequestInvalid);
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return ValidationErrors(ModelState);
             }
@@ -51,16 +51,18 @@ namespace Solution.Base.Controllers.Api
 
             var createdDto = await Service.CreateAsync(dto, cts.Token);
             //return CreatedAtRoute("", new { id = createdDto.Id }, createdDto);
+
             //return ApiSuccessMessage(Messages.AddSuccessful, createdDto.Id);
-            return Success(createdDto);
+            //return Success(createdDto);
+
+            return CreatedAtAction(nameof(Add), new { id = createdDto.Id }, createdDto);
         }
 
-
-
-        [Route("update")]
-        [HttpPost]
+        [Route("{id}")]
+        [HttpPut]
+        //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Update(TDto dto)
+        public virtual async Task<IActionResult> Update(object id, TDto dto)
         {
             if (dto == null)
             {
@@ -108,13 +110,14 @@ namespace Solution.Base.Controllers.Api
             }
 
             await Service.UpdateAsync(dto, cts.Token);
-           
+
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
             return Success(dto);
         }
 
-        [Route("delete")]
-        [HttpPost]
+        [Route("{id}")]
+        [HttpDelete]
+        //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage),200)]
         public virtual async Task<IActionResult> Delete([FromBody]int id)
         {

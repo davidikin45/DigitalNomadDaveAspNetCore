@@ -37,11 +37,11 @@ namespace Solution.Base.Controllers.Api
     public abstract class BaseEntityReadOnlyWebApiController<TDto, IEntityService> : BaseWebApiController
         where TDto : class, IBaseEntity
         where IEntityService : IBaseEntityService<TDto>
-    {   
+    {
         public IEntityService Service { get; private set; }
         public ITypeHelperService TypeHelperService { get; private set; }
 
-        public BaseEntityReadOnlyWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService =null)
+        public BaseEntityReadOnlyWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)
         : base(mapper, emailService, urlHelper)
         {
             Service = service;
@@ -50,48 +50,57 @@ namespace Solution.Base.Controllers.Api
 
         //http://jakeydocs.readthedocs.io/en/latest/mvc/models/formatting.html
         [FormatFilter]
-        [Route("{id}"), Route("get/{id}"),Route("{id}.{format}"), Route("get/{id}.{format}")]
+        [Route("{id}"), Route("{id}.{format}")]
+        //[Route("get/{id}"), Route("get/{id}.{format}")]
         [HttpGet]
-        [ProducesResponseType(typeof(object),200)]
+        [ProducesResponseType(typeof(object), 200)]
         public virtual async Task<IActionResult> Get(string id, [FromQuery] string fields)
         {
-            if(!TypeHelperService.TypeHasProperties<TDto>(fields))
+            if (!TypeHelperService.TypeHasProperties<TDto>(fields))
             {
                 return ApiErrorMessage(Messages.FieldsInvalid);
             }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-           var response =  await Service.GetByIdAsync(id, cts.Token);
+            var response = await Service.GetByIdAsync(id, cts.Token);
 
             if (response == null)
             {
                 return ApiNotFoundErrorMessage(Messages.NotFound);
             }
 
-           var shapedData = response.ShapeData(fields);
+            var links = CreateLinks(id, fields);
 
-           return Success(shapedData);
+            var linkedResourceToReturn = response.ShapeData(fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+
+            // Success(shapedData);
         }
 
         [FormatFilter]
-        [Route("({ids})"), Route("get/({ids})"), Route("({ids}).{format}"), Route("get/({ids}).{format}")]
+        [Route("({ids})"), Route("({ids}).{format}")]
+        //[Route("get/({ids})"), Route("get/({ids}).{format}")]
         [HttpGet]
         [ProducesResponseType(typeof(List<object>), 200)]
         public virtual async Task<IActionResult> GetCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<string> ids)
         {
-            if(ids == null)
+            if (ids == null)
             {
                 return ApiErrorMessage(Messages.RequestInvalid);
             }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            
+
             var response = await Service.GetByIdAsync(ids, cts.Token);
 
             var list = response.ToList();
 
-            if(ids.Count() != list.Count())
+            if (ids.Count() != list.Count())
             {
                 return ApiNotFoundErrorMessage(Messages.NotFound);
             }
@@ -116,9 +125,12 @@ namespace Solution.Base.Controllers.Api
         }
 
         [FormatFilter]
-        [Route("get-paged")]
-        [Route("get-paged.{format}")]
-        [HttpPost]
+        [Route("")]
+        [Route(".{format}")]
+        //[Route("get-paged")]
+        //[Route("get-paged.{format}")]
+        [HttpGet]
+        //[HttpPost]
         [HttpHead]
         [ProducesResponseType(typeof(WebApiPagedResponseDTO<object>), 200)]
         public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDTO resourceParameters)
@@ -126,7 +138,7 @@ namespace Solution.Base.Controllers.Api
             if (string.IsNullOrEmpty(resourceParameters.OrderBy))
                 resourceParameters.OrderBy = "id";
 
-            if(!TypeHelperService.TypeHasProperties<TDto>(resourceParameters.Fields))
+            if (!TypeHelperService.TypeHasProperties<TDto>(resourceParameters.Fields))
             {
                 return ApiErrorMessage(Messages.FieldsInvalid);
             }
@@ -159,7 +171,7 @@ namespace Solution.Base.Controllers.Api
                 NextPageLink = null
             };
 
-            if(paginationMetadata.HasPrevious)
+            if (paginationMetadata.HasPrevious)
             {
                 paginationMetadata.PreviousPageLink = CreateResourceUri(resourceParameters, ResourceUriType.PreviousPage);
             }
@@ -171,47 +183,29 @@ namespace Solution.Base.Controllers.Api
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 
-            var shapedData = data.ToList().ShapeData(resourceParameters.Fields);
+            var links = CreateLinksForCollections(resourceParameters,
+              paginationMetadata.HasNext, paginationMetadata.HasPrevious);
 
-            return Success(shapedData);
-        }
+            var shapedData = IEnumerableExtensions.ShapeData(data.ToList(), resourceParameters.Fields);
 
-        private string CreateResourceUri(
-       WebApiPagedRequestDTO resourceParameters,
-       ResourceUriType type)
-        {
-            return null;
-            //switch (type)
-            //{
-            //    case ResourceUriType.PreviousPage:
-            //        return UrlHelper.Link("GetPaged",
-            //          new
-            //          {
-            //              fields = resourceParameters.Fields,
-            //              search = resourceParameters.Search,
-            //              page = resourceParameters.Page - 1,
-            //              pageSize = resourceParameters.PageSize
-            //          });
-            //    case ResourceUriType.NextPage:
-            //        return UrlHelper.Link("GetPaged",
-            //          new
-            //          {
-            //              fields = resourceParameters.Fields,
-            //              search = resourceParameters.Search,
-            //              page = resourceParameters.Page + 1,
-            //              pageSize = resourceParameters.PageSize
-            //          });
+            var shapedDataWithLinks = shapedData.Select(author =>
+            {
+                var authorAsDictionary = author as IDictionary<string, object>;
+                var authorLinks = CreateLinks(
+                    authorAsDictionary["Id"].ToString(), resourceParameters.Fields);
 
-            //    default:
-            //        return UrlHelper.Link("GetPaged",
-            //        new
-            //        {
-            //            fields = resourceParameters.Fields,
-            //            search = resourceParameters.Search,
-            //            page = resourceParameters.Page,
-            //            pageSize = resourceParameters.PageSize
-            //        });
-            //}
+                authorAsDictionary.Add("links", authorLinks);
+
+                return authorAsDictionary;
+            });
+
+            var linkedCollectionResource = new
+            {
+                value = shapedDataWithLinks,
+                links = links
+            };
+
+            return Ok(linkedCollectionResource);
         }
 
         [FormatFilter]
@@ -275,7 +269,7 @@ namespace Solution.Base.Controllers.Api
             foreach (var item in data)
             {
                 var description = item.Id.ToString();
-                
+
                 if (item.HasProperty("Name") && !string.IsNullOrEmpty((string)item.GetPropValue("Name")))
                 {
                     description = (string)item.GetPropValue("Name");
@@ -290,9 +284,131 @@ namespace Solution.Base.Controllers.Api
         [HttpOptions]
         public IActionResult GetOptions()
         {
-            Response.Headers.Add("Allow", "GET, OPTIONS,POST,PATCH");
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, PATCH");
             return Ok();
         }
+
+        #region HATEOAS
+        private string CreateResourceUri(
+WebApiPagedRequestDTO resourceParameters,
+ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return UrlHelper.Action(nameof(GetPaged),
+                          UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                      new
+                      {
+                          fields = resourceParameters.Fields,
+                          orderBy = resourceParameters.OrderBy,
+                          search = resourceParameters.Search,
+                          page = resourceParameters.Page - 1,
+                          pageSize = resourceParameters.PageSize
+                      },
+                      UrlHelper.ActionContext.HttpContext.Request.Scheme);
+                case ResourceUriType.NextPage:
+                    return UrlHelper.Action(nameof(GetPaged),
+                          UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                      new
+                      {
+                          fields = resourceParameters.Fields,
+                          orderBy = resourceParameters.OrderBy,
+                          search = resourceParameters.Search,
+                          page = resourceParameters.Page + 1,
+                          pageSize = resourceParameters.PageSize
+                      },
+                      UrlHelper.ActionContext.HttpContext.Request.Scheme);
+
+                default:
+                    return UrlHelper.Action(nameof(GetPaged),
+                    UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                    new
+                    {
+                        fields = resourceParameters.Fields,
+                        orderBy = resourceParameters.OrderBy,
+                        search = resourceParameters.Search,
+                        page = resourceParameters.Page,
+                        pageSize = resourceParameters.PageSize
+                    },
+                      UrlHelper.ActionContext.HttpContext.Request.Scheme);
+            }
+        }
+
+        private IEnumerable<LinkDto> CreateLinks(string id, string fields)
+        {
+            var links = new List<LinkDto>();
+
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                links.Add(
+                  new LinkDto(UrlHelper.Action(nameof(Get), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  "self",
+                  "GET"));
+            }
+            else
+            {
+                links.Add(
+                  new LinkDto(UrlHelper.Action(nameof(Get), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id, fields = fields }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  "self",
+                  "GET"));
+            }
+
+            links.Add(
+              new LinkDto(UrlHelper.Action("Delete", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+              "delete",
+              "DELETE"));
+
+            links.Add(
+                new LinkDto(UrlHelper.Action("Update", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                "update",
+                "PUT"));
+
+            links.Add(
+                new LinkDto(UrlHelper.Action("UpdatePartial", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                "partially_update",
+                "PATCH"));
+
+            return links;
+        }
+
+        private IEnumerable<LinkDto> CreateLinksForCollections(WebApiPagedRequestDTO resourceParameters, bool hasNext, bool hasPrevious)
+        {
+            var links = new List<LinkDto>();
+
+            // self 
+            links.Add(
+               new LinkDto(CreateResourceUri(resourceParameters,
+               ResourceUriType.Current)
+               , "self", "GET"));
+
+            links.Add(
+           new LinkDto(UrlHelper.Action("Add", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+          null, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+           "add",
+           "POST"));
+
+            if (hasNext)
+            {
+                links.Add(
+                  new LinkDto(CreateResourceUri(resourceParameters,
+                  ResourceUriType.NextPage),
+                  "nextPage", "GET"));
+            }
+
+            if (hasPrevious)
+            {
+                links.Add(
+                    new LinkDto(CreateResourceUri(resourceParameters,
+                    ResourceUriType.PreviousPage),
+                    "previousPage", "GET"));
+            }
+
+            return links;
+        }
+        #endregion
 
     }
 }

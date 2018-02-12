@@ -616,6 +616,7 @@
     <Compile Include="Implementation\DTOs\FolderMetadataDTO.cs" />
     <Compile Include="Implementation\DTOs\FileMetadataDTO.cs" />
     <Compile Include="Implementation\DTOs\JpegMetadataDTO.cs" />
+    <Compile Include="Implementation\DTOs\LinkDTO.cs" />
     <Compile Include="Implementation\DTOs\WebApiPagedRequestDTO.cs" />
     <Compile Include="Implementation\DTOs\WebApiPagedResponseDTO.cs" />
     <Compile Include="Implementation\Models\BaseApplicationUser.cs" />

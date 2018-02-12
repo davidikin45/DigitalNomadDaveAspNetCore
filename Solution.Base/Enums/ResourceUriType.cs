@@ -8,6 +8,7 @@ namespace Solution.Base.Enums
 {
     public enum ResourceUriType
     {
+        Current,
         PreviousPage,
         NextPage
     }
