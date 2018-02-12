@@ -32,10 +32,10 @@ namespace Solution.Base.Controllers.Api
 
         }
 
-        [Route("add")]
+        //[Route("create")]
         [HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Add(TDto dto)
+        public virtual async Task<IActionResult> Create([FromBody] TDto dto)
         {
             if (dto == null)
             {
@@ -55,16 +55,16 @@ namespace Solution.Base.Controllers.Api
             //return ApiSuccessMessage(Messages.AddSuccessful, createdDto.Id);
             //return Success(createdDto);
 
-            return CreatedAtAction(nameof(Add), new { id = createdDto.Id }, createdDto);
+            return CreatedAtAction(nameof(Create), new { id = createdDto.Id }, createdDto);
         }
 
         [Route("{id}")]
         [HttpPut]
         //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Update(object id, TDto dto)
+        public virtual async Task<IActionResult> Update(object id, [FromBody] TDto dto)
         {
-            if (dto == null)
+            if (dto == null || id.ToString() != dto.Id.ToString())
             {
                 return ApiErrorMessage(Messages.RequestInvalid);
             }
@@ -74,17 +74,20 @@ namespace Solution.Base.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
+       
+
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             await Service.UpdateAsync(dto, cts.Token);
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
-            return Success(dto);
+            //return Success(dto);
+            return NoContent();
         }
 
         [Route("{id}")]
         [HttpPatch]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> UpdatePartial(object id, JsonPatchDocument<TDto> dtoPatch)
+        public virtual async Task<IActionResult> UpdatePartial(object id, [FromBody] JsonPatchDocument<TDto> dtoPatch)
         {
             if (dtoPatch == null)
             {
@@ -112,14 +115,15 @@ namespace Solution.Base.Controllers.Api
             await Service.UpdateAsync(dto, cts.Token);
 
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
-            return Success(dto);
+            //return Success(dto);
+            return NoContent();
         }
 
         [Route("{id}")]
         [HttpDelete]
         //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage),200)]
-        public virtual async Task<IActionResult> Delete([FromBody]int id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 

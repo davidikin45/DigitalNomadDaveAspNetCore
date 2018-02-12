@@ -385,7 +385,7 @@ ResourceUriType type)
                , "self", "GET"));
 
             links.Add(
-           new LinkDto(UrlHelper.Action("Add", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+           new LinkDto(UrlHelper.Action("Create", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
           null, UrlHelper.ActionContext.HttpContext.Request.Scheme),
            "add",
            "POST"));
