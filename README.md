@@ -19,6 +19,7 @@ A custom built Content Management System using Bootstrap 4, Angular and C# MVC C
 * [Autofac](http://www.autofac.org/) - Dependency injector for .NET
 * [Hangfire](https://rometools.github.io/rome/) - Background job processing
 * [Swagger](https://swagger.io/) - API testing
+* [Http Cache Headers](https://github.com/KevinDockx/HttpCacheHeaders) - ETags
 
 ## Authors
 
