@@ -26,14 +26,38 @@ namespace DND.Web.Controllers.Api
             var links = new List<LinkDto>();
 
             links.Add(
-              new LinkDto(UrlHelper.Link("GetRoot", new { }),
+              new LinkDto(UrlHelper.Action(nameof(GetRoot), 
+              UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), 
+              new { },
+              UrlHelper.ActionContext.HttpContext.Request.Scheme),
               "self",
               "GET"));
 
-            //links.Add(
-            // new LinkDto(UrlHelper.Link("GetAuthors", new { }),
-            // "authors",
-            // "GET"));
+            var apis = new Dictionary<string, string>()
+            {
+                {"Author","author"},
+                {"BlogPost","blog_post"},
+                {"Category","category"},
+                {"ContentHtml","content_html"},
+                {"ContentText","content_text"},
+                {"Faq","faq"},
+                {"Location","location"},
+                {"MailingList","mailing_list"},
+                {"Project","project"},
+                {"Tag","tag"},
+                {"Testimonial","testimonial"},
+            };
+
+            foreach(KeyValuePair<string,string> api in apis)
+            {
+                links.Add(
+               new LinkDto(UrlHelper.Action("GetPaged",
+               api.Key,
+               new { },
+               UrlHelper.ActionContext.HttpContext.Request.Scheme),
+              api.Value,
+               "GET"));
+            }
 
             return Ok(links);
         }

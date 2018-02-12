@@ -374,7 +374,7 @@ ResourceUriType type)
             return links;
         }
 
-        private IEnumerable<LinkDto> CreateLinksForCollections(WebApiPagedRequestDTO resourceParameters, bool hasNext, bool hasPrevious)
+        private  IEnumerable<LinkDto> CreateLinksForCollections(WebApiPagedRequestDTO resourceParameters, bool hasNext, bool hasPrevious)
         {
             var links = new List<LinkDto>();
 
