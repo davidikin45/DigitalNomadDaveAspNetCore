@@ -17,6 +17,10 @@ using Microsoft.AspNetCore.Identity;
 using Solution.Base.Interfaces.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Validation;
+using System.Data.Entity.Infrastructure;
 
 namespace Solution.Base.Implementation.Persistance
 {
@@ -31,13 +35,10 @@ namespace Solution.Base.Implementation.Persistance
             ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
-        public static readonly LoggerFactory MyLoggerFactory
-        = new LoggerFactory(new[]
-        {
-            new ConsoleLoggerProvider((category, level)
-                => category == DbLoggerCategory.Database.Command.Name
-                   && level == LogLevel.Information, true)
-        });
+        public static readonly ILoggerFactory MyLoggerFactory
+        = new LoggerFactory()
+          .AddDebug((categoryName, logLevel) => (logLevel == LogLevel.Information) && (categoryName == DbLoggerCategory.Database.Command.Name))
+          .AddConsole((categoryName, logLevel) => (logLevel == LogLevel.Information) && (categoryName == DbLoggerCategory.Database.Command.Name));
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -73,9 +74,51 @@ namespace Solution.Base.Implementation.Persistance
             return new BaseDbContextTransactionAspNetcore(Database.BeginTransaction());
         }
 
+        //Validate on Save
         public IEnumerable<System.Data.Entity.Validation.DbEntityValidationResult> GetValidationErrors()
         {
-            return new List<System.Data.Entity.Validation.DbEntityValidationResult>();
+            var list = new List<System.Data.Entity.Validation.DbEntityValidationResult>();
+
+            var serviceProvider = this.GetService<IServiceProvider>();
+            var items = new Dictionary<object, object>();
+
+            foreach (var entry in this.ChangeTracker.Entries().Where(e => (e.State == EntityState.Added) || (e.State == EntityState.Modified)))
+            {
+                var entity = entry.Entity;
+                var context = new ValidationContext(entity, serviceProvider, items);
+                var results = new List<ValidationResult>();
+
+                if (Validator.TryValidateObject(entity, context, results, true) == false)
+                {
+
+                    var errors = results.Where(r => r != ValidationResult.Success);
+
+                    if(errors.Count() > 0)
+                    {
+                        var dbValidationErrors = new List<DbValidationError>();
+                        foreach(ValidationResult error in errors)
+                        {
+                            if (error.MemberNames.Count() > 0)
+                            {
+                                foreach (var prop in error.MemberNames)
+                                { 
+                                    dbValidationErrors.Add(new DbValidationError(prop, error.ErrorMessage));
+                                }
+                            }
+                            else
+                            {
+                                dbValidationErrors.Add(new DbValidationError("", error.ErrorMessage));
+                            }
+                        }
+
+                        var validationResult = new DbEntityValidationResult((DbEntityEntry)new object(), dbValidationErrors);
+
+                        list.Add(validationResult);
+                    }
+                }
+            }
+
+            return list;
         }
 
         public bool IsEntityStateAdded(object entity)
@@ -106,6 +149,7 @@ namespace Solution.Base.Implementation.Persistance
         public override int SaveChanges()
         {
             AddTimestamps();
+
             return base.SaveChanges();
         }
 
