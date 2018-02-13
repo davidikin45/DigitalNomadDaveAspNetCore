@@ -17,6 +17,7 @@ namespace DND.Web
     public class Program
     {
         //http://mygeekjourney.com/asp-net-core/integrating-serilog-asp-net-core/
+        //https://www.carlrippon.com/asp-net-core-logging-with-serilog-and-sql-server/
         //Logging
         //Trace = 0
         //Debug = 1 -- Developement Standard

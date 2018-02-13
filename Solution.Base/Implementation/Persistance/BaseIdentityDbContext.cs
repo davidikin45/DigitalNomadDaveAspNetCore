@@ -15,6 +15,8 @@ using System.Threading;
 using Solution.Base.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Solution.Base.Interfaces.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace Solution.Base.Implementation.Persistance
 {
@@ -27,6 +29,19 @@ namespace Solution.Base.Implementation.Persistance
             :base(options)
         {
             ChangeTracker.AutoDetectChangesEnabled = false;
+        }
+
+        public static readonly LoggerFactory MyLoggerFactory
+        = new LoggerFactory(new[]
+        {
+            new ConsoleLoggerProvider((category, level)
+                => category == DbLoggerCategory.Database.Command.Name
+                   && level == LogLevel.Information, true)
+        });
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLoggerFactory(MyLoggerFactory);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
