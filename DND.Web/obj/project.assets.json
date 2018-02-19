@@ -10063,6 +10063,7 @@
       "Marvin.Cache.Headers >= 1.0.0",
       "Microsoft.AspNetCore >= 2.0.1",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 2.0.1",
+      "Microsoft.AspNetCore.Cors >= 2.0.1",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 2.0.1",
       "Microsoft.AspNetCore.Mvc >= 2.0.2",
       "Microsoft.AspNetCore.Mvc.Formatters.Xml >= 2.0.2",
@@ -10181,6 +10182,10 @@
           "Serilog.AspNetCore": {
             "target": "Package",
             "version": "2.1.0"
+          },
+          "Microsoft.AspNetCore.Cors": {
+            "target": "Package",
+            "version": "2.0.1"
           },
           "Microsoft.VisualStudio.Web.BrowserLink": {
             "target": "Package",

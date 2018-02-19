@@ -76,6 +76,16 @@ namespace DND.Web
                     }
                 );
 
+            //https://docs.microsoft.com/en-us/aspnet/core/security/cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.Configure<RazorViewEngineOptions>(options =>
@@ -270,7 +280,7 @@ namespace DND.Web
             }
             
             app.UseRequestTasks();
-
+     
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -301,6 +311,8 @@ namespace DND.Web
 
             //API rate limiting
             //app.UseIpRateLimiting();
+
+            app.UseCors("AllowAnyOrigin");
 
 
             //Unsure about ETag and Response caching order. The pluralsight video restful api building has them the other way around.
