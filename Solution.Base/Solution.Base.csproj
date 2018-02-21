@@ -596,7 +596,7 @@
     <Compile Include="Extensions\TempDataExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\AjaxRequestAttribute.cs" />
-    <Compile Include="Filters\ApiExceptionHandlingFilter.cs" />
+    <Compile Include="Filters\ExceptionHandlingFilter.cs" />
     <Compile Include="Filters\OperationCancelledExceptionFilter.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationfilter.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />

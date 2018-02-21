@@ -31,6 +31,7 @@ using Solution.Base.Tasks;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Spatial;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -38,6 +39,16 @@ using System.Text;
 
 namespace DND.Web
 {
+    //http://mygeekjourney.com/asp-net-core/integrating-serilog-asp-net-core/
+    //https://www.carlrippon.com/asp-net-core-logging-with-serilog-and-sql-server/
+    //Logging
+    //Trace = 0
+    //Debug = 1 -- Developement Standard
+    //Information = 2
+    //Warning = 3 -- Production Standard
+    //Error = 4
+    //Critical = 5
+
     public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
@@ -76,16 +87,6 @@ namespace DND.Web
                     }
                 );
 
-            //https://docs.microsoft.com/en-us/aspnet/core/security/cors
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAnyOrigin",
-                    builder => builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-            });
-
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.Configure<RazorViewEngineOptions>(options =>
@@ -110,7 +111,12 @@ namespace DND.Web
             // Add framework services.
             services.AddMvc(options => {
                 options.UseCustomModelBinding();
-                options.Filters.Add<ApiExceptionHandlingFilter>();
+
+                //DbGeography causes infinite validation loop
+                //https://github.com/aspnet/Home/issues/2024
+                options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(DbGeography)));
+
+                options.Filters.Add<ExceptionHandlingFilter>();
                 options.Filters.Add<OperationCancelledExceptionFilter>();
 
                 //Cache-control: no-cache = store response on client browser but recheck with server each request 
@@ -189,6 +195,17 @@ namespace DND.Web
             {
                 var actionContext = factory.GetService<IActionContextAccessor>().ActionContext;
                 return new UrlHelper(actionContext);
+            });
+
+            //CORS
+            //https://docs.microsoft.com/en-us/aspnet/core/security/cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
             });
 
             //Used for returning only certain fields in API

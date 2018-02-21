@@ -13,23 +13,43 @@ using System.Web.Http;
 
 namespace Solution.Base.Filters
 {
-    public class ApiExceptionHandlingFilter : ExceptionFilterAttribute
+    //This will only handle MVC errors
+    //https://stackoverflow.com/questions/42582758/asp-net-core-middleware-vs-filters
+    public class ExceptionHandlingFilter : ExceptionFilterAttribute
     {
         private readonly ILogger _logger;
 
-        public ApiExceptionHandlingFilter(ILoggerFactory loggerFactory)
+        public ExceptionHandlingFilter(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<ApiExceptionHandlingFilter>();
+            _logger = loggerFactory.CreateLogger<ExceptionHandlingFilter>();
         }
         public override void OnException(ExceptionContext context)
         {
-            if(context.HttpContext.Request.Path.ToString().StartsWith("/api"))
+            LogException(context);
+            if (context.HttpContext.Request.Path.ToString().StartsWith("/api"))
             {
-                HandleEexception(context);
-            }        
+                HandleApiException(context);
+            }   
         }
 
-        private void HandleEexception(ExceptionContext context)
+        private void LogException(ExceptionContext context)
+        {
+            if (context.Exception is ValidationErrors)
+            {
+
+            }
+            else if (context.Exception is OperationCanceledException)
+            {
+               
+            }
+            else
+            {
+                _logger.LogError(context.Exception, Messages.UnknownError);
+
+            }
+        }
+
+        private void HandleApiException(ExceptionContext context)
         {
             int statusCode = (int)HttpStatusCode.InternalServerError;
             WebApiMessage messageObject = null;
