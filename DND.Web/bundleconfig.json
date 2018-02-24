@@ -51,6 +51,7 @@
   {
     "outputFileName": "wwwroot/js/site.min.js",
     "inputFiles": [
+      "wwwroot/js/non-sucky-youtube-embed.js",
       "wwwroot/js/db-geography.js",
       "wwwroot/js/modal.js",
       "wwwroot/js/return-to-top.js",

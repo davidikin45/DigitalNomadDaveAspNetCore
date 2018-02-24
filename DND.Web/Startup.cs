@@ -27,6 +27,7 @@ using Solution.Base.Implementation.Persistance;
 using Solution.Base.Infrastructure;
 using Solution.Base.Interfaces.Services;
 using Solution.Base.Middleware;
+using Solution.Base.Scripts;
 using Solution.Base.Tasks;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -238,7 +239,6 @@ namespace DND.Web
 
                 c.DescribeAllParametersInCamelCase();
             });
-
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

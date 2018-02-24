@@ -38,7 +38,14 @@ namespace Solution.Base.DependencyInjection.Autofac.Modules
                             }
                             else
                             {
-                                builder.RegisterType(type).As(type.GetInterface("I" + type.Name));
+                                if (type.Name.Contains("Singleton"))
+                                {
+                                    builder.RegisterType(type).As(type.GetInterface("I" + type.Name)).SingleInstance();
+                                }
+                                else
+                                {
+                                    builder.RegisterType(type).As(type.GetInterface("I" + type.Name));
+                                }
                             }
                         }
                     }

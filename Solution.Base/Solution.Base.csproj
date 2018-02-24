@@ -735,6 +735,10 @@
     <Compile Include="ModelMetadataCustom\Providers\AttributeMetadataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\DashedRoutingConvention.cs" />
+    <Compile Include="Scripts\IScriptManagerSingleton.cs" />
+    <Compile Include="Scripts\ScriptManagerSingleton.cs" />
+    <Compile Include="TagHelpers\BodyTagHelper.cs" />
+    <Compile Include="TagHelpers\YouTubeEmbedTagHelper.cs" />
     <Compile Include="Tasks\IRunAfterEachRequest.cs" />
     <Compile Include="Tasks\IRunAtStartup.cs" />
     <Compile Include="Tasks\IRunOnEachRequest.cs" />
