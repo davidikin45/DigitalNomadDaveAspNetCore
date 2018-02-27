@@ -28,6 +28,7 @@
             iframe,
             iframeStyle,
             iframeInContainer,
+            iframeInContainerStyle,
             width,
             height,
             paddingBottom;
@@ -49,8 +50,9 @@
             height = ($this.data('height')) ? $this.data('height') : s.defaultHeight;
             paddingBottom = ((height / width) * 100) + '%';
             iframeStyle = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%';
-            iframe = '<iframe allowfullscreen type="text/html" style="' + iframeStyle + '" src="http://youtube.com/embed/' + videoID + '?autoplay=1" frameborder="0" height="' + height + '" width="' + width + '"></iframe>';
-            iframeInContainer = '<div style="position: relative; padding-bottom: ' + paddingBottom + '; padding-top: 30px; height: 0; overflow: hidden;">' + iframe + '</div>';
+            iframe = '<iframe allowfullscreen type="text/html" src="http://youtube.com/embed/' + videoID + '?autoplay=1" frameborder="0" height="' + height + '" width="' + width + '"></iframe>';
+            iframeInContainerStyle = 'position: relative; padding-bottom: ' + paddingBottom + '; padding-top: 30px; height: 0; overflow: hidden;';
+            iframeInContainer = '<div class="youtube-container">' + iframe + '</div>';
             $this.html(iframeInContainer);
         });
     };

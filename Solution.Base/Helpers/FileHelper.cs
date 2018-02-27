@@ -56,7 +56,7 @@ namespace Solution.Base.Helpers
             string eTag;
             using (var ms = new MemoryStream(fileInfo.LastAccessTime.SerializeToBytes()))
             {
-                eTag = CryptographyHelper.GetHash(ms);
+                eTag = HashData.ComputeHashMd5(ms);
             }
 
             return eTag;
