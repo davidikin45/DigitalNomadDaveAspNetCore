@@ -13,6 +13,7 @@ namespace DND.Domain.Constants
             public const string About = "About";
             public const string SideBarAbout = "SideBarAbout";
             public const string WorkWithMe = "WorkWithMe";
+            public const string MyWebsite = "MyWebsite";
             public const string Affiliates = "Affiliates";
             public const string Resume = "Resume";
         }

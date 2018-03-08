@@ -22,6 +22,6 @@ namespace DND.Domain.Models
         public string Subject { get; set; }
 
         [Required]
-        public string Body { get; set; }
+        public string Message { get; set; }
     }
 }

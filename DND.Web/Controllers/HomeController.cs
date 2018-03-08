@@ -100,6 +100,15 @@ namespace DND.Web.Controllers
             return View();
         }
 
+        [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
+        [Route("my-website")]
+        public ActionResult MyWebsite()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
         //[ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("about")]
         public ActionResult About()
@@ -130,14 +139,14 @@ namespace DND.Web.Controllers
 
         [HttpPost]
         [Route("contact")]
-        public ViewResult Contact(Contact contact)
+        public IActionResult Contact(Contact contact)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     var message = new EmailMessage();
-                    message.Body = contact.Body;
+                    message.Body = contact.Message;
                     message.IsHtml = true;
                     message.Subject = contact.Subject;
                     message.ReplyDisplayName = contact.Name;
@@ -145,7 +154,11 @@ namespace DND.Web.Controllers
 
                     EmailService.SendEmailMessageToAdmin(message);
 
-                    return View("Thanks");
+                    //Clears all post data
+                    //https://stackoverflow.com/questions/1775170/asp-net-mvc-modelstate-clear
+                    ViewData.ModelState.Clear();
+
+                    return View().WithSuccess(this, "Thankyou, your message was sent successfully."); ;
                 }
                 catch (Exception ex)
                 {
@@ -153,7 +166,7 @@ namespace DND.Web.Controllers
                 }
             }
 
-            if (contact.Body == null)
+            if (contact.Message == null)
             {
                 ViewData.ModelState.Clear();
             }

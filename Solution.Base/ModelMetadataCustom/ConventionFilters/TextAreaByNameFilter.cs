@@ -13,7 +13,8 @@ namespace Solution.Base.ModelMetadataCustom.ConventionFilters
 				new HashSet<string>
 						{
 							"body",
-							"comments",
+                            "message",
+                            "comments",
                             "text"
                         };
 
