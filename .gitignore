@@ -321,7 +321,6 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 
-/DND.Web/App_Data/ffmpeg/ffmpeg.exe
 /DND.Web/App_Data/Logs/*
 /DND.Web/appsettings.Production.json
 /DND.Web/uploads/gallery/australia
