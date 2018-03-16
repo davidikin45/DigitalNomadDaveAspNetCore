@@ -9,7 +9,7 @@ using System.Data.Entity.Spatial;
 
 namespace DND.Domain.Models
 {
-    public class Location : BaseEntityAuditable<int>
+    public class Location : BaseEntityAggregateRootAuditable<int>
     {
 		public string Name { get; set; }
 

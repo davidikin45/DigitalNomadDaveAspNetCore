@@ -76,7 +76,7 @@ namespace Solution.Base.Implementation.Services
             IEnumerable<TDto> dtoList;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                var entityList = unitOfWork.Repository<TContext, TEntity>().GetAll(orderByConverted, pageNo * pageSize, pageSize, includesConverted);
+                var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAll(orderByConverted, pageNo * pageSize, pageSize, includesConverted);
                 dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
                 return dtoList;
@@ -96,7 +96,7 @@ namespace Solution.Base.Implementation.Services
             IEnumerable<TDto> dtoList;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var entityList = await unitOfWork.Repository<TContext, TEntity>().GetAllAsync(orderByConverted, pageNo * pageSize, pageSize, includesConverted);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAllAsync(orderByConverted, pageNo * pageSize, pageSize, includesConverted);
                 dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
                 return dtoList;
@@ -119,7 +119,7 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
-                var entityList = unitOfWork.Repository<TContext, TEntity>().Search(search, filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
+                var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().Search(search, filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
 
                 dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -145,7 +145,7 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
 
-                var entityList = await unitOfWork.Repository<TContext, TEntity>().SearchAsync(search, filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchAsync(search, filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
                 dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
                 return dtoList;
@@ -167,7 +167,7 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
-                var entityList = unitOfWork.Repository<TContext, TEntity>().Get(filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
+                var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().Get(filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
 
                 dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -192,7 +192,7 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
 
-                var entityList = await unitOfWork.Repository<TContext, TEntity>().GetAsync(filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAsync(filterConverted, orderByConverted, pageNo * pageSize, pageSize, includesConverted);
                 dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
                 return dtoList;
@@ -209,7 +209,7 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
-                var result = unitOfWork.Repository<TContext, TEntity>().GetOne(filterConverted, includesConverted);
+                var result = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetOne(filterConverted, includesConverted);
 
                 return Mapper.Map<TDto>(result);
             }
@@ -225,7 +225,7 @@ namespace Solution.Base.Implementation.Services
 
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var result = await unitOfWork.Repository<TContext, TEntity>().GetOneAsync(filterConverted, includesConverted);
+                var result = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetOneAsync(filterConverted, includesConverted);
                 return Mapper.Map<TDto>(result);
             }
 
@@ -243,7 +243,7 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
-                var result = unitOfWork.Repository<TContext, TEntity>().GetFirst(filterConverted, orderByConverted, includesConverted);
+                var result = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetFirst(filterConverted, orderByConverted, includesConverted);
                 return Mapper.Map<TDto>(result);
             }
 
@@ -262,7 +262,7 @@ namespace Solution.Base.Implementation.Services
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
               
-                var result = await unitOfWork.Repository<TContext, TEntity>().GetFirstAsync(filterConverted, orderByConverted, includesConverted);
+                var result = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetFirstAsync(filterConverted, orderByConverted, includesConverted);
                 return Mapper.Map<TDto>(result);
             }
         }
@@ -271,7 +271,7 @@ namespace Solution.Base.Implementation.Services
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                var result = unitOfWork.Repository<TContext, TEntity>().GetById(id);
+                var result = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id);
                 return Mapper.Map<TDto>(result);
             }
         }
@@ -281,7 +281,7 @@ namespace Solution.Base.Implementation.Services
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var result = await unitOfWork.Repository<TContext, TEntity>().GetByIdAsync(id);
+                var result = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id);
                 return Mapper.Map<TDto>(result);
             }
         }
@@ -290,7 +290,7 @@ namespace Solution.Base.Implementation.Services
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                var result = unitOfWork.Repository<TContext, TEntity>().GetById(ids);
+                var result = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(ids);
                 return Mapper.Map<IEnumerable<TDto>>(result);
             }
         }
@@ -300,7 +300,7 @@ namespace Solution.Base.Implementation.Services
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var result = await unitOfWork.Repository<TContext, TEntity>().GetByIdAsync(ids);
+                var result = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(ids);
                 return Mapper.Map<IEnumerable<TDto>>(result);
             }
         }
@@ -313,7 +313,7 @@ namespace Solution.Base.Implementation.Services
             int count = 0;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                count = unitOfWork.Repository<TContext, TEntity>().GetCount(filterConverted);
+                count = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetCount(filterConverted);
             }
             return count;
         }
@@ -327,7 +327,7 @@ namespace Solution.Base.Implementation.Services
             int count = 0;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                count = await unitOfWork.Repository<TContext, TEntity>().GetCountAsync(filterConverted);
+                count = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetCountAsync(filterConverted);
             }
             return count;
         }
@@ -341,7 +341,7 @@ namespace Solution.Base.Implementation.Services
             int count = 0;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                count = unitOfWork.Repository<TContext, TEntity>().GetSearchCount(search, filterConverted);
+                count = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetSearchCount(search, filterConverted);
             }
             return count;
         }
@@ -356,7 +356,7 @@ namespace Solution.Base.Implementation.Services
             int count = 0;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                count = await unitOfWork.Repository<TContext, TEntity>().GetSearchCountAsync(search, filterConverted);
+                count = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetSearchCountAsync(search, filterConverted);
             }
             return count;
         }
@@ -368,7 +368,7 @@ namespace Solution.Base.Implementation.Services
             bool exists = false;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                exists = unitOfWork.Repository<TContext, TEntity>().GetExists(filterConverted);
+                exists = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExists(filterConverted);
             }
             return exists;
         }
@@ -383,7 +383,7 @@ namespace Solution.Base.Implementation.Services
             bool exists = false;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                exists = await unitOfWork.Repository<TContext, TEntity>().GetExistsAsync(filterConverted);
+                exists = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExistsAsync(filterConverted);
             }
             return exists;
         }
@@ -393,7 +393,7 @@ namespace Solution.Base.Implementation.Services
             bool exists = false;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                exists = unitOfWork.Repository<TContext, TEntity>().GetExists(x => x.Id.ToString() == id.ToString());
+                exists = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExists(x => x.Id.ToString() == id.ToString());
             }
             return exists;
         }
@@ -406,7 +406,7 @@ namespace Solution.Base.Implementation.Services
             bool exists = false;
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                exists = await unitOfWork.Repository<TContext, TEntity>().GetExistsAsync(x => x.Id.ToString() == id.ToString());
+                exists = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExistsAsync(x => x.Id.ToString() == id.ToString());
             }
             return exists;
         }

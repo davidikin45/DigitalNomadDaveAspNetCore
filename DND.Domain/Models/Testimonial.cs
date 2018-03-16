@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DND.Domain.Models
 {
-    public class Testimonial : BaseEntityAuditable<int>
+    public class Testimonial : BaseEntityAggregateRootAuditable<int>
     {
         [Required, StringLength(100)]
         public string Source

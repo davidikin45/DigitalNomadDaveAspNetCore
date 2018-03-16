@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DND.Domain.Models
 {
-    public class File : BaseEntityAuditable<int>
+    public class File : BaseEntityAggregateRootAuditable<int>
     {
         [Required, StringLength(255)]
         public string Description

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models
 {
-    public class Tag : BaseEntityAuditable<int>
+    public class Tag : BaseEntityAggregateRootAuditable<int>
     {
         [Required, StringLength(50)]
         public string Name

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models
 {
-    public class MailingList : BaseEntityAuditable<int>
+    public class MailingList : BaseEntityAggregateRootAuditable<int>
     {
         public string Name { get; set; }
 

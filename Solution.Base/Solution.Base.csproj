@@ -574,9 +574,14 @@
     <Compile Include="Cryptography\RSAParameterTraits.cs" />
     <Compile Include="DependencyInjection\Autofac\AutofacExtensions.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsMetadataModule.cs" />
+    <Compile Include="DependencyInjection\Autofac\Modules\AutofacDomainEventHandlerModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacTasksModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacAutomapperModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsDependencyInjectionModule.cs" />
+    <Compile Include="DomainEvents\EntityEvents.cs" />
+    <Compile Include="DomainEvents\EventListener.cs" />
+    <Compile Include="DomainEvents\IDomainEventHandler.cs" />
+    <Compile Include="DomainEvents\IDomainEvent.cs" />
     <Compile Include="Email\EmailMessage.cs" />
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Email\IEmailService.cs" />
@@ -640,10 +645,13 @@
     <Compile Include="Implementation\DTOs\LinkDTO.cs" />
     <Compile Include="Implementation\DTOs\WebApiPagedRequestDTO.cs" />
     <Compile Include="Implementation\DTOs\WebApiPagedResponseDTO.cs" />
+    <Compile Include="Implementation\Models\BaseEntityAggregateRoot.cs" />
     <Compile Include="Implementation\Models\BaseApplicationUser.cs" />
     <Compile Include="Implementation\Models\BaseEntity.cs" />
+    <Compile Include="Implementation\Models\BaseEntityAggregateRootAuditable.cs" />
     <Compile Include="Implementation\Models\BaseEntityAuditable.cs" />
     <Compile Include="Implementation\Models\BaseObjectValidatable.cs" />
+    <Compile Include="Implementation\Models\BaseValueObject.cs" />
     <Compile Include="Implementation\Models\JpegMetadata.cs" />
     <Compile Include="Implementation\Models\EnumDatasourceAttribute.cs" />
     <Compile Include="Implementation\Persistance\BaseDbConfiguration.cs" />
@@ -683,6 +691,7 @@
     <Compile Include="Infrastructure\Activators.cs" />
     <Compile Include="Infrastructure\ArrayModelBinder.cs" />
     <Compile Include="Infrastructure\AspNetCoreExtensions.cs" />
+    <Compile Include="DomainEvents\DomainEvents.cs" />
     <Compile Include="Infrastructure\PaginatedList.cs" />
     <Compile Include="Infrastructure\ConfigurationManager.cs" />
     <Compile Include="Infrastructure\CustomModelBinderProvider.cs" />
@@ -699,6 +708,7 @@
     <Compile Include="Interfaces\Automapper\IMapFrom.cs" />
     <Compile Include="Interfaces\Automapper\IMapTo.cs" />
     <Compile Include="Interfaces\Models\IBaseEntity.cs" />
+    <Compile Include="Interfaces\Models\IBaseEntityAggregateRoot.cs" />
     <Compile Include="Interfaces\Models\IBaseEntityAuditable.cs" />
     <Compile Include="Interfaces\Models\IBaseObjectValidatable.cs" />
     <Compile Include="Interfaces\Persistance\IBaseDbContext.cs" />

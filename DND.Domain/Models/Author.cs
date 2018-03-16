@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models
 {
-    public class Author : BaseEntityAuditable<int>
+    public class Author : BaseEntityAggregateRootAuditable<int>
     {
         [Required]
 		public string Name { get; set; }

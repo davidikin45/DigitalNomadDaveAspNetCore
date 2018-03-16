@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models
 {
-    public class Faq : BaseEntityAuditable<int>
+    public class Faq : BaseEntityAggregateRootAuditable<int>
     {
         [Required]
         public string Question { get; set; }

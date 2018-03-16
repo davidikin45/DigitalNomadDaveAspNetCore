@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models
 {
-    public class BlogPost : BaseEntityAuditable<int>
+    public class BlogPost : BaseEntityAggregateRootAuditable<int>
     {
 
         [Required, StringLength(500)]

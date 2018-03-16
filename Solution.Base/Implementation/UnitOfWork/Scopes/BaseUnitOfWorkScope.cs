@@ -18,6 +18,7 @@ namespace Solution.Base.Implementation.UnitOfWork
     public class BaseUnitOfWorkScope : IBaseUnitOfWorkScope
     {
         ConcurrentDictionary<Type, object> _repositories = new ConcurrentDictionary<Type, object>();
+        ConcurrentDictionary<Type, object> _readOnlyRepositories = new ConcurrentDictionary<Type, object>();
         private readonly IBaseAmbientDbContextLocator _contextLocator;
         private readonly IBaseRepositoryFactory _repositoryFactory;
         protected BaseDbContextCollection _dbContexts;
@@ -41,6 +42,16 @@ namespace Solution.Base.Implementation.UnitOfWork
             return (IBaseRepository<TEntity>)_repositories.GetOrAdd(
                 typeof(TEntity),
                 t => _repositoryFactory.Get<TEntity>(DbContexts.Get<TContext>(), _cancellationToken)
+            );
+        }
+
+        public IBaseReadOnlyRepository<TEntity> ReadOnlyRepository<TContext, TEntity>()
+             where TContext : IBaseDbContext
+            where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
+        {
+            return (IBaseReadOnlyRepository<TEntity>)_readOnlyRepositories.GetOrAdd(
+                typeof(TEntity),
+                t => _repositoryFactory.GetReadOnly<TEntity>(DbContexts.Get<TContext>(), _cancellationToken)
             );
         }
 

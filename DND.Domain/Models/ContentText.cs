@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models
 {
-    public class ContentText : BaseEntityAuditable<string>
+    public class ContentText : BaseEntityAggregateRootAuditable<string>
     {
 
         public string Text { get; set; }

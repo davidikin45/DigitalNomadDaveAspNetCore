@@ -21,6 +21,7 @@ using System.Reflection;
 using System.Collections;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.SqlServer;
+using Solution.Base.DomainEvents;
 
 namespace Solution.Base.Implementation.Persistance
 {
@@ -179,19 +180,137 @@ namespace Solution.Base.Implementation.Persistance
         public override int SaveChanges()
         {
             AddTimestamps();
-            return base.SaveChanges();
+
+            var all = ChangeTracker.Entries<IBaseEntity>().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToArray();
+            var inserted  = all.Where(x => x.State == EntityState.Added).ToArray();
+            var updated = all.Where(x => x.State == EntityState.Modified).ToArray();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).ToArray();
+
+            RaiseDomainEventsPreCommit(all, inserted, updated, deleted);
+
+            var objectCount = base.SaveChanges();
+
+            RaiseDomainEventsPostCommit(all, inserted, updated, deleted);
+
+            return objectCount;
         }
 
         public override async Task<int> SaveChangesAsync()
         {
             AddTimestamps();
-            return await base.SaveChangesAsync();
+
+            var all = ChangeTracker.Entries<IBaseEntity>().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToArray();
+            var inserted = all.Where(x => x.State == EntityState.Added).ToArray();
+            var updated = all.Where(x => x.State == EntityState.Modified).ToArray();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).ToArray();
+
+            RaiseDomainEventsPreCommit(all, inserted, updated, deleted);
+
+            var objectCount = await base.SaveChangesAsync();
+
+            RaiseDomainEventsPostCommit(all, inserted, updated, deleted);
+
+            return objectCount;
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationtoken)
         {
             AddTimestamps();
-            return await base.SaveChangesAsync(cancellationtoken);
+
+            var all = ChangeTracker.Entries<IBaseEntity>().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToArray();
+            var inserted = all.Where(x => x.State == EntityState.Added).ToArray();
+            var updated = all.Where(x => x.State == EntityState.Modified).ToArray();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).ToArray();
+
+            RaiseDomainEventsPreCommit(all, inserted, updated, deleted);
+
+            var objectCount = await base.SaveChangesAsync(cancellationtoken);
+
+            RaiseDomainEventsPostCommit(all, inserted, updated, deleted);
+
+            return objectCount;
+        }
+
+        private void RaiseDomainEventsPreCommit(
+             DbEntityEntry<IBaseEntity>[] all,
+            DbEntityEntry<IBaseEntity>[] inserted,
+            DbEntityEntry<IBaseEntity>[] updated,
+            DbEntityEntry<IBaseEntity>[] deleted)
+        {
+            foreach (var entityEntry in inserted)
+            {
+                Type genericType = typeof(InsertEntityEvent<>);
+                Type[] typeArgs = { entityEntry.Entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
+                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
+            }
+
+            foreach (var entityEntry in updated)
+            {
+                Type genericType = typeof(UpdateEntityEvent<>);
+                Type[] typeArgs = { entityEntry.Entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
+                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
+            }
+
+            foreach (var entityEntry in deleted)
+            {
+                Type genericType = typeof(DeleteEntityEvent<>);
+                Type[] typeArgs = { entityEntry.Entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
+                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
+            }
+        }
+
+        private void RaiseDomainEventsPostCommit(
+            DbEntityEntry<IBaseEntity>[] all,
+            DbEntityEntry<IBaseEntity>[] inserted,
+            DbEntityEntry<IBaseEntity>[] updated,
+            DbEntityEntry<IBaseEntity>[] deleted)
+        {
+            foreach (var entityEntry in inserted)
+            {
+                Type genericType = typeof(InsertEntityEvent<>);
+                Type[] typeArgs = { entityEntry.Entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
+                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
+            }
+
+            foreach (var entityEntry in updated)
+            {
+                Type genericType = typeof(UpdateEntityEvent<>);
+                Type[] typeArgs = { entityEntry.Entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
+                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
+            }
+
+            foreach (var entityEntry in deleted)
+            {
+                Type genericType = typeof(DeleteEntityEvent<>);
+                Type[] typeArgs = { entityEntry.Entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
+                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
+            }
+
+            foreach (var entityEntry in all)
+            {
+                if (entityEntry.Entity is IBaseEntityAggregateRoot)
+                {
+                    var aggRootEntity = ((IBaseEntityAggregateRoot)entityEntry.Entity);
+                    var events = aggRootEntity.DomainEvents.ToArray();
+                    aggRootEntity.ClearEvents();
+                    foreach (var domainEvent in events)
+                    {
+                        DomainEvents.DomainEvents.DispatchPostCommit(domainEvent);
+                    }
+                }
+            }
         }
 
         public void AddEntity<TEntity>(TEntity entity) where TEntity : class
@@ -244,6 +363,7 @@ namespace Solution.Base.Implementation.Persistance
                 ((IBaseEntityAuditable)entity.Entity).UserModified = currentUsername;
             }
         }
+
 
         #region "UTC"
         private static void ReadAllDateTimeValuesAsUtc(object sender, ObjectMaterializedEventArgs evArg)

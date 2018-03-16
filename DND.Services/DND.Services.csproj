@@ -75,6 +75,7 @@
     <Compile Include="ContentHtmlService.cs" />
     <Compile Include="ContentTextService.cs" />
     <Compile Include="CurrencyService.cs" />
+    <Compile Include="DomainEventHandlers\BlogPostInsertEventHandler.cs" />
     <Compile Include="Factories\FlightSearchEngineFactory.cs" />
     <Compile Include="FaqService.cs" />
     <Compile Include="FlightSearchService.cs" />
@@ -150,5 +151,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Models
 {
-    public class CarouselItem : BaseEntityAuditable<int>
+    public class CarouselItem : BaseEntityAggregateRootAuditable<int>
     {
 
 		public string Title { get; set; }

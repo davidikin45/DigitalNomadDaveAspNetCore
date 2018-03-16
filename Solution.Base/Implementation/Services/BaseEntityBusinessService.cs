@@ -10,7 +10,7 @@ namespace Solution.Base.Implementation.Services
 {
     public abstract class BaseEntityService<TContext, TEntity, TDto> : BaseEntityReadOnlyService<TContext, TEntity, TDto>, IBaseEntityService<TDto>
           where TContext : IBaseDbContext
-          where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
+          where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, new()
           where TDto : class, IBaseEntity
 
     {

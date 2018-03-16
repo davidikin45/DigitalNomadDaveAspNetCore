@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Solution.Base.Alerts;
 using Solution.Base.Controllers.Admin;
 using Solution.Base.DependencyInjection.Autofac.Modules;
+using Solution.Base.DomainEvents;
 using Solution.Base.Extensions;
 using Solution.Base.Filters;
 using Solution.Base.Implementation.Persistance;
@@ -254,6 +255,7 @@ namespace DND.Web
 
             builder.RegisterModule(new AutofacConventionsDependencyInjectionModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacTasksModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
+            builder.RegisterModule(new AutofacDomainEventHandlerModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacConventionsMetadataModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacAutomapperModule() { Filter = filterFunc });
 
@@ -379,6 +381,8 @@ namespace DND.Web
             StaticProperties.HostingEnvironment = HostingEnvironment;
             StaticProperties.Configuration = Configuration;
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+
+            DomainEvents.Init();
 
             taskRunner.RunTasksAtStartup();
         }

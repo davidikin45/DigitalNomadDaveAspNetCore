@@ -17,5 +17,9 @@ namespace Solution.Base.Interfaces.UnitOfWork
         IBaseRepository<TEntity> Repository<TContext, TEntity>()
               where TContext : IBaseDbContext
              where TEntity : class, IBaseEntity, IBaseEntityAuditable, new();
+
+        IBaseReadOnlyRepository<TEntity> ReadOnlyRepository<TContext, TEntity>()
+            where TContext : IBaseDbContext
+           where TEntity : class, IBaseEntity, IBaseEntityAuditable, new();
     }
 }
