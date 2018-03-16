@@ -44,6 +44,9 @@
     <Reference Include="RefactorThis.GraphDiff, Version=3.0.1.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
       <HintPath>..\packages\RefactorThis.GraphDiff.3.0.1\lib\RefactorThis.GraphDiff.dll</HintPath>
     </Reference>
+    <Reference Include="SQLite.CodeFirst, Version=1.5.1.25, Culture=neutral, PublicKeyToken=eb96ba0a78d831a7, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLite.CodeFirst.1.5.1.25\lib\net45\SQLite.CodeFirst.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -72,6 +75,9 @@
     <Compile Include="ApplicationDbInitializer.cs" />
     <Compile Include="ApplicationDbContextFactory.cs" />
     <Compile Include="Factories\DbContextFactory.cs" />
+    <Compile Include="Initializers\ApplicationDbInitializerDropCreateModelChangeSQLite.cs" />
+    <Compile Include="Initializers\ApplicationDbInitializerDropCreateSQLite.cs" />
+    <Compile Include="Initializers\ApplicationDbInitializerCreateSQLite.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerCreate.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerDropCreate.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerDropCreateForce.cs" />
