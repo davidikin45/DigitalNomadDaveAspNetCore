@@ -3,6 +3,7 @@ using DND.Domain.Models;
 using DND.EFPersistance.Initializers;
 using Solution.Base.Implementation.Models;
 using Solution.Base.Implementation.Persistance;
+using System.Data.Common;
 using System.Data.Entity;
 
 namespace DND.EFPersistance
@@ -61,6 +62,24 @@ namespace DND.EFPersistance
             : base(connectionString)
         {
             
+            this.Database.CommandTimeout = 180;
+            //SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
+            //Once a migration is created DB is never created
+            //Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext,ApplicationDbConfiguration>());
+            //Database.SetInitializer<ApplicationDbContext>(new ApplicationDbInitializerTest());
+            //DbContextInitializer<ApplicationDbContext>.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, ApplicationDbConfiguration>());
+            //SetInitializer(new ApplicationDbInitializerMigrate());
+            //Database.SetInitializer<YourContext>(new CreateDatabaseIfNotExists<YourContext>()); //Default one
+            //Database.SetInitializer<YourContext>(new DropCreateDatabaseIfModelChanges<YourContext>()); //Drop database if changes detected
+            //Database.SetInitializer<YourContext>(new DropCreateDatabaseAlways<YourContext>()); //Drop database every times
+            //Database.SetInitializer<YourContext>(new CustomInitializer<YourContext>()); //Custom if model changed and seed values
+
+        }
+
+        public ApplicationDbContext(DbConnection connection)
+           : base(connection)
+        {
+
             this.Database.CommandTimeout = 180;
             //SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
             //Once a migration is created DB is never created

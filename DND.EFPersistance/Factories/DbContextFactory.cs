@@ -2,6 +2,7 @@
 using Solution.Base.Implementation.Persistance;
 using Solution.Base.Interfaces.Persistance;
 using System;
+using System.Data.SQLite;
 
 namespace DND.EFPersistance
 {
@@ -13,7 +14,18 @@ namespace DND.EFPersistance
 
         public IBaseDbContext CreateDefault()
         {
-            return new ApplicationDbContext(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            if (bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite")))
+            {
+                var con = new SQLiteConnection()
+                {
+                    ConnectionString = ConnectionStrings.GetConnectionString("SQLite")
+                };
+                return new ApplicationDbContext(con);
+            }
+            else
+            {
+                return new ApplicationDbContext(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            }
         }
 
         public TIDbContext Create<TIDbContext>() where TIDbContext : IBaseDbContext

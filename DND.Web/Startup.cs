@@ -66,6 +66,8 @@ namespace DND.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
+
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
             {
@@ -74,7 +76,14 @@ namespace DND.Web
                 return new UrlHelper(actionContext);
             });
 
-            services.AddDbContext<ApplicationIdentityDbContext>(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            if(useSQLite)
+            {
+                services.AddDbContextSqlite<ApplicationIdentityDbContext>(ConnectionStrings.GetConnectionString("SQLite"));
+            }
+            else
+            {
+                services.AddDbContextSqlServer<ApplicationIdentityDbContext>(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            }
 
             services.AddIdentity<ApplicationIdentityDbContext, User, IdentityRole>();
 
@@ -108,7 +117,14 @@ namespace DND.Web
 
             services.AddResponseCompression();
 
-            services.AddHangfire(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            if (useSQLite)
+            {
+                services.AddHangfireSqlite(ConnectionStrings.GetConnectionString("SQLite"));
+            }
+            else
+            {
+                services.AddHangfireSqlServer(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            }
 
             // Add framework services.
             services.AddMvc(options => {
@@ -307,7 +323,7 @@ namespace DND.Web
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API V1");
-                c.DocExpansion("none");
+                c.DocExpansion(DocExpansion.None);
             });
 
 

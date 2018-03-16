@@ -11,10 +11,16 @@ namespace Solution.Base.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddDbContext<TContext>(this IServiceCollection services, string connectionString) where TContext : DbContext
+        public static void AddDbContextSqlServer<TContext>(this IServiceCollection services, string connectionString) where TContext : DbContext
         {
             services.AddDbContext<TContext>(options =>
                     options.UseSqlServer(connectionString));
+        }
+
+        public static void AddDbContextSqlite<TContext>(this IServiceCollection services, string connectionString) where TContext : DbContext
+        {
+            services.AddDbContext<TContext>(options =>
+                    options.UseSqlite(connectionString));
         }
 
         public static void AddIdentity<TContext, TUser, TRole>(this IServiceCollection services) 

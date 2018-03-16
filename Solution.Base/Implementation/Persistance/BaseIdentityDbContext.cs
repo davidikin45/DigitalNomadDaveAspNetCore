@@ -52,7 +52,8 @@ namespace Solution.Base.Implementation.Persistance
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            builder.HasDefaultSchema("dbo");
+            //builder.HasDefaultSchema("dbo"); //SQLite doesnt have schemas
+
             builder.RemovePluralizingTableNameConvention();
             //modelBuilder.Entity<IdentityUser>().ToTable("User");
             builder.Entity<IdentityRole>().ToTable("Role");

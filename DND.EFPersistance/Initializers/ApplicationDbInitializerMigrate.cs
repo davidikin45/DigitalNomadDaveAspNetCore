@@ -6,7 +6,7 @@ namespace DND.EFPersistance.Initializers
 {
 
     //https://blog.oneunicorn.com/2013/05/28/database-initializer-and-migrations-seed-methods/
-    public class ApplicationDbInitializerMigrate : MigrateDatabaseToLatestVersion<ApplicationDbContext, ApplicationDbConfiguration>
+    public class ApplicationDbInitializerMigrate : MigrateDatabaseToLatestVersion<ApplicationDbContext, ApplicationDbMigrationConfiguration>
     {
        
     }

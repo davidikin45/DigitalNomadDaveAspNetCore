@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Solution.Base.Hangfire;
@@ -30,9 +31,14 @@ namespace Solution.Base.Middleware
             return builder.UseMiddleware<ResponseCachingCustomMiddleware>();
         }
 
-        public static IServiceCollection AddHangfire(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddHangfireSqlServer(this IServiceCollection services, string connectionString)
         {
             return services.AddHangfire(config => config.UseSqlServerStorage(connectionString));
+        }
+
+        public static IServiceCollection AddHangfireSqlite(this IServiceCollection services, string connectionString)
+        {
+            return services.AddHangfire(config => config.UseSQLiteStorage(connectionString));
         }
 
         public static IApplicationBuilder UseHangfire(this IApplicationBuilder builder)

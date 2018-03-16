@@ -22,6 +22,7 @@ using System.Collections;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.SqlServer;
 using Solution.Base.DomainEvents;
+using System.Data.Common;
 
 namespace Solution.Base.Implementation.Persistance
 {
@@ -30,6 +31,26 @@ namespace Solution.Base.Implementation.Persistance
         {
             public BaseDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
+        {
+            init();
+
+            //Database.Log = Console.WriteLine;
+
+            //Once a migration is created DB is never created
+            //Database.SetInitializer<BaseIdentityDbContext<T>>(new MigrateDatabaseToLatestVersion<BaseIdentityDbContext, T>());
+
+            //Database.SetInitializer<ApplicationDbContext>(new CreateDatabaseIfNotExists<ApplicationDbContext>());
+            //Database.SetInitializer<SchoolDBContext>(new DropCreateDatabaseIfModelChanges<SchoolDBContext>());
+            //Database.SetInitializer<SchoolDBContext>(new DropCreateDatabaseAlways<SchoolDBContext>());
+        }
+
+        public BaseDbContext(DbConnection connection)
+           : base(connection, true)
+        {
+            init();
+        }
+
+        private void init()
         {
             SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
 
@@ -43,15 +64,6 @@ namespace Solution.Base.Implementation.Persistance
             Configuration.ValidateOnSaveEnabled = true;
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
-
-            //Database.Log = Console.WriteLine;
-
-            //Once a migration is created DB is never created
-            //Database.SetInitializer<BaseIdentityDbContext<T>>(new MigrateDatabaseToLatestVersion<BaseIdentityDbContext, T>());
-
-            //Database.SetInitializer<ApplicationDbContext>(new CreateDatabaseIfNotExists<ApplicationDbContext>());
-            //Database.SetInitializer<SchoolDBContext>(new DropCreateDatabaseIfModelChanges<SchoolDBContext>());
-            //Database.SetInitializer<SchoolDBContext>(new DropCreateDatabaseAlways<SchoolDBContext>());
         }
 
         public bool AutoDetectChanges

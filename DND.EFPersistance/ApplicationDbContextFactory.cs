@@ -1,6 +1,7 @@
 ﻿using DND.Domain;
 using Solution.Base.Implementation.Persistance;
 using System.Data.Entity.Infrastructure;
+using System.Data.SQLite;
 
 namespace DND.EFPersistance
 {
@@ -8,7 +9,18 @@ namespace DND.EFPersistance
     {
         ApplicationDbContext IDbContextFactory<ApplicationDbContext>.Create()
         {
-            return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            if (bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite")))
+            {
+                var con = new SQLiteConnection()
+                {
+                    ConnectionString = ConnectionStrings.GetConnectionString("SQLite")
+                };
+                return new ApplicationDbContext(con);
+            }
+            else
+            {
+                return new ApplicationDbContext(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+            }
         }
     }
 }
