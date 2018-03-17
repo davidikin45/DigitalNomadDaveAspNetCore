@@ -1,22 +1,19 @@
 ﻿using AutoMapper;
+using DND.ApplicationServices;
 using DND.Controllers;
 using DND.Domain;
 using DND.Domain.Interfaces.Persistance;
 using DND.Domain.Models;
+using DND.DomainServices;
 using DND.EFPersistance;
 using DND.EFPersistance.Identity;
-using DND.Services;
 using Moq;
 using NUnit.Framework;
 using Solution.Base.Implementation.Repository;
 using Solution.Base.Implementation.UnitOfWork;
 using Solution.Base.Interfaces.Persistance;
 using Solution.Base.Testing;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.IntegrationTests.Controllers
 {
@@ -42,7 +39,7 @@ namespace DND.IntegrationTests.Controllers
             mockDbContextFactory.Setup(c => c.CreateDefault()).Returns(_context);
 
 
-            _controller = new FlightSearchController(new FlightSearchService(new BaseUnitOfWorkScopeFactory(mockDbContextFactory.Object, new BaseAmbientDbContextLocator(), new BaseRepositoryFactory()), _mapper), _mapper, null, null);
+            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new BaseUnitOfWorkScopeFactory(mockDbContextFactory.Object, new BaseAmbientDbContextLocator(), new BaseRepositoryFactory())), _mapper), _mapper, null, null);
         }
 
         [TearDown]

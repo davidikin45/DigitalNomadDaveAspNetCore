@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Solution.Base.Interfaces.ApplicationServices;
 using Solution.Base.Interfaces.Models;
 using Solution.Base.Interfaces.Services;
 using System;
@@ -20,7 +21,7 @@ namespace Solution.Base.Controllers
     [Authorize(Roles = "admin")]
     public abstract class BaseEntityReadOnlyControllerAuthorize<TDto, IEntityService> : BaseEntityReadOnlyController<TDto, IEntityService>
         where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityService<TDto>
+        where IEntityService : IBaseEntityApplicationService<TDto>
     {
 
         public BaseEntityReadOnlyControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null)

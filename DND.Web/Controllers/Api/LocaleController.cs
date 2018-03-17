@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
 using Solution.Base.Email;
@@ -28,9 +28,9 @@ namespace DND.Controllers
     [Route("api/locale")]
     public class LocaleController : BaseWebApiController
     {
-        private readonly ILocaleService _localeService;
+        private readonly ILocaleApplicationService _localeService;
 
-        public LocaleController(ILocaleService localeService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+        public LocaleController(ILocaleApplicationService localeService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
              : base(mapper, emailService, urlHelper)
         {
             _localeService = localeService;

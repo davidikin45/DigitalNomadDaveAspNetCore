@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
 using Solution.Base.Email;
@@ -10,9 +10,9 @@ namespace DND.Web.Controllers.Api
 {
     [ApiVersion("1.0")]
     [Route("api/tag")]
-    public class TagController : BaseEntityWebApiControllerAuthorize<TagDTO,ITagService>
+    public class TagController : BaseEntityWebApiControllerAuthorize<TagDTO, ITagApplicationService>
     {
-        public TagController(ITagService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
+        public TagController(ITagApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
 

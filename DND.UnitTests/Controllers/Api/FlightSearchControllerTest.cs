@@ -1,16 +1,12 @@
 ﻿using AutoMapper;
 using DND.Controllers;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DND.UnitTests.Controllers.Api
 {
@@ -23,7 +19,7 @@ namespace DND.UnitTests.Controllers.Api
         public void TestInitialize()
         {
             var expected = new FlightSearchRequestDTO();
-            var mockService = new Mock<IFlightSearchService>();
+            var mockService = new Mock<IFlightSearchApplicationService>();
             mockService.Setup(s => s.SearchAsync(It.IsAny<FlightSearchRequestDTO>(), It.IsAny<CancellationToken>())).ReturnsAsync(new FlightSearchResponseDTO(new List<ItineraryDTO>(), 0, 10, 1));
 
             var mockMapper = new Mock<IMapper>();

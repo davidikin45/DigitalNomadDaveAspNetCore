@@ -9,6 +9,7 @@ using Solution.Base.Extensions;
 using Solution.Base.Helpers;
 using Solution.Base.Implementation.DTOs;
 using Solution.Base.Infrastructure;
+using Solution.Base.Interfaces.ApplicationServices;
 using Solution.Base.Interfaces.Models;
 using Solution.Base.Interfaces.Services;
 using System;
@@ -36,7 +37,7 @@ namespace Solution.Base.Controllers.Api
     //Otherwise, the action supports the POST method.
     public abstract class BaseEntityReadOnlyWebApiController<TDto, IEntityService> : BaseWebApiController
         where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityService<TDto>
+        where IEntityService : IBaseEntityApplicationService<TDto>
     {
         public IEntityService Service { get; private set; }
         public ITypeHelperService TypeHelperService { get; private set; }

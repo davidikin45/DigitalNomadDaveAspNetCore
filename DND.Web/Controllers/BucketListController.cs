@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.Constants;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers;
 using Solution.Base.Helpers;
@@ -18,11 +18,11 @@ namespace DND.Web.Controllers
     [Route("bucket-list")]
     public class BucketListController : BaseController
 	{
-        private readonly IBlogService _blogService;
+        private readonly IBlogApplicationService _blogService;
         private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
 
 
-        public BucketListController(IBlogService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
+        public BucketListController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
              : base(mapper)
         {
             _blogService = blogService;

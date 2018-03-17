@@ -231,6 +231,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Interactive.Async, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Interactive.Async.3.1.1\lib\net46\System.Interactive.Async.dll</HintPath>
     </Reference>
@@ -287,6 +288,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DND.ApplicationServices\DND.ApplicationServices.csproj">
+      <Project>{CD5B1A44-D686-4038-A6E9-3FA0F2993CDF}</Project>
+      <Name>DND.ApplicationServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.DomainServices\DND.DomainServices.csproj">
+      <Project>{00A1FCE1-7020-49B7-9E9D-0B1B551DDEFB}</Project>
+      <Name>DND.DomainServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DND.Domain\DND.Domain.csproj">
       <Project>{78f45465-8ef2-40de-aa58-2ea76a9853d4}</Project>
       <Name>DND.Domain</Name>
@@ -298,10 +307,6 @@
     <ProjectReference Include="..\DND.EFPersistance\DND.EFPersistance.csproj">
       <Project>{B27F3141-B790-465D-A33B-1599E1F4C571}</Project>
       <Name>DND.EFPersistance</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DND.Services\DND.Services.csproj">
-      <Project>{CD5B1A44-D686-4038-A6E9-3FA0F2993CDF}</Project>
-      <Name>DND.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\DND.Web\DND.Web.csproj">
       <Project>{16EDDC5F-CA90-492A-8C53-5777B0C206EE}</Project>

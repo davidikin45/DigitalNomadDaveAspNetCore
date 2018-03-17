@@ -1,9 +1,8 @@
 ﻿using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.Models.ProjectsViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Helpers;
-using Solution.Base.Infrastructure;
 using Solution.Base.Interfaces.Repository;
 using Solution.Base.ModelMetadataCustom.DisplayAttributes;
 using Solution.Base.ViewComponents;
@@ -15,10 +14,10 @@ namespace DND.Web.ViewComponents
 {
     public class ProjectViewComponent : BaseViewComponent
     {
-        private readonly IProjectService _projectService;
+        private readonly IProjectApplicationService _projectService;
         private readonly IFileSystemRepositoryFactory _fileSystemRepository;
 
-        public ProjectViewComponent(IProjectService projectService, IFileSystemRepositoryFactory fileSystemRepository)
+        public ProjectViewComponent(IProjectApplicationService projectService, IFileSystemRepositoryFactory fileSystemRepository)
         {
             _fileSystemRepository = fileSystemRepository;
             _projectService = projectService;

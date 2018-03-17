@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
 using Solution.Base.Email;
@@ -28,9 +28,9 @@ namespace DND.Controllers
     [Route("api/currency")]
     public class CurrencyController : BaseWebApiController
     {
-        private readonly ICurrencyService _currencyService;
+        private readonly ICurrencyApplicationService _currencyService;
 
-        public CurrencyController(ICurrencyService currencyService, IMapper mapper, IEmailService emailService = null, IUrlHelper urlHelper = null)
+        public CurrencyController(ICurrencyApplicationService currencyService, IMapper mapper, IEmailService emailService = null, IUrlHelper urlHelper = null)
              : base(mapper, emailService, urlHelper)
         {
 

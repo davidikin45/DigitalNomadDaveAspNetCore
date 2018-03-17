@@ -675,6 +675,9 @@
     <Compile Include="Helpers\WebHelper.cs" />
     <Compile Include="Helpers\WebRequestHelper.cs" />
     <Compile Include="Helpers\YouTubeHelper.cs" />
+    <Compile Include="Implementation\ApplicationServices\BaseApplicationService.cs" />
+    <Compile Include="Implementation\ApplicationServices\BaseEntityApplicationService.cs" />
+    <Compile Include="Implementation\ApplicationServices\BaseEntityReadOnlyApplicationService.cs" />
     <Compile Include="Implementation\DTOs\BaseDTO.cs" />
     <Compile Include="Implementation\DTOs\FolderMetadataDTO.cs" />
     <Compile Include="Implementation\DTOs\FileMetadataDTO.cs" />
@@ -709,9 +712,9 @@
     <Compile Include="Implementation\Repository\File\BaseJpegMetadataRepository.cs" />
     <Compile Include="Implementation\Repository\Folder\BaseFolderReadOnlyRepository.cs" />
     <Compile Include="Implementation\Repository\Folder\BaseFolderRepository.cs" />
-    <Compile Include="Implementation\Services\BaseBusinessService.cs" />
-    <Compile Include="Implementation\Services\BaseEntityBusinessService.cs" />
-    <Compile Include="Implementation\Services\BaseEntityReadOnlyBusinessService.cs" />
+    <Compile Include="Implementation\DomainServices\BaseDomainService.cs" />
+    <Compile Include="Implementation\DomainServices\BaseEntityDomainService.cs" />
+    <Compile Include="Implementation\DomainServices\BaseEntityReadOnlyDomainService.cs" />
     <Compile Include="Implementation\Services\TypeHelperService.cs" />
     <Compile Include="Implementation\UnitOfWork\BaseAmbientDbContextLocator.cs" />
     <Compile Include="Implementation\UnitOfWork\BaseAmbientUnitOfWorkSuppressor.cs" />
@@ -742,6 +745,7 @@
     <Compile Include="Infrastructure\Server.cs" />
     <Compile Include="Infrastructure\StaticProperties.cs" />
     <Compile Include="Infrastructure\UrlSlugger.cs" />
+    <Compile Include="Interfaces\ApplicationServices\IBaseApplicationService.cs" />
     <Compile Include="Interfaces\Automapper\IHaveCustomMappings.cs" />
     <Compile Include="Interfaces\Automapper\IMapFrom.cs" />
     <Compile Include="Interfaces\Automapper\IMapTo.cs" />
@@ -762,9 +766,11 @@
     <Compile Include="Interfaces\Repository\IBaseRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseRepositoryFactory.cs" />
     <Compile Include="Interfaces\Repository\IFileSystemRepositoryFactory.cs" />
-    <Compile Include="Interfaces\Services\IBaseBusinessService.cs" />
-    <Compile Include="Interfaces\Services\IBaseEntityBusinessService.cs" />
-    <Compile Include="Interfaces\Services\IBaseEntityReadOnlyBusinessService.cs" />
+    <Compile Include="Interfaces\DomainServices\IBaseDomainService.cs" />
+    <Compile Include="Interfaces\ApplicationServices\IBaseEntityApplicationService.cs" />
+    <Compile Include="Interfaces\ApplicationServices\IBaseEntityReadOnlyApplicationService.cs" />
+    <Compile Include="Interfaces\DomainServices\IBaseEntityDomainService.cs" />
+    <Compile Include="Interfaces\DomainServices\IBaseEntityReadOnlyDomainService.cs" />
     <Compile Include="Interfaces\Services\IEmailSender.cs" />
     <Compile Include="Interfaces\Services\ITypeHelperService.cs" />
     <Compile Include="Interfaces\UnitOfWork\BaseUnitOfWorkScopeOption.cs" />

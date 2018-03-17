@@ -1,13 +1,12 @@
 ﻿using DND.Domain.Constants;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.Models.SidebarViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Helpers;
 using Solution.Base.Infrastructure;
 using Solution.Base.Interfaces.Repository;
 using Solution.Base.ViewComponents;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,10 +16,10 @@ namespace DND.Web.ViewComponents
 {
     public class SidebarViewComponent : BaseViewComponent
     {
-        private readonly IBlogService _blogService;
+        private readonly IBlogApplicationService _blogService;
         private readonly IFileSystemRepositoryFactory FileSystemRepository;
 
-        public SidebarViewComponent(IBlogService blogService, IFileSystemRepositoryFactory fileSystemRepository)
+        public SidebarViewComponent(IBlogApplicationService blogService, IFileSystemRepositoryFactory fileSystemRepository)
         {
             FileSystemRepository = fileSystemRepository;
             _blogService = blogService;
@@ -37,9 +36,9 @@ namespace DND.Web.ViewComponents
             IEnumerable<BlogPostDTO> posts = null;
             IEnumerable<FileInfo> photos = null;
 
-            var categoriesTask = _blogService.CategoryService.GetAllAsync(cts.Token);
-            var tagsTask = _blogService.TagService.GetAllAsync(cts.Token);
-            var postsTask = _blogService.BlogPostService.GetPostsAsync(0, 10, cts.Token);
+            var categoriesTask = _blogService.CategoryApplicationService.GetAllAsync(cts.Token);
+            var tagsTask = _blogService.TagApplicationService.GetAllAsync(cts.Token);
+            var postsTask = _blogService.BlogPostApplicationService.GetPostsAsync(0, 10, cts.Token);
             var photosTask = repository.GetAllAsync(d => d.OrderByDescending(f => f.LastWriteTime), 0, 6);
 
             await TaskHelper.WhenAllOrException(cts, tagsTask, categoriesTask);
@@ -53,7 +52,7 @@ namespace DND.Web.ViewComponents
             categories = categoriesTask.Result.ToList();
             foreach (CategoryDTO dto in categories)
             {
-                countTasks.Add(_blogService.BlogPostService.GetTotalPostsForCategoryAsync(dto.UrlSlug, cts.Token));
+                countTasks.Add(_blogService.BlogPostApplicationService.GetTotalPostsForCategoryAsync(dto.UrlSlug, cts.Token));
             }
 
             await TaskHelper.WhenAllOrException(cts, categoriesTask, postsTask, photosTask);

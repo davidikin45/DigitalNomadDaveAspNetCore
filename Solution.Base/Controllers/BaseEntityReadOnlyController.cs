@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Email;
 using Solution.Base.Helpers;
 using Solution.Base.Implementation.DTOs;
+using Solution.Base.Interfaces.ApplicationServices;
 using Solution.Base.Interfaces.Models;
 using Solution.Base.Interfaces.Services;
 using Solution.Base.ModelMetadataCustom.DisplayAttributes;
@@ -27,7 +28,7 @@ namespace Solution.Base.Controllers
     //Otherwise, the action supports the POST method.
     public abstract class BaseEntityReadOnlyController<TDto, IEntityService> : BaseController
         where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityService<TDto>
+        where IEntityService : IBaseEntityApplicationService<TDto>
     {   
         public IEntityService Service { get; private set; }
         public Boolean Admin { get; set; }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Solution.Base.Email;
+using Solution.Base.Interfaces.ApplicationServices;
 using Solution.Base.Interfaces.Models;
-using Solution.Base.Interfaces.Services;
 using System;
 
 namespace Solution.Base.Controllers
@@ -21,7 +21,7 @@ namespace Solution.Base.Controllers
     [Authorize(Roles = "admin")]
     public abstract class BaseEntityControllerAuthorize<TDto, IEntityService> : BaseEntityController<TDto, IEntityService>
         where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityService<TDto>
+        where IEntityService : IBaseEntityApplicationService<TDto>
     {
         public BaseEntityControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null)
         : base(admin, service, mapper, emailService)

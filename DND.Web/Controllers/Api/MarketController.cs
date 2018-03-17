@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
 using Solution.Base.Email;
@@ -28,9 +28,9 @@ namespace DND.Controllers
     [Route("api/market")]
     public class MarketController : BaseWebApiController
     {
-        private readonly IMarketService _marketService;
+        private readonly IMarketApplicationService _marketService;
 
-        public MarketController(IMarketService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+        public MarketController(IMarketApplicationService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
              : base(mapper, emailService, urlHelper)
         {
             _marketService = marketService;

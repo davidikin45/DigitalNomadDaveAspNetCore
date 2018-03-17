@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
@@ -27,9 +27,9 @@ namespace DND.Controllers
     [Route("api/flight-search")]
     public class FlightSearchController : BaseWebApiController
     {
-        private readonly IFlightSearchService _flightSearchService;
+        private readonly IFlightSearchApplicationService _flightSearchService;
 
-        public FlightSearchController(IFlightSearchService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+        public FlightSearchController(IFlightSearchApplicationService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
             : base(mapper, emailService, urlHelper)
         {
 

@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
 using DND.Domain.Models;
 using DND.Web.Models.AccountViewModels;
 using Microsoft.AspNetCore.Authorization;

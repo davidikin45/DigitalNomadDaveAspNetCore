@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.Constants;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers;
 using Solution.Base.Filters;
@@ -19,11 +19,11 @@ namespace DND.Web.Controllers
     [Route("gallery")]
     public class GalleryController : BaseController
 	{
-        private readonly IBlogService _blogService;
+        private readonly IBlogApplicationService _blogService;
         private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
 
 
-        public GalleryController(IBlogService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
+        public GalleryController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
              : base(mapper)
         {
             _blogService = blogService;

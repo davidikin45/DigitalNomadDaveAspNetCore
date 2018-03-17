@@ -1,17 +1,11 @@
-﻿using DND.Domain.Constants;
-using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
-using DND.Web.Models.SidebarViewModels;
+﻿using DND.Domain.DTOs;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Helpers;
 using Solution.Base.Implementation.DTOs;
-using Solution.Base.Infrastructure;
-using Solution.Base.Interfaces.Repository;
 using Solution.Base.ModelMetadataCustom.DisplayAttributes;
 using Solution.Base.ViewComponents;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,9 +13,9 @@ namespace DND.Web.ViewComponents
 {
     public class FaqViewComponent : BaseViewComponent
     {
-        private readonly IFaqService Service;
+        private readonly IFaqApplicationService Service;
 
-        public FaqViewComponent(IFaqService service)
+        public FaqViewComponent(IFaqApplicationService service)
         {
             Service = service;
         }

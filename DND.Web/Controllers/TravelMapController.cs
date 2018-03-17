@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers;
 using Solution.Base.Email;
 using Solution.Base.Helpers;
 using Solution.Base.Implementation.DTOs;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +14,9 @@ namespace DND.Web.Controllers
     [Route("travel-map")]
     public class TravelMapController : BaseController
 	{
-        private readonly ILocationService Service;
+        private readonly ILocationApplicationService Service;
 
-        public TravelMapController(ILocationService service, IMapper mapper, IEmailService emailService)
+        public TravelMapController(ILocationApplicationService service, IMapper mapper, IEmailService emailService)
             :base(mapper, emailService)
 		{
             Service = service;

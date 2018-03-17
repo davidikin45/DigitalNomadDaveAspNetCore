@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Alerts;
@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 namespace DND.Web.Controllers.Admin
 {
     [Route("admin/mailing-list")]
-    public class AdminMailingListController : BaseEntityControllerAuthorize<MailingListDTO,IMailingListService>
+    public class AdminMailingListController : BaseEntityControllerAuthorize<MailingListDTO, IMailingListApplicationService>
     {
-        public AdminMailingListController(IMailingListService service, IMapper mapper, IEmailService emailService)
+        public AdminMailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService)
              : base(true, service, mapper, emailService)
         {
         }

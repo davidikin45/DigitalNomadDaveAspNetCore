@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers.Api;
 using Solution.Base.Email;
@@ -10,9 +10,9 @@ namespace DND.Web.Controllers.Api
 {
     [ApiVersion("1.0")]
     [Route("api/content-text")]
-    public class ContentTextController : BaseEntityWebApiControllerAuthorize<ContentTextDTO, IContentTextService>
+    public class ContentTextController : BaseEntityWebApiControllerAuthorize<ContentTextDTO, IContentTextApplicationService>
     {
-        public ContentTextController(IContentTextService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
+        public ContentTextController(IContentTextApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
 

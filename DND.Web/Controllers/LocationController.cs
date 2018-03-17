@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Controllers;
 using Solution.Base.Helpers;
@@ -8,7 +8,6 @@ using Solution.Base.Implementation.DTOs;
 using Solution.Base.Interfaces.Repository;
 using Solution.Base.ModelMetadataCustom.DisplayAttributes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,9 +16,9 @@ namespace DND.Web.Controllers
     [Route("location")]
     public class LocationController : BaseController
     {
-        private readonly ILocationService _locationService;
+        private readonly ILocationApplicationService _locationService;
 
-        public LocationController(ILocationService locationService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
+        public LocationController(ILocationApplicationService locationService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
              : base(mapper)
         {
             _locationService = locationService;

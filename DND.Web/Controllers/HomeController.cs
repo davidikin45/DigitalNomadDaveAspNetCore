@@ -1,27 +1,26 @@
-﻿using System;
+﻿using AutoMapper;
+using DND.Domain.Constants;
+using DND.Domain.DTOs;
+using DND.Domain.Interfaces.ApplicationServices;
+using DND.Domain.Models;
+using DND.Web.Models;
+using Microsoft.AspNetCore.Mvc;
+using Solution.Base.Alerts;
+using Solution.Base.Controllers;
+using Solution.Base.Email;
+using Solution.Base.Extensions;
+using Solution.Base.Helpers;
+using Solution.Base.Infrastructure;
+using Solution.Base.Interfaces.Repository;
+using Solution.Base.ModelMetadataCustom.DisplayAttributes;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using DND.Web.Models;
-using Solution.Base.Controllers;
-using DND.Domain.Interfaces.Services;
-using Solution.Base.Interfaces.Repository;
-using AutoMapper;
-using Solution.Base.Infrastructure;
-using System.Threading;
-using Solution.Base.Extensions;
-using DND.Domain.DTOs;
-using System.ServiceModel.Syndication;
-using Solution.Base.ModelMetadataCustom.DisplayAttributes;
-using DND.Domain.Models;
-using Solution.Base.Email;
-using Solution.Base.Helpers;
 using System.IO;
-using DND.Domain.Constants;
-using Solution.Base.Middleware;
-using Solution.Base.Alerts;
+using System.Linq;
+using System.ServiceModel.Syndication;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DND.Web.Controllers
 {
@@ -29,12 +28,12 @@ namespace DND.Web.Controllers
     //[LogAction]
     public class HomeController : BaseHomeController
     {
-        private IBlogService _blogService;
-        private ILocationService _locationService;
+        private IBlogApplicationService _blogService;
+        private ILocationApplicationService _locationService;
         private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
-        private readonly IMailingListService _mailingListService;
+        private readonly IMailingListApplicationService _mailingListService;
 
-        public HomeController(IBlogService blogService, ILocationService locationService, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper, IEmailService emailService, IMailingListService mailingListService)
+        public HomeController(IBlogApplicationService blogService, ILocationApplicationService locationService, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper, IEmailService emailService, IMailingListApplicationService mailingListService)
             : base(mapper, emailService)
         {
             if (blogService == null) throw new ArgumentNullException("blogService");
@@ -186,7 +185,7 @@ namespace DND.Web.Controllers
                      Priority = 0.9
                  });
 
-            foreach (TagDTO t in (await _blogService.TagService.GetAllAsync(cancellationToken, null, null, null)))
+            foreach (TagDTO t in (await _blogService.TagApplicationService.GetAllAsync(cancellationToken, null, null, null)))
             {
                 nodes.Add(
                    new SitemapNode()
@@ -197,7 +196,7 @@ namespace DND.Web.Controllers
                    });
             }
 
-            foreach (CategoryDTO c in (await _blogService.CategoryService.GetAllAsync(cancellationToken, null, null, null)))
+            foreach (CategoryDTO c in (await _blogService.CategoryApplicationService.GetAllAsync(cancellationToken, null, null, null)))
             {
                 nodes.Add(
                    new SitemapNode()
@@ -208,7 +207,7 @@ namespace DND.Web.Controllers
                    });
             }
 
-            foreach (BlogPostDTO p in (await _blogService.BlogPostService.GetPostsAsync(0, 200, cancellationToken)))
+            foreach (BlogPostDTO p in (await _blogService.BlogPostApplicationService.GetPostsAsync(0, 200, cancellationToken)))
             {
                 nodes.Add(
                    new SitemapNode()
@@ -250,7 +249,7 @@ namespace DND.Web.Controllers
 
         protected async override Task<IEnumerable<System.ServiceModel.Syndication.SyndicationItem>> RSSItems(CancellationToken cancellationToken)
         {
-            var posts = (await _blogService.BlogPostService.GetPostsAsync(0, 200, cancellationToken)).Select
+            var posts = (await _blogService.BlogPostApplicationService.GetPostsAsync(0, 200, cancellationToken)).Select
             (
               p => new SyndicationItem
                   (

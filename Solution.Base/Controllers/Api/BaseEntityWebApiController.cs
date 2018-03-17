@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Alerts;
 using Solution.Base.Email;
 using Solution.Base.Helpers;
+using Solution.Base.Interfaces.ApplicationServices;
 using Solution.Base.Interfaces.Models;
 using Solution.Base.Interfaces.Services;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace Solution.Base.Controllers.Api
     //Otherwise, the action supports the POST method.
     public abstract class BaseEntityWebApiController<TDto, IEntityService> : BaseEntityReadOnlyWebApiController<TDto, IEntityService>
         where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityService<TDto>
+        where IEntityService : IBaseEntityApplicationService<TDto>
     {
 
         public BaseEntityWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)

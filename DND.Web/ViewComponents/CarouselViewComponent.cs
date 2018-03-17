@@ -1,6 +1,6 @@
 ﻿using DND.Domain.Constants;
 using DND.Domain.DTOs;
-using DND.Domain.Interfaces.Services;
+using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.Models.CarouselViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Solution.Base.Helpers;
@@ -18,12 +18,12 @@ namespace DND.Web.ViewComponents
     [ViewComponent]
     public class CarouselViewComponent : BaseViewComponent
     {
-        private readonly IBlogService _blogService;
-        private readonly ICarouselItemService _carouselItemService;
+        private readonly IBlogApplicationService _blogService;
+        private readonly ICarouselItemApplicationService _carouselItemService;
         private readonly IFileSystemRepositoryFactory _fileSystemRepository;
 
 
-        public CarouselViewComponent(IBlogService blogService, ICarouselItemService carouselItemService, IFileSystemRepositoryFactory fileSystemRepository)
+        public CarouselViewComponent(IBlogApplicationService blogService, ICarouselItemApplicationService carouselItemService, IFileSystemRepositoryFactory fileSystemRepository)
         {
             _fileSystemRepository = fileSystemRepository;
             _blogService = blogService;
@@ -45,7 +45,7 @@ namespace DND.Web.ViewComponents
             IList<CarouselItemDTO> albumCarouselItems = new List<CarouselItemDTO>();
 
 
-            var postsTask = _blogService.BlogPostService.GetPostsForCarouselAsync(0, 3, cts.Token);
+            var postsTask = _blogService.BlogPostApplicationService.GetPostsForCarouselAsync(0, 3, cts.Token);
             var carouselItemsTask = _carouselItemService.GetAsync(cts.Token, c => c.Published, LamdaHelper.GetOrderBy<CarouselItemDTO>(orderColumn, orderType), null, null);
 
             await TaskHelper.WhenAllOrException(cts, postsTask, carouselItemsTask);

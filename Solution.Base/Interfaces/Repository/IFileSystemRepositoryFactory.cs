@@ -1,15 +1,10 @@
-﻿using Solution.Base.Interfaces.Repository;
-using Solution.Base.Interfaces.Services;
+﻿using Solution.Base.Interfaces.DomainServices;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Solution.Base.Interfaces.Repository
 {
-    public interface IFileSystemRepositoryFactory : IBaseBusinessService
+    public interface IFileSystemRepositoryFactory : IBaseDomainService
     {      
         IBaseFileRepository CreateFileRepository(CancellationToken cancellationToken, string physicalPath, Boolean includeSubDirectories = false, string searchPattern = "*.*", params string[] extensions);
         IBaseFileReadOnlyRepository CreateFileRepositoryReadOnly(CancellationToken cancellationToken, string physicalPath, Boolean includeSubDirectories = false, string searchPattern = "*.*", params string[] extensions);
