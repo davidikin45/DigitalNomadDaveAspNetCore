@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices
 {
-    public class LocationApplicationService : BaseEntityApplicationService<IApplicationDbContext, Location, LocationDTO>, ILocationApplicationService
+    public class LocationApplicationService : BaseEntityApplicationService<IApplicationDbContext, Location, LocationDTO, ILocationDomainService>, ILocationApplicationService
     {
         public LocationApplicationService(ILocationDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

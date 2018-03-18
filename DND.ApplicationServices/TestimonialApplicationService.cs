@@ -8,7 +8,7 @@ using Solution.Base.Implementation.ApplicationServices;
 
 namespace DND.ApplicationServices
 {
-    public class TestimonialApplicationService : BaseEntityApplicationService<IApplicationDbContext, Testimonial, TestimonialDTO>, ITestimonialApplicationService
+    public class TestimonialApplicationService : BaseEntityApplicationService<IApplicationDbContext, Testimonial, TestimonialDTO, ITestimonialDomainService>, ITestimonialApplicationService
     {
         public TestimonialApplicationService(ITestimonialDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

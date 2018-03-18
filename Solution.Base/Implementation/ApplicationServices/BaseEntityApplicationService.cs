@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace Solution.Base.Implementation.ApplicationServices
 {
-    public abstract class BaseEntityApplicationService<TContext, TEntity, TDto> : BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto>, IBaseEntityApplicationService<TDto>
+    public abstract class BaseEntityApplicationService<TContext, TEntity, TDto, TDomainService> : BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto, TDomainService>, IBaseEntityApplicationService<TDto>
           where TContext : IBaseDbContext
           where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, new()
           where TDto : class, IBaseEntity
+          where TDomainService : IBaseEntityDomainService<TEntity>
 
     {
-        protected virtual IBaseEntityDomainService<TEntity> DomainService { get; }
 
-        public BaseEntityApplicationService(IBaseEntityDomainService<TEntity> domainService, IMapper mapper)
+        public BaseEntityApplicationService(TDomainService domainService, IMapper mapper)
            : base(domainService, mapper)
         {
-            DomainService = domainService;
+     
         }
 
-        public BaseEntityApplicationService(IBaseEntityDomainService<TEntity> domainService)
+        public BaseEntityApplicationService(TDomainService domainService)
            : base(domainService)
         {
-            DomainService = domainService;
+
         }
 
         public virtual TDto Create(TDto dto)

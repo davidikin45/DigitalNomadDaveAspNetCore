@@ -8,7 +8,7 @@ using Solution.Base.Interfaces.Persistance;
 
 namespace DND.ApplicationServices
 {
-    public class FaqApplicationService : BaseEntityApplicationService<IBaseDbContext, Faq, FaqDTO>, IFaqApplicationService
+    public class FaqApplicationService : BaseEntityApplicationService<IBaseDbContext, Faq, FaqDTO, IFaqDomainService>, IFaqApplicationService
     {
         public FaqApplicationService(IFaqDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

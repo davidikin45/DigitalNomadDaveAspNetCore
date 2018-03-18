@@ -8,7 +8,7 @@ using Solution.Base.Implementation.ApplicationServices;
 
 namespace DND.ApplicationServices
 {
-    public class CarouselItemApplicationService : BaseEntityApplicationService<IApplicationDbContext, CarouselItem, CarouselItemDTO>, ICarouselItemApplicationService
+    public class CarouselItemApplicationService : BaseEntityApplicationService<IApplicationDbContext, CarouselItem, CarouselItemDTO, ICarouselItemDomainService>, ICarouselItemApplicationService
     {
         public CarouselItemApplicationService(ICarouselItemDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

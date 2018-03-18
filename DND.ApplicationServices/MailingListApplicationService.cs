@@ -8,7 +8,7 @@ using Solution.Base.Interfaces.Persistance;
 
 namespace DND.ApplicationServices
 {
-    public class MailingListApplicationService : BaseEntityApplicationService<IBaseDbContext, MailingList, MailingListDTO>, IMailingListApplicationService
+    public class MailingListApplicationService : BaseEntityApplicationService<IBaseDbContext, MailingList, MailingListDTO, IMailingListDomainService>, IMailingListApplicationService
     {
         public MailingListApplicationService(IMailingListDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

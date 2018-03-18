@@ -8,7 +8,7 @@ using Solution.Base.Interfaces.Persistance;
 
 namespace DND.ApplicationServices
 {
-    public class ContentTextApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentText, ContentTextDTO>, IContentTextApplicationService
+    public class ContentTextApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentText, ContentTextDTO, IContentTextDomainService>, IContentTextApplicationService
     {
         public ContentTextApplicationService(IContentTextDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices
 {
-    public class ContentHtmlApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentHtml, ContentHtmlDTO>, IContentHtmlApplicationService
+    public class ContentHtmlApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentHtml, ContentHtmlDTO, IContentHtmlDomainService>, IContentHtmlApplicationService
     {
         public ContentHtmlApplicationService(IContentHtmlDomainService domainService, IMapper mapper)
         : base(domainService, mapper)
         {
-
+           
         }
 
         public override Task DeleteAsync(ContentHtmlDTO dto, CancellationToken cancellationToken)

@@ -8,7 +8,7 @@ using Solution.Base.Implementation.ApplicationServices;
 
 namespace DND.ApplicationServices
 {
-    public class ProjectApplicationService : BaseEntityApplicationService<IApplicationDbContext, Project, ProjectDTO>, IProjectApplicationService
+    public class ProjectApplicationService : BaseEntityApplicationService<IApplicationDbContext, Project, ProjectDTO, IProjectDomainService>, IProjectApplicationService
     {
         public ProjectApplicationService(IProjectDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

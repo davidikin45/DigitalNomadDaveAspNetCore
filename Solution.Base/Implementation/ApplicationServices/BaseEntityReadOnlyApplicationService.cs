@@ -14,22 +14,24 @@ using System.Threading.Tasks;
 
 namespace Solution.Base.Implementation.ApplicationServices
 {
-    public abstract class BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto> : BaseApplicationService, IBaseEntityReadOnlyApplicationService<TDto>
+    public abstract class BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto, TDomainService> : BaseApplicationService, IBaseEntityReadOnlyApplicationService<TDto>
           where TContext : IBaseDbContext
           where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
           where TDto : class, IBaseEntity
-    {
-        protected virtual IBaseEntityReadOnlyDomainService<TEntity> ReadOnlyDomainService { get; }
+          where TDomainService : IBaseEntityReadOnlyDomainService<TEntity>
 
-        public BaseEntityReadOnlyApplicationService(IBaseEntityReadOnlyDomainService<TEntity> domainService, IMapper mapper)
+    {
+        protected virtual TDomainService DomainService { get; }
+
+        public BaseEntityReadOnlyApplicationService(TDomainService domainService, IMapper mapper)
            : base(mapper)
         {
-            ReadOnlyDomainService = domainService;
+            DomainService = domainService;
         }
 
-        public BaseEntityReadOnlyApplicationService(IBaseEntityReadOnlyDomainService<TEntity> domainService)
+        public BaseEntityReadOnlyApplicationService(TDomainService domainService)
         {
-            ReadOnlyDomainService = domainService;
+            DomainService = domainService;
         }
 
         public virtual IEnumerable<TDto> GetAll(
@@ -41,7 +43,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = ReadOnlyDomainService.GetAll(orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = DomainService.GetAll(orderByConverted, pageNo, pageSize, includesConverted);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -58,7 +60,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = await ReadOnlyDomainService.GetAllAsync(cancellationToken, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = await DomainService.GetAllAsync(cancellationToken, orderByConverted, pageNo, pageSize, includesConverted);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -77,7 +79,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = ReadOnlyDomainService.Search(search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = DomainService.Search(search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -97,7 +99,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = await ReadOnlyDomainService.SearchAsync(cancellationToken, search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = await DomainService.SearchAsync(cancellationToken, search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -115,7 +117,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = ReadOnlyDomainService.Get(filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = DomainService.Get(filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -134,7 +136,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = await ReadOnlyDomainService.GetAsync(cancellationToken, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = await DomainService.GetAsync(cancellationToken, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -148,7 +150,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var bo = ReadOnlyDomainService.GetOne(filterConverted, includesConverted);
+            var bo = DomainService.GetOne(filterConverted, includesConverted);
 
             return Mapper.Map<TDto>(bo);
         }
@@ -161,7 +163,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var bo = await ReadOnlyDomainService.GetOneAsync(cancellationToken, filterConverted, includesConverted);
+            var bo = await DomainService.GetOneAsync(cancellationToken, filterConverted, includesConverted);
 
             return Mapper.Map<TDto>(bo);
         }
@@ -175,7 +177,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var bo = ReadOnlyDomainService.GetFirst(filterConverted, orderByConverted, includesConverted);
+            var bo = DomainService.GetFirst(filterConverted, orderByConverted, includesConverted);
 
             return Mapper.Map<TDto>(bo);
         }
@@ -190,34 +192,34 @@ namespace Solution.Base.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var bo = await ReadOnlyDomainService.GetFirstAsync(cancellationToken, filterConverted, orderByConverted, includesConverted);
+            var bo = await DomainService.GetFirstAsync(cancellationToken, filterConverted, orderByConverted, includesConverted);
 
             return Mapper.Map<TDto>(bo);
         }
 
         public virtual TDto GetById(object id)
         {
-            var bo = ReadOnlyDomainService.GetById(id);
+            var bo = DomainService.GetById(id);
             return Mapper.Map<TDto>(bo);
         }
 
         public virtual async Task<TDto> GetByIdAsync(object id,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var bo = await ReadOnlyDomainService.GetByIdAsync(id, cancellationToken);
+            var bo = await DomainService.GetByIdAsync(id, cancellationToken);
             return Mapper.Map<TDto>(bo);
         }
 
         public virtual IEnumerable<TDto> GetById(IEnumerable<object> ids)
         {
-            var result = ReadOnlyDomainService.GetById(ids);
+            var result = DomainService.GetById(ids);
             return Mapper.Map<IEnumerable<TDto>>(result);
         }
 
         public virtual async Task<IEnumerable<TDto>> GetByIdAsync(IEnumerable<object> ids,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var result = await ReadOnlyDomainService.GetByIdAsync(ids, cancellationToken);
+            var result = await DomainService.GetByIdAsync(ids, cancellationToken);
             return Mapper.Map<IEnumerable<TDto>>(result);
         }
 
@@ -226,7 +228,7 @@ namespace Solution.Base.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return ReadOnlyDomainService.GetCount(filterConverted);
+            return DomainService.GetCount(filterConverted);
         }
 
         public virtual async Task<int> GetCountAsync(
@@ -235,7 +237,7 @@ namespace Solution.Base.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return await ReadOnlyDomainService.GetCountAsync(cancellationToken, filterConverted);
+            return await DomainService.GetCountAsync(cancellationToken, filterConverted);
         }
 
         public virtual int GetSearchCount(
@@ -244,7 +246,7 @@ namespace Solution.Base.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return ReadOnlyDomainService.GetSearchCount(search, filterConverted);
+            return DomainService.GetSearchCount(search, filterConverted);
         }
 
         public virtual async Task<int> GetSearchCountAsync(
@@ -254,14 +256,14 @@ namespace Solution.Base.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return await ReadOnlyDomainService.GetSearchCountAsync(cancellationToken, search, filterConverted);
+            return await DomainService.GetSearchCountAsync(cancellationToken, search, filterConverted);
         }
 
         public virtual bool Exists(Expression<Func<TDto, bool>> filter = null)
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return ReadOnlyDomainService.Exists(filterConverted);
+            return DomainService.Exists(filterConverted);
         }
 
         public virtual async Task<bool> ExistsAsync(
@@ -271,12 +273,12 @@ namespace Solution.Base.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return await ReadOnlyDomainService.ExistsAsync(cancellationToken, filterConverted);
+            return await DomainService.ExistsAsync(cancellationToken, filterConverted);
         }
 
         public virtual bool Exists(object id)
         {
-            return ReadOnlyDomainService.Exists(id);
+            return DomainService.Exists(id);
         }
 
         public virtual async Task<bool> ExistsAsync(
@@ -284,7 +286,7 @@ namespace Solution.Base.Implementation.ApplicationServices
             object id
             )
         {
-            return await ReadOnlyDomainService.ExistsAsync(cancellationToken, id);
+            return await DomainService.ExistsAsync(cancellationToken, id);
         }
 
     }
