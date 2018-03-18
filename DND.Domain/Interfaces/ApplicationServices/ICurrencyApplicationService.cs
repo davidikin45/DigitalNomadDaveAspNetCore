@@ -1,6 +1,6 @@
 ﻿using DND.Domain.DTOs;
-using Solution.Base.Interfaces.ApplicationServices;
-using Solution.Base.Interfaces.Services;
+using DND.Common.Interfaces.ApplicationServices;
+using DND.Common.Interfaces.Services;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

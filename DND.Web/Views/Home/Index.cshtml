@@ -124,7 +124,7 @@
     </div>
 }
 
-@await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = Solution.Base.Constants.CMS.ContentHtml.Main })
+@await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = DND.Common.Constants.CMS.ContentHtml.Main })
 
 @section footerContent
         {

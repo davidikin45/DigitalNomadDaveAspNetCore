@@ -1,9 +1,9 @@
 using AutoMapper;
 using DND.Domain.DTOs;
 using DND.Domain.Enums;
-using Solution.Base.Extensions;
-using Solution.Base.Implementation.Models;
-using Solution.Base.Interfaces.Automapper;
+using DND.Common.Extensions;
+using DND.Common.Implementation.Models;
+using DND.Common.Interfaces.Automapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

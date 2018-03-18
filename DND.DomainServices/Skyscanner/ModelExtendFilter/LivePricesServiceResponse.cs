@@ -2,7 +2,7 @@
 using DND.DomainServices.SearchEngines.Interfaces;
 using DND.Services;
 using DND.Services.Factories;
-using Solution.Base.Helpers;
+using DND.Common.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,7 +99,7 @@ namespace DND.DomainServices.Skyscanner.Model
 
             var filterSegmentPlaces = Places.Where(p => filterSegments.Any(s => s.OriginStation == p.Id || s.DestinationStation == p.Id)).ToList();
 
-            var filterPlaces = filterLegPlaces.Union(filterSegmentPlaces, new Solution.Base.Helpers.Comparer<Place>((p1, p2) => p1.Id == p2.Id)).ToList();
+            var filterPlaces = filterLegPlaces.Union(filterSegmentPlaces, new DND.Common.Helpers.Comparer<Place>((p1, p2) => p1.Id == p2.Id)).ToList();
 
             List<Place> newPlaces = new List<Place>();
             foreach (Place fp in filterPlaces)
@@ -123,7 +123,7 @@ namespace DND.DomainServices.Skyscanner.Model
                 }
             }
 
-            filterPlaces = filterPlaces.Union(newPlaces, new Solution.Base.Helpers.Comparer<Place>((p1, p2) => p1.Id == p2.Id)).ToList();
+            filterPlaces = filterPlaces.Union(newPlaces, new DND.Common.Helpers.Comparer<Place>((p1, p2) => p1.Id == p2.Id)).ToList();
 
             foreach (Segment s in filterSegments)
             {
@@ -442,7 +442,7 @@ namespace DND.DomainServices.Skyscanner.Model
 
             var filterSegmentCarriers = Carriers.Where(c => filterSegments.Any(s => s.Carrier == c.Id)).ToList();
 
-            var filterCarriers = filterLegCarriers.Union(filterSegmentCarriers, new Solution.Base.Helpers.Comparer<Carrier>((c1, c2) => c1.Id == c2.Id)).ToList();
+            var filterCarriers = filterLegCarriers.Union(filterSegmentCarriers, new DND.Common.Helpers.Comparer<Carrier>((c1, c2) => c1.Id == c2.Id)).ToList();
 
             var filterAgents = Agents.Where(a => filterItineries.Any(i => i.PricingOptions.Any(po => po.Agents.Contains(a.Id)))).ToList();
 

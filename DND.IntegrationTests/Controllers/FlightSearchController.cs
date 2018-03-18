@@ -9,10 +9,10 @@ using DND.EFPersistance;
 using DND.EFPersistance.Identity;
 using Moq;
 using NUnit.Framework;
-using Solution.Base.Implementation.Repository;
-using Solution.Base.Implementation.UnitOfWork;
-using Solution.Base.Interfaces.Persistance;
-using Solution.Base.Testing;
+using DND.Common.Implementation.Repository;
+using DND.Common.Implementation.UnitOfWork;
+using DND.Common.Interfaces.Persistance;
+using DND.Common.Testing;
 using System.Linq;
 
 namespace DND.IntegrationTests.Controllers

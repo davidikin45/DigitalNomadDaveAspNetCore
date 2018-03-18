@@ -2,10 +2,10 @@
 using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers;
-using Solution.Base.Email;
-using Solution.Base.Helpers;
-using Solution.Base.Implementation.DTOs;
+using DND.Common.Controllers;
+using DND.Common.Email;
+using DND.Common.Helpers;
+using DND.Common.Implementation.DTOs;
 using System.Linq;
 using System.Threading.Tasks;
 

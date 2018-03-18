@@ -2,10 +2,10 @@
 using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.SearchEngines;
-using Solution.Base.Extensions;
-using Solution.Base.Implementation.DomainServices;
-using Solution.Base.Implementation.Validation;
-using Solution.Base.Interfaces.UnitOfWork;
+using DND.Common.Extensions;
+using DND.Common.Implementation.DomainServices;
+using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Threading;

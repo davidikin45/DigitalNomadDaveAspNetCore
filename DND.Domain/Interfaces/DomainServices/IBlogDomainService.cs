@@ -1,4 +1,4 @@
-﻿using Solution.Base.Interfaces.DomainServices;
+﻿using DND.Common.Interfaces.DomainServices;
 
 namespace DND.Domain.Interfaces.DomainServices
 {

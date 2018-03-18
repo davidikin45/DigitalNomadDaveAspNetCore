@@ -2,9 +2,9 @@
 using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers.Api;
-using Solution.Base.Email;
-using Solution.Base.Interfaces.Services;
+using DND.Common.Controllers.Api;
+using DND.Common.Email;
+using DND.Common.Interfaces.Services;
 
 namespace DND.Web.Controllers.Api
 {

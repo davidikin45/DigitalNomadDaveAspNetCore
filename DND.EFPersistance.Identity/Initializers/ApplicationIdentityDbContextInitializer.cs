@@ -1,7 +1,7 @@
 ﻿using DND.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Solution.Base.Interfaces.Persistance;
+using DND.Common.Interfaces.Persistance;
 using System;
 using System.Collections.Generic;
 using System.Linq;

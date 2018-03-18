@@ -2,8 +2,8 @@
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.Models.BlogPostViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers;
-using Solution.Base.Helpers;
+using DND.Common.Controllers;
+using DND.Common.Helpers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

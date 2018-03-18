@@ -1,5 +1,5 @@
 ﻿using DND.Domain.Models;
-using Solution.Base.Interfaces.DomainServices;
+using DND.Common.Interfaces.DomainServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;

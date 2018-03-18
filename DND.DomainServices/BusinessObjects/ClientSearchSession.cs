@@ -1,7 +1,7 @@
 ﻿using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.Skyscanner.Model;
 using Newtonsoft.Json;
-using Solution.Base.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

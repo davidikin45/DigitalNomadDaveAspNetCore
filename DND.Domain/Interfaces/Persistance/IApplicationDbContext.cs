@@ -1,5 +1,5 @@
 ﻿using DND.Domain.Models;
-using Solution.Base.Interfaces.Persistance;
+using DND.Common.Interfaces.Persistance;
 using System.Data.Entity;
 
 namespace DND.Domain.Interfaces.Persistance

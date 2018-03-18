@@ -1,5 +1,5 @@
 ﻿using DND.Domain;
-using Solution.Base.Implementation.Persistance;
+using DND.Common.Implementation.Persistance;
 using System.Data.Entity.Infrastructure;
 using System.Data.SQLite;
 

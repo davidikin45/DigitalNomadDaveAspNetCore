@@ -1,6 +1,6 @@
 ﻿
 using DND.Domain.DTOs;
-using Solution.Base.Interfaces.ApplicationServices;
+using DND.Common.Interfaces.ApplicationServices;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {

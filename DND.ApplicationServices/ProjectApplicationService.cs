@@ -4,7 +4,7 @@ using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Interfaces.Persistance;
 using DND.Domain.Models;
-using Solution.Base.Implementation.ApplicationServices;
+using DND.Common.Implementation.ApplicationServices;
 
 namespace DND.ApplicationServices
 {

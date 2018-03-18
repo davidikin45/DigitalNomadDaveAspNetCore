@@ -2878,10 +2878,19 @@
           "lib/net46/System.Xml.XPath.XDocument.dll": {}
         }
       },
+      "DND.Common/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/DND.Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DND.Common.dll": {}
+        }
+      },
       "DND.Domain/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Solution.Base": "1.0.0"
+          "DND.Common": "1.0.0"
         },
         "compile": {
           "bin/placeholder/DND.Domain.dll": {}
@@ -2893,8 +2902,8 @@
       "DND.EFPersistance.Identity/1.0.0": {
         "type": "project",
         "dependencies": {
-          "DND.Domain": "1.0.0",
-          "Solution.Base": "1.0.0"
+          "DND.Common": "1.0.0",
+          "DND.Domain": "1.0.0"
         },
         "compile": {
           "bin/placeholder/DND.EFPersistance.Identity.dll": {}
@@ -2910,15 +2919,6 @@
         },
         "runtime": {
           "bin/placeholder/Marvin.Cache.Headers.dll": {}
-        }
-      },
-      "Solution.Base/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/Solution.Base.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Solution.Base.dll": {}
         }
       }
     },
@@ -5653,10 +5653,19 @@
           "lib/net46/System.Xml.XPath.XDocument.dll": {}
         }
       },
+      "DND.Common/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/DND.Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DND.Common.dll": {}
+        }
+      },
       "DND.Domain/1.0.0": {
         "type": "project",
         "dependencies": {
-          "Solution.Base": "1.0.0"
+          "DND.Common": "1.0.0"
         },
         "compile": {
           "bin/placeholder/DND.Domain.dll": {}
@@ -5668,8 +5677,8 @@
       "DND.EFPersistance.Identity/1.0.0": {
         "type": "project",
         "dependencies": {
-          "DND.Domain": "1.0.0",
-          "Solution.Base": "1.0.0"
+          "DND.Common": "1.0.0",
+          "DND.Domain": "1.0.0"
         },
         "compile": {
           "bin/placeholder/DND.EFPersistance.Identity.dll": {}
@@ -5685,15 +5694,6 @@
         },
         "runtime": {
           "bin/placeholder/Marvin.Cache.Headers.dll": {}
-        }
-      },
-      "Solution.Base/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/Solution.Base.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Solution.Base.dll": {}
         }
       }
     }
@@ -10610,6 +10610,11 @@
         "system.xml.xpath.xdocument.nuspec"
       ]
     },
+    "DND.Common/1.0.0": {
+      "type": "project",
+      "path": "../DND.Common/DND.Common.csproj",
+      "msbuildProject": "../DND.Common/DND.Common.csproj"
+    },
     "DND.Domain/1.0.0": {
       "type": "project",
       "path": "../DND.Domain/DND.Domain.csproj",
@@ -10624,11 +10629,6 @@
       "type": "project",
       "path": "../Marvin.Cache.Headers/Marvin.Cache.Headers.csproj",
       "msbuildProject": "../Marvin.Cache.Headers/Marvin.Cache.Headers.csproj"
-    },
-    "Solution.Base/1.0.0": {
-      "type": "project",
-      "path": "../Solution.Base/Solution.Base.csproj",
-      "msbuildProject": "../Solution.Base/Solution.Base.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -10637,6 +10637,7 @@
       "AutoMapper >= 6.2.2",
       "Autofac >= 4.6.2",
       "Autofac.Extensions.DependencyInjection >= 4.2.1",
+      "DND.Common >= 1.0.0",
       "DND.Domain >= 1.0.0",
       "DND.EFPersistance.Identity >= 1.0.0",
       "EntityFramework >= 6.2.0",
@@ -10663,7 +10664,6 @@
       "Serilog.Sinks.Debug >= 1.0.0",
       "Serilog.Sinks.MSSqlServer >= 5.1.1",
       "Serilog.Sinks.RollingFile >= 3.3.0",
-      "Solution.Base >= 1.0.0",
       "Swashbuckle.AspNetCore >= 2.3.0",
       "System.Data.SQLite >= 1.0.108",
       "System.Data.SqlClient >= 4.4.3"
@@ -10711,8 +10711,8 @@
             "C:\\Development\\DigitalNomadDaveAspNetCore\\Marvin.Cache.Headers\\Marvin.Cache.Headers.csproj": {
               "projectPath": "C:\\Development\\DigitalNomadDaveAspNetCore\\Marvin.Cache.Headers\\Marvin.Cache.Headers.csproj"
             },
-            "C:\\Development\\DigitalNomadDaveAspNetCore\\Solution.Base\\Solution.Base.csproj": {
-              "projectPath": "C:\\Development\\DigitalNomadDaveAspNetCore\\Solution.Base\\Solution.Base.csproj"
+            "C:\\Development\\DigitalNomadDaveAspNetCore\\DND.Common\\DND.Common.csproj": {
+              "projectPath": "C:\\Development\\DigitalNomadDaveAspNetCore\\DND.Common\\DND.Common.csproj"
             }
           }
         }

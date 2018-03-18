@@ -1,5 +1,5 @@
 ﻿using DND.Domain.DTOs;
-using Solution.Base.Interfaces.ApplicationServices;
+using DND.Common.Interfaces.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using System.Data.Entity.Migrations;
-using Solution.Base.Implementation.Persistance;
+using DND.Common.Implementation.Persistance;
 using DND.EFPersistance.Initializers;
 
 //enable-migrations -ContextProjectName EFPersistance -StartUpProjectName WebApplication1 -ContextTypeName EFPersistance.ApplicationDbContext -ProjectName EFPersistance

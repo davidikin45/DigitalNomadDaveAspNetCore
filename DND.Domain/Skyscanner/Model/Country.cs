@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Domain.DTOs;
-using Solution.Base.Interfaces.Automapper;
+using DND.Common.Interfaces.Automapper;
 using System.Collections.Generic;
 
 namespace DND.Domain.Skyscanner.Model

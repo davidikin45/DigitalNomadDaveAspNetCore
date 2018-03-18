@@ -2,7 +2,7 @@
 using DND.DomainServices.SearchEngines.Interfaces;
 using DND.Services.Factories;
 using DND.Services.FlightSearch.BusinessObjects;
-using Solution.Base.Helpers;
+using DND.Common.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

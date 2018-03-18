@@ -1,4 +1,4 @@
-﻿using Solution.Base.Interfaces.Services;
+﻿using DND.Common.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

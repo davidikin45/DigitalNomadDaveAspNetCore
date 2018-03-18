@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers.Admin;
+using DND.Common.Controllers.Admin;
 
 namespace DND.Web.Controllers.Admin
 {

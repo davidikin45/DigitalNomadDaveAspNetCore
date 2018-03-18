@@ -25,9 +25,9 @@ namespace DND.EFPersistance.Initializers
             AddContentHTML(context, DND.Domain.Constants.CMS.ContentHtml.MyWebsite, "<p>My Website</p>");
             AddContentHTML(context, DND.Domain.Constants.CMS.ContentHtml.Affiliates, "<p>Affiliates</p>");
             AddContentHTML(context, DND.Domain.Constants.CMS.ContentHtml.Resume, "<p>Resume</p>");
-            AddContentHTML(context, Solution.Base.Constants.CMS.ContentHtml.Contact, "<p>Contact</p>");
-            AddContentHTML(context, Solution.Base.Constants.CMS.ContentHtml.Head, "");
-            AddContentHTML(context, Solution.Base.Constants.CMS.ContentHtml.Main, "");
+            AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.Contact, "<p>Contact</p>");
+            AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.Head, "");
+            AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.Main, "");
         }
 
         private static void AddContentHTML(ApplicationDbContext context, string id, string content)

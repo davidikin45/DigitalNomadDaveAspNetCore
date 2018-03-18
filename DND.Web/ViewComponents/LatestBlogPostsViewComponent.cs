@@ -1,8 +1,8 @@
 ﻿using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Helpers;
-using Solution.Base.Infrastructure;
+using DND.Common.Helpers;
+using DND.Common.Infrastructure;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

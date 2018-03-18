@@ -3,7 +3,7 @@ using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Skyscanner.Model;
-using Solution.Base.Implementation.ApplicationServices;
+using DND.Common.Implementation.ApplicationServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

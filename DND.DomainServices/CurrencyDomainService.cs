@@ -1,8 +1,8 @@
 ﻿using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.SearchEngines;
-using Solution.Base.Implementation.DomainServices;
-using Solution.Base.Interfaces.UnitOfWork;
+using DND.Common.Implementation.DomainServices;
+using DND.Common.Interfaces.UnitOfWork;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

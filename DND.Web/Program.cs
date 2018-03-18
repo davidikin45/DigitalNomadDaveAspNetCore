@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Solution.Base.DependencyInjection.Autofac;
+using DND.Common.DependencyInjection.Autofac;
 using System;
 using System.Diagnostics;
 using System.IO;

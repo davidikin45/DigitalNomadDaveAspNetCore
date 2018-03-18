@@ -1,5 +1,5 @@
-﻿using Solution.Base.Implementation.Models;
-using Solution.Base.Infrastructure;
+﻿using DND.Common.Implementation.Models;
+using DND.Common.Infrastructure;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

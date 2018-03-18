@@ -1,0 +1,91 @@
+﻿using AutoMapper;
+using DND.Common.Interfaces.ApplicationServices;
+using DND.Common.Interfaces.DomainServices;
+using DND.Common.Interfaces.Models;
+using DND.Common.Interfaces.Persistance;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace DND.Common.Implementation.ApplicationServices
+{
+    public abstract class BaseEntityApplicationService<TContext, TEntity, TDto, TDomainService> : BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto, TDomainService>, IBaseEntityApplicationService<TDto>
+          where TContext : IBaseDbContext
+          where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, new()
+          where TDto : class, IBaseEntity
+          where TDomainService : IBaseEntityDomainService<TEntity>
+
+    {
+
+        public BaseEntityApplicationService(TDomainService domainService, IMapper mapper)
+           : base(domainService, mapper)
+        {
+     
+        }
+
+        public BaseEntityApplicationService(TDomainService domainService)
+           : base(domainService)
+        {
+
+        }
+
+        public virtual TDto Create(TDto dto)
+        {
+            var bo = Mapper.Map<TEntity>(dto);
+
+            DomainService.Create(bo);
+
+            return Mapper.Map<TDto>(bo);           
+        }
+
+        public virtual async Task<TDto> CreateAsync(TDto dto, CancellationToken cancellationToken)
+        {
+            var bo = Mapper.Map<TEntity>(dto);
+
+            await DomainService.CreateAsync(bo);
+
+            return Mapper.Map<TDto>(bo);
+        }
+
+        public virtual void Update(TDto dto)
+        {
+            var persistedBO = DomainService.GetById(dto.Id);
+
+            Mapper.Map(dto, persistedBO);
+
+            DomainService.Update(persistedBO);
+        }
+
+        public virtual async Task UpdateAsync(TDto dto, CancellationToken cancellationToken)
+        {
+            var persistedBO = await DomainService.GetByIdAsync(dto.Id, cancellationToken);
+
+            Mapper.Map(dto, persistedBO);
+
+            await DomainService.UpdateAsync(persistedBO, cancellationToken);
+        }
+
+        public virtual void Delete(object id)
+        {
+            TDto entity = GetById(id);
+            Delete(entity);
+        }
+
+        public virtual async Task DeleteAsync(object id, CancellationToken cancellationToken)
+        {
+            TDto entity = await GetByIdAsync(id,cancellationToken);
+            await DeleteAsync(entity, cancellationToken);
+        }
+
+        public virtual void Delete(TDto dto)
+        {
+            var bo = Mapper.Map<TEntity>(dto);
+            DomainService.Delete(bo);
+        }
+
+        public virtual async Task DeleteAsync(TDto dto, CancellationToken cancellationToken)
+        {
+            var bo = Mapper.Map<TEntity>(dto);
+            await DomainService.DeleteAsync(bo, cancellationToken);
+        }
+    }
+}

@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using DND.Web.Models.ManageViewModels;
-using Solution.Base.Interfaces.Services;
+using DND.Common.Interfaces.Services;
 using DND.Web.Extensions;
 
 namespace DND.Web.Controllers

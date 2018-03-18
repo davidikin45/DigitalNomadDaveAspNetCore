@@ -2,8 +2,8 @@
 using DND.DomainServices.SearchEngines.Interfaces;
 using DND.DomainServices.Skyscanner.Model;
 using Newtonsoft.Json;
-using Solution.Base.Extensions;
-using Solution.Base.Helpers;
+using DND.Common.Extensions;
+using DND.Common.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Solution.Base.ModelMetadataCustom.Interfaces;
-using Solution.Base.ModelMetadataCustom.Providers;
+using DND.Common.ModelMetadataCustom.Interfaces;
+using DND.Common.ModelMetadataCustom.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

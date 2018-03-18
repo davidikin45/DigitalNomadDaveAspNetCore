@@ -1,6 +1,6 @@
 ﻿using DND.Domain.Interfaces.Persistance;
-using Solution.Base.Implementation.Persistance;
-using Solution.Base.Interfaces.Persistance;
+using DND.Common.Implementation.Persistance;
+using DND.Common.Interfaces.Persistance;
 using System;
 using System.Data.SQLite;
 

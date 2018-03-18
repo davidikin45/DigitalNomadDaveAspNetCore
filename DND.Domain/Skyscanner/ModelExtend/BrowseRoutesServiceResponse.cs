@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Solution.Base.Helpers;
+using DND.Common.Helpers;
 
 namespace DND.Domain.Skyscanner.Model
 {
@@ -30,7 +30,7 @@ namespace DND.Domain.Skyscanner.Model
             var filterQuotePlaces = Places.Where(p => filterQuotes.Any(fq => (fq.InboundLeg != null && fq.InboundLeg.OriginId.ToString() == p.PlaceId) || (fq.InboundLeg != null && fq.InboundLeg.DestinationId.ToString() == p.PlaceId) ||
                 (fq.OutboundLeg != null && fq.OutboundLeg.OriginId.ToString() == p.PlaceId) || (fq.OutboundLeg != null && fq.OutboundLeg.DestinationId.ToString() == p.PlaceId))).ToList();
 
-            var filterPlaces = filterRoutePlaces.Union(filterQuotePlaces, new Solution.Base.Helpers.Comparer<Place>((p1, p2) => p1.PlaceId == p2.PlaceId)).ToList();
+            var filterPlaces = filterRoutePlaces.Union(filterQuotePlaces, new DND.Common.Helpers.Comparer<Place>((p1, p2) => p1.PlaceId == p2.PlaceId)).ToList();
 
             var filterCarriers = Carriers.Where(c => filterQuotes.Any(fq => (fq.InboundLeg != null && fq.InboundLeg.CarrierIds.Contains(c.CarrierId)) || (fq.OutboundLeg != null && fq.OutboundLeg.CarrierIds.Contains(c.CarrierId)))).ToList();
 

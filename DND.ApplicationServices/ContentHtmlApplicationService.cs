@@ -3,9 +3,9 @@ using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Models;
-using Solution.Base.Implementation.ApplicationServices;
-using Solution.Base.Implementation.Validation;
-using Solution.Base.Interfaces.Persistance;
+using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.Persistance;
 using System.Threading;
 using System.Threading.Tasks;
 

@@ -123,10 +123,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj" />
     <ProjectReference Include="..\DND.Domain\DND.Domain.csproj" />
     <ProjectReference Include="..\DND.EFPersistance.Identity\DND.EFPersistance.Identity.csproj" />
     <ProjectReference Include="..\Marvin.Cache.Headers\Marvin.Cache.Headers.csproj" />
-    <ProjectReference Include="..\Solution.Base\Solution.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup>

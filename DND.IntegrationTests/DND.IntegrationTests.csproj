@@ -292,6 +292,10 @@
       <Project>{CD5B1A44-D686-4038-A6E9-3FA0F2993CDF}</Project>
       <Name>DND.ApplicationServices</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj">
+      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
+      <Name>DND.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DND.DomainServices\DND.DomainServices.csproj">
       <Project>{00A1FCE1-7020-49B7-9E9D-0B1B551DDEFB}</Project>
       <Name>DND.DomainServices</Name>
@@ -311,10 +315,6 @@
     <ProjectReference Include="..\DND.Web\DND.Web.csproj">
       <Project>{16EDDC5F-CA90-492A-8C53-5777B0C206EE}</Project>
       <Name>DND.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Solution.Base\Solution.Base.csproj">
-      <Project>{632121C5-DB10-4F32-A239-D4FA4EE8C12E}</Project>
-      <Name>Solution.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

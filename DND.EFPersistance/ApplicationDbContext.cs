@@ -1,8 +1,8 @@
 ﻿using DND.Domain.Interfaces.Persistance;
 using DND.Domain.Models;
 using DND.EFPersistance.Initializers;
-using Solution.Base.Implementation.Models;
-using Solution.Base.Implementation.Persistance;
+using DND.Common.Implementation.Models;
+using DND.Common.Implementation.Persistance;
 using System.Data.Common;
 using System.Data.Entity;
 

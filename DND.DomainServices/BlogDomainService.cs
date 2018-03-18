@@ -1,10 +1,10 @@
 ﻿using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Interfaces.Persistance;
 using DND.Domain.Models;
-using Solution.Base.Implementation.ApplicationServices;
-using Solution.Base.Implementation.DomainServices;
-using Solution.Base.Infrastructure;
-using Solution.Base.Interfaces.UnitOfWork;
+using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Implementation.DomainServices;
+using DND.Common.Infrastructure;
+using DND.Common.Interfaces.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -99,7 +99,7 @@
     <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
     <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
 
-    @await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = Solution.Base.Constants.CMS.ContentHtml.Head })
+    @await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = DND.Common.Constants.CMS.ContentHtml.Head })
 
     <base href="/">
     <title>@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle | </text>}@(Settings.GetValue<String>("SiteTitle"))</title>

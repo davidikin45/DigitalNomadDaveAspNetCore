@@ -1,10 +1,10 @@
 using DND.Domain.Constants;
 using DND.Domain.Enums;
 using DND.Domain.Models;
-using Solution.Base.Implementation.Models;
-using Solution.Base.Interfaces.Automapper;
-using Solution.Base.ModelMetadataCustom;
-using Solution.Base.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Implementation.Models;
+using DND.Common.Interfaces.Automapper;
+using DND.Common.ModelMetadataCustom;
+using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

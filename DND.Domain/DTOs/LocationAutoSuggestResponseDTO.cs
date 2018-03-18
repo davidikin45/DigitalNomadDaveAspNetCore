@@ -1,4 +1,4 @@
-﻿using Solution.Base.Implementation.Models;
+﻿using DND.Common.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

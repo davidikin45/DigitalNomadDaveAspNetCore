@@ -92,13 +92,13 @@
     <Compile Include="TestimonialDomainService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj">
+      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
+      <Name>DND.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DND.Domain\DND.Domain.csproj">
       <Project>{78f45465-8ef2-40de-aa58-2ea76a9853d4}</Project>
       <Name>DND.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Solution.Base\Solution.Base.csproj">
-      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
-      <Name>Solution.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿using Solution.Base.Implementation.Persistance;
+﻿using DND.Common.Implementation.Persistance;
 
 namespace DND.EFPersistance.Initializers
 {

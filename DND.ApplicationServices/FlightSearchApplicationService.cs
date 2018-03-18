@@ -2,9 +2,9 @@
 using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.Interfaces.DomainServices;
-using Solution.Base.Extensions;
-using Solution.Base.Implementation.ApplicationServices;
-using Solution.Base.Implementation.Validation;
+using DND.Common.Extensions;
+using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Implementation.Validation;
 using System;
 using System.Collections.Generic;
 using System.Threading;

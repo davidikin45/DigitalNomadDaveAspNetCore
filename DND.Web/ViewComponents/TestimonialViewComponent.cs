@@ -2,10 +2,10 @@
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.Models.TestimonialViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Helpers;
-using Solution.Base.Interfaces.Repository;
-using Solution.Base.ModelMetadataCustom.DisplayAttributes;
-using Solution.Base.ViewComponents;
+using DND.Common.Helpers;
+using DND.Common.Interfaces.Repository;
+using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.ViewComponents;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

@@ -2,11 +2,11 @@
 using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers;
-using Solution.Base.Helpers;
-using Solution.Base.Implementation.DTOs;
-using Solution.Base.Interfaces.Repository;
-using Solution.Base.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Controllers;
+using DND.Common.Helpers;
+using DND.Common.Implementation.DTOs;
+using DND.Common.Interfaces.Repository;
+using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

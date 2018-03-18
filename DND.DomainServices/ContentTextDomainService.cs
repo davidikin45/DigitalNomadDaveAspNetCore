@@ -1,8 +1,8 @@
 ﻿using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Models;
-using Solution.Base.Implementation.DomainServices;
-using Solution.Base.Interfaces.Persistance;
-using Solution.Base.Interfaces.UnitOfWork;
+using DND.Common.Implementation.DomainServices;
+using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.UnitOfWork;
 
 namespace DND.ApplicationServices
 {

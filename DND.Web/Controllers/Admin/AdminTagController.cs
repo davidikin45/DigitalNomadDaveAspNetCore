@@ -2,8 +2,8 @@
 using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers;
-using Solution.Base.Email;
+using DND.Common.Controllers;
+using DND.Common.Email;
 
 namespace DND.Web.Controllers.Admin
 {

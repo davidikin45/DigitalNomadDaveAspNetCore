@@ -24,11 +24,11 @@ else
 @if (ViewContext.RouteData.Values["action"].ToString()
                                                     .Equals("search", StringComparison.OrdinalIgnoreCase))
 {
-    link = pageIndex => Solution.Base.Infrastructure.HttpContext.Current.Request.Path + "?s=" + Solution.Base.Infrastructure.HttpContext.Current.Request.Query["s"] + "page=" + pageIndex.ToString();
+    link = pageIndex => DND.Common.Infrastructure.HttpContext.Current.Request.Path + "?s=" + DND.Common.Infrastructure.HttpContext.Current.Request.Query["s"] + "page=" + pageIndex.ToString();
 }
 else
 {
-   link = pageIndex => Solution.Base.Infrastructure.HttpContext.Current.Request.Path + "?page=" + pageIndex.ToString();
+   link = pageIndex => DND.Common.Infrastructure.HttpContext.Current.Request.Path + "?page=" + pageIndex.ToString();
 }
 @HtmlHelperExtensions.BootstrapPager(Html, Model.Page, link, Model.TotalPosts, Model.PageSize, 5)
 

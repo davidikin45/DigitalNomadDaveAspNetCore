@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers.Api;
-using Solution.Base.Email;
-using Solution.Base.Implementation.DTOs;
+using DND.Common.Controllers.Api;
+using DND.Common.Email;
+using DND.Common.Implementation.DTOs;
 using System.Collections.Generic;
 
 namespace DND.Web.Controllers.Api

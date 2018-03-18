@@ -1,6 +1,6 @@
 using DND.Domain.Models;
-using Solution.Base.Implementation.Models;
-using Solution.Base.Interfaces.Automapper;
+using DND.Common.Implementation.Models;
+using DND.Common.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Solution.Base.Interfaces.Services;
+using DND.Common.Interfaces.Services;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

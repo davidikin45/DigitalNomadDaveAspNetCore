@@ -1,8 +1,8 @@
 ﻿using DND.EFPersistance.Initializers;
-using Solution.Base.Implementation.Persistance;
-using Solution.Base.Infrastructure;
-using Solution.Base.Interfaces.Persistance;
-using Solution.Base.Tasks;
+using DND.Common.Implementation.Persistance;
+using DND.Common.Infrastructure;
+using DND.Common.Interfaces.Persistance;
+using DND.Common.Tasks;
 
 namespace DND.EFPersistance
 {

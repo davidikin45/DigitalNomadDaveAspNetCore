@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using DND.Domain.Constants;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Controllers;
-using Solution.Base.Email;
-using Solution.Base.Infrastructure;
-using Solution.Base.Interfaces.Repository;
+using DND.Common.Controllers;
+using DND.Common.Email;
+using DND.Common.Infrastructure;
+using DND.Common.Interfaces.Repository;
 
 namespace DND.Web.Controllers.Admin
 {

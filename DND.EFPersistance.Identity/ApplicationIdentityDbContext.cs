@@ -1,6 +1,6 @@
 ﻿using DND.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using Solution.Base.Implementation.Persistance;
+using DND.Common.Implementation.Persistance;
 using System;
 using System.Collections.Generic;
 using System.Linq;

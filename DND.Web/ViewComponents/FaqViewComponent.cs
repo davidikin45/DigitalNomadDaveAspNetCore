@@ -1,10 +1,10 @@
 ﻿using DND.Domain.DTOs;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
-using Solution.Base.Helpers;
-using Solution.Base.Implementation.DTOs;
-using Solution.Base.ModelMetadataCustom.DisplayAttributes;
-using Solution.Base.ViewComponents;
+using DND.Common.Helpers;
+using DND.Common.Implementation.DTOs;
+using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.ViewComponents;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

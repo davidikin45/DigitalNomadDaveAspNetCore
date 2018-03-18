@@ -119,6 +119,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj">
+      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
+      <Name>DND.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DND.Domain\DND.Domain.csproj">
       <Project>{78F45465-8EF2-40DE-AA58-2EA76A9853D4}</Project>
       <Name>DND.Domain</Name>
@@ -126,10 +130,6 @@
     <ProjectReference Include="..\DND.Web\DND.Web.csproj">
       <Project>{16EDDC5F-CA90-492A-8C53-5777B0C206EE}</Project>
       <Name>DND.Web</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Solution.Base\Solution.Base.csproj">
-      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
-      <Name>Solution.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

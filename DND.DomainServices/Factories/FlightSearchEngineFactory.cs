@@ -1,6 +1,6 @@
 ﻿using DND.DomainServices.SearchEngines;
 using DND.DomainServices.SearchEngines.Interfaces;
-using Solution.Base.Infrastructure;
+using DND.Common.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;

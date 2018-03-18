@@ -1,6 +1,6 @@
-using Solution.Base.Enums;
-using Solution.Base.Extensions;
-using Solution.Base.Implementation.Models;
+using DND.Common.Enums;
+using DND.Common.Extensions;
+using DND.Common.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

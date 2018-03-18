@@ -83,13 +83,13 @@
     <Compile Include="TestimonialApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj">
+      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
+      <Name>DND.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DND.Domain\DND.Domain.csproj">
       <Project>{78F45465-8EF2-40DE-AA58-2EA76A9853D4}</Project>
       <Name>DND.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Solution.Base\Solution.Base.csproj">
-      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
-      <Name>Solution.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

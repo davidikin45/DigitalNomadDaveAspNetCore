@@ -3,7 +3,7 @@ using DND.EFPersistance;
 using DND.EFPersistance.Identity;
 using DND.EFPersistance.Initializers;
 using NUnit.Framework;
-using Solution.Base.Infrastructure;
+using DND.Common.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;

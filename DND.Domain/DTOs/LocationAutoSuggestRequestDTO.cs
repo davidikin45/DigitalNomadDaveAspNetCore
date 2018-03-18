@@ -1,5 +1,5 @@
-﻿using Solution.Base.Extensions;
-using Solution.Base.Implementation.Models;
+﻿using DND.Common.Extensions;
+using DND.Common.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
