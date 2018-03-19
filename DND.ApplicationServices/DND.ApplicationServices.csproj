@@ -67,20 +67,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlogApplicationService.cs" />
-    <Compile Include="CarouselItemApplicationService.cs" />
-    <Compile Include="ContentHtmlApplicationService.cs" />
-    <Compile Include="ContentTextApplicationService.cs" />
-    <Compile Include="CurrencyApplicationService.cs" />
-    <Compile Include="FaqApplicationService.cs" />
-    <Compile Include="FlightSearchApplicationService.cs" />
-    <Compile Include="LocaleApplicationService.cs" />
-    <Compile Include="LocationApplicationService.cs" />
-    <Compile Include="MailingListApplicationService.cs" />
-    <Compile Include="MarketApplicationService.cs" />
-    <Compile Include="ProjectApplicationService.cs" />
+    <Compile Include="Blog\BlogApplicationService.cs" />
+    <Compile Include="CMS\CarouselItemApplicationService.cs" />
+    <Compile Include="CMS\ContentHtmlApplicationService.cs" />
+    <Compile Include="CMS\ContentTextApplicationService.cs" />
+    <Compile Include="FlightSearch\CurrencyApplicationService.cs" />
+    <Compile Include="CMS\FaqApplicationService.cs" />
+    <Compile Include="FlightSearch\FlightSearchApplicationService.cs" />
+    <Compile Include="FlightSearch\LocaleApplicationService.cs" />
+    <Compile Include="Blog\LocationApplicationService.cs" />
+    <Compile Include="CMS\MailingListApplicationService.cs" />
+    <Compile Include="FlightSearch\MarketApplicationService.cs" />
+    <Compile Include="CMS\ProjectApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestimonialApplicationService.cs" />
+    <Compile Include="CMS\TestimonialApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DND.Common\DND.Common.csproj">

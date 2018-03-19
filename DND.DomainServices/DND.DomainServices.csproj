@@ -60,25 +60,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlogDomainService.cs" />
+    <Compile Include="Blog\BlogDomainService.cs" />
     <Compile Include="BusinessObjects\ClientSearchSession.cs" />
     <Compile Include="BusinessObjects\ServerSearchSession.cs" />
     <Compile Include="BusinessObjects\ServerSearchSessionResult.cs" />
-    <Compile Include="CarouselItemDomainService.cs" />
-    <Compile Include="ContentHtmlDomainService.cs" />
-    <Compile Include="ContentTextDomainService.cs" />
-    <Compile Include="CurrencyDomainService.cs" />
+    <Compile Include="CMS\CarouselItemDomainService.cs" />
+    <Compile Include="CMS\ContentHtmlDomainService.cs" />
+    <Compile Include="CMS\ContentTextDomainService.cs" />
+    <Compile Include="FlightSearch\CurrencyDomainService.cs" />
     <Compile Include="DomainEventHandlers\BlogPostInsertEventHandler.cs" />
     <Compile Include="Factories\FlightSearchEngineFactory.cs" />
-    <Compile Include="FaqDomainService.cs" />
-    <Compile Include="FlightSearchDomainService.cs" />
-    <Compile Include="LocaleDomainService.cs" />
-    <Compile Include="LocationDomainService.cs" />
-    <Compile Include="MailingListDomainService.cs" />
-    <Compile Include="MarkeDomainService.cs" />
+    <Compile Include="CMS\FaqDomainService.cs" />
+    <Compile Include="FlightSearch\FlightSearchDomainService.cs" />
+    <Compile Include="FlightSearch\LocaleDomainService.cs" />
+    <Compile Include="Blog\LocationDomainService.cs" />
+    <Compile Include="CMS\MailingListDomainService.cs" />
+    <Compile Include="FlightSearch\MarkeDomainService.cs" />
     <Compile Include="Skyscanner\Model\LivePricesServiceResponse.cs" />
     <Compile Include="Skyscanner\ModelExtendFilter\LivePricesServiceResponse.cs" />
-    <Compile Include="ProjectDomainService.cs" />
+    <Compile Include="CMS\ProjectDomainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchEngines\AirportService.cs" />
     <Compile Include="SearchEngines\FlightSearchEngine.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="SearchEngines\LocationSearchEngine.cs" />
     <Compile Include="SearchEngines\SkyscannerSearchEngine.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="TestimonialDomainService.cs" />
+    <Compile Include="CMS\TestimonialDomainService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DND.Common\DND.Common.csproj">
