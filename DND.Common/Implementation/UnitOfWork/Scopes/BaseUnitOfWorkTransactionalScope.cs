@@ -20,11 +20,22 @@ using System.Threading.Tasks;
 using DND.Common.Interfaces.Repository;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Models;
 
 namespace DND.Common.Implementation.UnitOfWork
 {
     public class BaseUnitOfWorkTransactionScope : BaseUnitOfWorkScope, IBaseUnitOfWorkTransactionScope
     {
+        public IBaseRepository<TEntity> Repository<TContext, TEntity>()
+        where TContext : IBaseDbContext
+        where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
+        {
+            return (IBaseRepository<TEntity>)_repositories.GetOrAdd(
+                typeof(TEntity),
+                t => _repositoryFactory.Get<TEntity>(DbContexts.Get<TContext>(), _cancellationToken)
+            );
+        }
+
         private bool _disposed;
         private bool _readOnly;
         private bool _completed;

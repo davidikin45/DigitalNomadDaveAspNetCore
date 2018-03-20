@@ -27,7 +27,7 @@ namespace DND.DomainServices.Authors.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.Repository<IApplicationDbContext, Author>().GetFirstAsync(c => c.UrlSlug.Equals(authorSlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Author>().GetFirstAsync(c => c.UrlSlug.Equals(authorSlug));
             }
         }
 

@@ -27,7 +27,7 @@ namespace DND.DomainServices.Categories.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.Repository<IApplicationDbContext, Category>().GetFirstAsync(c => c.UrlSlug.Equals(categorySlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Category>().GetFirstAsync(c => c.UrlSlug.Equals(categorySlug));
             }
         }
 
@@ -35,7 +35,7 @@ namespace DND.DomainServices.Categories.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.Repository<IApplicationDbContext, Category>().GetAllAsync(o => o.OrderBy(c => c.Name));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Category>().GetAllAsync(o => o.OrderBy(c => c.Name));
             }
         }
 

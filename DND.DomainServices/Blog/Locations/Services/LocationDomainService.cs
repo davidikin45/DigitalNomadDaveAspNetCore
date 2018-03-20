@@ -31,7 +31,7 @@ namespace DND.DomainServices.Blog.Locations.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.Repository<IApplicationDbContext, Location>().GetFirstAsync(t => t.UrlSlug.Equals(urlSlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Location>().GetFirstAsync(t => t.UrlSlug.Equals(urlSlug));
             }
         }
 

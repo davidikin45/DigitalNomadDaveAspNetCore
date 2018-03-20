@@ -32,7 +32,7 @@ namespace DND.Common.Implementation.UnitOfWork
     public class BaseDbContextCollection : IBaseDbContextCollection
     {
         private Dictionary<Type, IBaseDbContext> _initializedDbContexts;
-        private Dictionary<IBaseDbContext, IBaseDbContextTransaction> _transactions; 
+        private Dictionary<IBaseDbContext, IBaseDbContextTransaction> _transactions;
         private IsolationLevel? _isolationLevel;
         private readonly IDbContextFactory _dbContextFactory;
         private bool _disposed;
@@ -75,7 +75,8 @@ namespace DND.Common.Implementation.UnitOfWork
                 {
                     dbContext.AutoDetectChanges = false;
                 }
-
+                
+                //EF uses a transaction when calling SaveChanges(). Only need explicit transaction if executing raw SQL
                 if (_isolationLevel.HasValue)
                 {
                     var tran = dbContext.BeginTransaction(_isolationLevel.Value);
@@ -113,15 +114,15 @@ namespace DND.Common.Implementation.UnitOfWork
 
             foreach (var dbContext in _initializedDbContexts.Values)
             {
-                    if (!_readOnly)
-                    {      
-                        var errors = dbContext.GetValidationErrors();
-                        if (errors.Count() > 0)
-                        {
-                            throw new DatabaseValidationErrors(errors);
-                            //ThrowEnhancedValidationException(errors);
-                        }
+                if (!_readOnly)
+                {
+                    var errors = dbContext.GetValidationErrors();
+                    if (errors.Count() > 0)
+                    {
+                        throw new DatabaseValidationErrors(errors);
+                        //ThrowEnhancedValidationException(errors);
                     }
+                }
             }
 
             var c = 0;
@@ -132,11 +133,7 @@ namespace DND.Common.Implementation.UnitOfWork
                 {
                     if (!_readOnly)
                     {
-
-                            c += dbContext.SaveChanges();
-                        
-
-                          
+                        c += dbContext.SaveChanges();
                     }
 
                     // If we've started an explicit database transaction, time to commit it now.
@@ -202,7 +199,7 @@ namespace DND.Common.Implementation.UnitOfWork
                     if (!_readOnly)
                     {
 
-                          c += await dbContext.SaveChangesAsync(cancelToken).ConfigureAwait(false);
+                        c += await dbContext.SaveChangesAsync(cancelToken).ConfigureAwait(false);
 
                     }
 

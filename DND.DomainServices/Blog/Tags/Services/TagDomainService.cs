@@ -27,7 +27,7 @@ namespace DND.DomainServices.Tags.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.Repository<IApplicationDbContext,Tag>().GetFirstAsync(t => t.UrlSlug.Equals(tagSlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext,Tag>().GetFirstAsync(t => t.UrlSlug.Equals(tagSlug));
             }
         }
 
@@ -35,7 +35,7 @@ namespace DND.DomainServices.Tags.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.Repository<IApplicationDbContext, Tag>().GetAllAsync(o => o.OrderBy(c => c.Name));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Tag>().GetAllAsync(o => o.OrderBy(c => c.Name));
             }
         }
 

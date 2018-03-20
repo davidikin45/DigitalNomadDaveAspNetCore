@@ -5,6 +5,9 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+using DND.Common.Interfaces.Models;
+using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Repository;
 using System;
 using System.Collections;
 using System.Threading;
@@ -41,7 +44,9 @@ namespace DND.Common.Interfaces.UnitOfWork
     /// </summary>
     public interface IBaseUnitOfWorkTransactionScope : IDisposable, IBaseUnitOfWorkScope
     {
-       
+        IBaseRepository<TEntity> Repository<TContext, TEntity>()
+       where TContext : IBaseDbContext
+      where TEntity : class, IBaseEntity, IBaseEntityAuditable, new();
 
 
         /// <summary>

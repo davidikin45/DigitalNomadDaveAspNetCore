@@ -17,12 +17,12 @@ namespace DND.Common.Implementation.UnitOfWork
 {
     public class BaseUnitOfWorkScope : IBaseUnitOfWorkScope
     {
-        ConcurrentDictionary<Type, object> _repositories = new ConcurrentDictionary<Type, object>();
+        protected ConcurrentDictionary<Type, object> _repositories = new ConcurrentDictionary<Type, object>();
         ConcurrentDictionary<Type, object> _readOnlyRepositories = new ConcurrentDictionary<Type, object>();
         private readonly IBaseAmbientDbContextLocator _contextLocator;
-        private readonly IBaseRepositoryFactory _repositoryFactory;
+        protected readonly IBaseRepositoryFactory _repositoryFactory;
         protected BaseDbContextCollection _dbContexts;
-        private readonly CancellationToken _cancellationToken;
+        protected readonly CancellationToken _cancellationToken;
 
         public virtual IBaseDbContextCollection DbContexts { get { return _dbContexts; } }
 
@@ -33,16 +33,6 @@ namespace DND.Common.Implementation.UnitOfWork
             _contextLocator = contextLocator;
             _repositoryFactory = repositoryFactory;
             _cancellationToken = cancellationToken;
-        }
-
-        public IBaseRepository<TEntity> Repository<TContext, TEntity>()
-             where TContext : IBaseDbContext
-            where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
-        {
-            return (IBaseRepository<TEntity>)_repositories.GetOrAdd(
-                typeof(TEntity),
-                t => _repositoryFactory.Get<TEntity>(DbContexts.Get<TContext>(), _cancellationToken)
-            );
         }
 
         public IBaseReadOnlyRepository<TEntity> ReadOnlyRepository<TContext, TEntity>()

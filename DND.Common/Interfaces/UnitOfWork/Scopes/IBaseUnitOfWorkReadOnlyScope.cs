@@ -19,5 +19,6 @@ namespace DND.Common.Interfaces.UnitOfWork
         /// The DbContext instances that this UnitOfWorkScope manages.
         /// </summary>
         IBaseDbContextCollection DbContexts { get; }
+
     }
 }
