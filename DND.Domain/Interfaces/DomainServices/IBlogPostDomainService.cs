@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DND.Domain.Blog.BlogPosts;
 
 namespace DND.Domain.Interfaces.DomainServices
 {

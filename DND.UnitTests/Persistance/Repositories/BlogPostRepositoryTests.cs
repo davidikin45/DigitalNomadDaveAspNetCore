@@ -11,6 +11,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DND.Domain.Blog.BlogPosts;
 
 namespace DND.UnitTests.Persistance.Repositories
 {

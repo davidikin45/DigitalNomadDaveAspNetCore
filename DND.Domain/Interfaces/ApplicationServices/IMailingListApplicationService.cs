@@ -1,11 +1,9 @@
-﻿using DND.Domain.DTOs;
-using DND.Domain.Models;
-using DND.Common.Interfaces.ApplicationServices;
-using DND.Common.Interfaces.Services;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.CMS.MailingLists.Dtos;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface IMailingListApplicationService : IBaseEntityApplicationService<MailingListDTO>
+    public interface IMailingListApplicationService : IBaseEntityApplicationService<MailingListDto>
     {
     }
 }

@@ -1,11 +1,9 @@
-﻿using DND.Domain.DTOs;
-using DND.Domain.Models;
-using DND.Common.Interfaces.ApplicationServices;
-using DND.Common.Interfaces.Services;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.CMS.ContentTexts.Dtos;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface IContentTextApplicationService : IBaseEntityApplicationService<ContentTextDTO>
+    public interface IContentTextApplicationService : IBaseEntityApplicationService<ContentTextDto>
     {
     }
 }

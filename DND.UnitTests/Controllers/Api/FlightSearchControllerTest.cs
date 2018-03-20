@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using DND.Controllers;
-using DND.Domain.DTOs;
+using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.ViewModels;
+using DND.Web.Implementation.FlightSearch.Api;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
@@ -18,12 +18,12 @@ namespace DND.UnitTests.Controllers.Api
         [TestInitialize()]
         public void TestInitialize()
         {
-            var expected = new FlightSearchRequestDTO();
+            var expected = new FlightSearchRequestDto();
             var mockService = new Mock<IFlightSearchApplicationService>();
-            mockService.Setup(s => s.SearchAsync(It.IsAny<FlightSearchRequestDTO>(), It.IsAny<CancellationToken>())).ReturnsAsync(new FlightSearchResponseDTO(new List<ItineraryDTO>(), 0, 10, 1));
+            mockService.Setup(s => s.SearchAsync(It.IsAny<FlightSearchRequestDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(new FlightSearchResponseDto(new List<ItineraryDto>(), 0, 10, 1));
 
             var mockMapper = new Mock<IMapper>();
-            mockMapper.Setup(x => x.Map<FlightSearchClientRequestForm, FlightSearchRequestDTO>(It.IsAny<FlightSearchClientRequestForm>()))
+            mockMapper.Setup(x => x.Map<FlightSearchClientRequestForm, FlightSearchRequestDto>(It.IsAny<FlightSearchClientRequestForm>()))
                 .Returns(expected);
 
             //var mockLogger = new Mock<ILogFactory>();
@@ -39,7 +39,7 @@ namespace DND.UnitTests.Controllers.Api
             //var task = _controller.Search(model);
             //task.Wait();
             // result = task.Result;
-            // result.Should().BeOfType<BetterJsonResult<FlightSearchResponseDTO>>();
+            // result.Should().BeOfType<BetterJsonResult<FlightSearchResponseDto>>();
         }
 
         [TestMethod]

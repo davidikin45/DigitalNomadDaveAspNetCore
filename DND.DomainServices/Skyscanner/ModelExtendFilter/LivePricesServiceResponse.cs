@@ -1,8 +1,8 @@
-﻿using DND.Domain.Skyscanner.Model;
+﻿using DND.Common.Helpers;
+using DND.Domain.Skyscanner.Model;
+using DND.DomainServices.FlightSearch.Search.Services;
 using DND.DomainServices.SearchEngines.Interfaces;
 using DND.Services;
-using DND.Services.Factories;
-using DND.Common.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

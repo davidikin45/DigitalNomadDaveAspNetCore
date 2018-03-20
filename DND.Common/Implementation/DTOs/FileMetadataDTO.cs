@@ -10,9 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DND.Common.Implementation.DTOs
+namespace DND.Common.Implementation.Dtos
 {
-    public class FileMetadataDTO : BaseEntity<string>, IHaveCustomMappings
+    public class FileMetadataDto : BaseEntity<string>, IHaveCustomMappings
     {
         //[Render(ShowForDisplay = false, ShowForEdit = false, ShowForGrid = false)]
         public FileInfo File { get; set; }
@@ -27,7 +27,7 @@ namespace DND.Common.Implementation.DTOs
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<FileInfo, FileMetadataDTO>()
+            configuration.CreateMap<FileInfo, FileMetadataDto>()
             .ForMember(dto => dto.Id, bo => bo.MapFrom(s => s.FullName))
             .ForMember(dto => dto.Caption, bo => bo.MapFrom(s => Path.GetFileNameWithoutExtension(s.Name)))
             .ForMember(dto => dto.CreationTime, bo => bo.MapFrom(s => s.LastWriteTime))

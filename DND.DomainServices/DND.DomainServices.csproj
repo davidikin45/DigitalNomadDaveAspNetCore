@@ -60,25 +60,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Blog\BlogDomainService.cs" />
-    <Compile Include="BusinessObjects\ClientSearchSession.cs" />
-    <Compile Include="BusinessObjects\ServerSearchSession.cs" />
-    <Compile Include="BusinessObjects\ServerSearchSessionResult.cs" />
-    <Compile Include="CMS\CarouselItemDomainService.cs" />
-    <Compile Include="CMS\ContentHtmlDomainService.cs" />
-    <Compile Include="CMS\ContentTextDomainService.cs" />
-    <Compile Include="FlightSearch\CurrencyDomainService.cs" />
-    <Compile Include="DomainEventHandlers\BlogPostInsertEventHandler.cs" />
-    <Compile Include="Factories\FlightSearchEngineFactory.cs" />
-    <Compile Include="CMS\FaqDomainService.cs" />
-    <Compile Include="FlightSearch\FlightSearchDomainService.cs" />
-    <Compile Include="FlightSearch\LocaleDomainService.cs" />
-    <Compile Include="Blog\LocationDomainService.cs" />
-    <Compile Include="CMS\MailingListDomainService.cs" />
-    <Compile Include="FlightSearch\MarkeDomainService.cs" />
+    <Compile Include="Blog\Authors\Services\AuthorDomainService.cs" />
+    <Compile Include="Blog\BlogPosts\Services\BlogPostDomainService.cs" />
+    <Compile Include="Blog\Categories\Services\CategoryDomainService.cs" />
+    <Compile Include="Blog\Services\BlogDomainService.cs" />
+    <Compile Include="Blog\Tags\Services\TagDomainService.cs" />
+    <Compile Include="Skyscanner\BusinessObjects\ClientSearchSession.cs" />
+    <Compile Include="Skyscanner\BusinessObjects\ServerSearchSession.cs" />
+    <Compile Include="Skyscanner\BusinessObjects\ServerSearchSessionResult.cs" />
+    <Compile Include="CMS\CarouselItems\Services\CarouselItemDomainService.cs" />
+    <Compile Include="CMS\ContentHtmls\Services\ContentHtmlDomainService.cs" />
+    <Compile Include="CMS\ContentTexts\Services\ContentTextDomainService.cs" />
+    <Compile Include="FlightSearch\Currencies\Services\CurrencyDomainService.cs" />
+    <Compile Include="Blog\BlogPosts\DomainEventHandlers\BlogPostInsertEventHandler.cs" />
+    <Compile Include="FlightSearch\Search\Services\FlightSearchEngineFactory.cs" />
+    <Compile Include="CMS\Faqs\Services\FaqDomainService.cs" />
+    <Compile Include="FlightSearch\Search\Services\FlightSearchDomainService.cs" />
+    <Compile Include="FlightSearch\Locales\Services\LocaleDomainService.cs" />
+    <Compile Include="Blog\Locations\Services\LocationDomainService.cs" />
+    <Compile Include="CMS\MailingLists\Services\MailingListDomainService.cs" />
+    <Compile Include="FlightSearch\Markets\Services\MarkeDomainService.cs" />
     <Compile Include="Skyscanner\Model\LivePricesServiceResponse.cs" />
     <Compile Include="Skyscanner\ModelExtendFilter\LivePricesServiceResponse.cs" />
-    <Compile Include="CMS\ProjectDomainService.cs" />
+    <Compile Include="CMS\Projects\Services\ProjectDomainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchEngines\AirportService.cs" />
     <Compile Include="SearchEngines\FlightSearchEngine.cs" />
@@ -89,7 +93,7 @@
     <Compile Include="SearchEngines\LocationSearchEngine.cs" />
     <Compile Include="SearchEngines\SkyscannerSearchEngine.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="CMS\TestimonialDomainService.cs" />
+    <Compile Include="CMS\Testimonials\Services\TestimonialDomainService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DND.Common\DND.Common.csproj">
@@ -104,6 +108,23 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Blog\Authors\DomainEventHandlers\" />
+    <Folder Include="Blog\Categories\DomainEventHandlers\" />
+    <Folder Include="Blog\Locations\DomainEventHandlers\" />
+    <Folder Include="Blog\Tags\DomainEventHandlers\" />
+    <Folder Include="CMS\CarouselItems\DomainEventHandlers\" />
+    <Folder Include="CMS\ContentHtmls\DomainEventHandlers\" />
+    <Folder Include="CMS\ContentTexts\DomainEventHandlers\" />
+    <Folder Include="CMS\Faqs\DomainEventHandlers\" />
+    <Folder Include="CMS\MailingLists\DomainEventHandlers\" />
+    <Folder Include="CMS\Projects\DomainEventHandlers\" />
+    <Folder Include="CMS\Testimonials\DomainEventHandlers\" />
+    <Folder Include="FlightSearch\Currencies\DomainEventHandlers\" />
+    <Folder Include="FlightSearch\Locales\DomainEventHandlers\" />
+    <Folder Include="FlightSearch\Markets\DomainEventHandlers\" />
+    <Folder Include="FlightSearch\Search\DomainEventHandlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

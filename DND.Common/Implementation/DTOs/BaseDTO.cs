@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DND.Common.Implementation.DTOs
+namespace DND.Common.Implementation.Dtos
 {
-    public abstract class BaseDTO : BaseObjectValidatable
+    public abstract class BaseDto : BaseObjectValidatable
     {
         
     }

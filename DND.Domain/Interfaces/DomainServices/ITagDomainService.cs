@@ -1,7 +1,5 @@
-﻿using DND.Domain.DTOs;
-using DND.Domain.Models;
-using DND.Common.Interfaces.DomainServices;
-using DND.Common.Interfaces.Services;
+﻿using DND.Common.Interfaces.DomainServices;
+using DND.Domain.Blog.Tags;
 using System.Threading;
 using System.Threading.Tasks;
 

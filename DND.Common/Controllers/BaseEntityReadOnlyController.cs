@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DND.Common.Email;
 using DND.Common.Helpers;
-using DND.Common.Implementation.DTOs;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
@@ -57,7 +57,7 @@ namespace DND.Common.Controllers
                 var data = dataTask.Result;
                 var total = totalTask.Result;
 
-                var response = new WebApiPagedResponseDTO<TDto>
+                var response = new WebApiPagedResponsedto<TDto>
                 {
                     Page = page,
                     PageSize = pageSize,

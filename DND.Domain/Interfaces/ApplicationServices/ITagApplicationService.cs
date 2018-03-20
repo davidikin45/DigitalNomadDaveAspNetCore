@@ -1,12 +1,12 @@
-﻿using DND.Domain.DTOs;
-using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.Blog.Tags.Dtos;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface ITagApplicationService : IBaseEntityApplicationService<TagDTO>
+    public interface ITagApplicationService : IBaseEntityApplicationService<TagDto>
     {
-        Task<TagDTO> GetTagAsync(string tagSlug, CancellationToken cancellationToken);
+        Task<TagDto> GetTagAsync(string tagSlug, CancellationToken cancellationToken);
     }
 }

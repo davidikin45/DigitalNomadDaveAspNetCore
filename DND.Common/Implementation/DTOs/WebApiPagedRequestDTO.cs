@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DND.Common.Implementation.DTOs
+namespace DND.Common.Implementation.Dtos
 {
-    public class WebApiPagedRequestDTO : BaseDTO
+    public class WebApiPagedRequestDto : BaseDto
     {
         // no. of records to fetch
         public int PageSize

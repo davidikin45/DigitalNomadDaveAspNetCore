@@ -1,6 +1,5 @@
-﻿using DND.Domain.DTOs;
-using DND.Common.Interfaces.ApplicationServices;
-using DND.Common.Interfaces.Services;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.FlightSearch.Search.Dtos;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,9 +7,9 @@ namespace DND.Domain.Interfaces.ApplicationServices
 {
     public interface IFlightSearchApplicationService : IBaseApplicationService
     {
-        Task<FlightSearchResponseDTO> SearchAsync(FlightSearchRequestDTO request, CancellationToken cancellationToken);
+        Task<FlightSearchResponseDto> SearchAsync(FlightSearchRequestDto request, CancellationToken cancellationToken);
 
-        Task<LocationAutoSuggestResponseDTO> LocationAutoSuggestAsync(LocationAutoSuggestRequestDTO request, CancellationToken cancellationToken);
-        Task<LocationResponseDTO> GetLocationAsync(LocationRequestDTO request, CancellationToken cancellationToken);
+        Task<LocationAutoSuggestResponseDto> LocationAutoSuggestAsync(LocationAutoSuggestRequestDto request, CancellationToken cancellationToken);
+        Task<LocationResponsedto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken);
     }
 }

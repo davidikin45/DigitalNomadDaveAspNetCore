@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using DND.Common.Alerts;
 using DND.Common.Email;
 using DND.Common.Helpers;
-using DND.Common.Implementation.DTOs;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Repository;
 using System;
 using System.IO;
@@ -42,7 +42,7 @@ namespace DND.Common.Controllers
                 var repository = FileSystemRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.GetByPathAsync(id.Replace("/", "\\"));
 
-                var dto = Mapper.Map<FolderMetadataDTO>(data);
+                var dto = Mapper.Map<FolderMetadataDto>(data);
                 dto.Id = dto.Id.Replace(PhysicalPath, "");
 
                 ViewBag.PageTitle = Title;
@@ -58,7 +58,7 @@ namespace DND.Common.Controllers
         // POST: Default/Edit/5
         [HttpPost]
         [Route("edit/{*id}")]
-        public virtual async Task<ActionResult> Edit(string id, FolderMetadataDTO dto)
+        public virtual async Task<ActionResult> Edit(string id, FolderMetadataDto dto)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -104,7 +104,7 @@ namespace DND.Common.Controllers
                 var repository = FileSystemRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.GetByPathAsync(id.Replace("/", "\\"));
 
-                var dto = Mapper.Map<FolderMetadataDTO>(data);
+                var dto = Mapper.Map<FolderMetadataDto>(data);
                 dto.Id = dto.Id.Replace(PhysicalPath, "");
 
                 ViewBag.PageTitle = Title;

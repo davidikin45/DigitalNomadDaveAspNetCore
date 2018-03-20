@@ -1,12 +1,12 @@
-﻿using DND.Domain.DTOs;
-using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.Blog.Categories.Dtos;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface ICategoryApplicationService : IBaseEntityApplicationService<CategoryDTO>
+    public interface ICategoryApplicationService : IBaseEntityApplicationService<CategoryDto>
     {
-        Task<CategoryDTO> GetCategoryAsync(string categorySlug, CancellationToken cancellationToken);
+        Task<CategoryDto> GetCategoryAsync(string categorySlug, CancellationToken cancellationToken);
     }
 }

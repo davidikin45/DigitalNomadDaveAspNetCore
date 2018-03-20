@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DND.Common.Email;
 using DND.Common.Helpers;
-using DND.Common.Implementation.DTOs;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Repository;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
@@ -61,14 +61,14 @@ namespace DND.Common.Controllers
                 var data = dataTask.Result;
                 var total = totalTask.Result;
 
-                var rows = data.ToList().Select(Mapper.Map<FileInfo, FileMetadataDTO>).ToList();
+                var rows = data.ToList().Select(Mapper.Map<FileInfo, FileMetadataDto>).ToList();
 
-                foreach (FileMetadataDTO dto in rows)
+                foreach (FileMetadataDto dto in rows)
                 {
                     dto.Id = dto.Id.Replace(PhysicalPath, "");
                 }
 
-                var response = new WebApiPagedResponseDTO<FileMetadataDTO>
+                var response = new WebApiPagedResponsedto<FileMetadataDto>
                 {
                     Page = page,
                     PageSize = pageSize,
@@ -122,7 +122,7 @@ namespace DND.Common.Controllers
             ViewBag.PageTitle = Title;
             ViewBag.Admin = Admin;
 
-            var dto = Mapper.Map<FileMetadataDTO>(data);
+            var dto = Mapper.Map<FileMetadataDto>(data);
             dto.Id = dto.Id.Replace(PhysicalPath, "");
 
             return View("Details", dto);

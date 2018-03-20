@@ -1,6 +1,5 @@
-﻿using DND.Domain.DTOs;
-using DND.Common.Interfaces.ApplicationServices;
-using DND.Common.Interfaces.Services;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.FlightSearch.Locales.Dtos;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ namespace DND.Domain.Interfaces.ApplicationServices
 {
     public interface ILocaleApplicationService : IBaseApplicationService
     {
-        Task<IEnumerable<LocaleDTO>> GetAllAsync(CancellationToken cancellationToken);
-        Task<LocaleDTO> GetAsync(string id, CancellationToken cancellationToken);
+        Task<IEnumerable<LocaleDto>> GetAllAsync(CancellationToken cancellationToken);
+        Task<LocaleDto> GetAsync(string id, CancellationToken cancellationToken);
     }
 }

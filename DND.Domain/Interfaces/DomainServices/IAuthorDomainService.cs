@@ -1,5 +1,5 @@
-﻿using DND.Domain.Models;
-using DND.Common.Interfaces.DomainServices;
+﻿using DND.Common.Interfaces.DomainServices;
+using DND.Domain.Blog.Authors;
 using System.Threading;
 using System.Threading.Tasks;
 

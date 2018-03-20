@@ -1,4 +1,5 @@
-﻿using DND.Domain.Models;
+﻿using DND.Domain.CMS.ContentHtmls;
+using DND.Domain.Models;
 using System;
 using System.Linq;
 

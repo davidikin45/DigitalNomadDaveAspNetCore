@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using DND.Common.Alerts;
 using DND.Common.Email;
 using DND.Common.Helpers;
-using DND.Common.Implementation.DTOs;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Repository;
 using System;
@@ -42,7 +42,7 @@ namespace DND.Common.Controllers
                 var repository = FileSystemRepositoryFactory.CreateJpegMetadataRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.MetadataGetByPathAsync(id.Replace("/", "\\"));
 
-                var dto = Mapper.Map<JpegMetadataDTO>(data);
+                var dto = Mapper.Map<JpegMetadataDto>(data);
 
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = Admin;
@@ -57,7 +57,7 @@ namespace DND.Common.Controllers
         // POST: Default/Edit/5
         [HttpPost]
         [Route("edit/{*id}")]
-        public virtual async Task<ActionResult> Edit(string id, JpegMetadataDTO dto)
+        public virtual async Task<ActionResult> Edit(string id, JpegMetadataDto dto)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -98,7 +98,7 @@ namespace DND.Common.Controllers
                 var repository = FileSystemRepositoryFactory.CreateJpegMetadataRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.MetadataGetByPathAsync(id.Replace("/", "\\"));
 
-                var dto = Mapper.Map<JpegMetadataDTO>(data);
+                var dto = Mapper.Map<JpegMetadataDto>(data);
 
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = Admin;

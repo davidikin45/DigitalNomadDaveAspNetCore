@@ -1,13 +1,12 @@
-﻿
-using DND.Domain.DTOs;
-using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.Blog.Locations.Dtos;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface ILocationApplicationService : IBaseEntityApplicationService<LocationDTO>
+    public interface ILocationApplicationService : IBaseEntityApplicationService<LocationDto>
     {
-        Task<LocationDTO> GetLocationAsync(string urlSlug, CancellationToken cancellationToken);
+        Task<LocationDto> GetLocationAsync(string urlSlug, CancellationToken cancellationToken);
     }
 }

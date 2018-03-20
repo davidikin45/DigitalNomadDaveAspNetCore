@@ -12,9 +12,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DND.Common.Implementation.DTOs
+namespace DND.Common.Implementation.Dtos
 {
-    public class JpegMetadataDTO : BaseEntity<string>, IHaveCustomMappings
+    public class JpegMetadataDto : BaseEntity<string>, IHaveCustomMappings
     {
         //[Render(ShowForDisplay =false, ShowForEdit = false, ShowForGrid = false)]
         public FileInfo Image { get; set; }
@@ -34,7 +34,7 @@ namespace DND.Common.Implementation.DTOs
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<JpegMetadata, JpegMetadataDTO>()
+            configuration.CreateMap<JpegMetadata, JpegMetadataDto>()
             .ForMember(dto => dto.Id, bo => bo.MapFrom(s => s.Id))
             .ForMember(dto => dto.PlaceId, bo => bo.MapFrom(s => s.Comments))
             .ForMember(dto => dto.Caption, bo => bo.MapFrom(s => Path.GetFileNameWithoutExtension(s.FileInfo.Name)))
@@ -44,7 +44,7 @@ namespace DND.Common.Implementation.DTOs
             .ForMember(dto => dto.GPSLocation, bo => bo.MapFrom(s => s.Latitude.HasValue && s.Longitude.HasValue ?
             DbGeography.FromText(string.Format(CultureInfo.InvariantCulture, "POINT({1} {0})", s.Latitude.ToString(), s.Longitude.ToString()), DbGeography.DefaultCoordinateSystemId) : default(DbGeography)));
 
-            configuration.CreateMap<JpegMetadataDTO, JpegMetadata>()
+            configuration.CreateMap<JpegMetadataDto, JpegMetadata>()
            .ForMember(bo => bo.Comments, dto => dto.MapFrom(s => s.PlaceId))
            .ForMember(bo => bo.DateTaken, dto => dto.MapFrom(s => s.DateTaken))
            .ForMember(bo => bo.Latitude, dto => dto.MapFrom(s => s.GPSLocation != null ? s.GPSLocation.Latitude : null))

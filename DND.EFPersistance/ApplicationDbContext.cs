@@ -5,6 +5,18 @@ using DND.Common.Implementation.Models;
 using DND.Common.Implementation.Persistance;
 using System.Data.Common;
 using System.Data.Entity;
+using DND.Domain.CMS.ContentTexts;
+using DND.Domain.CMS.MailingLists;
+using DND.Domain.CMS.Faqs;
+using DND.Domain.CMS.ContentHtmls;
+using DND.Domain.Blog.BlogPosts;
+using DND.Domain.Blog.Authors;
+using DND.Domain.Blog.Tags;
+using DND.Domain.Blog.Categories;
+using DND.Domain.Blog.Locations;
+using DND.Domain.CMS.CarouselItems;
+using DND.Domain.CMS.Projects;
+using DND.Domain.CMS.Testimonials;
 
 namespace DND.EFPersistance
 {

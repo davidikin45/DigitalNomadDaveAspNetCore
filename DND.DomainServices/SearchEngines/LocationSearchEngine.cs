@@ -1,6 +1,6 @@
 ﻿using DND.Domain.Skyscanner.Model;
+using DND.DomainServices.FlightSearch.Search.Services;
 using DND.DomainServices.SearchEngines.Interfaces;
-using DND.Services.Factories;
 using System.Threading;
 using System.Threading.Tasks;
 

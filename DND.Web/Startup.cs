@@ -1,23 +1,5 @@
 ﻿using AspNetCoreRateLimit;
 using Autofac;
-using DND.Domain.Models;
-using DND.EFPersistance.Identity;
-using DND.Web.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using DND.Common.Alerts;
 using DND.Common.Controllers.Admin;
 using DND.Common.DependencyInjection.Autofac.Modules;
@@ -28,8 +10,24 @@ using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Services;
 using DND.Common.Middleware;
-using DND.Common.Scripts;
 using DND.Common.Tasks;
+using DND.Domain.Models;
+using DND.EFPersistance.Identity;
+using DND.Web.Implementation.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
@@ -38,6 +36,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using static DND.Common.Helpers.NavigationMenuHelperExtension;
 
 namespace DND.Web
 {
@@ -100,9 +99,10 @@ namespace DND.Web
 
             services.AddTransient<IEmailSender, EmailSender>();
 
+            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
             services.Configure<RazorViewEngineOptions>(options =>
             {
-                options.ViewLocationExpanders.Add(new CustomViewLocator());
+                options.ViewLocationExpanders.Add(new CustomViewLocator(implementationFolder));
             });
 
             services.AddResponseCaching(options =>
@@ -397,6 +397,8 @@ namespace DND.Web
             StaticProperties.HostingEnvironment = HostingEnvironment;
             StaticProperties.Configuration = Configuration;
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
+            NavigationMenuHelper.ImplementationFolder = implementationFolder;
 
             DomainEvents.Init();
 

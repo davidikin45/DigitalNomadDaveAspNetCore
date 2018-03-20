@@ -10,9 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DND.Common.Implementation.DTOs
+namespace DND.Common.Implementation.Dtos
 {
-    public class FolderMetadataDTO : BaseEntity<string>, IHaveCustomMappings
+    public class FolderMetadataDto : BaseEntity<string>, IHaveCustomMappings
     {
         [Render(ShowForDisplay = false, ShowForEdit = false, ShowForGrid = false)]
         public DirectoryInfo Folder { get; set; }
@@ -27,7 +27,7 @@ namespace DND.Common.Implementation.DTOs
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<DirectoryInfo, FolderMetadataDTO>()
+            configuration.CreateMap<DirectoryInfo, FolderMetadataDto>()
             .ForMember(dto => dto.Id, bo => bo.MapFrom(s => s.FullName))
             .ForMember(dto => dto.Name, bo => bo.MapFrom(s => s.Name))
             .ForMember(dto => dto.CreationTime, bo => bo.MapFrom(s => s.LastWriteTime))

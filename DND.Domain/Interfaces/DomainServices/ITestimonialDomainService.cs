@@ -1,5 +1,6 @@
 ﻿using DND.Domain.Models;
 using DND.Common.Interfaces.DomainServices;
+using DND.Domain.CMS.Testimonials;
 
 namespace DND.Domain.Interfaces.DomainServices
 {

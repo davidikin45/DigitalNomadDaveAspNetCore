@@ -1,10 +1,9 @@
-﻿
-using DND.Domain.DTOs;
-using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Interfaces.ApplicationServices;
+using DND.Domain.CMS.CarouselItems.Dtos;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface ICarouselItemApplicationService : IBaseEntityApplicationService<CarouselItemDTO>
+    public interface ICarouselItemApplicationService : IBaseEntityApplicationService<CarouselItemDto>
     {
 
     }

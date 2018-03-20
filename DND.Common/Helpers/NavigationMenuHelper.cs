@@ -27,14 +27,15 @@ namespace DND.Common.Helpers
 
         public class NavigationMenuHelper
         {
-            private static Lazy<object> _menu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("~/Views/Shared/Navigation/navigation.json"))));
+            public static string ImplementationFolder { get; set; }
+            private static Lazy<object> _menu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("~/" + ImplementationFolder + "Shared/Views/Navigation/navigation.json"))));
 
             public dynamic Menu
             {
                 get { return _menu.Value; }
             }
 
-            private static Lazy<object> _adminMenu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("~/Views/Shared/Navigation/admin-navigation.json"))));
+            private static Lazy<object> _adminMenu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("~/" + ImplementationFolder + "Shared/Views/Navigation/admin-navigation.json"))));
 
             public dynamic AdminMenu
             {

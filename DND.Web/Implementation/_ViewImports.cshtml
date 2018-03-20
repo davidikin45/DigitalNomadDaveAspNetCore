@@ -1,0 +1,74 @@
+@using Microsoft.AspNetCore.Identity
+@using DND.Web
+@using DND.Web.Controllers
+
+@using DND.Web.Implementation.Account.Controllers
+@using DND.Web.Implementation.Admin.Controllers
+@using DND.Web.Implementation.Author.Controllers
+@using DND.Web.Implementation.Blog.Controllers
+@using DND.Web.Implementation.Blog.ViewComponents
+@using DND.Web.Implementation.BucketList.Controllers
+@using DND.Web.Implementation.CarouselItem.ViewComponents
+@using DND.Web.Implementation.Category.Controllers
+@using DND.Web.Implementation.ContentHtml.ViewComponents
+@using DND.Web.Implementation.ContentText.ViewComponents
+@using DND.Web.Implementation.Faq.Controllers
+@using DND.Web.Implementation.Faq.ViewComponents
+@using DND.Web.Implementation.Gallery.Controllers
+@using DND.Web.Implementation.Home.Controllers
+@using DND.Web.Implementation.Location.Controllers
+@using DND.Web.Implementation.Manage.Controllers
+@using DND.Web.Implementation.Project.ViewComponents
+@using DND.Web.Implementation.Project.Controllers
+@using DND.Web.Implementation.Shared.Controllers
+@using DND.Web.Implementation.Sidebar.ViewComponents
+@using DND.Web.Implementation.Tag.Controllers
+@using DND.Web.Implementation.Testimonial.Controllers
+@using DND.Web.Implementation.Testimonial.ViewComponents
+@using DND.Web.Implementation.TravelMap.Controllers
+@using DND.Web.Implementation.Videos.Controllers
+
+@using DND.Web.Implementation.Account.Models
+@using DND.Web.Implementation.Blog.Models
+@using DND.Web.Implementation.CarouselItem.Models
+@using DND.Web.Implementation.Manage.Models
+@using DND.Web.Implementation.MailingList.Models
+@using DND.Web.Implementation.Contact.Models
+@using DND.Web.Implementation.Sidebar.Models
+@using DND.Web.Implementation.Sidebar.Models
+@using DND.Web.Implementation.Testimonial.Models
+@using DND.Web.Implementation.Project.Models
+@using DND.Web.Implementation.Shared.Models
+
+@using DND.Domain.Models
+
+@using DND.Domain.Blog.Authors.Dtos
+@using DND.Domain.Blog.BlogPosts.Dtos
+@using DND.Domain.Blog.Categories.Dtos
+@using DND.Domain.Blog.Locations.Dtos
+@using DND.Domain.Blog.Tags.Dtos
+@using DND.Domain.CMS.CarouselItems.Dtos
+@using DND.Domain.CMS.ContentHtmls.Dtos
+@using DND.Domain.CMS.ContentTexts.Dtos
+@using DND.Domain.CMS.Faqs.Dtos
+@using DND.Domain.CMS.MailingLists.Dtos
+@using DND.Domain.CMS.Projects.Dtos
+@using DND.Domain.CMS.Testimonials.Dtos
+@using DND.Domain.Interfaces.Persistance
+@using DND.Domain.FlightSearch.Enums
+
+@using Microsoft.Extensions.Configuration
+@using Microsoft.AspNetCore.Http
+@using DND.Common.Alerts
+@using DND.Common.Extensions
+@using DND.Common.Helpers
+@using DND.Common.Constants
+@using DND.Common.Infrastructure
+@using DND.Common.Implementation.Dtos
+@using DND.Common.ModelMetadataCustom.DisplayAttributes
+@using System.IO;
+@using System.Collections
+@using System.Threading
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, DND.Common

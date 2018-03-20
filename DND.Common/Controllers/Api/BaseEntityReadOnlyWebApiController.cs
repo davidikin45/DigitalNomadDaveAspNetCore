@@ -7,7 +7,7 @@ using DND.Common.Email;
 using DND.Common.Enums;
 using DND.Common.Extensions;
 using DND.Common.Helpers;
-using DND.Common.Implementation.DTOs;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
@@ -133,8 +133,8 @@ namespace DND.Common.Controllers.Api
         [HttpGet]
         //[HttpPost]
         [HttpHead]
-        [ProducesResponseType(typeof(WebApiPagedResponseDTO<object>), 200)]
-        public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDTO resourceParameters)
+        [ProducesResponseType(typeof(WebApiPagedResponsedto<object>), 200)]
+        public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDto resourceParameters)
         {
             if (string.IsNullOrEmpty(resourceParameters.OrderBy))
                 resourceParameters.OrderBy = "id";
@@ -155,7 +155,7 @@ namespace DND.Common.Controllers.Api
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            //var response = new WebApiPagedResponseDTO<TDto>
+            //var response = new WebApiPagedResponsedto<TDto>
             //{
             //    Page = jqParams.Page,
             //    PageSize = jqParams.PageSize,
@@ -163,7 +163,7 @@ namespace DND.Common.Controllers.Api
             //    Rows = data.ToList()
             //};
 
-            var paginationMetadata = new WebApiPagedResponseDTO<TDto>
+            var paginationMetadata = new WebApiPagedResponsedto<TDto>
             {
                 Page = resourceParameters.Page,
                 PageSize = resourceParameters.PageSize,
@@ -213,7 +213,7 @@ namespace DND.Common.Controllers.Api
         [Route("get-all-paged")]
         [Route("get-all-paged.{format}")]
         [HttpGet]
-        [ProducesResponseType(typeof(WebApiPagedResponseDTO<object>), 200)]
+        [ProducesResponseType(typeof(WebApiPagedResponsedto<object>), 200)]
         public virtual async Task<IActionResult> GetAllPaged()
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -227,7 +227,7 @@ namespace DND.Common.Controllers.Api
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            //var response = new WebApiPagedResponseDTO<TDto>
+            //var response = new WebApiPagedResponsedto<TDto>
             //{
             //    CurrentPage = 1,
             //    PageSize = total,
@@ -235,7 +235,7 @@ namespace DND.Common.Controllers.Api
             //    Rows = data.ToList()
             //};
 
-            var paginationMetadata = new WebApiPagedResponseDTO<TDto>
+            var paginationMetadata = new WebApiPagedResponsedto<TDto>
             {
                 Page = 1,
                 PageSize = total,
@@ -291,7 +291,7 @@ namespace DND.Common.Controllers.Api
 
         #region HATEOAS
         private string CreateResourceUri(
-WebApiPagedRequestDTO resourceParameters,
+WebApiPagedRequestDto resourceParameters,
 ResourceUriType type)
         {
             switch (type)
@@ -375,7 +375,7 @@ ResourceUriType type)
             return links;
         }
 
-        private  IEnumerable<LinkDto> CreateLinksForCollections(WebApiPagedRequestDTO resourceParameters, bool hasNext, bool hasPrevious)
+        private  IEnumerable<LinkDto> CreateLinksForCollections(WebApiPagedRequestDto resourceParameters, bool hasNext, bool hasPrevious)
         {
             var links = new List<LinkDto>();
 
