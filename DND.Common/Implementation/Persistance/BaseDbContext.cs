@@ -251,7 +251,7 @@ namespace DND.Common.Implementation.Persistance
         {
             foreach (var entityEntry in inserted)
             {
-                Type genericType = typeof(InsertEntityEvent<>);
+                Type genericType = typeof(EntityInsertedEvent<>);
                 Type[] typeArgs = { entityEntry.Entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
                 object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
@@ -260,7 +260,7 @@ namespace DND.Common.Implementation.Persistance
 
             foreach (var entityEntry in updated)
             {
-                Type genericType = typeof(UpdateEntityEvent<>);
+                Type genericType = typeof(EntityUpdatedEvent<>);
                 Type[] typeArgs = { entityEntry.Entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
                 object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
@@ -269,7 +269,7 @@ namespace DND.Common.Implementation.Persistance
 
             foreach (var entityEntry in deleted)
             {
-                Type genericType = typeof(DeleteEntityEvent<>);
+                Type genericType = typeof(EntityDeletedEvent<>);
                 Type[] typeArgs = { entityEntry.Entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
                 object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
@@ -285,7 +285,7 @@ namespace DND.Common.Implementation.Persistance
         {
             foreach (var entityEntry in inserted)
             {
-                Type genericType = typeof(InsertEntityEvent<>);
+                Type genericType = typeof(EntityInsertedEvent<>);
                 Type[] typeArgs = { entityEntry.Entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
                 object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
@@ -294,7 +294,7 @@ namespace DND.Common.Implementation.Persistance
 
             foreach (var entityEntry in updated)
             {
-                Type genericType = typeof(UpdateEntityEvent<>);
+                Type genericType = typeof(EntityUpdatedEvent<>);
                 Type[] typeArgs = { entityEntry.Entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
                 object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);
@@ -303,7 +303,7 @@ namespace DND.Common.Implementation.Persistance
 
             foreach (var entityEntry in deleted)
             {
-                Type genericType = typeof(DeleteEntityEvent<>);
+                Type genericType = typeof(EntityDeletedEvent<>);
                 Type[] typeArgs = { entityEntry.Entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
                 object domainEvent = Activator.CreateInstance(constructed, entityEntry.Entity);

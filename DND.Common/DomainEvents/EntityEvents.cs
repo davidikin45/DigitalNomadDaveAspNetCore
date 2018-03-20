@@ -7,31 +7,31 @@ using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
-    public class InsertEntityEvent<T> : IDomainEvent
+    public class EntityInsertedEvent<T> : IDomainEvent
         where T: IBaseEntity
     {
         public T Entity { get; } 
-        public InsertEntityEvent(T entity)
+        public EntityInsertedEvent(T entity)
         {
             Entity = entity;
         }
     }
 
-    public class UpdateEntityEvent<T> : IDomainEvent
+    public class EntityUpdatedEvent<T> : IDomainEvent
         where T : IBaseEntity
     {
         public T Entity { get; }
-        public UpdateEntityEvent(T entity)
+        public EntityUpdatedEvent(T entity)
         {
             Entity = entity;
         }
     }
 
-    public class DeleteEntityEvent<T> : IDomainEvent
+    public class EntityDeletedEvent<T> : IDomainEvent
         where T : IBaseEntity
     {
         public T Entity { get; }
-        public DeleteEntityEvent(T entity)
+        public EntityDeletedEvent(T entity)
         {
             Entity = entity;
         }

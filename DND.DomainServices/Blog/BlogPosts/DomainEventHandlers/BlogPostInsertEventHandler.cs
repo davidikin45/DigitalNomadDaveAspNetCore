@@ -9,14 +9,14 @@ using DND.Domain.Blog.BlogPosts;
 
 namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
 {
-    public class BlogPostInsertEventHandler : IDomainEventHandler<InsertEntityEvent<BlogPost>>
+    public class BlogPostInsertEventHandler : IDomainEventHandler<EntityInsertedEvent<BlogPost>>
     {
-        public void HandlePostCommit(InsertEntityEvent<BlogPost> domainEvent)
+        public void HandlePostCommit(EntityInsertedEvent<BlogPost> domainEvent)
         {
             var after = domainEvent.Entity;
         }
 
-        public void HandlePreCommit(InsertEntityEvent<BlogPost> domainEvent)
+        public void HandlePreCommit(EntityInsertedEvent<BlogPost> domainEvent)
         {
             var before = domainEvent.Entity;
         }
