@@ -16,6 +16,9 @@ namespace DND.Common.Implementation.Models
             if (ReferenceEquals(valueObject, null))
                 return false;
 
+            if (GetType() != obj.GetType())
+                return false;
+
             return EqualsCore(valueObject);
         }
 

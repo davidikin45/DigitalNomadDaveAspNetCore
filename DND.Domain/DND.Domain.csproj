@@ -254,6 +254,8 @@
     <Compile Include="CMS\ContentHtmls\ContentHTML.cs" />
     <Compile Include="CMS\ContentTexts\ContentText.cs" />
     <Compile Include="CMS\Faqs\Faq.cs" />
+    <Compile Include="Models\Dollars.cs" />
+    <Compile Include="Models\Email.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Blog\Locations\Location.cs" />
     <Compile Include="CMS\MailingLists\MailingList.cs" />

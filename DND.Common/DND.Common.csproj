@@ -567,6 +567,7 @@
     <Compile Include="Alerts\Alert.cs" />
     <Compile Include="Alerts\AlertDecoratorResult.cs" />
     <Compile Include="Alerts\AlertExtensions.cs" />
+    <Compile Include="Alerts\Envelope.cs" />
     <Compile Include="Alerts\Messages.cs" />
     <Compile Include="Alerts\WebApiMessage.cs" />
     <Compile Include="APIs\APIConstants.cs" />
@@ -727,6 +728,8 @@
     <Compile Include="Implementation\Validation\EntityValidationErrors.cs" />
     <Compile Include="Implementation\Validation\GeneralError.cs" />
     <Compile Include="Implementation\Validation\PropertyError.cs" />
+    <Compile Include="Implementation\Validation\Result.cs" />
+    <Compile Include="Implementation\Validation\ResultExtensions.cs" />
     <Compile Include="Implementation\Validation\ServiceValidationErrors.cs" />
     <Compile Include="Implementation\Validation\ValidationErrors.cs" />
     <Compile Include="Infrastructure\Activators.cs" />
