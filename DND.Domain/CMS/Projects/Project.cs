@@ -6,7 +6,7 @@ namespace DND.Domain.CMS.Projects
 {
     public class Project : BaseEntityAggregateRootAuditable<int>
     {
-        [Required, StringLength(100)]
+        //[Required, StringLength(100)]
         public string Name { get; set; }
 
         public string Link { get; set; }
@@ -15,7 +15,7 @@ namespace DND.Domain.CMS.Projects
 
         public string Album { get; set; }
 
-        [Required, StringLength(200)]
+        //[Required, StringLength(200)]
         public string DescriptionText { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

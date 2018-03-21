@@ -10,50 +10,50 @@ namespace DND.Domain.Blog.BlogPosts
     public class BlogPost : BaseEntityAggregateRootAuditable<int>
     {
 
-        [Required, StringLength(500)]
+        //[Required, StringLength(500)]
         public string Title
         { get; set; }
 
-        [Required, StringLength(5000)]
+        //[Required, StringLength(5000)]
         public string ShortDescription
         { get; set; }
 
-        [Required, StringLength(30000)]
+        //[Required, StringLength(30000)]
         public string Description
         { get; set; }
 
-        [Required, StringLength(200)]
+        //[Required, StringLength(200)]
         public string UrlSlug
         { get; set; }
 
         public string CarouselImage
         { get; set; }
 
-        [StringLength(200)]
+        //[StringLength(200)]
         public string CarouselText
         { get; set; }
 
-        [Required]
+        //[Required]
         public bool ShowInCarousel
         { get; set; }
 
-        [Required]
+        //[Required]
         public bool Published
         { get; set; }
 
-        [Required]
+        //[Required]
         public override DateTime DateCreated
         {
             get { return base.DateCreated; }
             set { base.DateCreated = value; }
         }
 
-        [Required]
+        //[Required]
         public int AuthorId { get; set; }
         public virtual Author Author
         { get; set; }
 
-        [Required]
+        //[Required]
         public int CategoryId { get; set; }
         public virtual Category Category
         { get; set; }
@@ -64,22 +64,22 @@ namespace DND.Domain.Blog.BlogPosts
         public virtual IList<BlogPostLocation> Locations
         { get; set; }
 
-        [Required]
+        //[Required]
         public bool ShowLocationDetail { get; set; }
 
-        [Required]
+        //[Required]
         public bool ShowLocationMap { get; set; }
 
-        [Required]
+        //[Required]
         public int MapHeight { get; set; }
 
-        [Required]
+        //[Required]
         public int MapZoom { get; set; }
 
-        [Required]
+        //[Required]
         public string Album { get; set; }
 
-        [Required]
+        //[Required]
         public bool ShowPhotosInAlbum { get; set; }
 
         public BlogPost()

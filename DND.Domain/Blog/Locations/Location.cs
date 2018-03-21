@@ -13,14 +13,14 @@ namespace DND.Domain.Blog.Locations
     {
 		public string Name { get; set; }
 
-        [Column("LocationType")]
+        //[Column("LocationType")]
         public string LocationTypeString
         {
             get { return LocationType.ToString(); }
             private set { LocationType = EnumExtensions.ParseEnum<LocationType>(value); }
         }
 
-        [NotMapped]
+        //[NotMapped]
         public LocationType LocationType = LocationType.City;
         public string DescriptionBody { get; set; }
         public string TimeRequired { get; set; }

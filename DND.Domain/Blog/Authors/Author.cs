@@ -6,10 +6,10 @@ namespace DND.Domain.Blog.Authors
 {
     public class Author : BaseEntityAggregateRootAuditable<int>
     {
-        [Required]
+        //[Required]
 		public string Name { get; set; }
 
-        [StringLength(50)]
+        //[StringLength(50)]
         public string UrlSlug { get; set; }
 
         public Author()

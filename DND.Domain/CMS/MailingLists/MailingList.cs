@@ -8,7 +8,7 @@ namespace DND.Domain.CMS.MailingLists
     {
         public string Name { get; set; }
 
-        [Required, EmailAddress]
+        //[Required, EmailAddress]
         public string Email { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

@@ -17,6 +17,18 @@ using DND.Domain.Blog.Locations;
 using DND.Domain.CMS.CarouselItems;
 using DND.Domain.CMS.Projects;
 using DND.Domain.CMS.Testimonials;
+using DND.EFPersistance.Configurations.Blog.Authors;
+using DND.EFPersistance.Configurations.Blog.BlogPosts;
+using DND.EFPersistance.Configurations.Blog.Categories;
+using DND.EFPersistance.Configurations.Blog.Locations;
+using DND.EFPersistance.Configurations.Blog.Tags;
+using DND.EFPersistance.Configurations.CMS.Testimonials;
+using DND.EFPersistance.Configurations.CMS.Projects;
+using DND.EFPersistance.Configurations.CMS.MailingLists;
+using DND.EFPersistance.Configurations.CMS.Faqs;
+using DND.EFPersistance.Configurations.CMS.ContentTexts;
+using DND.EFPersistance.Configurations.CMS.ContentHtmls;
+using DND.EFPersistance.Configurations.CMS.CarouselItems;
 
 namespace DND.EFPersistance
 {
@@ -108,7 +120,22 @@ namespace DND.EFPersistance
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Configurations.Add(new GigConfiguration());
+            modelBuilder.Configurations.Add(new AuthorConfiguration());
+            modelBuilder.Configurations.Add(new BlogPostConfiguration());
+            modelBuilder.Configurations.Add(new BlogPostTagConfiguration());
+            modelBuilder.Configurations.Add(new BlogPostLocationConfiguration());
+            modelBuilder.Configurations.Add(new CategoryConfiguration());
+            modelBuilder.Configurations.Add(new LocationConfiguration());
+            modelBuilder.Configurations.Add(new TagConfiguration());
+
+            modelBuilder.Configurations.Add(new CarouselItemConfiguration());
+            modelBuilder.Configurations.Add(new ContentHtmlConfiguration());
+            modelBuilder.Configurations.Add(new ContentTextConfiguration());
+            modelBuilder.Configurations.Add(new FaqConfiguration());
+            modelBuilder.Configurations.Add(new MailingListConfiguration());
+            modelBuilder.Configurations.Add(new ProjectConfiguration());
+            modelBuilder.Configurations.Add(new TestimonialConfiguration());
+
             base.OnModelCreating(modelBuilder);
 
             //modelBuilder.Entity<User>().ToTable("User");

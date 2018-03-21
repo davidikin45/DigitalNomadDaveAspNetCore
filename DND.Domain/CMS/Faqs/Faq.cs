@@ -6,10 +6,10 @@ namespace DND.Domain.CMS.Faqs
 {
     public class Faq : BaseEntityAggregateRootAuditable<int>
     {
-        [Required]
+        //[Required]
         public string Question { get; set; }
 
-        [Required]
+        //[Required]
         public string Answer { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

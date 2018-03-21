@@ -6,15 +6,15 @@ namespace DND.Domain.Blog.Tags
 {
     public class Tag : BaseEntityAggregateRootAuditable<int>
     {
-        [Required, StringLength(50)]
+        //[Required, StringLength(50)]
         public string Name
         { get; set; }
 
-        [Required, StringLength(50)]
+        //[Required, StringLength(50)]
         public string UrlSlug
         { get; set; }
 
-        [Required, StringLength(200)]
+        //[Required, StringLength(200)]
         public string Description
         { get; set; }
 

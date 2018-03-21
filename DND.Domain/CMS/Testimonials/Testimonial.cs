@@ -10,11 +10,11 @@ namespace DND.Domain.CMS.Testimonials
 {
     public class Testimonial : BaseEntityAggregateRootAuditable<int>
     {
-        [Required, StringLength(100)]
+        //[Required, StringLength(100)]
         public string Source
         { get; set; }
 
-        [Required, StringLength(5000)]
+        //[Required, StringLength(5000)]
         public string QuoteText { get; set; }
 
         public string File { get; set; }

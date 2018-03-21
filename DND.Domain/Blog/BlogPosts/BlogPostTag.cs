@@ -7,11 +7,11 @@ namespace DND.Domain.Blog.BlogPosts
 {
     public class BlogPostTag : BaseEntityAuditable<int>
     {
-        [Required]
+        //[Required]
         public int BlogPostId { get; set; }
         public virtual BlogPost BlogPost { get; set; }
 
-        [Required]
+        //[Required]
         public int TagId { get; set; }
         public virtual Tag Tag { get; set; }
 

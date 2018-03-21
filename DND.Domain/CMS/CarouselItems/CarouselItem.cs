@@ -9,7 +9,7 @@ namespace DND.Domain.CMS.CarouselItems
 
 		public string Title { get; set; }
 
-        [StringLength(200)]
+        //[StringLength(200)]
         public string CarouselText
         { get; set; }
 
@@ -19,11 +19,11 @@ namespace DND.Domain.CMS.CarouselItems
         public string Link { get; set; }
         public string Image { get; set; }
 
-        [Required]
+        //[Required]
         public bool OpenInNewWindow
         { get; set; }
 
-        [Required]
+        //[Required]
         public bool Published
         { get; set; }
 
