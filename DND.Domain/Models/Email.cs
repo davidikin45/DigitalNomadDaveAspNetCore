@@ -39,16 +39,6 @@ namespace DND.Domain.Models
             return Result.Ok(new Email(email));
         }
 
-        protected override bool EqualsCore(Email other)
-        {
-            return Value.Equals(other.Value, StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            return Value.GetHashCode();
-        }
-
         public static explicit operator Email(string email)
         {
             return Create(email).Value;

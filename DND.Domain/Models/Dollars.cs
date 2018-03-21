@@ -45,16 +45,6 @@ namespace DND.Domain.Models
             return new Dollars(dollars1.Value + dollars2.Value);
         }
 
-        protected override bool EqualsCore(Dollars other)
-        {
-            return Value == other.Value;
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            return Value.GetHashCode();
-        }
-
         public static implicit operator decimal(Dollars dollars)
         {
             return dollars.Value;
