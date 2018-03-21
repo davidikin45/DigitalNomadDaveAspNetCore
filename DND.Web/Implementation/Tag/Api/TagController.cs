@@ -10,7 +10,7 @@ namespace DND.Web.Implementation.Tag.Api
 {
     [ApiVersion("1.0")]
     [Route("api/tag")]
-    public class TagController : BaseEntityWebApiControllerAuthorize<TagDto, ITagApplicationService>
+    public class TagController : BaseEntityWebApiControllerAuthorize<TagDto, TagDto, TagDto, TagDto, ITagApplicationService>
     {
         public TagController(ITagApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)

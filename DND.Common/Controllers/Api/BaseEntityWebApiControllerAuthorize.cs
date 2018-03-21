@@ -6,6 +6,7 @@ using DND.Common.Email;
 using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
+using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.Controllers.Api
 {
@@ -22,9 +23,12 @@ namespace DND.Common.Controllers.Api
     //Otherwise, the action supports the POST method.
     //[Authorize(Roles = "admin")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")] // 40
-    public abstract class BaseEntityWebApiControllerAuthorize<TDto, IEntityService> : BaseEntityWebApiController<TDto, IEntityService>
-        where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityApplicationService<TDto>
+    public abstract class BaseEntityWebApiControllerAuthorize<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService> : BaseEntityWebApiController<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService>
+        where TCreateDto : class, IBaseDto
+        where TReadDto : class, IBaseDtoWithId
+        where TUpdateDto : class, IBaseDto
+        where TDeleteDto : class, IBaseDtoWithId
+        where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {   
 
         public BaseEntityWebApiControllerAuthorize(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)

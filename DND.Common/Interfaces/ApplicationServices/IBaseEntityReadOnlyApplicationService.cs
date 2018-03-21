@@ -1,4 +1,5 @@
-﻿using DND.Common.Interfaces.Models;
+﻿using DND.Common.Interfaces.Dtos;
+using DND.Common.Interfaces.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace DND.Common.Interfaces.ApplicationServices
 {
     public interface IBaseEntityReadOnlyApplicationService<TDto> : IBaseApplicationService
-        where TDto : class, IBaseEntity
+        where TDto : class, IBaseDtoWithId
     {
 
         IEnumerable<TDto> GetAll(

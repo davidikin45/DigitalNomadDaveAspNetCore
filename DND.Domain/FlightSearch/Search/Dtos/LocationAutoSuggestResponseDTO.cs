@@ -1,10 +1,11 @@
-﻿using DND.Common.Implementation.Models;
+﻿using DND.Common.Implementation.Dtos;
+using DND.Common.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.FlightSearch.Search.Dtos
 {
-    public class LocationAutoSuggestResponseDto : BaseEntity<int>
+    public class LocationAutoSuggestResponseDto : BaseDto<int>
     {
         public LocationAutoSuggestResponseDto()
         {

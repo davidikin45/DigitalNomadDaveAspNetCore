@@ -10,7 +10,7 @@ namespace DND.Web.Implementation.Author.Api
 {
     [ApiVersion("1.0")]
     [Route("api/author")]
-    public class AuthorController : BaseEntityWebApiControllerAuthorize<AuthorDto, IAuthorApplicationService>
+    public class AuthorController : BaseEntityWebApiControllerAuthorize<AuthorDto, AuthorDto, AuthorDto, AuthorDto, IAuthorApplicationService>
     {
         public AuthorController(IAuthorApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             :base(service, mapper, emailService, urlHelper, typeHelperService)

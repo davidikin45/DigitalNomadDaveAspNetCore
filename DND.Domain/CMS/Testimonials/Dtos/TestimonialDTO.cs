@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Models;
+﻿using DND.Common.Implementation.Dtos;
+using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Domain.Constants;
@@ -8,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.Testimonials.Dtos
 {
-    public class TestimonialDto : BaseEntity<int>, IMapFrom<Testimonial>, IMapTo<Testimonial>
+    public class TestimonialDto : BaseDto<int>, IMapFrom<Testimonial>, IMapTo<Testimonial>
     {
         [Required, StringLength(100)]
         public string Source { get; set; }

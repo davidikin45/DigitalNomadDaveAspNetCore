@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace DND.Web.Controllers.Admin
 {
     [Route("admin/mailing-list")]
-    public class AdminMailingListController : BaseEntityControllerAuthorize<MailingListDto, IMailingListApplicationService>
+    public class AdminMailingListController : BaseEntityControllerAuthorize<MailingListDto, MailingListDto, MailingListDto, MailingListDto, IMailingListApplicationService>
     {
         public AdminMailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService)
              : base(true, service, mapper, emailService)

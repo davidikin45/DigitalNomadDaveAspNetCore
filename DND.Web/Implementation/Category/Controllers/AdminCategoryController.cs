@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.Category.Controllers
 {
     [Route("admin/category")]
-    public class AdminCategoryController : BaseEntityControllerAuthorize<CategoryDto, ICategoryApplicationService>
+    public class AdminCategoryController : BaseEntityControllerAuthorize<CategoryDto, CategoryDto, CategoryDto, CategoryDto, ICategoryApplicationService>
     {
         public AdminCategoryController(ICategoryApplicationService service, IMapper mapper, IEmailService emailService)
              : base(true, service, mapper, emailService)

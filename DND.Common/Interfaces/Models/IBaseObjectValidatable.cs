@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Interfaces.Models
 {
-    interface IBaseObjectValidatable : IValidatableObject
+    public interface IBaseObjectValidatable : IValidatableObject
     {
         Boolean IsValid();
         IEnumerable<ValidationResult> Validate();

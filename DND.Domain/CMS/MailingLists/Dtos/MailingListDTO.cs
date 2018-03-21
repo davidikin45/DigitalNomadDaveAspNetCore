@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
@@ -8,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.MailingLists.Dtos
 {
-    public class MailingListDto : BaseEntity<int>, IHaveCustomMappings
+    public class MailingListDto : BaseDto<int>, IHaveCustomMappings
     {
         public string Name { get; set; }
 

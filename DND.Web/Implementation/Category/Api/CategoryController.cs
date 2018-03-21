@@ -10,7 +10,7 @@ namespace DND.Web.Implementation.Category.Api
 {
     [ApiVersion("1.0")]
     [Route("api/category")]
-    public class CategoryController : BaseEntityWebApiControllerAuthorize<CategoryDto, ICategoryApplicationService>
+    public class CategoryController : BaseEntityWebApiControllerAuthorize<CategoryDto, CategoryDto, CategoryDto, CategoryDto, ICategoryApplicationService>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryController"/> class.

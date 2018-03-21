@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.Tags.Services
 {
-    public class TagApplicationService : BaseEntityApplicationService<IApplicationDbContext, Tag, TagDto, ITagDomainService>, ITagApplicationService
+    public class TagApplicationService : BaseEntityApplicationService<IApplicationDbContext, Tag, TagDto, TagDto, TagDto, TagDto, ITagDomainService>, ITagApplicationService
     {
 
         public TagApplicationService(ITagDomainService domainService, IMapper mapper)

@@ -749,6 +749,7 @@
     <Compile Include="Interfaces\Automapper\IHaveCustomMappings.cs" />
     <Compile Include="Interfaces\Automapper\IMapFrom.cs" />
     <Compile Include="Interfaces\Automapper\IMapTo.cs" />
+    <Compile Include="Interfaces\Dtos\IBaseDto.cs" />
     <Compile Include="Interfaces\Models\IBaseEntity.cs" />
     <Compile Include="Interfaces\Models\IBaseEntityAggregateRoot.cs" />
     <Compile Include="Interfaces\Models\IBaseEntityAuditable.cs" />

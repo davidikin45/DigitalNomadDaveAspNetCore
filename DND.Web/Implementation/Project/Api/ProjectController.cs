@@ -10,7 +10,7 @@ namespace DND.Web.Implementation.Project.Api
 {
     [ApiVersion("1.0")]
     [Route("api/project")]
-    public class ProjectController : BaseEntityWebApiControllerAuthorize<ProjectDto, IProjectApplicationService>
+    public class ProjectController : BaseEntityWebApiControllerAuthorize<ProjectDto, ProjectDto, ProjectDto, ProjectDto, IProjectApplicationService>
     {
         public ProjectController(IProjectApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)

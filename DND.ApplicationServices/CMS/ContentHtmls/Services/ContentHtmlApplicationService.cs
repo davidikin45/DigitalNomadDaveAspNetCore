@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.CMS.ContentHtmls.Services
 {
-    public class ContentHtmlApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentHtml, ContentHtmlDto, IContentHtmlDomainService>, IContentHtmlApplicationService
+    public class ContentHtmlApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentHtml, ContentHtmlDto, ContentHtmlDto, ContentHtmlDto, ContentHtmlDto, IContentHtmlDomainService>, IContentHtmlApplicationService
     {
         public ContentHtmlApplicationService(IContentHtmlDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

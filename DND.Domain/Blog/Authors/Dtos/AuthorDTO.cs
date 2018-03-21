@@ -1,3 +1,4 @@
+using DND.Common.Implementation.Dtos;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.Authors.Dtos
 {
-    public class AuthorDto : BaseEntity<int> , IMapFrom<Author>, IMapTo<Author>
+    public class AuthorDto : BaseDto<int> , IMapFrom<Author>, IMapTo<Author>
     {
         [Required]
 		public string Name { get; set; }

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.Testimonial.Controllers
 {
     [Route("admin/testimonial")]
-    public class AdminTestimonialController : BaseEntityControllerAuthorize<TestimonialDto, ITestimonialApplicationService>
+    public class AdminTestimonialController : BaseEntityControllerAuthorize<TestimonialDto, TestimonialDto, TestimonialDto, TestimonialDto, ITestimonialApplicationService>
     {
         public AdminTestimonialController(ITestimonialApplicationService service, IMapper mapper, IEmailService emailService)
              : base(true, service, mapper, emailService)

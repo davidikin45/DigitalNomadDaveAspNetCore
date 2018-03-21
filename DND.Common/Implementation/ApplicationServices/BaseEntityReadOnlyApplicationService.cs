@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.DomainServices;
+using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Persistance;
 using DND.Common.Interfaces.Services;
@@ -17,7 +18,7 @@ namespace DND.Common.Implementation.ApplicationServices
     public abstract class BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto, TDomainService> : BaseApplicationService, IBaseEntityReadOnlyApplicationService<TDto>
           where TContext : IBaseDbContext
           where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
-          where TDto : class, IBaseEntity
+          where TDto : class, IBaseDtoWithId
           where TDomainService : IBaseEntityReadOnlyDomainService<TEntity>
 
     {

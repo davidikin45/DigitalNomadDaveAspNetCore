@@ -8,6 +8,7 @@ using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
 using System.Threading.Tasks;
+using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.Controllers.Api
 {
@@ -22,9 +23,12 @@ namespace DND.Common.Controllers.Api
     //If there is an attribute applied(via[HttpGet], [HttpPost], [HttpPut], [AcceptVerbs], etc), the action will accept the specified HTTP method(s).
     //If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
     //Otherwise, the action supports the POST method.
-    public abstract class BaseEntityWebApiController<TDto, IEntityService> : BaseEntityReadOnlyWebApiController<TDto, IEntityService>
-        where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityApplicationService<TDto>
+    public abstract class BaseEntityWebApiController<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService> : BaseEntityReadOnlyWebApiController<TReadDto, IEntityService>
+         where TCreateDto : class, IBaseDto
+         where TReadDto : class, IBaseDtoWithId
+         where TUpdateDto : class, IBaseDto
+         where TDeleteDto : class, IBaseDtoWithId
+        where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
 
         public BaseEntityWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)
@@ -36,7 +40,7 @@ namespace DND.Common.Controllers.Api
         //[Route("create")]
         [HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Create([FromBody] TDto dto)
+        public virtual async Task<IActionResult> Create([FromBody] TCreateDto dto)
         {
             if (dto == null)
             {
@@ -63,11 +67,15 @@ namespace DND.Common.Controllers.Api
         [HttpPut]
         //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Update(object id, [FromBody] TDto dto)
+        public virtual async Task<IActionResult> Update(object id, [FromBody] TUpdateDto dto)
         {
-            if (dto == null || id.ToString() != dto.Id.ToString())
+            if(dto is IBaseDtoWithId)
             {
-                return ApiErrorMessage(Messages.RequestInvalid);
+                IBaseDtoWithId dtoWithId = dto as IBaseDtoWithId;
+                if (dto == null || id.ToString() != dtoWithId.Id.ToString())
+                {
+                    return ApiErrorMessage(Messages.RequestInvalid);
+                }
             }
 
             if (!ModelState.IsValid)
@@ -75,11 +83,9 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-       
-
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            await Service.UpdateAsync(dto, cts.Token);
+            await Service.UpdateAsync(id, dto, cts.Token);
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
             //return Success(dto);
             return NoContent();
@@ -88,7 +94,7 @@ namespace DND.Common.Controllers.Api
         [Route("{id}")]
         [HttpPatch]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> UpdatePartial(object id, [FromBody] JsonPatchDocument<TDto> dtoPatch)
+        public virtual async Task<IActionResult> UpdatePartial(object id, [FromBody] JsonPatchDocument<TUpdateDto> dtoPatch)
         {
             if (dtoPatch == null)
             {
@@ -97,7 +103,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dto = await Service.GetByIdAsync(id, cts.Token);
+            var dto = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
 
             if (dto == null)
             {
@@ -113,7 +119,7 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-            await Service.UpdateAsync(dto, cts.Token);
+            await Service.UpdateAsync(id, dto, cts.Token);
 
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
             //return Success(dto);
@@ -123,7 +129,7 @@ namespace DND.Common.Controllers.Api
         [Route("{id}")]
         [HttpDelete]
         //[HttpPost]
-        [ProducesResponseType(typeof(WebApiMessage),200)]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> Delete(int id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -134,6 +140,23 @@ namespace DND.Common.Controllers.Api
             }
 
             await Service.DeleteAsync(id, cts.Token);
+            //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
+            return NoContent();
+        }
+
+        [HttpDelete]
+        //[HttpPost]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> Delete([FromBody] TDeleteDto dto)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            if (!(await Service.ExistsAsync(cts.Token, dto.Id)))
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            await Service.DeleteAsync(dto, cts.Token);
             //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
             return NoContent();
         }

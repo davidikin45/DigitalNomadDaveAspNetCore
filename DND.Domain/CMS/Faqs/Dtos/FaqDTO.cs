@@ -6,10 +6,11 @@ using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.CMS.Faqs.Dtos
 {
-    public class FaqDto : BaseEntity<int>, IMapTo<Faq>, IMapFrom<Faq>
+    public class FaqDto : BaseDto<int>, IMapTo<Faq>, IMapFrom<Faq>
     {
         [Required]
         public string Question { get; set; }

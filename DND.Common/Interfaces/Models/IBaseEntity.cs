@@ -7,12 +7,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Common.Interfaces.Models
 {
-    public interface IBaseEntity : IValidatableObject
+    public interface IBaseEntity : IBaseObjectValidatable
     {
          object Id { get; set; }
 
-        Boolean IsValid();
-        IEnumerable<ValidationResult> Validate();
     }
 
     public interface IBaseEntity<T> : IBaseEntity

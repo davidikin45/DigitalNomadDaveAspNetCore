@@ -3,7 +3,7 @@ using DND.Domain.CMS.MailingLists.Dtos;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface IMailingListApplicationService : IBaseEntityApplicationService<MailingListDto>
+    public interface IMailingListApplicationService : IBaseEntityApplicationService<MailingListDto, MailingListDto, MailingListDto, MailingListDto>
     {
     }
 }

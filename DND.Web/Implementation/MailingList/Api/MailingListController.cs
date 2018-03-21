@@ -10,7 +10,7 @@ namespace DND.Web.Implementation.MailingList.Api
 {
     [ApiVersion("1.0")]
     [Route("api/mailing-list")]
-    public class MailingListController : BaseEntityWebApiControllerAuthorize<MailingListDto, IMailingListApplicationService>
+    public class MailingListController : BaseEntityWebApiControllerAuthorize<MailingListDto, MailingListDto, MailingListDto, MailingListDto, IMailingListApplicationService>
     {
         public MailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)

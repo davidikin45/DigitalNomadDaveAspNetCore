@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface IBlogPostApplicationService : IBaseEntityApplicationService<BlogPostDto>
+    public interface IBlogPostApplicationService : IBaseEntityApplicationService<BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDto>
     {
         Task<BlogPostDto> GetPostAsync(int year, int month, string titleSlug, CancellationToken cancellationToken);
 

@@ -4,6 +4,7 @@ using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
 using System;
+using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.Controllers
 {
@@ -20,8 +21,8 @@ namespace DND.Common.Controllers
     //Otherwise, the action supports the POST method.
     [Authorize(Roles = "admin")]
     public abstract class BaseEntityReadOnlyControllerAuthorize<TDto, IEntityService> : BaseEntityReadOnlyController<TDto, IEntityService>
-        where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityApplicationService<TDto>
+        where TDto : class, IBaseDtoWithId
+        where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
     {
 
         public BaseEntityReadOnlyControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null)

@@ -8,7 +8,7 @@ using DND.Domain.Interfaces.Persistance;
 
 namespace DND.ApplicationServices.CMS.Testimonials.Services
 {
-    public class TestimonialApplicationService : BaseEntityApplicationService<IApplicationDbContext, Testimonial, TestimonialDto, ITestimonialDomainService>, ITestimonialApplicationService
+    public class TestimonialApplicationService : BaseEntityApplicationService<IApplicationDbContext, Testimonial, TestimonialDto, TestimonialDto, TestimonialDto, TestimonialDto, ITestimonialDomainService>, ITestimonialApplicationService
     {
         public TestimonialApplicationService(ITestimonialDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.Locations.Services
 {
-    public class LocationApplicationService : BaseEntityApplicationService<IApplicationDbContext, Location, LocationDto, ILocationDomainService>, ILocationApplicationService
+    public class LocationApplicationService : BaseEntityApplicationService<IApplicationDbContext, Location, LocationDto, LocationDto, LocationDto, LocationDto, ILocationDomainService>, ILocationApplicationService
     {
         public LocationApplicationService(ILocationDomainService domainService, IMapper mapper)
         : base(domainService, mapper)
@@ -35,14 +35,14 @@ namespace DND.ApplicationServices.Blog.Locations.Services
             return Mapper.Map<LocationDto>(bo);
         }
 
-        public override Task UpdateAsync(LocationDto dto, CancellationToken cancellationToken)
+        public override Task UpdateAsync(object id, LocationDto dto, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(dto.UrlSlug))
             {
                 dto.UrlSlug = UrlSlugger.ToUrlSlug(dto.Name);
             }
 
-            return base.UpdateAsync(dto, cancellationToken);
+            return base.UpdateAsync(id, dto, cancellationToken);
         }
 
 

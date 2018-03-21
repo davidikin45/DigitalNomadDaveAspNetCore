@@ -8,6 +8,7 @@ using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
 using System;
 using System.Threading.Tasks;
+using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.Controllers
 {
@@ -22,9 +23,12 @@ namespace DND.Common.Controllers
     //If there is an attribute applied(via[HttpGet], [HttpPost], [HttpPut], [AcceptVerbs], etc), the action will accept the specified HTTP method(s).
     //If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
     //Otherwise, the action supports the POST method.
-    public abstract class BaseEntityController<TDto, IEntityService> : BaseEntityReadOnlyController<TDto, IEntityService>
-        where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityApplicationService<TDto>
+    public abstract class BaseEntityController<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService> : BaseEntityReadOnlyController<TReadDto, IEntityService>
+        where TCreateDto : class, IBaseDto
+        where TReadDto : class, IBaseDtoWithId
+        where TUpdateDto : class, IBaseDto
+        where TDeleteDto : class, IBaseDtoWithId
+        where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
         public BaseEntityController(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null)
         : base(admin, service, mapper,emailService)
@@ -44,7 +48,7 @@ namespace DND.Common.Controllers
         // POST: Default/Create
         [HttpPost]
         [Route("create")]
-        public virtual async Task<ActionResult> Create(TDto dto)
+        public virtual async Task<ActionResult> Create(TCreateDto dto)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -71,7 +75,7 @@ namespace DND.Common.Controllers
         public virtual async Task<ActionResult> Edit(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            TDto data = null;
+            TReadDto data = null;
             try
             {
                 data = await Service.GetByIdAsync(id, cts.Token);
@@ -88,7 +92,7 @@ namespace DND.Common.Controllers
         // POST: Default/Edit/5
         [HttpPost]
         [Route("edit/{id}")]
-        public virtual async Task<ActionResult> Edit(string id, TDto dto)
+        public virtual async Task<ActionResult> Edit(string id, TUpdateDto dto)
         {
             //dto.Id = id;
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -97,7 +101,7 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    await Service.UpdateAsync(dto, cts.Token);
+                    await Service.UpdateAsync(id, dto, cts.Token);
                     return RedirectToControllerDefault().WithSuccess(this, Messages.UpdateSuccessful);
                 }
                 catch (Exception ex)
@@ -116,7 +120,7 @@ namespace DND.Common.Controllers
         public virtual async Task<ActionResult> Delete(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            TDto data = null;
+            TReadDto data = null;
             try
             {             
                data = await Service.GetByIdAsync(id, cts.Token);

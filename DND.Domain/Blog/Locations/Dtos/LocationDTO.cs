@@ -1,3 +1,4 @@
+using DND.Common.Implementation.Dtos;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
@@ -10,7 +11,7 @@ using System.Data.Entity.Spatial;
 
 namespace DND.Domain.Blog.Locations.Dtos
 {
-    public class LocationDto : BaseEntity<int> , IMapFrom<Location>, IMapTo<Location>
+    public class LocationDto : BaseDto<int> , IMapFrom<Location>, IMapTo<Location>
     {
         [Required]
 		public string Name { get; set; }

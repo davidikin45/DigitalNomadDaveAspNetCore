@@ -5,10 +5,11 @@ using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.CMS.ContentHtmls.Dtos
 {
-    public class ContentHtmlDto : BaseEntity<string>, IMapTo<ContentHtml>, IMapFrom<ContentHtml>
+    public class ContentHtmlDto : BaseDto<string>, IMapTo<ContentHtml>, IMapFrom<ContentHtml>
     {
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = true)]
         public override string Id { get => base.Id; set => base.Id = value; }

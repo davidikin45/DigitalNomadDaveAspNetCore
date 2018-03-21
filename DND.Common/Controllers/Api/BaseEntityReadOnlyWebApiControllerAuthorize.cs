@@ -6,6 +6,7 @@ using DND.Common.Email;
 using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
+using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.Controllers.Api
 {
@@ -24,8 +25,8 @@ namespace DND.Common.Controllers.Api
     //[Authorize(Roles = "admin")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")] // 40
     public abstract class BaseEntityReadOnlyWebApiControllerAuthorize<TDto, IEntityService> : BaseEntityReadOnlyWebApiController<TDto, IEntityService>
-        where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityApplicationService<TDto>
+        where TDto : class, IBaseDtoWithId
+        where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
     {   
 
         public BaseEntityReadOnlyWebApiControllerAuthorize(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)

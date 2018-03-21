@@ -3,7 +3,7 @@ using DND.Domain.CMS.CarouselItems.Dtos;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface ICarouselItemApplicationService : IBaseEntityApplicationService<CarouselItemDto>
+    public interface ICarouselItemApplicationService : IBaseEntityApplicationService<CarouselItemDto, CarouselItemDto, CarouselItemDto, CarouselItemDto>
     {
 
     }

@@ -10,7 +10,7 @@ namespace DND.Web.Controllers.Api
 {
     [ApiVersion("1.0")]
     [Route("api/blog-post")]
-    public class BlogPostController : BaseEntityWebApiControllerAuthorize<BlogPostDto, IBlogPostApplicationService>
+    public class BlogPostController : BaseEntityWebApiControllerAuthorize<BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDto, IBlogPostApplicationService>
     {
         public BlogPostController(IBlogPostApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)

@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Models;
+﻿using DND.Common.Implementation.Dtos;
+using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Domain.Constants;
@@ -8,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.Projects.Dtos
 {
-    public class ProjectDto : BaseEntity<int>, IMapFrom<Project>, IMapTo<Project>
+    public class ProjectDto : BaseDto<int>, IMapFrom<Project>, IMapTo<Project>
     {
 
         [Required, StringLength(100)]

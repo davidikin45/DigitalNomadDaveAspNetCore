@@ -35,7 +35,7 @@ namespace DND.Common.Implementation.Models
                 return false;
 
             if (ReferenceEquals(this, other))
-                return false;
+                return true;
 
             if (GetType() != other.GetType())
                 return false;

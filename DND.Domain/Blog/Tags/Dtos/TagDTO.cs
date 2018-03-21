@@ -6,10 +6,11 @@ using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.Blog.Tags.Dtos
 {
-    public class TagDto : BaseEntity<int>, IMapFrom<Tag>, IMapTo<Tag>
+    public class TagDto : BaseDto<int>, IMapFrom<Tag>, IMapTo<Tag>
     {
 
         [Required, StringLength(50)]

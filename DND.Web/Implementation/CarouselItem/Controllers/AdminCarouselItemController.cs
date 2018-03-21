@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.BucketList.Controllers
 {
     [Route("admin/carousel-item")]
-    public class AdminCarouselItemController : BaseEntityControllerAuthorize<CarouselItemDto, ICarouselItemApplicationService>
+    public class AdminCarouselItemController : BaseEntityControllerAuthorize<CarouselItemDto, CarouselItemDto, CarouselItemDto, CarouselItemDto, ICarouselItemApplicationService>
     {
         public AdminCarouselItemController(ICarouselItemApplicationService service, IMapper mapper, IEmailService emailService)
              : base(true, service, mapper, emailService)

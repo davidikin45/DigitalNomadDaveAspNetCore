@@ -10,7 +10,7 @@ namespace DND.Web.Implementation.Category.Api
 {
     [ApiVersion("1.0")]
     [Route("api/content-html")]
-    public class ContentHtmlController : BaseEntityWebApiControllerAuthorize<ContentHtmlDto, IContentHtmlApplicationService>
+    public class ContentHtmlController : BaseEntityWebApiControllerAuthorize<ContentHtmlDto, ContentHtmlDto, ContentHtmlDto, ContentHtmlDto, IContentHtmlApplicationService>
     {
         public ContentHtmlController(IContentHtmlApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)

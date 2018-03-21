@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.Category.Controllers
 {
     [Route("admin/content-text")]
-    public class AdminContentTextController : BaseEntityControllerAuthorize<ContentTextDto, IContentTextApplicationService>
+    public class AdminContentTextController : BaseEntityControllerAuthorize<ContentTextDto, ContentTextDto, ContentTextDto, ContentTextDto, IContentTextApplicationService>
     {
         public AdminContentTextController(IContentTextApplicationService service, IMapper mapper, IEmailService emailService)
              : base(true, service, mapper, emailService)

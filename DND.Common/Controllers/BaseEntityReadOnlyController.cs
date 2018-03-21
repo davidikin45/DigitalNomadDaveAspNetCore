@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.Controllers
 {
@@ -27,8 +28,8 @@ namespace DND.Common.Controllers
     //If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
     //Otherwise, the action supports the POST method.
     public abstract class BaseEntityReadOnlyController<TDto, IEntityService> : BaseController
-        where TDto : class, IBaseEntity
-        where IEntityService : IBaseEntityApplicationService<TDto>
+        where TDto : class, IBaseDtoWithId
+        where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
     {   
         public IEntityService Service { get; private set; }
         public Boolean Admin { get; set; }

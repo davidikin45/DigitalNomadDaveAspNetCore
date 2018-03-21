@@ -1,4 +1,5 @@
 ﻿using DND.Common.Extensions;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Implementation.Models;
 using DND.Domain.FlightSearch.Enums;
 using System;
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.FlightSearch.Search.Dtos
 {
-    public class FlightSearchRequestDto : BaseEntity<int>
+    public class FlightSearchRequestDto : BaseDto<int>
     {
         public string Locale { get; set; }
         public string[] Markets { get; set; }

@@ -7,10 +7,11 @@ using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.CMS.CarouselItems.Dtos
 {
-    public class CarouselItemDto : BaseEntity<int>, IMapFrom<CarouselItem>, IMapTo<CarouselItem>
+    public class CarouselItemDto : BaseDto<int>, IMapFrom<CarouselItem>, IMapTo<CarouselItem>
     {
         [Render(AllowSortForGrid = false)]
         [FolderDropdown(Folders.Gallery, true)]

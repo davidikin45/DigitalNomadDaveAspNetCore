@@ -1,26 +1,45 @@
-﻿using DND.Common.Interfaces.Models;
+﻿using DND.Common.Interfaces.Dtos;
+using DND.Common.Interfaces.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Common.Interfaces.ApplicationServices
 {
-    public interface IBaseEntityApplicationService<TDto> : IBaseEntityReadOnlyApplicationService<TDto>
-          where TDto : class, IBaseEntity
+    public interface IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto> : IBaseEntityReadOnlyApplicationService<TReadDto>
+          where TCreateDto : class, IBaseDto
+          where TReadDto : class, IBaseDtoWithId
+          where TUpdateDto : class, IBaseDto
+          where TDeleteDto : class, IBaseDtoWithId
     {
-        TDto Create(TDto dto);
+        TReadDto Create(TCreateDto dto);
 
-        Task<TDto> CreateAsync(TDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task<TReadDto> CreateAsync(TCreateDto dto, CancellationToken cancellationToken = default(CancellationToken));
 
-        void Update(TDto dto);
+        void Update(object id, TUpdateDto dto);
 
-        Task UpdateAsync(TDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task UpdateAsync(object id, TUpdateDto dto, CancellationToken cancellationToken = default(CancellationToken));
 
         void Delete(object id);
 
         Task DeleteAsync(object id, CancellationToken cancellationToken = default(CancellationToken));
 
-        void Delete(TDto dto);
+        void Delete(TDeleteDto dto);
 
-        Task DeleteAsync(TDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteAsync(TDeleteDto dto, CancellationToken cancellationToken = default(CancellationToken));
+
+        TUpdateDto GetUpdateDtoById(object id)
+           ;
+
+        Task<TUpdateDto> GetUpdateDtoByIdAsync(object id,
+             CancellationToken cancellationToken)
+            ;
+
+        TDeleteDto GetDeleteDtoById(object id)
+           ;
+
+        Task<TDeleteDto> GetDeleteDtoByIdAsync(object id,
+             CancellationToken cancellationToken)
+            ;
     }
 }

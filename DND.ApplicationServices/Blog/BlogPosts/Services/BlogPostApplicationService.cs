@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.BlogPosts.Services
 {
-    public class BlogPostApplicationService : BaseEntityApplicationService<IApplicationDbContext, BlogPost, BlogPostDto, IBlogPostDomainService>, IBlogPostApplicationService
+    public class BlogPostApplicationService : BaseEntityApplicationService<IApplicationDbContext, BlogPost, BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDto, IBlogPostDomainService>, IBlogPostApplicationService
     {
         public BlogPostApplicationService(IBlogPostDomainService domainService, IMapper mapper)
         : base(domainService, mapper)
@@ -169,7 +169,7 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
             return Mapper.Map<BlogPostDto>(bo);
         }
 
-        public async override Task UpdateAsync(BlogPostDto dto, CancellationToken cancellationToken)
+        public async override Task UpdateAsync(Object id, BlogPostDto dto, CancellationToken cancellationToken)
         {
             var persistedPost = await DomainService.GetFirstAsync(cancellationToken, p => p.Id == dto.Id, null, p => p.Tags, p => p.Locations);
             var persistedTags = persistedPost.Tags.ToList();
