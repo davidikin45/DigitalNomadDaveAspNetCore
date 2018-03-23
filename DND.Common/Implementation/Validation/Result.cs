@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+
+//No Result return = Not expected to fail
+//Result return type = expected to fail
 namespace DND.Common.Implementation.Validation
 {
     public class Result
