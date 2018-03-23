@@ -178,7 +178,7 @@ namespace DND.Web
             .AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices()
             .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            //Disable IObjectValidatable and Validation Attributes from being evaluated and populating viewstate
+            //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
             if(!enableMVCValidation)
             {
                 var validator = services.FirstOrDefault(s => s.ServiceType == typeof(IObjectModelValidator));
