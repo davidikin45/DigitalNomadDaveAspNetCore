@@ -37,7 +37,7 @@ namespace DND.DomainServices.SearchEngines
          DateTime? outboundDepartureDateTimeFromFilter, DateTime? outboundDepartureDateTimeToFilter, DateTime? outboundArrivalDateTimeFromFilter, DateTime? outboundArrivalDateTimeToFilter,
          DateTime? inboundDepartureDateTimeFromFilter, DateTime? inboundDepartureDateTimeToFilter, DateTime? inboundArrivalDateTimeFromFilter, DateTime? inboundArrivalDateTimeToFilter, CancellationToken cancellationToken)
         {
-            await _flightSearchEngine.GetLocalesAsync(cancellationToken);
+            await _flightSearchEngine.GetLocalesAsync(cancellationToken).ConfigureAwait(false);
             int passengers = adults + children + infants;
 
             List<ServerSearchSessionResult> searchResults = new List<ServerSearchSessionResult>();
@@ -50,7 +50,7 @@ namespace DND.DomainServices.SearchEngines
                 tasks.Add(StartSearchAsync(country, currency, locale, originPlaceSkyscannerCode, destinationPlaceSkyscannerCode, outboundPartialDate, inboundPartialDate, adults, 0, 0, priceMinFilter, priceMaxFilter, maxStopsFilter, cabinClass, cts.Token));
             }
 
-            IEnumerable<IEnumerable<ServerSearchSessionResult>> tempResults = await TaskHelper.WhenAllOrException(tasks.ToArray(), cts);
+            IEnumerable<IEnumerable<ServerSearchSessionResult>> tempResults = await TaskHelper.WhenAllOrException(tasks.ToArray(), cts).ConfigureAwait(false);
 
             foreach (List<ServerSearchSessionResult> list in tempResults)
             {
@@ -76,7 +76,7 @@ namespace DND.DomainServices.SearchEngines
 
             ClientSearchSession clientSearchSession = data.CreateClientSearchSession();
             await clientSearchSession.FilterAsync(sortType, sortOrder, adults, children, infants, outboundDepartureDateTimeFromFilter, outboundDepartureDateTimeToFilter, outboundArrivalDateTimeFromFilter, outboundArrivalDateTimeToFilter,
-                   inboundDepartureDateTimeFromFilter, inboundDepartureDateTimeToFilter, inboundArrivalDateTimeFromFilter, inboundArrivalDateTimeToFilter, priceMinFilterAllPassengers, priceMaxFilterAllPassengers, maxStopsFilter, cancellationToken);
+                   inboundDepartureDateTimeFromFilter, inboundDepartureDateTimeToFilter, inboundArrivalDateTimeFromFilter, inboundArrivalDateTimeToFilter, priceMinFilterAllPassengers, priceMaxFilterAllPassengers, maxStopsFilter, cancellationToken).ConfigureAwait(false);
 
             return clientSearchSession;
         }
@@ -88,7 +88,7 @@ namespace DND.DomainServices.SearchEngines
             //ConcurrentBag<ServerSearchSessionResult> searchResults2 = new ConcurrentBag<ServerSearchSessionResult>();
 
             IEnumerable<ServerSearchSessionResult> searchResults = await StartSearchInnerAsync(country, currency, locale, originPlaceSkyscannerCode, destinationPlaceSkyscannerCode, outboundPartialDate, inboundPartialDate, adults, children, infants, priceMinFilter, priceMaxFilter,
-             maxStopsFilter, cabinClass, false, cancellationToken);
+             maxStopsFilter, cabinClass, false, cancellationToken).ConfigureAwait(false);
 
             return searchResults;
         }
@@ -140,7 +140,7 @@ namespace DND.DomainServices.SearchEngines
             //Country > Anywhere = Countries
             if (destinationPlaceSkyscannerCode == "anywhere")
             {
-                var dataOriginal = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, originPlaceSkyscannerCode, destinationPlaceSkyscannerCode, outboundPartialDate, inboundPartialDate, cancellationToken);
+                var dataOriginal = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, originPlaceSkyscannerCode, destinationPlaceSkyscannerCode, outboundPartialDate, inboundPartialDate, cancellationToken).ConfigureAwait(false);
 
                 var dataFilter = dataOriginal.Filter(priceMinFilter, priceMaxFilter, direct);
 
@@ -165,7 +165,7 @@ namespace DND.DomainServices.SearchEngines
                     }
                 }
 
-                var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts);
+                var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts).ConfigureAwait(false);
                 foreach (List<ServerSearchSessionResult> result in results)
                 {
                     searchResults.AddRange(result);
@@ -175,7 +175,7 @@ namespace DND.DomainServices.SearchEngines
             else if (originPlaceSkyscannerCode == "anywhere")
             {
 
-                var dataOriginal = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, destinationPlaceSkyscannerCode, originPlaceSkyscannerCode, null, null, cancellationToken);
+                var dataOriginal = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, destinationPlaceSkyscannerCode, originPlaceSkyscannerCode, null, null, cancellationToken).ConfigureAwait(false);
                 //This is a filter based on the reverse route. This will give performance
                 dataOriginal = dataOriginal.Filter(priceMinFilter, priceMaxFilter, direct);
 
@@ -206,7 +206,7 @@ namespace DND.DomainServices.SearchEngines
             }
             else if (!livePriceDirect)
             {
-                BrowseRoutesServiceResponse dataOriginal = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, originPlaceSkyscannerCode, destinationPlaceSkyscannerCode, outboundPartialDate, inboundPartialDate, cancellationToken);
+                BrowseRoutesServiceResponse dataOriginal = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, originPlaceSkyscannerCode, destinationPlaceSkyscannerCode, outboundPartialDate, inboundPartialDate, cancellationToken).ConfigureAwait(false);
                 BrowseRoutesServiceResponse dataFilter = dataOriginal.Filter(priceMinFilter, priceMaxFilter, direct);
 
 
@@ -246,7 +246,7 @@ namespace DND.DomainServices.SearchEngines
                                 }
                             }
 
-                            var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts);
+                            var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts).ConfigureAwait(false);
                             foreach (List<ServerSearchSessionResult> result in results)
                             {
                                 searchResults.AddRange(result);
@@ -270,7 +270,7 @@ namespace DND.DomainServices.SearchEngines
                                 }
                             }
 
-                            var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts);
+                            var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts).ConfigureAwait(false);
                             foreach (List<ServerSearchSessionResult> result in results)
                             {
                                 searchResults.AddRange(result);
@@ -295,7 +295,7 @@ namespace DND.DomainServices.SearchEngines
                                 }
                             }
 
-                            var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts);
+                            var results = await TaskHelper.WhenAllOrException(t.ToArray(), cts).ConfigureAwait(false);
                             foreach (List<ServerSearchSessionResult> result in results)
                             {
                                 searchResults.AddRange(result);
@@ -308,7 +308,7 @@ namespace DND.DomainServices.SearchEngines
                     var originAirportOrCity = originPlaceSkyscannerCode;
                     var destinationAirportOrCity = destinationPlaceSkyscannerCode;
 
-                    searchResults.AddRange(await StartSearchInnerAsync(country, currency, locale, originAirportOrCity, destinationAirportOrCity, outboundPartialDate, inboundPartialDate, adults, children, infants, priceMinFilter, priceMaxFilter, maxStopsFilter, cabinClass, true, cancellationToken));
+                    searchResults.AddRange(await StartSearchInnerAsync(country, currency, locale, originAirportOrCity, destinationAirportOrCity, outboundPartialDate, inboundPartialDate, adults, children, infants, priceMinFilter, priceMaxFilter, maxStopsFilter, cabinClass, true, cancellationToken).ConfigureAwait(false));
                 }
             }
             else if (livePriceDirect)
@@ -316,7 +316,7 @@ namespace DND.DomainServices.SearchEngines
                 var originAirportOrCity = originPlaceSkyscannerCode;
                 var destinationAirportOrCity = destinationPlaceSkyscannerCode;
 
-                BrowseRoutesServiceResponse cacheResults = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, originAirportOrCity, destinationAirportOrCity, outboundPartialDate, inboundPartialDate, cancellationToken);
+                BrowseRoutesServiceResponse cacheResults = await _flightSearchEngine.BrowseRoutesSearchAsync(country, currency, locale, originAirportOrCity, destinationAirportOrCity, outboundPartialDate, inboundPartialDate, cancellationToken).ConfigureAwait(false);
                 cacheResults = cacheResults.Filter(priceMinFilter, priceMaxFilter, direct);
 
                
@@ -326,7 +326,7 @@ namespace DND.DomainServices.SearchEngines
                    priceMaxFilter, maxStopsFilter, cabinClass);
 
                         //**** This is where the magic happens!
-                        result.Results = await _flightSearchEngine.LivePriceSearchAsync(country, currency, locale, originAirportOrCity, destinationAirportOrCity, outboundPartialDate, inboundPartialDate, adults, children, infants, cabinClass, null, cancellationToken);
+                        result.Results = await _flightSearchEngine.LivePriceSearchAsync(country, currency, locale, originAirportOrCity, destinationAirportOrCity, outboundPartialDate, inboundPartialDate, adults, children, infants, cabinClass, null, cancellationToken).ConfigureAwait(false);
 
 
                         searchResults.Add(result);

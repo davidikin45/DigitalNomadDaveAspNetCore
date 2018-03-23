@@ -79,7 +79,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAllAsync(orderBy, pageNo * pageSize, pageSize, includeProperties);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAllAsync(orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
 
                 return entityList;
             }
@@ -112,7 +112,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
 
                 return entityList;
             }
@@ -143,7 +143,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAsync(filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAsync(filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
 
                 return entityList;
             }
@@ -166,7 +166,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetOneAsync(filter, includeProperties);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetOneAsync(filter, includeProperties).ConfigureAwait(false);
             }
         }
 
@@ -189,7 +189,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {             
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetFirstAsync(filter, orderBy, includeProperties);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetFirstAsync(filter, orderBy, includeProperties).ConfigureAwait(false);
             }
         }
 
@@ -206,7 +206,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id).ConfigureAwait(false);
             }
         }
 
@@ -223,7 +223,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(ids);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(ids).ConfigureAwait(false);
             }
         }
 
@@ -242,7 +242,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetCountAsync(filter);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetCountAsync(filter).ConfigureAwait(false);
             }
         }
 
@@ -263,7 +263,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetSearchCountAsync(search, filter);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetSearchCountAsync(search, filter).ConfigureAwait(false);
             }
         }
 
@@ -282,7 +282,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExistsAsync(filter);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExistsAsync(filter).ConfigureAwait(false);
             }
         }
 
@@ -301,7 +301,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExistsAsync(x => x.Id.ToString() == id.ToString());
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetExistsAsync(x => x.Id.ToString() == id.ToString()).ConfigureAwait(false);
             }
         }
     }

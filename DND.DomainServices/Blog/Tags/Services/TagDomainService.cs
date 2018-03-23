@@ -27,7 +27,7 @@ namespace DND.DomainServices.Tags.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext,Tag>().GetFirstAsync(t => t.UrlSlug.Equals(tagSlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext,Tag>().GetFirstAsync(t => t.UrlSlug.Equals(tagSlug)).ConfigureAwait(false);
             }
         }
 
@@ -35,7 +35,7 @@ namespace DND.DomainServices.Tags.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, Tag>().GetAllAsync(o => o.OrderBy(c => c.Name));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Tag>().GetAllAsync(o => o.OrderBy(c => c.Name)).ConfigureAwait(false);
             }
         }
 
@@ -46,7 +46,7 @@ namespace DND.DomainServices.Tags.Services
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            await base.UpdateAsync(entity, cancellationToken);
+            await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<Tag> CreateAsync(Tag entity, CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ namespace DND.DomainServices.Tags.Services
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, cancellationToken);
+            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
     }
 }

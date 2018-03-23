@@ -27,7 +27,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => !checkIsPublished || p.Published);
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => !checkIsPublished || p.Published).ConfigureAwait(false);
             }
 
         }
@@ -44,7 +44,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published, o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published, o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag)).ConfigureAwait(false);
             }
         }
 
@@ -52,7 +52,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published, o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published, o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
             }
         }
 
@@ -68,7 +68,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && p.Author.UrlSlug.Equals(authorSlug), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && p.Author.UrlSlug.Equals(authorSlug), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
             }
         }
 
@@ -76,7 +76,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && p.Author.UrlSlug.Equals(authorSlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && p.Author.UrlSlug.Equals(authorSlug)).ConfigureAwait(false);
             }
         }
 
@@ -84,7 +84,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && p.Category.UrlSlug.Equals(categorySlug), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && p.Category.UrlSlug.Equals(categorySlug), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
             }
         }
 
@@ -92,7 +92,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && p.Category.UrlSlug.Equals(categorySlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && p.Category.UrlSlug.Equals(categorySlug)).ConfigureAwait(false);
             }
         }
 
@@ -100,7 +100,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && p.Tags.Any(t => t.Tag.UrlSlug.Equals(tagSlug)), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && p.Tags.Any(t => t.Tag.UrlSlug.Equals(tagSlug)), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
             }
         }
 
@@ -108,7 +108,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && p.Tags.Any(t => t.Tag.UrlSlug.Equals(tagSlug)));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && p.Tags.Any(t => t.Tag.UrlSlug.Equals(tagSlug))).ConfigureAwait(false);
             }
         }
 
@@ -116,7 +116,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && (p.Title.Contains(search) || p.Category.Name.Equals(search) || p.Author.Name.Equals(search) || p.Tags.Any(t => t.Tag.Name.Equals(search)) || p.Locations.Any(l => l.Location.Name.Equals(search))), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(p => p.Published && (p.Title.Contains(search) || p.Category.Name.Equals(search) || p.Author.Name.Equals(search) || p.Tags.Any(t => t.Tag.Name.Equals(search)) || p.Locations.Any(l => l.Location.Name.Equals(search))), o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
             }
         }
 
@@ -124,7 +124,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && (p.Title.Contains(search) || p.Category.Name.Equals(search) || p.Author.Name.Equals(search) || p.Tags.Any(t => t.Tag.Name.Equals(search))) || p.Locations.Any(l => l.Location.Name.Equals(search)));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetCountAsync(p => p.Published && (p.Title.Contains(search) || p.Category.Name.Equals(search) || p.Author.Name.Equals(search) || p.Tags.Any(t => t.Tag.Name.Equals(search))) || p.Locations.Any(l => l.Location.Name.Equals(search))).ConfigureAwait(false);
             }
         }
 
@@ -132,7 +132,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetFirstAsync(p => p.DateCreated.Year == year && p.DateCreated.Month == month && p.UrlSlug.Equals(titleSlug), null, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetFirstAsync(p => p.DateCreated.Year == year && p.DateCreated.Month == month && p.UrlSlug.Equals(titleSlug), null, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
             }
         }
 
@@ -141,13 +141,13 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<IApplicationDbContext, BlogPost>().SearchAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
+                return await unitOfWork.ReadOnlyRepository<IApplicationDbContext, BlogPost>().SearchAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
             }
         }
 
         public async override Task<IEnumerable<BlogPost>> GetAllAsync(CancellationToken cancellationToken, Func<IQueryable<BlogPost>, IOrderedQueryable<BlogPost>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<BlogPost, object>>[] includeProperties)
         {
-            return await GetPostsAsync(pageNo.Value, pageSize.Value, orderBy, cancellationToken);
+            return await GetPostsAsync(pageNo.Value, pageSize.Value, orderBy, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<BlogPost>> GetPostsAsync(int pageNo, int pageSize, Func<IQueryable<BlogPost>, IOrderedQueryable<BlogPost>> orderBy, CancellationToken cancellationToken)
@@ -157,11 +157,11 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
                 IEnumerable<BlogPost> posts = null;
                 if (orderBy != null)
                 {
-                    posts = await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(null, orderBy, pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                    posts = await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(null, orderBy, pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
                 }
                 else
                 {
-                    posts = await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(null, o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                    posts = await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetAsync(null, o => o.OrderByDescending(p => p.DateCreated), pageNo * pageSize, pageSize, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
                 }
 
                 return posts;
@@ -170,14 +170,14 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
 
         public async override Task<BlogPost> GetByIdAsync(object id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await GetPostAsync(int.Parse(id.ToString()), cancellationToken);
+            return await GetPostAsync(int.Parse(id.ToString()), cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<BlogPost> GetPostAsync(int id, CancellationToken cancellationToken)
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetFirstAsync(p => p.Id == id, null, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, BlogPost>().GetFirstAsync(p => p.Id == id, null, p => p.Category, p => p.Author, p => p.Tags.Select(t => t.Tag), p => p.Locations.Select(t => t.Location)).ConfigureAwait(false);
             }
         }
 
@@ -188,7 +188,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Title);
             }
 
-            return await base.CreateAsync(entity, cancellationToken);
+            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(BlogPost entity, IEnumerable<BlogPostTag> insertTags, IEnumerable<BlogPostTag> deleteTags, IEnumerable<BlogPostLocation> insertLocations, IEnumerable<BlogPostLocation> deleteLocations, CancellationToken cancellationToken)
@@ -223,7 +223,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
 
                 UoW.Repository<IApplicationDbContext, BlogPost>().Update(entity);
 
-                await UoW.CompleteAsync(cancellationToken);
+                await UoW.CompleteAsync(cancellationToken).ConfigureAwait(false);
             }
         }
         #endregion

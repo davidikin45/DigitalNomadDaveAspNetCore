@@ -142,7 +142,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             int? take = null,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(null, null, orderBy, skip, take, includeProperties).ToListAsync(_cancellationToken);
+            return await GetQueryable(null, null, orderBy, skip, take, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual IEnumerable<TEntity> SQLQuery(string query, params object[] paramaters)
@@ -174,7 +174,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             int? take = null,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(null, filter, orderBy, skip, take, includeProperties).ToListAsync(_cancellationToken);
+            return await GetQueryable(null, filter, orderBy, skip, take, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual IEnumerable<TEntity> Search(
@@ -198,7 +198,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             int? take = null,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(search, filter, orderBy, skip, take, includeProperties).ToListAsync(_cancellationToken);
+            return await GetQueryable(search, filter, orderBy, skip, take, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual TEntity GetOne(
@@ -214,7 +214,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
           // string includeProperties = null,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(null, filter, null, null, null, includeProperties).SingleOrDefaultAsync(_cancellationToken);
+            return await GetQueryable(null, filter, null, null, null, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual TEntity GetFirst(
@@ -232,7 +232,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
           // string includeProperties = null,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(null, filter, orderBy, null, null, includeProperties).FirstOrDefaultAsync(_cancellationToken);
+            return await GetQueryable(null, filter, orderBy, null, null, includeProperties).FirstOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual TEntity GetById(object id)
@@ -242,7 +242,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<TEntity> GetByIdAsync(object id)
         {
-            return await GetQueryable(null, x => x.Id.ToString() == id.ToString(), null, null).SingleOrDefaultAsync(_cancellationToken);
+            return await GetQueryable(null, x => x.Id.ToString() == id.ToString(), null, null).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual IEnumerable<TEntity> GetById(IEnumerable<object> ids)
@@ -265,7 +265,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 list.Add(id.ToString());
             }
 
-            return await GetQueryable(null, x => list.Contains(x.Id.ToString()), null, null).ToListAsync(_cancellationToken);
+            return await GetQueryable(null, x => list.Contains(x.Id.ToString()), null, null).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual int GetCount(Expression<Func<TEntity, bool>> filter = null)
@@ -273,9 +273,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return GetQueryable(null, filter).Count();
         }
 
-        public virtual Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null)
         {
-            return GetQueryable(null, filter).CountAsync(_cancellationToken);
+            return await GetQueryable(null, filter).CountAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual int GetSearchCount(string search = "", Expression<Func<TEntity, bool>> filter = null)
@@ -283,9 +283,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return GetQueryable(search, filter).Count();
         }
 
-        public virtual Task<int> GetSearchCountAsync(string search = "", Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<int> GetSearchCountAsync(string search = "", Expression<Func<TEntity, bool>> filter = null)
         {
-            return GetQueryable(search, filter).CountAsync(_cancellationToken);
+            return await GetQueryable(search, filter).CountAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual bool GetExists(Expression<Func<TEntity, bool>> filter = null)
@@ -293,9 +293,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return GetQueryable(null, filter).Any();
         }
 
-        public virtual Task<bool> GetExistsAsync(Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<bool> GetExistsAsync(Expression<Func<TEntity, bool>> filter = null)
         {
-            return GetQueryable(null, filter).AnyAsync(_cancellationToken);
+            return await GetQueryable(null, filter).AnyAsync(_cancellationToken).ConfigureAwait(false);
         }
     }
 }

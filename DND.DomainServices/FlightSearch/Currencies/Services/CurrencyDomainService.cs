@@ -21,7 +21,7 @@ namespace DND.DomainServices.FlightSearch.Currencies.Services
         {
             var marketSearchEngine = new LocaleMarketCurrencySearchEngine("skyscanner");
 
-            return await marketSearchEngine.GetCurrencyByIDAsync(id, cancellationToken);
+            return await marketSearchEngine.GetCurrencyByIDAsync(id, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<DND.Domain.Skyscanner.Model.Currency>> GetAllAsync(CancellationToken cancellationToken)
@@ -29,7 +29,7 @@ namespace DND.DomainServices.FlightSearch.Currencies.Services
 
             var marketSearchEngine = new LocaleMarketCurrencySearchEngine("skyscanner");
 
-            return (await marketSearchEngine.GetCurrenciesAsync(cancellationToken)).Currencies;
+            return (await marketSearchEngine.GetCurrenciesAsync(cancellationToken).ConfigureAwait(false)).Currencies;
         }
     }
 }

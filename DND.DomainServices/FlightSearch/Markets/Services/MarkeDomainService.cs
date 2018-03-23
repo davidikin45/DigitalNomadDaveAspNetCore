@@ -22,7 +22,7 @@ namespace DND.DomainServices.FlightSearch.Markets.Services
         {
             var marketSearchEngine = new LocaleMarketCurrencySearchEngine("skyscanner");
 
-            return await marketSearchEngine.GetMarketByIDAsync(id, cancellationToken);
+            return await marketSearchEngine.GetMarketByIDAsync(id, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Country>> GetByLocale(string locale, CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ namespace DND.DomainServices.FlightSearch.Markets.Services
 
             var marketSearchEngine = new LocaleMarketCurrencySearchEngine("skyscanner");
 
-            return (await marketSearchEngine.GetMarketsByLocaleAsync(locale, cancellationToken)).Countries;
+            return (await marketSearchEngine.GetMarketsByLocaleAsync(locale, cancellationToken).ConfigureAwait(false)).Countries;
         }
    
     }

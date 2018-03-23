@@ -24,25 +24,25 @@ namespace DND.DomainServices.Blog.Locations.Services
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return base.CreateAsync(entity, cancellationToken);
+            return base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<Location> GetLocationAsync(string urlSlug, CancellationToken cancellationToken)
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, Location>().GetFirstAsync(t => t.UrlSlug.Equals(urlSlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Location>().GetFirstAsync(t => t.UrlSlug.Equals(urlSlug)).ConfigureAwait(false);
             }
         }
 
-        public override Task UpdateAsync(DND.Domain.Blog.Locations.Location entity, CancellationToken cancellationToken)
+        public override async Task UpdateAsync(DND.Domain.Blog.Locations.Location entity, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return base.UpdateAsync(entity, cancellationToken);
+             await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
 

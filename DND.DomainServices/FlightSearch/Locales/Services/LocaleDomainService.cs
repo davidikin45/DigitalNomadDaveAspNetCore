@@ -21,14 +21,14 @@ namespace DND.DomainServices.FlightSearch.Locales.Services
         {
             var marketSearchEngine = new LocaleMarketCurrencySearchEngine("skyscanner");
 
-            return await marketSearchEngine.GetLocaleByIDAsync(id, cancellationToken);
+            return await marketSearchEngine.GetLocaleByIDAsync(id, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<DND.Domain.Skyscanner.Model.Locale>> GetAllAsync(CancellationToken cancellationToken)
         {
             var marketSearchEngine = new LocaleMarketCurrencySearchEngine("skyscanner");
 
-            return (await marketSearchEngine.GetLocalesAsync(cancellationToken)).Locales;
+            return (await marketSearchEngine.GetLocalesAsync(cancellationToken).ConfigureAwait(false)).Locales;
         }
     }
 }

@@ -63,7 +63,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
                  request.InboundDepartureTimeToFilter,
                  request.InboundArrivalTimeFromFilter,
                  request.InboundArrivalTimeToFilter,
-                 cancellationToken);
+                 cancellationToken).ConfigureAwait(false);
 
 
             var ItineraryDtos = new List<ItineraryDto>();
@@ -111,7 +111,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
                 var locationSearchEngine = new LocationSearchEngine("skyscanner");
 
                 cancellationToken.ThrowIfCancellationRequested();
-                var results = await locationSearchEngine.SearchByQueryAsync(request.Market[0], request.Currency, request.Locale, request.Search, cancellationToken);
+                var results = await locationSearchEngine.SearchByQueryAsync(request.Market[0], request.Currency, request.Locale, request.Search, cancellationToken).ConfigureAwait(false);
 
                 foreach (Place p in results.Places)
                 {
@@ -145,7 +145,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
 
             var locationSearchEngine = new LocationSearchEngine("skyscanner");
 
-            var p = await locationSearchEngine.GetByIDAsync(request.Market[0], request.Currency, request.Locale, request.Id, cancellationToken);
+            var p = await locationSearchEngine.GetByIDAsync(request.Market[0], request.Currency, request.Locale, request.Id, cancellationToken).ConfigureAwait(false);
 
             var location = new LocationResponsedto { PlaceId = p.PlaceId.Replace("-sky", ""), PlaceName = p.PlaceName, CityId = p.CityId.Replace("-sky", ""), CountryId = p.CountryId.Replace("-sky", ""), CountryName = p.CountryName, RegionId = "" };
 

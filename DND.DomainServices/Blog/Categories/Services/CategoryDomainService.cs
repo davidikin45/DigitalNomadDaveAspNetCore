@@ -27,7 +27,7 @@ namespace DND.DomainServices.Categories.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, Category>().GetFirstAsync(c => c.UrlSlug.Equals(categorySlug));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Category>().GetFirstAsync(c => c.UrlSlug.Equals(categorySlug)).ConfigureAwait(false);
             }
         }
 
@@ -35,7 +35,7 @@ namespace DND.DomainServices.Categories.Services
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await UoW.ReadOnlyRepository<IApplicationDbContext, Category>().GetAllAsync(o => o.OrderBy(c => c.Name));
+                return await UoW.ReadOnlyRepository<IApplicationDbContext, Category>().GetAllAsync(o => o.OrderBy(c => c.Name)).ConfigureAwait(false);
             }
         }
 
@@ -46,7 +46,7 @@ namespace DND.DomainServices.Categories.Services
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, cancellationToken);
+            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
     }
 }

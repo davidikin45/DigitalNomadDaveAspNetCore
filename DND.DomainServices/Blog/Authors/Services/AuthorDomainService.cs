@@ -38,7 +38,7 @@ namespace DND.DomainServices.Authors.Services
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            await base.UpdateAsync(entity, cancellationToken);
+            await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<Author> CreateAsync(Author entity, CancellationToken cancellationToken)
@@ -48,7 +48,7 @@ namespace DND.DomainServices.Authors.Services
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, cancellationToken);
+            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
     }
 }
