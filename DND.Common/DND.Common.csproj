@@ -643,6 +643,7 @@
     <Compile Include="Extensions\ModelHelperExtensions.cs" />
     <Compile Include="Extensions\MvcOptionsExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\ResultExtensions.cs" />
     <Compile Include="Extensions\ServiceCollectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
