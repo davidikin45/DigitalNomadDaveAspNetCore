@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -65,6 +66,7 @@ namespace DND.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            bool enableMVCValidation = true;
             bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -175,6 +177,17 @@ namespace DND.Web
             .AddXmlSerializerFormatters() //XML Opt out. Contract Serializer is Opt in
             .AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices()
             .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            //Disable IObjectValidatable and Validation Attributes from being evaluated and populating viewstate
+            if(!enableMVCValidation)
+            {
+                var validator = services.FirstOrDefault(s => s.ServiceType == typeof(IObjectModelValidator));
+                if (validator != null)
+                {
+                    services.Remove(validator);
+                    services.Add(new ServiceDescriptor(typeof(IObjectModelValidator), _ => new NonValidatingValidator(), ServiceLifetime.Singleton));
+                }
+            }
 
             services.AddApiVersioning(option =>
             {

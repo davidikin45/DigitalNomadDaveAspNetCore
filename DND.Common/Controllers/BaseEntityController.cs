@@ -34,7 +34,7 @@ namespace DND.Common.Controllers
         : base(admin, service, mapper,emailService)
         {
         }
-
+        
         // GET: Default/Create
         [Route("create")]
         public virtual ActionResult Create()
