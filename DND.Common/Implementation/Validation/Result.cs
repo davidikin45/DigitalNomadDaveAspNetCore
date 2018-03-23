@@ -101,6 +101,7 @@ namespace DND.Common.Implementation.Validation
         }
     }
 
+    //Only for expected errors
     public enum ErrorType
     {
         ObjectValidationFailed
