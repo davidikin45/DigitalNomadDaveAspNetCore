@@ -39,6 +39,7 @@ This project is licensed under the MIT License
 ## Pluralsight Courses
 
 * [Building a Web App with ASP.NET Core, MVC, Entity Framework Core, Bootstrap, and Angular](https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents)
+* [Build Your Own Application Framework with ASP.NET MVC 5](https://app.pluralsight.com/library/courses/build-application-framework-aspdotnet-mvc-5/table-of-contents)
 
 * [Building Strongly-typed AngularJS Apps with ASP.NET MVC 5](https://app.pluralsight.com/library/courses/building-strongly-typed-angularjs-apps-aspdotnet-mvc5/table-of-contents)
 
