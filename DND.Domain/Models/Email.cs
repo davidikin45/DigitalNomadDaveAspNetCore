@@ -31,10 +31,10 @@ namespace DND.Domain.Models
             email = (email ?? string.Empty).Trim();
 
             if (email.Length == 0)
-                return Result.Fail<Email>("Email should not be empty");
+                return Result.ObjectValidationFail<Email>("Email should not be empty");
 
             if (!Regex.IsMatch(email, @"^(.+)@(.+)$"))
-                return Result.Fail<Email>("Email is invalid");
+                return Result.ObjectValidationFail<Email>("Email is invalid");
 
             return Result.Ok(new Email(email));
         }

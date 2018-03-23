@@ -116,13 +116,13 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         //protected virtual void ThrowEnhancedValidationException(DbEntityValidationException e)
         //{
-        //    var errorMessages = e.EntityValidationErrors
+        //    var errorMessages = e.ObjectValidationErrors
         //            .SelectMany(x => x.ValidationErrors)
         //            .Select(x => x.ErrorMessage);
 
         //    var fullErrorMessage = string.Join("; ", errorMessages);
         //    var exceptionMessage = string.Concat(e.Message, " The validation errors are: ", fullErrorMessage);
-        //    throw new DbEntityValidationException(exceptionMessage, e.EntityValidationErrors);
+        //    throw new DbEntityValidationException(exceptionMessage, e.ObjectValidationErrors);
         //}
     }
 

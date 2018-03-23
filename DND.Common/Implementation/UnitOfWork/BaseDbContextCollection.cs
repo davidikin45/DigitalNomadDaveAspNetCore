@@ -228,24 +228,24 @@ namespace DND.Common.Implementation.UnitOfWork
 
         //protected virtual void ThrowEnhancedValidationException(DbEntityValidationException e)
         //{
-        //    var errorMessages = e.EntityValidationErrors
+        //    var errorMessages = e.ObjectValidationErrors
         //            .SelectMany(x => x.ValidationErrors)
         //            .Select(x => x.ErrorMessage);
 
         //    var fullErrorMessage = string.Join("; ", errorMessages);
         //    var exceptionMessage = string.Concat(e.Message, " The validation errors are: ", fullErrorMessage);
-        //    throw new DbEntityValidationException(exceptionMessage, e.EntityValidationErrors);
+        //    throw new DbEntityValidationException(exceptionMessage, e.ObjectValidationErrors);
         //}
 
-        //protected virtual void ThrowEnhancedValidationException(IEnumerable<DbEntityValidationResult> entityValidationErrors)
+        //protected virtual void ThrowEnhancedValidationException(IEnumerable<DbEntityValidationResult> ObjectValidationErrors)
         //{
-        //    var errorMessages = entityValidationErrors
+        //    var errorMessages = ObjectValidationErrors
         //             .SelectMany(x => x.ValidationErrors)
         //             .Select(x => x.ErrorMessage);
 
         //    var fullErrorMessage = string.Join("; ", errorMessages);
         //    var exceptionMessage = string.Concat(" The validation errors are: ", fullErrorMessage);
-        //    throw new DbEntityValidationException(exceptionMessage, entityValidationErrors);
+        //    throw new DbEntityValidationException(exceptionMessage, ObjectValidationErrors);
         //}
 
         public void Rollback()

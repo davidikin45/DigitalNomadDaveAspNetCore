@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Implementation.Validation;
 using DND.Domain.Blog.Tags;
 using DND.Domain.Blog.Tags.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;

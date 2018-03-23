@@ -56,8 +56,15 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    await Service.CreateAsync(dto, cts.Token);
-                    return RedirectToControllerDefault().WithSuccess(this, Messages.AddSuccessful);
+                    var result = await Service.CreateAsync(dto, cts.Token);
+                    if (result.IsFailure)
+                    {
+                        HandleUpdateException(result);
+                    }
+                    else
+                    {
+                        return RedirectToControllerDefault().WithSuccess(this, Messages.AddSuccessful);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -101,8 +108,15 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    await Service.UpdateAsync(id, dto, cts.Token);
-                    return RedirectToControllerDefault().WithSuccess(this, Messages.UpdateSuccessful);
+                    var result = await Service.UpdateAsync(id, dto, cts.Token);
+                    if (result.IsFailure)
+                    {
+                        HandleUpdateException(result);
+                    }
+                    else
+                    {
+                        return RedirectToControllerDefault().WithSuccess(this, Messages.UpdateSuccessful);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -144,8 +158,15 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    await Service.DeleteAsync(id, cts.Token);
-                    return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);
+                    var result = await Service.DeleteAsync(id, cts.Token);
+                    if (result.IsFailure)
+                    {
+                        HandleUpdateException(result);
+                    }
+                    else
+                    {
+                        return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);
+                    }
                 }
                 catch (Exception ex)
                 {

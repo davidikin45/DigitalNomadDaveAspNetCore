@@ -19,7 +19,7 @@ namespace DND.ApplicationServices.CMS.ContentHtmls.Services
            
         }
 
-        public override Task DeleteAsync(ContentHtmlDto dto, CancellationToken cancellationToken)
+        public override Task<Result> DeleteAsync(ContentHtmlDto dto, CancellationToken cancellationToken)
         {
             if(dto.PreventDelete)
             {

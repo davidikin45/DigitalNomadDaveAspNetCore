@@ -10,6 +10,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Web;
+using DND.Common.Implementation.Validation;
+using DND.Common.Extensions;
 
 namespace DND.Common.Controllers.Api
 {
@@ -39,6 +41,21 @@ namespace DND.Common.Controllers.Api
             Mapper = mapper;
             EmailService = emailService;
             UrlHelper = urlHelper;
+        }
+
+        protected IActionResult ValidationErrors(Result failure)
+        {
+            var newModelState = new ModelStateDictionary();
+            switch (failure.ErrorType)
+            {
+                case ErrorType.ObjectValidationFailed:
+                    newModelState.AddValidationErrors(failure.ObjectValidationErrors);
+                    break;
+                default:
+                    newModelState.AddModelError("", Messages.UnknownError);
+                    break;
+            }
+            return ValidationErrors(newModelState);
         }
 
         protected IActionResult ValidationErrors(ModelStateDictionary modelState)

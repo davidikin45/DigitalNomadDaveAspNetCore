@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Implementation.Validation;
 using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
@@ -169,7 +170,7 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
             return Mapper.Map<BlogPostDto>(bo);
         }
 
-        public async override Task UpdateAsync(Object id, BlogPostDto dto, CancellationToken cancellationToken)
+        public async override Task<Result> UpdateAsync(Object id, BlogPostDto dto, CancellationToken cancellationToken)
         {
             var persistedPost = await DomainService.GetFirstAsync(cancellationToken, p => p.Id == dto.Id, null, p => p.Tags, p => p.Locations);
             var persistedTags = persistedPost.Tags.ToList();
@@ -182,7 +183,7 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
             var insertLocations = persistedPost.Locations.Except(persistedLocations);
             var deleteLocations = persistedLocations.Except(persistedPost.Locations);
 
-            await DomainService.UpdateAsync(persistedPost, insertTags, deleteTags, insertLocations, deleteLocations, cancellationToken);
+            return await DomainService.UpdateAsync(persistedPost, insertTags, deleteTags, insertLocations, deleteLocations, cancellationToken);
         }
         #endregion
     }

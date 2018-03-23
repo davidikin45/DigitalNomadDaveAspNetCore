@@ -1,7 +1,9 @@
-﻿using DND.Common.Interfaces.DomainServices;
+﻿using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Persistance;
 using DND.Common.Interfaces.UnitOfWork;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,74 +20,106 @@ namespace DND.Common.Implementation.DomainServices
 
         }
 
-        public virtual TEntity Create(TEntity entity)
+        public virtual Result<TEntity> Create(TEntity entity)
         {
+            var objectValidationErrors = entity.Validate().ToList();
+            if (objectValidationErrors.Any())
+            {
+                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
+            }
+
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
                 unitOfWork.Repository<TContext, TEntity>().Create(entity, "");
                 unitOfWork.Complete();
 
-                return entity;
+                return Result.Ok(entity);
             }
         }
 
-        public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<Result<TEntity>> CreateAsync(TEntity entity, CancellationToken cancellationToken)
         {
+            var objectValidationErrors = entity.Validate().ToList();
+            if (objectValidationErrors.Any())
+            {
+                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
+            }
+
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 unitOfWork.Repository<TContext, TEntity>().Create(entity, "");
                 await unitOfWork.CompleteAsync(cancellationToken);
 
-                return entity;
+                return Result.Ok(entity);
             }
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual Result Update(TEntity entity)
         {
+            var objectValidationErrors = entity.Validate().ToList();
+            if (objectValidationErrors.Any())
+            {
+                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
+            }
+
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
                 unitOfWork.Repository<TContext, TEntity>().Update(entity, "");
                 unitOfWork.Complete();
             }
+
+            return Result.Ok();
         }
 
-        public virtual async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<Result> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
+            var objectValidationErrors = entity.Validate().ToList();
+            if (objectValidationErrors.Any())
+            {
+                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
+            }
+
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 unitOfWork.Repository<TContext, TEntity>().Update(entity, "");
                 await unitOfWork.CompleteAsync(cancellationToken);
             }
+
+            return Result.Ok();
         }
 
-        public virtual void Delete(object id)
+        public virtual Result Delete(object id)
         {
             TEntity entity = GetById(id);
-            Delete(entity);
+            return Delete(entity);
         }
 
-        public virtual async Task DeleteAsync(object id, CancellationToken cancellationToken)
+        public virtual async Task<Result> DeleteAsync(object id, CancellationToken cancellationToken)
         {
             TEntity entity = await GetByIdAsync(id,cancellationToken);
-            await DeleteAsync(entity, cancellationToken);
+            return await DeleteAsync(entity, cancellationToken);
         }
 
-        public virtual void Delete(TEntity entity)
+        public virtual Result Delete(TEntity entity)
         {
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
                 unitOfWork.Repository<TContext, TEntity>().Delete(entity);
                 unitOfWork.Complete();
             }
+
+            return Result.Ok();
         }
 
-        public virtual async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<Result> DeleteAsync(TEntity entity, CancellationToken cancellationToken)
         {
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 unitOfWork.Repository<TContext, TEntity>().Delete(entity);
                 await unitOfWork.CompleteAsync(cancellationToken);
             }
+
+            return Result.Ok();
         }
 
     }

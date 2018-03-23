@@ -54,7 +54,13 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var createdDto = await Service.CreateAsync(dto, cts.Token);
+            var result = await Service.CreateAsync(dto, cts.Token);
+            if(result.IsFailure)
+            {
+                return ValidationErrors(result);
+            }
+            var createdDto = result.Value;
+
             //return CreatedAtRoute("", new { id = createdDto.Id }, createdDto);
 
             //return ApiSuccessMessage(Messages.AddSuccessful, createdDto.Id);
@@ -85,7 +91,11 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            await Service.UpdateAsync(id, dto, cts.Token);
+            var result = await Service.UpdateAsync(id, dto, cts.Token);
+            if (result.IsFailure)
+            {
+                return ValidationErrors(result);
+            }
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
             //return Success(dto);
             return NoContent();
@@ -119,7 +129,11 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-            await Service.UpdateAsync(id, dto, cts.Token);
+            var result = await Service.UpdateAsync(id, dto, cts.Token);
+            if (result.IsFailure)
+            {
+                return ValidationErrors(result);
+            }
 
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
             //return Success(dto);
@@ -139,7 +153,11 @@ namespace DND.Common.Controllers.Api
                 return ApiNotFoundErrorMessage(Messages.NotFound);
             }
 
-            await Service.DeleteAsync(id, cts.Token);
+            var result = await Service.DeleteAsync(id, cts.Token);
+            if (result.IsFailure)
+            {
+                return ValidationErrors(result);
+            }
             //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
             return NoContent();
         }
@@ -156,7 +174,12 @@ namespace DND.Common.Controllers.Api
                 return ApiNotFoundErrorMessage(Messages.NotFound);
             }
 
-            await Service.DeleteAsync(dto, cts.Token);
+            var result = await Service.DeleteAsync(dto, cts.Token);
+            if (result.IsFailure)
+            {
+                return ValidationErrors(result);
+            }
+
             //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
             return NoContent();
         }

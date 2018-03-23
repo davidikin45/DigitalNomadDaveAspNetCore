@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DND.Domain.Blog.Tags;
+using DND.Common.Implementation.Validation;
 
 namespace DND.DomainServices.Tags.Services
 {
@@ -39,17 +40,17 @@ namespace DND.DomainServices.Tags.Services
             }
         }
 
-        public async override Task UpdateAsync(Tag entity, CancellationToken cancellationToken)
+        public async override Task<Result> UpdateAsync(Tag entity, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task<Tag> CreateAsync(Tag entity, CancellationToken cancellationToken)
+        public async override Task<Result<Tag>> CreateAsync(Tag entity, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {

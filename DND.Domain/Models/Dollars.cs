@@ -19,13 +19,13 @@ namespace DND.Domain.Models
         public static Result<Dollars> Create(decimal dollarAmount)
         {
             if (dollarAmount < 0)
-                return Result.Fail<Dollars>("Dollar amount cannot be negative");
+                return Result.ObjectValidationFail<Dollars>("Dollar amount cannot be negative");
 
             if (dollarAmount > MaxDollarAmount)
-                return Result.Fail<Dollars>("Dollar amount cannot be greater than " + MaxDollarAmount);
+                return Result.ObjectValidationFail<Dollars>("Dollar amount cannot be greater than " + MaxDollarAmount);
 
             if (dollarAmount % 0.01m > 0)
-                return Result.Fail<Dollars>("Dollar amount cannot contain part of a penny");
+                return Result.ObjectValidationFail<Dollars>("Dollar amount cannot contain part of a penny");
 
             return Result.Ok(new Dollars(dollarAmount));
         }

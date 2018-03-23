@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Implementation.Validation;
 using DND.Common.Infrastructure;
 using DND.Domain.Blog.Locations;
 using DND.Domain.Blog.Locations.Dtos;
@@ -19,7 +20,7 @@ namespace DND.ApplicationServices.Blog.Locations.Services
 
         }
 
-        public override Task<LocationDto> CreateAsync(LocationDto dto, CancellationToken cancellationToken)
+        public override Task<Result<LocationDto>> CreateAsync(LocationDto dto, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(dto.UrlSlug))
             {
@@ -35,7 +36,7 @@ namespace DND.ApplicationServices.Blog.Locations.Services
             return Mapper.Map<LocationDto>(bo);
         }
 
-        public override Task UpdateAsync(object id, LocationDto dto, CancellationToken cancellationToken)
+        public override Task<Result> UpdateAsync(object id, LocationDto dto, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(dto.UrlSlug))
             {

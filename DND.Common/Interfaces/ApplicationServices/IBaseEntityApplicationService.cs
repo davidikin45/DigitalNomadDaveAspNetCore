@@ -1,4 +1,5 @@
-﻿using DND.Common.Interfaces.Dtos;
+﻿using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
@@ -12,21 +13,21 @@ namespace DND.Common.Interfaces.ApplicationServices
           where TUpdateDto : class, IBaseDto
           where TDeleteDto : class, IBaseDtoWithId
     {
-        TReadDto Create(TCreateDto dto);
+        Result<TReadDto> Create(TCreateDto dto);
 
-        Task<TReadDto> CreateAsync(TCreateDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result<TReadDto>> CreateAsync(TCreateDto dto, CancellationToken cancellationToken = default(CancellationToken));
 
-        void Update(object id, TUpdateDto dto);
+        Result Update(object id, TUpdateDto dto);
 
-        Task UpdateAsync(object id, TUpdateDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> UpdateAsync(object id, TUpdateDto dto, CancellationToken cancellationToken = default(CancellationToken));
 
-        void Delete(object id);
+        Result Delete(object id);
 
-        Task DeleteAsync(object id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> DeleteAsync(object id, CancellationToken cancellationToken = default(CancellationToken));
 
-        void Delete(TDeleteDto dto);
+        Result Delete(TDeleteDto dto);
 
-        Task DeleteAsync(TDeleteDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> DeleteAsync(TDeleteDto dto, CancellationToken cancellationToken = default(CancellationToken));
 
         TUpdateDto GetUpdateDtoById(object id)
            ;

@@ -28,7 +28,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
                 throw new ValidationErrors(new GeneralError("Invaid Request"));
 
             if (!request.IsValid())
-                throw new EntityValidationErrors(request.Validate());
+                throw new ObjectValidationErrors(request.Validate());
 
             var flightSearchEngine = new FlightSearchEngine("skyscanner");
 
@@ -86,7 +86,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
                 throw new ValidationErrors(new GeneralError("Invaid Request"));
 
             if (!request.IsValid())
-                throw new EntityValidationErrors(request.Validate());
+                throw new ObjectValidationErrors(request.Validate());
 
             var response = new LocationAutoSuggestResponseDto();
 
@@ -139,7 +139,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
                 throw new ValidationErrors(new GeneralError("Invaid Request"));
 
             if (!request.IsValid())
-                throw new EntityValidationErrors(request.Validate());
+                throw new ObjectValidationErrors(request.Validate());
 
             var response = new LocationDto();
 

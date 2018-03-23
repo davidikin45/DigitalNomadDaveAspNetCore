@@ -9,9 +9,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Common.Implementation.Validation
 {
-    public class EntityValidationErrors : ValidationErrors
+    public class ObjectValidationErrors : ValidationErrors
     {
-        public EntityValidationErrors(IEnumerable<ValidationResult> errors) : base()
+        public ObjectValidationErrors(IEnumerable<ValidationResult> errors) : base()
         {
             foreach (var err in errors)
             {

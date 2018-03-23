@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DND.Domain.Blog.Categories;
+using DND.Common.Implementation.Validation;
 
 namespace DND.DomainServices.Categories.Services
 {
@@ -39,7 +40,7 @@ namespace DND.DomainServices.Categories.Services
             }
         }
 
-        public async override Task<Category> CreateAsync(Category entity, CancellationToken cancellationToken)
+        public async override Task<Result<Category>> CreateAsync(Category entity, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {

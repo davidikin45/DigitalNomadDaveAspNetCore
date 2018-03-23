@@ -1,4 +1,5 @@
 ﻿using DND.Common.Implementation.DomainServices;
+using DND.Common.Implementation.Validation;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Domain.Blog.Locations;
@@ -17,14 +18,14 @@ namespace DND.DomainServices.Blog.Locations.Services
 
         }
 
-        public override Task<Location> CreateAsync(Location entity, CancellationToken cancellationToken)
+        public override async Task<Result<Location>> CreateAsync(Location entity, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<Location> GetLocationAsync(string urlSlug, CancellationToken cancellationToken)
@@ -35,14 +36,14 @@ namespace DND.DomainServices.Blog.Locations.Services
             }
         }
 
-        public override async Task UpdateAsync(DND.Domain.Blog.Locations.Location entity, CancellationToken cancellationToken)
+        public override async Task<Result> UpdateAsync(DND.Domain.Blog.Locations.Location entity, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-             await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
+           return await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
 

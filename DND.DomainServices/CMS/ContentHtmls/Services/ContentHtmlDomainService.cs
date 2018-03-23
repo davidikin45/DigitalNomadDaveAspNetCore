@@ -17,7 +17,7 @@ namespace DND.DomainServices.CMS.ContentHtmls.Services
 
         }
 
-        public override Task DeleteAsync(ContentHtml entity, CancellationToken cancellationToken)
+        public override Task<Result> DeleteAsync(ContentHtml entity, CancellationToken cancellationToken)
         {
             if(entity.PreventDelete)
             {

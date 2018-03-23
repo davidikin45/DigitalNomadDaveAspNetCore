@@ -9,11 +9,30 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace DND.Common.Extensions
 {
     public static class ControllerExtensions
     {
+
+        public static void AddValidationErrors(this ModelStateDictionary modelState, IEnumerable<ValidationResult> errors)
+        {
+            foreach (var err in errors)
+            {
+                if (err.MemberNames.Count() > 0)
+                {
+                    foreach (var prop in err.MemberNames)
+                    {
+                        modelState.AddModelError(prop, err.ErrorMessage);
+                    }
+                }
+                else
+                {
+                    modelState.AddModelError("", err.ErrorMessage);
+                }
+            }
+        }
 
         public static void AddValidationErrors(this ModelStateDictionary modelState, IValidationErrors errors)
         {

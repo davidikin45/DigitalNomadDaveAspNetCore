@@ -126,6 +126,21 @@ namespace DND.Common.Controllers
             return RedirectToControllerDefault().WithError(this, Messages.RequestInvalid);
         }
 
+        protected void HandleUpdateException(Result failure)
+        {
+            //TODO: Need to research how to turn off automatic model validation if doing it in application service layer
+            ModelState.Clear();
+            switch (failure.ErrorType)
+            {
+                case ErrorType.ObjectValidationFailed:
+                    ModelState.AddValidationErrors(failure.ObjectValidationErrors);
+                    break;
+                default:
+                    ModelState.AddModelError("", Messages.UnknownError);
+                    break;
+            }
+        }
+
         protected void HandleUpdateException(Exception ex)
         {
             if (ex is ValidationErrors)
