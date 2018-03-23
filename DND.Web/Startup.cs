@@ -179,7 +179,8 @@ namespace DND.Web
             .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
-            if(!enableMVCValidation)
+            //https://stackoverflow.com/questions/46374994/correct-way-to-disable-model-validation-in-asp-net-core-2-mvc
+            if (!enableMVCValidation)
             {
                 var validator = services.FirstOrDefault(s => s.ServiceType == typeof(IObjectModelValidator));
                 if (validator != null)
