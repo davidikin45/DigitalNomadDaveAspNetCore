@@ -35,10 +35,10 @@
           "lib/net45/Autofac.dll": {}
         }
       },
-      "Autofac.Extensions.DependencyInjection/4.2.1": {
+      "Autofac.Extensions.DependencyInjection/4.2.2": {
         "type": "package",
         "dependencies": {
-          "Autofac": "4.0.1",
+          "Autofac": "4.2.0",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0",
           "NETStandard.Library": "1.6.1"
         },
@@ -1709,7 +1709,7 @@
           "build/netstandard2.0/_._": {}
         }
       },
-      "Newtonsoft.Json/11.0.1": {
+      "Newtonsoft.Json/11.0.2": {
         "type": "package",
         "compile": {
           "lib/net45/Newtonsoft.Json.dll": {}
@@ -1825,17 +1825,17 @@
           "lib/net45/Serilog.Sinks.Console.dll": {}
         }
       },
-      "Serilog.Sinks.Debug/1.0.0": {
+      "Serilog.Sinks.Debug/1.0.1": {
         "type": "package",
         "dependencies": {
           "Serilog": "2.5.0",
           "System.Diagnostics.Debug": "4.3.0"
         },
         "compile": {
-          "lib/netstandard1.0/Serilog.Sinks.Debug.dll": {}
+          "lib/net46/Serilog.Sinks.Debug.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.0/Serilog.Sinks.Debug.dll": {}
+          "lib/net46/Serilog.Sinks.Debug.dll": {}
         }
       },
       "Serilog.Sinks.File/3.2.0": {
@@ -2956,10 +2956,10 @@
           "lib/net45/Autofac.dll": {}
         }
       },
-      "Autofac.Extensions.DependencyInjection/4.2.1": {
+      "Autofac.Extensions.DependencyInjection/4.2.2": {
         "type": "package",
         "dependencies": {
-          "Autofac": "4.0.1",
+          "Autofac": "4.2.0",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0",
           "NETStandard.Library": "1.6.1"
         },
@@ -4593,7 +4593,7 @@
           "build/netstandard2.0/_._": {}
         }
       },
-      "Newtonsoft.Json/11.0.1": {
+      "Newtonsoft.Json/11.0.2": {
         "type": "package",
         "compile": {
           "lib/net45/Newtonsoft.Json.dll": {}
@@ -4709,17 +4709,17 @@
           "lib/net45/Serilog.Sinks.Console.dll": {}
         }
       },
-      "Serilog.Sinks.Debug/1.0.0": {
+      "Serilog.Sinks.Debug/1.0.1": {
         "type": "package",
         "dependencies": {
           "Serilog": "2.5.0",
           "System.Diagnostics.Debug": "4.3.0"
         },
         "compile": {
-          "lib/netstandard1.0/Serilog.Sinks.Debug.dll": {}
+          "lib/net46/Serilog.Sinks.Debug.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.0/Serilog.Sinks.Debug.dll": {}
+          "lib/net46/Serilog.Sinks.Debug.dll": {}
         }
       },
       "Serilog.Sinks.File/3.2.0": {
@@ -5723,12 +5723,12 @@
         "lib/netstandard1.1/Autofac.xml"
       ]
     },
-    "Autofac.Extensions.DependencyInjection/4.2.1": {
-      "sha512": "0ksOl5haq1qEVWe2JL8gPlMqU5IDhYEAoOOXiaH3NNemsFSf6aoTVQRsqKLHy4j2CwK9wHQAoIVm+iUy+o0ypQ==",
+    "Autofac.Extensions.DependencyInjection/4.2.2": {
+      "sha512": "nkspkD4qRKCvM1WG6bFLAuEwvbajEhEe7U3Q6XISCBEG6ZamOy52JACXnx3VumZksjPTylavkUZRzBBY7T2R+w==",
       "type": "package",
-      "path": "autofac.extensions.dependencyinjection/4.2.1",
+      "path": "autofac.extensions.dependencyinjection/4.2.2",
       "files": [
-        "autofac.extensions.dependencyinjection.4.2.1.nupkg.sha512",
+        "autofac.extensions.dependencyinjection.4.2.2.nupkg.sha512",
         "autofac.extensions.dependencyinjection.nuspec",
         "lib/netstandard1.1/Autofac.Extensions.DependencyInjection.dll",
         "lib/netstandard1.1/Autofac.Extensions.DependencyInjection.xml"
@@ -7285,10 +7285,10 @@
         "netstandard.library.nuspec"
       ]
     },
-    "Newtonsoft.Json/11.0.1": {
-      "sha512": "pNN4l+J6LlpIvHOeNdXlwxv39NPJ2B5klz+Rd2UQZIx30Squ5oND1Yy3wEAUoKn0GPUj6Yxt9lxlYWQqfZcvKg==",
+    "Newtonsoft.Json/11.0.2": {
+      "sha512": "IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
       "type": "package",
-      "path": "newtonsoft.json/11.0.1",
+      "path": "newtonsoft.json/11.0.2",
       "files": [
         "LICENSE.md",
         "lib/net20/Newtonsoft.Json.dll",
@@ -7309,7 +7309,7 @@
         "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
         "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
         "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
-        "newtonsoft.json.11.0.1.nupkg.sha512",
+        "newtonsoft.json.11.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec"
       ]
     },
@@ -7420,14 +7420,20 @@
         "serilog.sinks.console.nuspec"
       ]
     },
-    "Serilog.Sinks.Debug/1.0.0": {
-      "sha512": "WNWAAaEbUm/kMc6bxI0HWGKQpKeeIRqI4mQAf9sg276ICa872aY5AAUe7XDv1I5JZZBq6a28x2PlR5jQT2vUUw==",
+    "Serilog.Sinks.Debug/1.0.1": {
+      "sha512": "nE5wvw9+J/V4lA+rEkFUETGjBabK8IlLQY5Z9KDzoo5LvILC4vhTOXLs7DGYs8h5juIf2nLZnVxHDXf404FqEQ==",
       "type": "package",
-      "path": "serilog.sinks.debug/1.0.0",
+      "path": "serilog.sinks.debug/1.0.1",
       "files": [
+        "lib/net45/Serilog.Sinks.Debug.dll",
+        "lib/net45/Serilog.Sinks.Debug.xml",
+        "lib/net46/Serilog.Sinks.Debug.dll",
+        "lib/net46/Serilog.Sinks.Debug.xml",
         "lib/netstandard1.0/Serilog.Sinks.Debug.dll",
         "lib/netstandard1.0/Serilog.Sinks.Debug.xml",
-        "serilog.sinks.debug.1.0.0.nupkg.sha512",
+        "lib/netstandard2.0/Serilog.Sinks.Debug.dll",
+        "lib/netstandard2.0/Serilog.Sinks.Debug.xml",
+        "serilog.sinks.debug.1.0.1.nupkg.sha512",
         "serilog.sinks.debug.nuspec"
       ]
     },
@@ -10636,7 +10642,7 @@
       "AspNetCoreRateLimit >= 2.1.0",
       "AutoMapper >= 6.2.2",
       "Autofac >= 4.6.2",
-      "Autofac.Extensions.DependencyInjection >= 4.2.1",
+      "Autofac.Extensions.DependencyInjection >= 4.2.2",
       "DND.Common >= 1.0.0",
       "DND.Domain >= 1.0.0",
       "DND.EFPersistance.Identity >= 1.0.0",
@@ -10657,11 +10663,11 @@
       "Microsoft.EntityFrameworkCore >= 2.0.2",
       "Microsoft.EntityFrameworkCore.Sqlite >= 2.0.2",
       "Microsoft.VisualStudio.Web.BrowserLink >= 2.0.2",
-      "Newtonsoft.Json >= 11.0.1",
+      "Newtonsoft.Json >= 11.0.2",
       "Serilog.AspNetCore >= 2.1.1",
       "Serilog.Settings.Configuration >= 2.6.1",
       "Serilog.Sinks.Console >= 3.1.1",
-      "Serilog.Sinks.Debug >= 1.0.0",
+      "Serilog.Sinks.Debug >= 1.0.1",
       "Serilog.Sinks.MSSqlServer >= 5.1.1",
       "Serilog.Sinks.RollingFile >= 3.3.0",
       "Swashbuckle.AspNetCore >= 2.3.0",
@@ -10740,7 +10746,7 @@
           },
           "Autofac.Extensions.DependencyInjection": {
             "target": "Package",
-            "version": "[4.2.1, )"
+            "version": "[4.2.2, )"
           },
           "EntityFramework": {
             "target": "Package",
@@ -10809,7 +10815,7 @@
           },
           "Newtonsoft.Json": {
             "target": "Package",
-            "version": "[11.0.1, )"
+            "version": "[11.0.2, )"
           },
           "Serilog.AspNetCore": {
             "target": "Package",
@@ -10825,7 +10831,7 @@
           },
           "Serilog.Sinks.Debug": {
             "target": "Package",
-            "version": "[1.0.0, )"
+            "version": "[1.0.1, )"
           },
           "Serilog.Sinks.MSSqlServer": {
             "target": "Package",
