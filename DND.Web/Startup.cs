@@ -10,10 +10,13 @@ using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Services;
 using DND.Common.Middleware;
+using DND.Common.Swagger;
 using DND.Common.Tasks;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
 using DND.Web.Implementation.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -68,6 +71,7 @@ namespace DND.Web
         {
             bool enableMVCValidation = true;
             bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
+            string cookieName = "SessionId";
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
@@ -87,9 +91,11 @@ namespace DND.Web
             }
 
             services.AddIdentity<ApplicationIdentityDbContext, User, IdentityRole>();
-
+         
             services.AddAuthentication()
-                .AddCookie()
+                .AddCookie(options => {
+                    options.Cookie.Name = cookieName;
+                })
                 .AddJwtBearer(cfg =>
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
@@ -241,7 +247,7 @@ namespace DND.Web
             });
 
             //Used for returning only certain fields in API
-            services.AddTransient<ITypeHelperService, ITypeHelperService>();
+            //services.AddTransient<ITypeHelperService, TypeHelperService>();
 
             services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -252,13 +258,30 @@ namespace DND.Web
             {
                 c.SwaggerDoc("v1", new Info { Title = Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API", Version = "v1" });
 
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new ApiKeyScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = "header",
                     Type = "apiKey"
                 });
+
+                c.AddSecurityDefinition(CookieAuthenticationDefaults.AuthenticationScheme, new ApiKeyScheme
+                {
+                    Description = "Cookie Authorization scheme. Example: \"Set-Cookie: Key=Value\"",
+                    Name = cookieName,
+                    In = "cookie",
+                    Type = "apiKey"
+                });
+
+                //For the time being will assume ALL methods are authorized by Bearer tokens
+                //c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                //{
+                //    { "Bearer", new string[] { } }
+                //});
+
+                //TODO - UpdatePartial causes error
+                c.OperationFilter<SwaggerAssignSecurityRequirements>();
 
                 // Set the comments path for the Swagger JSON and UI.
                 var location = System.Reflection.Assembly.GetEntryAssembly().Location;

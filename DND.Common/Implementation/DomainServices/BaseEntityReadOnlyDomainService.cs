@@ -1,4 +1,5 @@
-﻿using DND.Common.Interfaces.DomainServices;
+﻿using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Persistance;
 using DND.Common.Interfaces.UnitOfWork;
@@ -197,6 +198,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
+
                 return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id);
             }
         }

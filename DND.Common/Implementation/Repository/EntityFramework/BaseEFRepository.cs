@@ -75,7 +75,12 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual void Delete(object id)
         {
-            TEntity entity = _context.FindEntity<TEntity>(id);
+            TEntity entity = _context.FindEntityLocal<TEntity>(id);
+            if(entity == null)
+            {
+                entity = new TEntity() { Id = id };
+            }
+
             Delete(entity);
         }
 

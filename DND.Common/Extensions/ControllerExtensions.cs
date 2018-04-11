@@ -10,11 +10,23 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using System.Reflection;
 
 namespace DND.Common.Extensions
 {
     public static class ControllerExtensions
     {
+        public static IEnumerable<T> GetCustomAttributes<T>(this Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor actionDescriptor) where T : Attribute
+        {
+            var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
+            if (controllerActionDescriptor != null)
+            {
+                return controllerActionDescriptor.MethodInfo.GetCustomAttributes<T>();
+            }
+
+            return Enumerable.Empty<T>();
+        }
 
         public static void AddValidationErrors(this ModelStateDictionary modelState, IEnumerable<ValidationResult> errors)
         {

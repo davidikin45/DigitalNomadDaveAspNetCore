@@ -25,12 +25,12 @@ namespace DND.Web.Implementation.FlightSearch.Api
 
     //cannot begin or end with /
     [ApiVersion("1.0")]
-    [Route("api/market")]
-    public class MarketController : BaseWebApiController
+    [Route("api/markets")]
+    public class MarketsController : BaseWebApiController
     {
         private readonly IMarketApplicationService _marketService;
 
-        public MarketController(IMarketApplicationService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+        public MarketsController(IMarketApplicationService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
              : base(mapper, emailService, urlHelper)
         {
             _marketService = marketService;

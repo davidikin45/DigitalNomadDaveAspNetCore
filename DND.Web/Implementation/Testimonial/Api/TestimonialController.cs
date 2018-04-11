@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.Testimonial.Api
 {
     [ApiVersion("1.0")]
-    [Route("api/testimonial")]
-    public class TestimonialController : BaseEntityWebApiControllerAuthorize<TestimonialDto, TestimonialDto, TestimonialDto, TestimonialDto, ITestimonialApplicationService>
+    [Route("api/testimonials")]
+    public class TestimonialsController : BaseEntityWebApiControllerAuthorize<TestimonialDto, TestimonialDto, TestimonialDto, TestimonialDto, ITestimonialApplicationService>
     {
-        public TestimonialController(ITestimonialApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
+        public TestimonialsController(ITestimonialApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
 

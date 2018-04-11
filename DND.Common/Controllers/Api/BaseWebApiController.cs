@@ -51,6 +51,8 @@ namespace DND.Common.Controllers.Api
                 case ErrorType.ObjectValidationFailed:
                     newModelState.AddValidationErrors(failure.ObjectValidationErrors);
                     break;
+                case ErrorType.ObjectDoesNotExist:
+                    return ApiNotFoundErrorMessage(Messages.NotFound);
                 default:
                     newModelState.AddModelError("", Messages.UnknownError);
                     break;

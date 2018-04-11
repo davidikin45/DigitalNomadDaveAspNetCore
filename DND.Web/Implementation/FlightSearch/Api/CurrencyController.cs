@@ -25,12 +25,12 @@ namespace DND.Web.Implementation.FlightSearch.Api
 
     //cannot begin or end with /
     [ApiVersion("1.0")]
-    [Route("api/currency")]
-    public class CurrencyController : BaseWebApiController
+    [Route("api/currencies")]
+    public class CurrenciesController : BaseWebApiController
     {
         private readonly ICurrencyApplicationService _currencyService;
 
-        public CurrencyController(ICurrencyApplicationService currencyService, IMapper mapper, IEmailService emailService = null, IUrlHelper urlHelper = null)
+        public CurrenciesController(ICurrencyApplicationService currencyService, IMapper mapper, IEmailService emailService = null, IUrlHelper urlHelper = null)
              : base(mapper, emailService, urlHelper)
         {
 

@@ -51,6 +51,12 @@ namespace DND.Common.Controllers.Api
         }
 
         //http://jakeydocs.readthedocs.io/en/latest/mvc/models/formatting.html
+        /// <summary>
+        /// Gets the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="fields">The fields.</param>
+        /// <returns></returns>
         [FormatFilter]
         [Route("{id}"), Route("{id}.{format}")]
         //[Route("get/{id}"), Route("get/{id}.{format}")]
@@ -84,6 +90,11 @@ namespace DND.Common.Controllers.Api
             // Success(shapedData);
         }
 
+        /// <summary>
+        /// Gets the collection.
+        /// </summary>
+        /// <param name="ids">The ids.</param>
+        /// <returns></returns>
         [FormatFilter]
         [Route("({ids})"), Route("({ids}).{format}")]
         //[Route("get/({ids})"), Route("get/({ids}).{format}")]
@@ -110,6 +121,10 @@ namespace DND.Common.Controllers.Api
             return Success(list);
         }
 
+        /// <summary>
+        /// Gets all.
+        /// </summary>
+        /// <returns></returns>
         [FormatFilter]
         [Route("get-all")]
         [Route("get-all.{format}")]
@@ -126,6 +141,11 @@ namespace DND.Common.Controllers.Api
             return Success(list);
         }
 
+        /// <summary>
+        /// Gets the paged.
+        /// </summary>
+        /// <param name="resourceParameters">The resource parameters.</param>
+        /// <returns></returns>
         [FormatFilter]
         [Route("")]
         [Route(".{format}")]
@@ -210,6 +230,10 @@ namespace DND.Common.Controllers.Api
             return Ok(linkedCollectionResource);
         }
 
+        /// <summary>
+        /// Gets all paged.
+        /// </summary>
+        /// <returns></returns>
         [FormatFilter]
         [Route("get-all-paged")]
         [Route("get-all-paged.{format}")]
@@ -250,8 +274,9 @@ namespace DND.Common.Controllers.Api
             return Success(data.ToList());
         }
 
+
         /// <summary>
-        /// Tagses the HTML.
+        /// Gets all HTML.
         /// </summary>
         /// <returns></returns>
         [FormatFilter]
@@ -283,6 +308,10 @@ namespace DND.Common.Controllers.Api
             return Html(select.ToString());
         }
 
+        /// <summary>
+        /// Gets the options.
+        /// </summary>
+        /// <returns></returns>
         [HttpOptions]
         public IActionResult GetOptions()
         {

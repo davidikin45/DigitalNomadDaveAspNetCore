@@ -64,6 +64,11 @@ namespace DND.Common.Implementation.DomainServices
 
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
+                if (!(Exists(entity.Id)))
+                {
+                    return Result.ObjectDoesNotExist();
+                }
+
                 unitOfWork.Repository<TContext, TEntity>().Update(entity, "");
                 unitOfWork.Complete();
             }
@@ -81,6 +86,11 @@ namespace DND.Common.Implementation.DomainServices
 
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
+                if (!(await ExistsAsync(cancellationToken, entity.Id)))
+                {
+                    return Result.ObjectDoesNotExist();
+                }
+
                 unitOfWork.Repository<TContext, TEntity>().Update(entity, "");
                 await unitOfWork.CompleteAsync(cancellationToken);
             }
@@ -104,6 +114,11 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
+                if (!(Exists(entity.Id)))
+                {
+                    return Result.ObjectDoesNotExist();
+                }
+
                 unitOfWork.Repository<TContext, TEntity>().Delete(entity);
                 unitOfWork.Complete();
             }
@@ -115,6 +130,11 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
+                if (!(await ExistsAsync(cancellationToken, entity.Id)))
+                {
+                    return Result.ObjectDoesNotExist();
+                }
+
                 unitOfWork.Repository<TContext, TEntity>().Delete(entity);
                 await unitOfWork.CompleteAsync(cancellationToken);
             }

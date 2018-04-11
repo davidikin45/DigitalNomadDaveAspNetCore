@@ -40,6 +40,16 @@ namespace DND.Common.Implementation.Validation
             return ObjectValidationFail<T>(list);
         }
 
+        public static Result ObjectDoesNotExist()
+        {
+            return new Result(false, Validation.ErrorType.ObjectDoesNotExist, new List<ValidationResult>());
+        }
+
+        public static Result<T> ObjectDoesNotExist<T>()
+        {
+            return new Result<T>(default(T), false, Validation.ErrorType.ObjectDoesNotExist, new List<ValidationResult>());
+        }
+
         public static Result ObjectValidationFail(IEnumerable<ValidationResult> ObjectValidationErrors)
         {
             return new Result(false, Validation.ErrorType.ObjectValidationFailed, ObjectValidationErrors);
@@ -107,6 +117,7 @@ namespace DND.Common.Implementation.Validation
     //Only for expected errors
     public enum ErrorType
     {
+        ObjectDoesNotExist,
         ObjectValidationFailed
     }
 }

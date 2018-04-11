@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.Faq.Api
 {
     [ApiVersion("1.0")]
-    [Route("api/faq")]
-    public class FaqController : BaseEntityWebApiControllerAuthorize<FaqDto, FaqDto, FaqDto, FaqDto, IFaqApplicationService>
+    [Route("api/faqs")]
+    public class FaqsController : BaseEntityWebApiControllerAuthorize<FaqDto, FaqDto, FaqDto, FaqDto, IFaqApplicationService>
     {
-        public FaqController(IFaqApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
+        public FaqsController(IFaqApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
 

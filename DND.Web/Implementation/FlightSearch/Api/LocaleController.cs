@@ -25,12 +25,12 @@ namespace DND.Web.Implementation.FlightSearch.Api
 
     //cannot begin or end with /
     [ApiVersion("1.0")]
-    [Route("api/locale")]
-    public class LocaleController : BaseWebApiController
+    [Route("api/locales")]
+    public class LocalesController : BaseWebApiController
     {
         private readonly ILocaleApplicationService _localeService;
 
-        public LocaleController(ILocaleApplicationService localeService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
+        public LocalesController(ILocaleApplicationService localeService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
              : base(mapper, emailService, urlHelper)
         {
             _localeService = localeService;

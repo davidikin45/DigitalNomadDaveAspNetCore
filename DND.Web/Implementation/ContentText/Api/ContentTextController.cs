@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.Category.Api
 {
     [ApiVersion("1.0")]
-    [Route("api/content-text")]
-    public class ContentTextController : BaseEntityWebApiControllerAuthorize<ContentTextDto, ContentTextDto, ContentTextDto, ContentTextDto, IContentTextApplicationService>
+    [Route("api/content-texts")]
+    public class ContentTextsController : BaseEntityWebApiControllerAuthorize<ContentTextDto, ContentTextDto, ContentTextDto, ContentTextDto, IContentTextApplicationService>
     {
-        public ContentTextController(IContentTextApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
+        public ContentTextsController(IContentTextApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
             : base(service, mapper, emailService, urlHelper, typeHelperService)
         {
 

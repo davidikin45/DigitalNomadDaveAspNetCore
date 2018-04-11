@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using RefactorThis.GraphDiff;
 using Microsoft.AspNet.Identity.EntityFramework;
 using DND.Common.Implementation.Models;
+using DND.Common.Interfaces.Models;
 
 namespace DND.Common.Interfaces.Persistance
 {
@@ -30,6 +31,8 @@ namespace DND.Common.Interfaces.Persistance
         void AttachEntity<TEntity>(TEntity entity) where TEntity : class;
         void RemoveEntity<TEntity>(TEntity entity) where TEntity : class;
         TEntity FindEntity<TEntity>(object id) where TEntity : class;
+        TEntity FindEntityLocal<TEntity>(object id) where TEntity : class, IBaseEntity;
+
 
         IQueryable<TEntity> Queryable<TEntity>() where TEntity : class;
         IQueryable<Object> Queryable(Type type);

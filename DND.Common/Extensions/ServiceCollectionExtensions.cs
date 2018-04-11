@@ -23,7 +23,7 @@ namespace DND.Common.Extensions
                     options.UseSqlite(connectionString));
         }
 
-        public static void AddIdentity<TContext, TUser, TRole>(this IServiceCollection services) 
+        public static void AddIdentity<TContext, TUser, TRole>(this IServiceCollection services, string cookieName = "SessionId") 
             where TContext : DbContext
             where TUser : class
             where TRole : class

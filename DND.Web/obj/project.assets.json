@@ -14,19 +14,11 @@
           "lib/net46/AspNetCoreRateLimit.dll": {}
         }
       },
-      "Autofac/4.6.2": {
+      "Autofac/4.7.0": {
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "System",
-          "System.Core",
-          "System.Data",
-          "System.Drawing",
-          "System.IO.Compression.FileSystem",
-          "System.Numerics",
-          "System.Runtime.Serialization",
-          "System.Xml",
-          "System.Xml.Linq"
+          "System"
         ],
         "compile": {
           "lib/net45/Autofac.dll": {}
@@ -1996,12 +1988,12 @@
           "lib/net45/SQLitePCLRaw.provider.e_sqlite3.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore/2.3.0": {
+      "Swashbuckle.AspNetCore/2.4.0": {
         "type": "package",
         "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "2.3.0",
-          "Swashbuckle.AspNetCore.SwaggerGen": "2.3.0",
-          "Swashbuckle.AspNetCore.SwaggerUI": "2.3.0"
+          "Swashbuckle.AspNetCore.Swagger": "2.4.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "2.4.0",
+          "Swashbuckle.AspNetCore.SwaggerUI": "2.4.0"
         },
         "compile": {
           "lib/net451/Swashbuckle.AspNetCore.dll": {}
@@ -2010,7 +2002,7 @@
           "lib/net451/Swashbuckle.AspNetCore.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore.Swagger/2.3.0": {
+      "Swashbuckle.AspNetCore.Swagger/2.4.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.Core": "1.0.4",
@@ -2023,13 +2015,13 @@
           "lib/net451/Swashbuckle.AspNetCore.Swagger.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore.SwaggerGen/2.3.0": {
+      "Swashbuckle.AspNetCore.SwaggerGen/2.4.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.ApiExplorer": "1.0.4",
           "Microsoft.AspNetCore.Mvc.Core": "1.0.4",
           "Microsoft.AspNetCore.Mvc.DataAnnotations": "1.0.4",
-          "Swashbuckle.AspNetCore.Swagger": "2.3.0"
+          "Swashbuckle.AspNetCore.Swagger": "2.4.0"
         },
         "frameworkAssemblies": [
           "System.Xml"
@@ -2041,7 +2033,7 @@
           "lib/net451/Swashbuckle.AspNetCore.SwaggerGen.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore.SwaggerUI/2.3.0": {
+      "Swashbuckle.AspNetCore.SwaggerUI/2.4.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Routing": "1.0.4",
@@ -2935,19 +2927,11 @@
           "lib/net46/AspNetCoreRateLimit.dll": {}
         }
       },
-      "Autofac/4.6.2": {
+      "Autofac/4.7.0": {
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "System",
-          "System.Core",
-          "System.Data",
-          "System.Drawing",
-          "System.IO.Compression.FileSystem",
-          "System.Numerics",
-          "System.Runtime.Serialization",
-          "System.Xml",
-          "System.Xml.Linq"
+          "System"
         ],
         "compile": {
           "lib/net45/Autofac.dll": {}
@@ -4857,12 +4841,12 @@
           "lib/net45/SQLitePCLRaw.provider.e_sqlite3.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore/2.3.0": {
+      "Swashbuckle.AspNetCore/2.4.0": {
         "type": "package",
         "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "2.3.0",
-          "Swashbuckle.AspNetCore.SwaggerGen": "2.3.0",
-          "Swashbuckle.AspNetCore.SwaggerUI": "2.3.0"
+          "Swashbuckle.AspNetCore.Swagger": "2.4.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "2.4.0",
+          "Swashbuckle.AspNetCore.SwaggerUI": "2.4.0"
         },
         "compile": {
           "lib/net451/Swashbuckle.AspNetCore.dll": {}
@@ -4871,7 +4855,7 @@
           "lib/net451/Swashbuckle.AspNetCore.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore.Swagger/2.3.0": {
+      "Swashbuckle.AspNetCore.Swagger/2.4.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.Core": "1.0.4",
@@ -4884,13 +4868,13 @@
           "lib/net451/Swashbuckle.AspNetCore.Swagger.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore.SwaggerGen/2.3.0": {
+      "Swashbuckle.AspNetCore.SwaggerGen/2.4.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.ApiExplorer": "1.0.4",
           "Microsoft.AspNetCore.Mvc.Core": "1.0.4",
           "Microsoft.AspNetCore.Mvc.DataAnnotations": "1.0.4",
-          "Swashbuckle.AspNetCore.Swagger": "2.3.0"
+          "Swashbuckle.AspNetCore.Swagger": "2.4.0"
         },
         "frameworkAssemblies": [
           "System.Xml"
@@ -4902,7 +4886,7 @@
           "lib/net451/Swashbuckle.AspNetCore.SwaggerGen.dll": {}
         }
       },
-      "Swashbuckle.AspNetCore.SwaggerUI/2.3.0": {
+      "Swashbuckle.AspNetCore.SwaggerUI/2.4.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Routing": "1.0.4",
@@ -5710,12 +5694,12 @@
         "lib/netstandard1.6/AspNetCoreRateLimit.dll"
       ]
     },
-    "Autofac/4.6.2": {
-      "sha512": "wKI7F6+n45gqfq0T8FuB3hFzaCkuegiFo5in6uB1y2Ai9ZYcjue8yqk3yzyNEwBDS7AyvlTUGSoNovwpUuKqTw==",
+    "Autofac/4.7.0": {
+      "sha512": "y3QWj9NE+riKfgIxuouKJPmGchhj18jVSbw06S7PF8DMAnje2V74hF1yMzwXhtLkfB/L7oalhya4ZMNf80j73w==",
       "type": "package",
-      "path": "autofac/4.6.2",
+      "path": "autofac/4.7.0",
       "files": [
-        "autofac.4.6.2.nupkg.sha512",
+        "autofac.4.7.0.nupkg.sha512",
         "autofac.nuspec",
         "lib/net45/Autofac.dll",
         "lib/net45/Autofac.xml",
@@ -7616,53 +7600,53 @@
         "sqlitepclraw.provider.e_sqlite3.net45.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore/2.3.0": {
-      "sha512": "aYScYpC8kBZXA1dp9GajZ0iehqcUXhhWLK0paDUCpBDvDF7U5vR7+11MR/W6TaxAZGMJrqUirQU2EtOkvjY7lg==",
+    "Swashbuckle.AspNetCore/2.4.0": {
+      "sha512": "zsFkF1NPnRk41NQ3B/SOhp2zhF+AiCitWALqgEP+jy2fgIyslBLNSZMtBctKnJKqzGgyiye3no7GJrJ0MTHXdg==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore/2.3.0",
+      "path": "swashbuckle.aspnetcore/2.4.0",
       "files": [
         "lib/net451/Swashbuckle.AspNetCore.dll",
         "lib/netstandard1.6/Swashbuckle.AspNetCore.dll",
-        "swashbuckle.aspnetcore.2.3.0.nupkg.sha512",
+        "swashbuckle.aspnetcore.2.4.0.nupkg.sha512",
         "swashbuckle.aspnetcore.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore.Swagger/2.3.0": {
-      "sha512": "GVUpq/IGk7vpcber8AQEjHtZH9YF/RcyPLL9rhkR36HQREXwfoSo68YimLhfIPdKpT0UhMg1bNpFSybPy9w1xA==",
+    "Swashbuckle.AspNetCore.Swagger/2.4.0": {
+      "sha512": "gO+t8uBCQUDNjgAK5Mg56C5Pj88Z9WHBacm1njuMeDvbpEvFluNg8ocnDNYnwMcg1EcK8S+u+Xijzzf7PtpeXg==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore.swagger/2.3.0",
+      "path": "swashbuckle.aspnetcore.swagger/2.4.0",
       "files": [
         "lib/net451/Swashbuckle.AspNetCore.Swagger.dll",
         "lib/net451/Swashbuckle.AspNetCore.Swagger.xml",
         "lib/netstandard1.6/Swashbuckle.AspNetCore.Swagger.dll",
         "lib/netstandard1.6/Swashbuckle.AspNetCore.Swagger.xml",
-        "swashbuckle.aspnetcore.swagger.2.3.0.nupkg.sha512",
+        "swashbuckle.aspnetcore.swagger.2.4.0.nupkg.sha512",
         "swashbuckle.aspnetcore.swagger.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore.SwaggerGen/2.3.0": {
-      "sha512": "wRVXSTaYY5K0LJoUMkXpExm/0igVy5W40a9PZbbjm9LdqqBsmYmZHElNwGE5TIGV6Sy0HJtytVVjZwZuKc9pAQ==",
+    "Swashbuckle.AspNetCore.SwaggerGen/2.4.0": {
+      "sha512": "dDaKa1kLGjVNYHnTtv3BT+yg8fVHf3HRgpY4bjhRcjtJJtCHejPFWUF3DoIDB4c5mmlZoAvqn6iOtQW+Qj4wOg==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore.swaggergen/2.3.0",
+      "path": "swashbuckle.aspnetcore.swaggergen/2.4.0",
       "files": [
         "lib/net451/Swashbuckle.AspNetCore.SwaggerGen.dll",
         "lib/net451/Swashbuckle.AspNetCore.SwaggerGen.xml",
         "lib/netstandard1.6/Swashbuckle.AspNetCore.SwaggerGen.dll",
         "lib/netstandard1.6/Swashbuckle.AspNetCore.SwaggerGen.xml",
-        "swashbuckle.aspnetcore.swaggergen.2.3.0.nupkg.sha512",
+        "swashbuckle.aspnetcore.swaggergen.2.4.0.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggergen.nuspec"
       ]
     },
-    "Swashbuckle.AspNetCore.SwaggerUI/2.3.0": {
-      "sha512": "URNUb0lLP4FDshwY3+UsJGcyEiYeBguFswvcS08rCRbUjvW8FsGJwHkdSpM3UZUC5b1F6sVF21kA0qju6/fgQQ==",
+    "Swashbuckle.AspNetCore.SwaggerUI/2.4.0": {
+      "sha512": "TwnD/Ibviaxvuemq1YssHruRuEQBoJFuWaONClth6ZSae9YcFyy00bWCjvXJvrlbmIDw3UKZwWQ5f+zGFIjaqw==",
       "type": "package",
-      "path": "swashbuckle.aspnetcore.swaggerui/2.3.0",
+      "path": "swashbuckle.aspnetcore.swaggerui/2.4.0",
       "files": [
         "lib/net451/Swashbuckle.AspNetCore.SwaggerUI.dll",
         "lib/net451/Swashbuckle.AspNetCore.SwaggerUI.xml",
         "lib/netstandard1.6/Swashbuckle.AspNetCore.SwaggerUI.dll",
         "lib/netstandard1.6/Swashbuckle.AspNetCore.SwaggerUI.xml",
-        "swashbuckle.aspnetcore.swaggerui.2.3.0.nupkg.sha512",
+        "swashbuckle.aspnetcore.swaggerui.2.4.0.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
     },
@@ -10641,7 +10625,7 @@
     ".NETFramework,Version=v4.7": [
       "AspNetCoreRateLimit >= 2.1.0",
       "AutoMapper >= 6.2.2",
-      "Autofac >= 4.6.2",
+      "Autofac >= 4.7.0",
       "Autofac.Extensions.DependencyInjection >= 4.2.2",
       "DND.Common >= 1.0.0",
       "DND.Domain >= 1.0.0",
@@ -10670,7 +10654,7 @@
       "Serilog.Sinks.Debug >= 1.0.1",
       "Serilog.Sinks.MSSqlServer >= 5.1.1",
       "Serilog.Sinks.RollingFile >= 3.3.0",
-      "Swashbuckle.AspNetCore >= 2.3.0",
+      "Swashbuckle.AspNetCore >= 2.4.0",
       "System.Data.SQLite >= 1.0.108",
       "System.Data.SqlClient >= 4.4.3"
     ]
@@ -10742,7 +10726,7 @@
           },
           "Autofac": {
             "target": "Package",
-            "version": "[4.6.2, )"
+            "version": "[4.7.0, )"
           },
           "Autofac.Extensions.DependencyInjection": {
             "target": "Package",
@@ -10843,7 +10827,7 @@
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
-            "version": "[2.3.0, )"
+            "version": "[2.4.0, )"
           },
           "System.Data.SQLite": {
             "target": "Package",

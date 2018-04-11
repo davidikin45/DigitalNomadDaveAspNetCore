@@ -345,6 +345,11 @@ namespace DND.Common.Implementation.Persistance
             return Set<TEntity>().Find(id);
         }
 
+        public TEntity FindEntityLocal<TEntity>(object id) where TEntity : class, IBaseEntity
+        {
+            return Set<TEntity>().Local.Where(e => e.Id.Equals(id)).FirstOrDefault();
+        }
+
         public IQueryable<TEntity> Queryable<TEntity>() where TEntity : class
         {
             return Set<TEntity>();

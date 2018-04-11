@@ -32,17 +32,17 @@ namespace DND.Web.Implementation.Shared.Api
 
             var apis = new Dictionary<string, string>()
             {
-                {"Author","author"},
-                {"BlogPost","blog_post"},
-                {"Category","category"},
-                {"ContentHtml","content_html"},
-                {"ContentText","content_text"},
-                {"Faq","faq"},
-                {"Location","location"},
+                {"Authors","authors"},
+                {"BlogPosts","blog_posts"},
+                {"Categories","categories"},
+                {"ContentHtmls","content_htmls"},
+                {"ContentTexts","content_texts"},
+                {"Faqs","faqs"},
+                {"Locations","locations"},
                 {"MailingList","mailing_list"},
-                {"Project","project"},
-                {"Tag","tag"},
-                {"Testimonial","testimonial"},
+                {"Projects","projects"},
+                {"Tags","tags"},
+                {"Testimonials","testimonials"},
             };
 
             foreach(KeyValuePair<string,string> api in apis)

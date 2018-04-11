@@ -38,6 +38,11 @@ namespace DND.Common.Controllers.Api
         }
 
         //[Route("create")]
+        /// <summary>
+        /// Creates the specified dto.
+        /// </summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> Create([FromBody] TCreateDto dto)
@@ -69,6 +74,12 @@ namespace DND.Common.Controllers.Api
             return CreatedAtAction(nameof(Create), new { id = createdDto.Id }, createdDto);
         }
 
+        /// <summary>
+        /// Updates the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="dto">The dto.</param>
+        /// <returns></returns>
         [Route("{id}")]
         [HttpPut]
         //[HttpPost]
@@ -91,6 +102,13 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
+            //var exists = await Service.ExistsAsync(cts.Token, id);
+
+            //if (!exists)
+            //{
+            //    return ApiNotFoundErrorMessage(Messages.NotFound);
+            //}
+
             var result = await Service.UpdateAsync(id, dto, cts.Token);
             if (result.IsFailure)
             {
@@ -101,45 +119,56 @@ namespace DND.Common.Controllers.Api
             return NoContent();
         }
 
-        [Route("{id}")]
-        [HttpPatch]
-        [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> UpdatePartial(object id, [FromBody] JsonPatchDocument<TUpdateDto> dtoPatch)
-        {
-            if (dtoPatch == null)
-            {
-                return ApiErrorMessage(Messages.RequestInvalid);
-            }
+        /// <summary>
+        /// Updates the partial.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="dtoPatch">The dto patch.</param>
+        /// <returns></returns>
+        //[Route("{id}")]
+        //[HttpPatch]
+        //[ProducesResponseType(typeof(WebApiMessage), 200)]
+        //public virtual async Task<IActionResult> UpdatePartial(object id, [FromBody] JsonPatchDocument<TUpdateDto> dtoPatch)
+        //{
+        //    if (dtoPatch == null)
+        //    {
+        //        return ApiErrorMessage(Messages.RequestInvalid);
+        //    }
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+        //    var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dto = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
+        //    var dto = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
 
-            if (dto == null)
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
+        //    if (dto == null)
+        //    {
+        //        return ApiNotFoundErrorMessage(Messages.NotFound);
+        //    }
 
-            dtoPatch.ApplyTo(dto, ModelState);
+        //    dtoPatch.ApplyTo(dto, ModelState);
 
-            TryValidateModel(dto);
+        //    TryValidateModel(dto);
 
-            if (!ModelState.IsValid)
-            {
-                return ValidationErrors(ModelState);
-            }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return ValidationErrors(ModelState);
+        //    }
 
-            var result = await Service.UpdateAsync(id, dto, cts.Token);
-            if (result.IsFailure)
-            {
-                return ValidationErrors(result);
-            }
+        //    var result = await Service.UpdateAsync(id, dto, cts.Token);
+        //    if (result.IsFailure)
+        //    {
+        //        return ValidationErrors(result);
+        //    }
 
-            //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
-            //return Success(dto);
-            return NoContent();
-        }
+        //    //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
+        //    //return Success(dto);
+        //    return NoContent();
+        //}
 
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         [Route("{id}")]
         [HttpDelete]
         //[HttpPost]
@@ -148,10 +177,10 @@ namespace DND.Common.Controllers.Api
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            if (!(await Service.ExistsAsync(cts.Token, id)))
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
+            //if (!(await Service.ExistsAsync(cts.Token, id)))
+            //{
+            //    return ApiNotFoundErrorMessage(Messages.NotFound);
+            //}
 
             var result = await Service.DeleteAsync(id, cts.Token);
             if (result.IsFailure)
@@ -162,17 +191,22 @@ namespace DND.Common.Controllers.Api
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes the specified dto.
+        /// </summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns></returns>
         [HttpDelete]
         //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Delete([FromBody] TDeleteDto dto)
+        public virtual async Task<IActionResult> DeleteDto([FromBody] TDeleteDto dto)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            if (!(await Service.ExistsAsync(cts.Token, dto.Id)))
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
+            //if (!(await Service.ExistsAsync(cts.Token, dto.Id)))
+            //{
+            //    return ApiNotFoundErrorMessage(Messages.NotFound);
+            //}
 
             var result = await Service.DeleteAsync(dto, cts.Token);
             if (result.IsFailure)

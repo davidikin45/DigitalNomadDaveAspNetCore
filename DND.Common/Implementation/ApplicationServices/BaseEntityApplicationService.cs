@@ -78,6 +78,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return Result.ObjectValidationFail<TReadDto>(result.ObjectValidationErrors);
+                    case ErrorType.ObjectDoesNotExist:
+                        return Result.ObjectDoesNotExist<TReadDto>();
                     default:
                         throw new ArgumentException();
                 }
@@ -118,6 +120,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return Result.ObjectValidationFail<TReadDto>(result.ObjectValidationErrors);
+                    case ErrorType.ObjectDoesNotExist:
+                        return Result.ObjectDoesNotExist<TReadDto>();
                     default:
                         throw new ArgumentException();
                 }
@@ -145,6 +149,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return Result.ObjectValidationFail<TReadDto>(result.ObjectValidationErrors);
+                    case ErrorType.ObjectDoesNotExist:
+                        return Result.ObjectDoesNotExist<TReadDto>();
                     default:
                         throw new ArgumentException();
                 }
@@ -188,6 +194,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return Result.ObjectValidationFail(result.ObjectValidationErrors);
+                    case ErrorType.ObjectDoesNotExist:
+                        return Result.ObjectDoesNotExist<TReadDto>();
                     default:
                         throw new ArgumentException();
                 }
@@ -206,6 +214,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return Result.ObjectValidationFail(result.ObjectValidationErrors);
+                    case ErrorType.ObjectDoesNotExist:
+                        return Result.ObjectDoesNotExist<TReadDto>();
                     default:
                         throw new ArgumentException();
                 }
