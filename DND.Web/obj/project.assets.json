@@ -742,7 +742,7 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.TagHelpers.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.Versioning/2.1.0": {
+      "Microsoft.AspNetCore.Mvc.Versioning/2.2.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.Core": "2.0.0"
@@ -3624,7 +3624,7 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.TagHelpers.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.Versioning/2.1.0": {
+      "Microsoft.AspNetCore.Mvc.Versioning/2.2.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.Core": "2.0.0"
@@ -6258,14 +6258,14 @@
         "microsoft.aspnetcore.mvc.taghelpers.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Mvc.Versioning/2.1.0": {
-      "sha512": "D6RopYcqp72PY/Wv1K6kl33bIu3ue0kowdrUfC7gWPcGsm8eVAkgr6swW/7cKP72aF7aBONcb3dCAaKhk3sBhw==",
+    "Microsoft.AspNetCore.Mvc.Versioning/2.2.0": {
+      "sha512": "mBdGlJaOFmwTc5/bo8m3FeSjM+54be+VGqVoqke2WUapy5kKrybHLLnnB5OX2VKVHJw06k1JyXMgHpb6BBWGZQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.mvc.versioning/2.1.0",
+      "path": "microsoft.aspnetcore.mvc.versioning/2.2.0",
       "files": [
         "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Versioning.dll",
         "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Versioning.xml",
-        "microsoft.aspnetcore.mvc.versioning.2.1.0.nupkg.sha512",
+        "microsoft.aspnetcore.mvc.versioning.2.2.0.nupkg.sha512",
         "microsoft.aspnetcore.mvc.versioning.nuspec"
       ]
     },
@@ -10639,7 +10639,7 @@
       "Microsoft.AspNetCore.Mvc >= 2.0.3",
       "Microsoft.AspNetCore.Mvc.Formatters.Xml >= 2.0.3",
       "Microsoft.AspNetCore.Mvc.Razor.ViewCompilation >= 2.0.3",
-      "Microsoft.AspNetCore.Mvc.Versioning >= 2.1.0",
+      "Microsoft.AspNetCore.Mvc.Versioning >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Runtime >= 2.0.2",
       "Microsoft.AspNetCore.ResponseCaching >= 2.0.2",
       "Microsoft.AspNetCore.ResponseCompression >= 2.0.2",
@@ -10767,7 +10767,7 @@
           },
           "Microsoft.AspNetCore.Mvc.Versioning": {
             "target": "Package",
-            "version": "[2.1.0, )"
+            "version": "[2.2.0, )"
           },
           "Microsoft.AspNetCore.Razor.Runtime": {
             "target": "Package",

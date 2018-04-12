@@ -9,6 +9,8 @@ using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
 using System.Threading.Tasks;
 using DND.Common.Interfaces.Dtos;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 
 namespace DND.Common.Controllers.Api
 {
@@ -84,7 +86,7 @@ namespace DND.Common.Controllers.Api
         [HttpPut]
         //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Update(object id, [FromBody] TUpdateDto dto)
+        public virtual async Task<IActionResult> Update(string id, [FromBody] TUpdateDto dto)
         {
             if(dto is IBaseDtoWithId)
             {
@@ -125,44 +127,52 @@ namespace DND.Common.Controllers.Api
         /// <param name="id">The identifier.</param>
         /// <param name="dtoPatch">The dto patch.</param>
         /// <returns></returns>
-        //[Route("{id}")]
-        //[HttpPatch]
-        //[ProducesResponseType(typeof(WebApiMessage), 200)]
-        //public virtual async Task<IActionResult> UpdatePartial(object id, [FromBody] JsonPatchDocument<TUpdateDto> dtoPatch)
-        //{
-        //    if (dtoPatch == null)
-        //    {
-        //        return ApiErrorMessage(Messages.RequestInvalid);
-        //    }
+        [Route("{id}")]
+        [HttpPatch]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> UpdatePartial(string id, [FromBody] JsonPatchDocument dtoPatch)
+        {
+            if (dtoPatch == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
 
-        //    var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-        //    var dto = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
+            var dto = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
 
-        //    if (dto == null)
-        //    {
-        //        return ApiNotFoundErrorMessage(Messages.NotFound);
-        //    }
+            if (dto == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
 
-        //    dtoPatch.ApplyTo(dto, ModelState);
+            var ops = new List<Operation<TUpdateDto>>();
+            foreach (var op in dtoPatch.Operations)
+            {
+                ops.Add(new Operation<TUpdateDto>(op.op, op.path, op.from, op.value));
+            }
+       
+            var dtoPatchTypes = new JsonPatchDocument<TUpdateDto>(ops, dtoPatch.ContractResolver);
 
-        //    TryValidateModel(dto);
+            dtoPatchTypes.ApplyTo(dto, ModelState);
 
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return ValidationErrors(ModelState);
-        //    }
+            TryValidateModel(dto);
 
-        //    var result = await Service.UpdateAsync(id, dto, cts.Token);
-        //    if (result.IsFailure)
-        //    {
-        //        return ValidationErrors(result);
-        //    }
+            if (!ModelState.IsValid)
+            {
+                return ValidationErrors(ModelState);
+            }
 
-        //    //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
-        //    //return Success(dto);
-        //    return NoContent();
-        //}
+            var result = await Service.UpdateAsync(id, dto, cts.Token);
+            if (result.IsFailure)
+            {
+                return ValidationErrors(result);
+            }
+
+            //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
+            //return Success(dto);
+            return NoContent();
+        }
 
         /// <summary>
         /// Deletes the specified identifier.
@@ -173,7 +183,7 @@ namespace DND.Common.Controllers.Api
         [HttpDelete]
         //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Delete(int id)
+        public virtual async Task<IActionResult> Delete(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 

@@ -44,7 +44,7 @@
                         @(Html.MenuLink<ManageController>(c => c.Index(null), "Manage", "nav-link", "fa-cog"))
                     </li>
                     <li class="nav-item">
-                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        @using (Html.BeginForm("LogOut", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
                             @Html.AntiForgeryToken()
                             <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()" title="Sign Out">

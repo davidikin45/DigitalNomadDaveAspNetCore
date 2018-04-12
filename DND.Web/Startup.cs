@@ -282,6 +282,7 @@ namespace DND.Web
 
                 //TODO - UpdatePartial causes error
                 c.OperationFilter<SwaggerAssignSecurityRequirements>();
+                c.SchemaFilter<SwaggerModelExamples>();
 
                 // Set the comments path for the Swagger JSON and UI.
                 var location = System.Reflection.Assembly.GetEntryAssembly().Location;
@@ -359,6 +360,7 @@ namespace DND.Web
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
+               
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API V1");
                 c.DocExpansion(DocExpansion.None);
             });

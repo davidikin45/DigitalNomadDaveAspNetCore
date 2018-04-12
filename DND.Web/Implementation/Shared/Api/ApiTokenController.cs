@@ -47,7 +47,7 @@ namespace DND.Web.Implementation.Shared.Api
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Email);
+                var user = await _userManager.FindByNameAsync(model.Username);
                 if (user != null)
                 {
                     var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
