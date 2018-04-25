@@ -22,5 +22,6 @@ namespace DND.Common.Implementation.Models
         public string UserCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public string UserModified { get; set; }
+
     }
 }

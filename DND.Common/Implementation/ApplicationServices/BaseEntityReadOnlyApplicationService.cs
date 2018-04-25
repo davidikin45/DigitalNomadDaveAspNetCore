@@ -18,7 +18,7 @@ namespace DND.Common.Implementation.ApplicationServices
     public abstract class BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto, TDomainService> : BaseApplicationService, IBaseEntityReadOnlyApplicationService<TDto>
           where TContext : IBaseDbContext
           where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
-          where TDto : class, IBaseDtoWithId
+          where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
           where TDomainService : IBaseEntityReadOnlyDomainService<TEntity>
 
     {

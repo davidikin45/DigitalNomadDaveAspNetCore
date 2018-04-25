@@ -10,7 +10,7 @@ using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.Blog.Tags.Dtos
 {
-    public class TagDto : BaseDto<int>, IMapFrom<Tag>, IMapTo<Tag>
+    public class TagDto : BaseDtoAggregateRoot<int>, IMapFrom<Tag>, IMapTo<Tag>
     {
 
         [Required, StringLength(50)]

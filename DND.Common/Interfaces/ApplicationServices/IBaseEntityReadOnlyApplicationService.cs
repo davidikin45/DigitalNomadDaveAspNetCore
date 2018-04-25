@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DND.Common.Interfaces.ApplicationServices
 {
     public interface IBaseEntityReadOnlyApplicationService<TDto> : IBaseApplicationService
-        where TDto : class, IBaseDtoWithId
+        where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
     {
 
         IEnumerable<TDto> GetAll(

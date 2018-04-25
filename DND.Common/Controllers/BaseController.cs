@@ -15,6 +15,7 @@ using System.Linq.Expressions;
 using DND.Common.Helpers;
 using DND.Common.Extensions;
 using DND.Common.Email;
+using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.Controllers
 {
@@ -126,7 +127,7 @@ namespace DND.Common.Controllers
             return RedirectToControllerDefault().WithError(this, Messages.RequestInvalid);
         }
 
-        protected void HandleUpdateException(Result failure)
+        protected void HandleUpdateException(Result failure, IBaseDtoConcurrencyAware dto)
         {
             //TODO: Need to research how to turn off automatic model validation if doing it in application service layer
             ModelState.Clear();
@@ -134,6 +135,11 @@ namespace DND.Common.Controllers
             {
                 case ErrorType.ObjectValidationFailed:
                     ModelState.AddValidationErrors(failure.ObjectValidationErrors);
+                    break;
+                case ErrorType.ConcurrencyConflict:
+                    ModelState.AddValidationErrors(failure.ObjectValidationErrors);
+                    dto.RowVersion = failure.NewRowVersion;
+                    //Update RowVersion on DTO
                     break;
                 default:
                     ModelState.AddModelError("", Messages.UnknownError);

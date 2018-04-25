@@ -27,9 +27,9 @@ namespace DND.Common.Controllers.Api
     //Otherwise, the action supports the POST method.
     public abstract class BaseEntityWebApiController<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService> : BaseEntityReadOnlyWebApiController<TReadDto, IEntityService>
          where TCreateDto : class, IBaseDto
-         where TReadDto : class, IBaseDtoWithId
-         where TUpdateDto : class, IBaseDto
-         where TDeleteDto : class, IBaseDtoWithId
+         where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
+         where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
+         where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
 
@@ -179,37 +179,38 @@ namespace DND.Common.Controllers.Api
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        [Route("{id}")]
-        [HttpDelete]
-        //[HttpPost]
-        [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> Delete(string id)
-        {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+        //[Route("{id}")]
+        //[HttpDelete]
+        ////[HttpPost]
+        //[ProducesResponseType(typeof(WebApiMessage), 200)]
+        //public virtual async Task<IActionResult> Delete(string id)
+        //{
+        //    var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            //if (!(await Service.ExistsAsync(cts.Token, id)))
-            //{
-            //    return ApiNotFoundErrorMessage(Messages.NotFound);
-            //}
+        //    //if (!(await Service.ExistsAsync(cts.Token, id)))
+        //    //{
+        //    //    return ApiNotFoundErrorMessage(Messages.NotFound);
+        //    //}
 
-            var result = await Service.DeleteAsync(id, cts.Token);
-            if (result.IsFailure)
-            {
-                return ValidationErrors(result);
-            }
-            //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
-            return NoContent();
-        }
+        //    var result = await Service.DeleteAsync(id, cts.Token);
+        //    if (result.IsFailure)
+        //    {
+        //        return ValidationErrors(result);
+        //    }
+        //    //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
+        //    return NoContent();
+        //}
 
         /// <summary>
         /// Deletes the specified dto.
         /// </summary>
         /// <param name="dto">The dto.</param>
         /// <returns></returns>
+        [Route("{id}")]
         [HttpDelete]
         //[HttpPost]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
-        public virtual async Task<IActionResult> DeleteDto([FromBody] TDeleteDto dto)
+        public virtual async Task<IActionResult> DeleteDto(string id, [FromBody] TDeleteDto dto)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -218,7 +219,7 @@ namespace DND.Common.Controllers.Api
             //    return ApiNotFoundErrorMessage(Messages.NotFound);
             //}
 
-            var result = await Service.DeleteAsync(dto, cts.Token);
+            var result = await Service.DeleteAsync(dto, cts.Token); // // This should give concurrency checking
             if (result.IsFailure)
             {
                 return ValidationErrors(result);

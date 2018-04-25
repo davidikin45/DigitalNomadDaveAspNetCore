@@ -22,9 +22,9 @@ namespace DND.Common.Controllers
     [Authorize(Roles = "admin")]
     public abstract class BaseEntityControllerAuthorize<TCreate, TRead, TUpdate, TDelete, IEntityService> : BaseEntityController<TCreate, TRead, TUpdate, TDelete, IEntityService>
         where TCreate : class, IBaseDto
-        where TRead : class, IBaseDtoWithId
-        where TUpdate : class, IBaseDto
-        where TDelete : class, IBaseDtoWithId
+        where TRead : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
+        where TUpdate : class, IBaseDto, IBaseDtoConcurrencyAware
+        where TDelete : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreate, TRead, TUpdate, TDelete>
     {
         public BaseEntityControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null)

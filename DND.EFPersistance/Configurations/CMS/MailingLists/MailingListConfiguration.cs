@@ -10,6 +10,8 @@ namespace DND.EFPersistance.Configurations.CMS.MailingLists
         {
             HasKey(p => p.Id);
 
+            //Property(p => p.RowVersion).IsRowVersion();
+
             Property(p => p.Email)
                  .IsRequired();
         }

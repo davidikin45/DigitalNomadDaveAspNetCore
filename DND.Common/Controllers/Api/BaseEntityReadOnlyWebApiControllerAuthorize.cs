@@ -25,7 +25,7 @@ namespace DND.Common.Controllers.Api
     //[Authorize(Roles = "admin")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")] // 40
     public abstract class BaseEntityReadOnlyWebApiControllerAuthorize<TDto, IEntityService> : BaseEntityReadOnlyWebApiController<TDto, IEntityService>
-        where TDto : class, IBaseDtoWithId
+        where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
     {   
 

@@ -17,9 +17,9 @@ namespace DND.Common.Implementation.ApplicationServices
           where TContext : IBaseDbContext
           where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, new()
           where TCreateDto : class, IBaseDto
-          where TReadDto : class, IBaseDtoWithId
-          where TUpdateDto : class, IBaseDto
-          where TDeleteDto : class, IBaseDtoWithId
+          where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
+          where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
+          where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
           where TDomainService : IBaseEntityDomainService<TEntity>
 
     {
@@ -119,9 +119,11 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
-                        return Result.ObjectValidationFail<TReadDto>(result.ObjectValidationErrors);
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
-                        return Result.ObjectDoesNotExist<TReadDto>();
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
                     default:
                         throw new ArgumentException();
                 }
@@ -148,9 +150,11 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
-                        return Result.ObjectValidationFail<TReadDto>(result.ObjectValidationErrors);
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
-                        return Result.ObjectDoesNotExist<TReadDto>();
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
                     default:
                         throw new ArgumentException();
                 }
@@ -193,9 +197,11 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
-                        return Result.ObjectValidationFail(result.ObjectValidationErrors);
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
-                        return Result.ObjectDoesNotExist<TReadDto>();
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
                     default:
                         throw new ArgumentException();
                 }
@@ -213,9 +219,11 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
-                        return Result.ObjectValidationFail(result.ObjectValidationErrors);
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
-                        return Result.ObjectDoesNotExist<TReadDto>();
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
                     default:
                         throw new ArgumentException();
                 }

@@ -10,6 +10,8 @@ namespace DND.EFPersistance.Configurations.Blog.Tags
         {
             HasKey(p => p.Id);
 
+            //Property(p => p.RowVersion).IsRowVersion();
+
             Property(p => p.Name)
                  .IsRequired()
                 .HasMaxLength(50);

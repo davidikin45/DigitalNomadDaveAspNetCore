@@ -9,9 +9,9 @@ namespace DND.Common.Interfaces.ApplicationServices
 {
     public interface IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto> : IBaseEntityReadOnlyApplicationService<TReadDto>
           where TCreateDto : class, IBaseDto
-          where TReadDto : class, IBaseDtoWithId
-          where TUpdateDto : class, IBaseDto
-          where TDeleteDto : class, IBaseDtoWithId
+          where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
+          where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
+          where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
     {
         Result<TReadDto> Create(TCreateDto dto);
 

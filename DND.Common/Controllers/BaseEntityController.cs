@@ -25,9 +25,9 @@ namespace DND.Common.Controllers
     //Otherwise, the action supports the POST method.
     public abstract class BaseEntityController<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService> : BaseEntityReadOnlyController<TReadDto, IEntityService>
         where TCreateDto : class, IBaseDto
-        where TReadDto : class, IBaseDtoWithId
-        where TUpdateDto : class, IBaseDto
-        where TDeleteDto : class, IBaseDtoWithId
+        where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
+        where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
+        where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
         public BaseEntityController(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null)
@@ -59,7 +59,7 @@ namespace DND.Common.Controllers
                     var result = await Service.CreateAsync(dto, cts.Token);
                     if (result.IsFailure)
                     {
-                        HandleUpdateException(result);
+                        HandleUpdateException(result, null);
                     }
                     else
                     {
@@ -111,7 +111,7 @@ namespace DND.Common.Controllers
                     var result = await Service.UpdateAsync(id, dto, cts.Token);
                     if (result.IsFailure)
                     {
-                        HandleUpdateException(result);
+                        HandleUpdateException(result, dto);
                     }
                     else
                     {
@@ -150,29 +150,28 @@ namespace DND.Common.Controllers
 
         // POST: Default/Delete/5
         [HttpPost, ActionName("Delete"), Route("delete/{id}")]
-        public virtual async Task<ActionResult> DeleteConfirmed(string id)
+        public virtual async Task<ActionResult> DeleteConfirmed(string id, TDeleteDto dto)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                //var result = await Service.DeleteAsync(id, cts.Token);
+                var result = await Service.DeleteAsync(dto, cts.Token); // This should give concurrency checking
+                if (result.IsFailure)
                 {
-                    var result = await Service.DeleteAsync(id, cts.Token);
-                    if (result.IsFailure)
-                    {
-                        HandleUpdateException(result);
-                    }
-                    else
-                    {
-                        return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);
-                    }
+                    HandleUpdateException(result, dto);
                 }
-                catch (Exception ex)
+                else
                 {
-                    HandleUpdateException(ex);
+                    return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);
                 }
             }
+            catch (Exception ex)
+            {
+                HandleUpdateException(ex);
+            }
+
             ViewBag.PageTitle = Title;
             ViewBag.Admin = Admin;
             var data = await Service.GetByIdAsync(id, cts.Token);

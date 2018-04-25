@@ -28,7 +28,7 @@ namespace DND.Common.Controllers
     //If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
     //Otherwise, the action supports the POST method.
     public abstract class BaseEntityReadOnlyController<TDto, IEntityService> : BaseController
-        where TDto : class, IBaseDtoWithId
+        where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
     {   
         public IEntityService Service { get; private set; }

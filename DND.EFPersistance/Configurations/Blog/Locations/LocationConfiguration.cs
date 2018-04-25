@@ -10,6 +10,8 @@ namespace DND.EFPersistance.Configurations.Blog.Locations
         {
             HasKey(p => p.Id);
 
+            //Property(p => p.RowVersion).IsRowVersion();
+
             //NotMapped
             //Ignore(p => p.LocationType);
 

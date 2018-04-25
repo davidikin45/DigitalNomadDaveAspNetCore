@@ -10,7 +10,7 @@ using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.CMS.ContentTexts.Dtos
 {
-    public class ContentTextDto : BaseDto<string>, IMapTo<ContentText>, IMapFrom<ContentText>
+    public class ContentTextDto : BaseDtoAggregateRoot<string>, IMapTo<ContentText>, IMapFrom<ContentText>
     {
         [MultilineText(HTML = false, Rows = 7)]
         public string Text { get; set; }

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.Authors.Dtos
 {
-    public class AuthorDto : BaseDto<int> , IMapFrom<Author>, IMapTo<Author>
+    public class AuthorDto : BaseDtoAggregateRoot<int> , IMapFrom<Author>, IMapTo<Author>
     {
         [Required]
 		public string Name { get; set; }

@@ -11,7 +11,7 @@ using System.Data.Entity.Spatial;
 
 namespace DND.Domain.Blog.Locations.Dtos
 {
-    public class LocationDto : BaseDto<int> , IMapFrom<Location>, IMapTo<Location>
+    public class LocationDto : BaseDtoAggregateRoot<int> , IMapFrom<Location>, IMapTo<Location>
     {
         [Required]
 		public string Name { get; set; }

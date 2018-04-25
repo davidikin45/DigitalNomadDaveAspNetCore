@@ -11,6 +11,8 @@ namespace DND.EFPersistance.Configurations.CMS.Faqs
         {
             HasKey(p => p.Id);
 
+            //Property(p => p.RowVersion).IsRowVersion();
+
             Property(p => p.Question)
                  .IsRequired();
 

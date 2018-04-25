@@ -21,7 +21,7 @@ namespace DND.Common.Controllers
     //Otherwise, the action supports the POST method.
     [Authorize(Roles = "admin")]
     public abstract class BaseEntityReadOnlyControllerAuthorize<TDto, IEntityService> : BaseEntityReadOnlyController<TDto, IEntityService>
-        where TDto : class, IBaseDtoWithId
+        where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
     {
 

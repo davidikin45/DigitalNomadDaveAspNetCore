@@ -11,6 +11,8 @@ namespace DND.EFPersistance.Configurations.Blog.BlogPosts
         {
             HasKey(p => p.Id);
 
+           //Property(p => p.RowVersion).IsRowVersion();
+
             Property(p => p.Title)
                  .IsRequired()
                 .HasMaxLength(500);

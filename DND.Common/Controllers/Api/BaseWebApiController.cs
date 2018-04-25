@@ -53,6 +53,9 @@ namespace DND.Common.Controllers.Api
                     break;
                 case ErrorType.ObjectDoesNotExist:
                     return ApiNotFoundErrorMessage(Messages.NotFound);
+                case ErrorType.ConcurrencyConflict:
+                    newModelState.AddValidationErrors(failure.ObjectValidationErrors);
+                    break;
                 default:
                     newModelState.AddModelError("", Messages.UnknownError);
                     break;

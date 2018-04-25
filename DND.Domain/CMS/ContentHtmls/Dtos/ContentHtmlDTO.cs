@@ -9,7 +9,7 @@ using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.CMS.ContentHtmls.Dtos
 {
-    public class ContentHtmlDto : BaseDto<string>, IMapTo<ContentHtml>, IMapFrom<ContentHtml>
+    public class ContentHtmlDto : BaseDtoAggregateRoot<string>, IMapTo<ContentHtml>, IMapFrom<ContentHtml>
     {
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = true)]
         public override string Id { get => base.Id; set => base.Id = value; }

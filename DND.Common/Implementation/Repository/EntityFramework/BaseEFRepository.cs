@@ -75,11 +75,12 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual void Delete(object id)
         {
-            TEntity entity = _context.FindEntityLocal<TEntity>(id);
-            if(entity == null)
-            {
-                entity = new TEntity() { Id = id };
-            }
+            //TEntity entity = _context.FindEntityLocal<TEntity>(id);
+            //if(entity == null)
+            //{
+            //    entity = new TEntity() { Id = id };
+            //}
+            TEntity entity = _context.FindEntity<TEntity>(id); // For concurrency purposes need to get latest version
 
             Delete(entity);
         }

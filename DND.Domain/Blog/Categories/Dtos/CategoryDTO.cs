@@ -10,7 +10,7 @@ using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.Blog.Categories.Dtos
 {
-    public class CategoryDto : BaseDto<int>, IMapFrom<Category>, IMapTo<Category>
+    public class CategoryDto : BaseDtoAggregateRoot<int>, IMapFrom<Category>, IMapTo<Category>
     {
 
         [Required, StringLength(50)]

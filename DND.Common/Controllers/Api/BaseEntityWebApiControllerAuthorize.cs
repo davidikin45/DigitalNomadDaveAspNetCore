@@ -25,9 +25,9 @@ namespace DND.Common.Controllers.Api
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")] // 40
     public abstract class BaseEntityWebApiControllerAuthorize<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService> : BaseEntityWebApiController<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService>
         where TCreateDto : class, IBaseDto
-        where TReadDto : class, IBaseDtoWithId
-        where TUpdateDto : class, IBaseDto
-        where TDeleteDto : class, IBaseDtoWithId
+        where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
+        where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
+        where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {   
 

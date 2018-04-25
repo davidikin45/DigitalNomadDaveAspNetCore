@@ -11,6 +11,8 @@ namespace DND.EFPersistance.Configurations.CMS.Projects
         {
             HasKey(p => p.Id);
 
+            //Property(p => p.RowVersion).IsRowVersion();
+
             Property(p => p.Name)
                  .IsRequired()
                 .HasMaxLength(100);

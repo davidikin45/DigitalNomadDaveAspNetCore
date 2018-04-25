@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.Testimonials.Dtos
 {
-    public class TestimonialDto : BaseDto<int>, IMapFrom<Testimonial>, IMapTo<Testimonial>
+    public class TestimonialDto : BaseDtoAggregateRoot<int>, IMapFrom<Testimonial>, IMapTo<Testimonial>
     {
         [Required, StringLength(100)]
         public string Source { get; set; }

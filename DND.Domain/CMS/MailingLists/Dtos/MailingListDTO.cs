@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.MailingLists.Dtos
 {
-    public class MailingListDto : BaseDto<int>, IHaveCustomMappings
+    public class MailingListDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
         public string Name { get; set; }
 

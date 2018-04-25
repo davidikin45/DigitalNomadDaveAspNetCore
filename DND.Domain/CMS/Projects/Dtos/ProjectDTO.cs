@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.Projects.Dtos
 {
-    public class ProjectDto : BaseDto<int>, IMapFrom<Project>, IMapTo<Project>
+    public class ProjectDto : BaseDtoAggregateRoot<int>, IMapFrom<Project>, IMapTo<Project>
     {
 
         [Required, StringLength(100)]

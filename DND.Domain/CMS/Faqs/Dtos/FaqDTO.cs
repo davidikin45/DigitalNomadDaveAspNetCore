@@ -10,7 +10,7 @@ using DND.Common.Implementation.Dtos;
 
 namespace DND.Domain.CMS.Faqs.Dtos
 {
-    public class FaqDto : BaseDto<int>, IMapTo<Faq>, IMapFrom<Faq>
+    public class FaqDto : BaseDtoAggregateRoot<int>, IMapTo<Faq>, IMapFrom<Faq>
     {
         [Required]
         public string Question { get; set; }

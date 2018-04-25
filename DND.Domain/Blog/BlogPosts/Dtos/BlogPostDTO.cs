@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace DND.Domain.Blog.BlogPosts.Dtos
 {
-    public class BlogPostDto : BaseDto<int>, IHaveCustomMappings
+    public class BlogPostDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
         [Required(ErrorMessage = "Title: Field is required")]
         [StringLength(500, ErrorMessage = "Title: Length should not exceed 500 characters")]

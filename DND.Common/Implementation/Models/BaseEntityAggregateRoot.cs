@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Models
 {
-    public abstract class BaseEntityAggregateRoot<T> : BaseEntity<T>, IBaseEntityAggregateRoot
+    public abstract class BaseEntityAggregateRoot<T> : BaseEntity<T>, IBaseEntityAggregateRoot, IBaseEntityConcurrencyAware
     {
         private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
         public virtual IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
@@ -22,5 +22,8 @@ namespace DND.Common.Implementation.Models
         {
             _domainEvents.Clear();
         }
+
+        //Optimistic Concurrency. Potentially ETags serve the same purpose
+        public byte[] RowVersion { get; set; }
     }
 }

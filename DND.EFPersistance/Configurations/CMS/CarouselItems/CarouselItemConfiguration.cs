@@ -11,6 +11,8 @@ namespace DND.EFPersistance.Configurations.CMS.CarouselItems
         {
             HasKey(p => p.Id);
 
+            //Property(p => p.RowVersion).IsRowVersion();
+
             Property(p => p.CarouselText)
                 .HasMaxLength(200);
 

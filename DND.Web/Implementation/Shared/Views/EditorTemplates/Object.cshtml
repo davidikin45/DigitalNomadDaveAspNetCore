@@ -22,7 +22,15 @@
     if (prop.TemplateHint == "HiddenInput" || readOnlyHiddenInput)
     {
         hiddenInput = true;
-        @Html.Hidden(prop.PropertyName)
+        if (prop.ModelType.FullName == "System.Byte[]")
+        {
+
+            @Html.Editor(prop.PropertyName, "ByteArray")
+        }
+        else
+        {
+            @Html.Hidden(prop.PropertyName)
+        }
     }
 
     if (!hiddenInput || (prop.IsReadOnly) || readOnlyHiddenInput)
