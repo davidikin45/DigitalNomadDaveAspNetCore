@@ -181,7 +181,7 @@ namespace DND.Common.Controllers.Api
         /// <returns></returns>
         //[Route("{id}")]
         //[HttpDelete]
-        ////[HttpPost]
+        //////[HttpPost]
         //[ProducesResponseType(typeof(WebApiMessage), 200)]
         //public virtual async Task<IActionResult> Delete(string id)
         //{
@@ -218,6 +218,11 @@ namespace DND.Common.Controllers.Api
             //{
             //    return ApiNotFoundErrorMessage(Messages.NotFound);
             //}
+
+            if (dto == null || id.ToString() != dto.Id.ToString())
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
 
             var result = await Service.DeleteAsync(dto, cts.Token); // // This should give concurrency checking
             if (result.IsFailure)

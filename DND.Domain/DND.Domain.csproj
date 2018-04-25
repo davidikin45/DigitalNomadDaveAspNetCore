@@ -174,7 +174,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blog\Authors\Dtos\AuthorDeleteDTO.cs" />
     <Compile Include="Blog\Authors\Dtos\TestDto.cs" />
+    <Compile Include="Blog\BlogPosts\Dtos\BlogPostDeleteDTO.cs" />
+    <Compile Include="Blog\Categories\Dtos\CategoryDeleteDTO.cs" />
+    <Compile Include="Blog\Locations\Dtos\LocationDeleteDTO.cs" />
+    <Compile Include="Blog\Tags\Dtos\TagDeleteDTO.cs" />
+    <Compile Include="CMS\CarouselItems\Dtos\CarouselItemDeleteDTO.cs" />
+    <Compile Include="CMS\ContentHtmls\Dtos\ContentHtmlDeleteDTO.cs" />
+    <Compile Include="CMS\ContentTexts\Dtos\ContentTextDeleteDTO.cs" />
+    <Compile Include="CMS\Faqs\Dtos\FaqDeleteDTO.cs" />
+    <Compile Include="CMS\MailingLists\Dtos\MailingListDeleteDTO.cs" />
+    <Compile Include="CMS\Projects\Dtos\ProjectDeleteDTO.cs" />
+    <Compile Include="CMS\Testimonials\Dtos\TestimonialDeleteDTO.cs" />
     <Compile Include="DNDConnectionStrings.cs" />
     <Compile Include="Constants\CMS.cs" />
     <Compile Include="Constants\Folders.cs" />

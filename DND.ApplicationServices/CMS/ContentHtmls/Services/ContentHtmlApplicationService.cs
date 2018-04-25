@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.CMS.ContentHtmls.Services
 {
-    public class ContentHtmlApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentHtml, ContentHtmlDto, ContentHtmlDto, ContentHtmlDto, ContentHtmlDto, IContentHtmlDomainService>, IContentHtmlApplicationService
+    public class ContentHtmlApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentHtml, ContentHtmlDto, ContentHtmlDto, ContentHtmlDto, ContentHtmlDeleteDto, IContentHtmlDomainService>, IContentHtmlApplicationService
     {
         public ContentHtmlApplicationService(IContentHtmlDomainService domainService, IMapper mapper)
         : base(domainService, mapper)
@@ -19,13 +19,8 @@ namespace DND.ApplicationServices.CMS.ContentHtmls.Services
            
         }
 
-        public override Task<Result> DeleteAsync(ContentHtmlDto dto, CancellationToken cancellationToken)
+        public override Task<Result> DeleteAsync(ContentHtmlDeleteDto dto, CancellationToken cancellationToken)
         {
-            if(dto.PreventDelete)
-            {
-               throw new ServiceValidationErrors(new GeneralError("This CMS content cannot be deleted"));
-            }
-
             return base.DeleteAsync(dto, cancellationToken);
         }
     }

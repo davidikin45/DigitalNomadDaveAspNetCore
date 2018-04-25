@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface ILocationApplicationService : IBaseEntityApplicationService<LocationDto, LocationDto, LocationDto, LocationDto>
+    public interface ILocationApplicationService : IBaseEntityApplicationService<LocationDto, LocationDto, LocationDto, LocationDeleteDto>
     {
         Task<LocationDto> GetLocationAsync(string urlSlug, CancellationToken cancellationToken);
     }

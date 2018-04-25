@@ -104,7 +104,6 @@
     <Folder Include="Implementation\Category\Views\" />
     <Folder Include="Implementation\BucketList\Api\" />
     <Folder Include="Implementation\BucketList\Models\" />
-    <Folder Include="Implementation\CarouselItem\Api\" />
     <Folder Include="Implementation\CarouselItem\Views\" />
     <Folder Include="Implementation\ContentHtml\Models\" />
     <Folder Include="Implementation\ContentText\Models\" />

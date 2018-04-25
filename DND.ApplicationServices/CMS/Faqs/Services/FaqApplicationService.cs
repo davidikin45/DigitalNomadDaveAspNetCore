@@ -8,7 +8,7 @@ using DND.Domain.Interfaces.DomainServices;
 
 namespace DND.ApplicationServices.CMS.Faqs.Services
 {
-    public class FaqApplicationService : BaseEntityApplicationService<IBaseDbContext, Faq, FaqDto, FaqDto, FaqDto, FaqDto, IFaqDomainService>, IFaqApplicationService
+    public class FaqApplicationService : BaseEntityApplicationService<IBaseDbContext, Faq, FaqDto, FaqDto, FaqDto, FaqDeleteDto, IFaqDomainService>, IFaqApplicationService
     {
         public FaqApplicationService(IFaqDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

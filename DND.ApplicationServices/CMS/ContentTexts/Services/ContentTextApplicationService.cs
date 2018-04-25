@@ -8,7 +8,7 @@ using DND.Domain.Interfaces.DomainServices;
 
 namespace DND.ApplicationServices.CMS.ContentTexts.Services
 {
-    public class ContentTextApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentText, ContentTextDto, ContentTextDto, ContentTextDto, ContentTextDto, IContentTextDomainService>, IContentTextApplicationService
+    public class ContentTextApplicationService : BaseEntityApplicationService<IBaseDbContext, ContentText, ContentTextDto, ContentTextDto, ContentTextDto, ContentTextDeleteDto, IContentTextDomainService>, IContentTextApplicationService
     {
         public ContentTextApplicationService(IContentTextDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.Authors.Services
 {
-    public class AuthorApplicationService : BaseEntityApplicationService<IApplicationDbContext, Author, AuthorDto, AuthorDto, AuthorDto, AuthorDto, IAuthorDomainService>, IAuthorApplicationService
+    public class AuthorApplicationService : BaseEntityApplicationService<IApplicationDbContext, Author, AuthorDto, AuthorDto, AuthorDto, AuthorDeleteDto, IAuthorDomainService>, IAuthorApplicationService
     {
         public AuthorApplicationService(IAuthorDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

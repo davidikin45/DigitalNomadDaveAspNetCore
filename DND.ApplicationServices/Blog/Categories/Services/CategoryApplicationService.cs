@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.Categories.Services
 {
-    public class CategoryApplicationService : BaseEntityApplicationService<IApplicationDbContext, Category, CategoryDto, CategoryDto, CategoryDto, CategoryDto, ICategoryDomainService>, ICategoryApplicationService
+    public class CategoryApplicationService : BaseEntityApplicationService<IApplicationDbContext, Category, CategoryDto, CategoryDto, CategoryDto, CategoryDeleteDto, ICategoryDomainService>, ICategoryApplicationService
     {
 
         protected virtual ICategoryDomainService CategoryDomainService { get; }

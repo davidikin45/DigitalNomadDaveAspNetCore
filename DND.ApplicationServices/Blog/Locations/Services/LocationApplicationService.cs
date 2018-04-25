@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.Locations.Services
 {
-    public class LocationApplicationService : BaseEntityApplicationService<IApplicationDbContext, Location, LocationDto, LocationDto, LocationDto, LocationDto, ILocationDomainService>, ILocationApplicationService
+    public class LocationApplicationService : BaseEntityApplicationService<IApplicationDbContext, Location, LocationDto, LocationDto, LocationDto, LocationDeleteDto, ILocationDomainService>, ILocationApplicationService
     {
         public LocationApplicationService(ILocationDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

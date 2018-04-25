@@ -17,14 +17,15 @@ namespace DND.DomainServices.CMS.ContentHtmls.Services
 
         }
 
-        public override Task<Result> DeleteAsync(ContentHtml entity, CancellationToken cancellationToken)
+        public async override Task<Result> DeleteAsync(ContentHtml entity, CancellationToken cancellationToken)
         {
-            if(entity.PreventDelete)
+            var dbEntity = await GetByIdAsync(entity.Id);
+            if (dbEntity != null && dbEntity.PreventDelete)
             {
                throw new ServiceValidationErrors(new GeneralError("This CMS content cannot be deleted"));
             }
 
-            return base.DeleteAsync(entity, cancellationToken);
+            return await base.DeleteAsync(entity, cancellationToken);
         }
     }
 }

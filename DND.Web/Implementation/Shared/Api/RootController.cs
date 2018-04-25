@@ -34,6 +34,7 @@ namespace DND.Web.Implementation.Shared.Api
             {
                 {"Authors","authors"},
                 {"BlogPosts","blog_posts"},
+                {"CarouselItems","carousel_items"},
                 {"Categories","categories"},
                 {"ContentHtmls","content_htmls"},
                 {"ContentTexts","content_texts"},

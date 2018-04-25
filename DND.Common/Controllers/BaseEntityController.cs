@@ -154,22 +154,25 @@ namespace DND.Common.Controllers
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            try
+            if (ModelState.IsValid)
             {
-                //var result = await Service.DeleteAsync(id, cts.Token);
-                var result = await Service.DeleteAsync(dto, cts.Token); // This should give concurrency checking
-                if (result.IsFailure)
+                try
                 {
-                    HandleUpdateException(result, dto);
+                    //var result = await Service.DeleteAsync(id, cts.Token);
+                    var result = await Service.DeleteAsync(dto, cts.Token); // This should give concurrency checking
+                    if (result.IsFailure)
+                    {
+                        HandleUpdateException(result, dto);
+                    }
+                    else
+                    {
+                        return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);
+                    HandleUpdateException(ex);
                 }
-            }
-            catch (Exception ex)
-            {
-                HandleUpdateException(ex);
             }
 
             ViewBag.PageTitle = Title;

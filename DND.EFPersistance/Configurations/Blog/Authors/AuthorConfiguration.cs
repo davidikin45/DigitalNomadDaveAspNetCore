@@ -15,7 +15,7 @@ namespace DND.EFPersistance.Configurations.Blog.Authors
         {
             HasKey(p => p.Id);
 
-           //Property(p => p.RowVersion).IsRowVersion();
+           Property(p => p.RowVersion).IsRowVersion();
 
             Property(p => p.Name)
                 .IsRequired();

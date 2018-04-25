@@ -8,7 +8,7 @@ using DND.Domain.Interfaces.DomainServices;
 
 namespace DND.ApplicationServices.CMS.MailingLists.Services
 {
-    public class MailingListApplicationService : BaseEntityApplicationService<IBaseDbContext, MailingList, MailingListDto, MailingListDto, MailingListDto, MailingListDto, IMailingListDomainService>, IMailingListApplicationService
+    public class MailingListApplicationService : BaseEntityApplicationService<IBaseDbContext, MailingList, MailingListDto, MailingListDto, MailingListDto, MailingListDeleteDto, IMailingListDomainService>, IMailingListApplicationService
     {
         public MailingListApplicationService(IMailingListDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

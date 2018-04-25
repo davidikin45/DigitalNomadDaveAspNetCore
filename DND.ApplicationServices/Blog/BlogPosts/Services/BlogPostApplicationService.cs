@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.BlogPosts.Services
 {
-    public class BlogPostApplicationService : BaseEntityApplicationService<IApplicationDbContext, BlogPost, BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDto, IBlogPostDomainService>, IBlogPostApplicationService
+    public class BlogPostApplicationService : BaseEntityApplicationService<IApplicationDbContext, BlogPost, BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto, IBlogPostDomainService>, IBlogPostApplicationService
     {
         public BlogPostApplicationService(IBlogPostDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

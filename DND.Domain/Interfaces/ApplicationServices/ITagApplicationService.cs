@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface ITagApplicationService : IBaseEntityApplicationService<TagDto, TagDto, TagDto, TagDto>
+    public interface ITagApplicationService : IBaseEntityApplicationService<TagDto, TagDto, TagDto, TagDeleteDto>
     {
         Task<TagDto> GetTagAsync(string tagSlug, CancellationToken cancellationToken);
     }

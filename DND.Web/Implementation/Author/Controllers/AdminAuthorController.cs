@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DND.Web.Implementation.Author.Controllers
 {
     [Route("admin/author")]
-    public class AdminAuthorController : BaseEntityControllerAuthorize<AuthorDto, AuthorDto, AuthorDto, AuthorDto, IAuthorApplicationService>
+    public class AdminAuthorController : BaseEntityControllerAuthorize<AuthorDto, AuthorDto, AuthorDto, AuthorDeleteDto, IAuthorApplicationService>
     {
         public AdminAuthorController(IAuthorApplicationService service, IMapper mapper,IEmailService emailService)
              : base(true, service, mapper, emailService)

@@ -8,7 +8,7 @@ using DND.Domain.Interfaces.Persistance;
 
 namespace DND.ApplicationServices.CMS.Projects.Services
 {
-    public class ProjectApplicationService : BaseEntityApplicationService<IApplicationDbContext, Project, ProjectDto, ProjectDto, ProjectDto, ProjectDto, IProjectDomainService>, IProjectApplicationService
+    public class ProjectApplicationService : BaseEntityApplicationService<IApplicationDbContext, Project, ProjectDto, ProjectDto, ProjectDto, ProjectDeleteDto, IProjectDomainService>, IProjectApplicationService
     {
         public ProjectApplicationService(IProjectDomainService domainService, IMapper mapper)
         : base(domainService, mapper)

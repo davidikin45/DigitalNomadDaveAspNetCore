@@ -10,7 +10,7 @@ namespace DND.EFPersistance.Configurations.CMS.ContentHtmls
         {
             HasKey(p => p.Id);
 
-            //Property(p => p.RowVersion).IsRowVersion();
+            Property(p => p.RowVersion).IsRowVersion();
 
         }
     }

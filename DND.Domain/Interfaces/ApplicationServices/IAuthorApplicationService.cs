@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DND.Domain.Interfaces.ApplicationServices
 {
-    public interface IAuthorApplicationService : IBaseEntityApplicationService<AuthorDto, AuthorDto, AuthorDto, AuthorDto>
+    public interface IAuthorApplicationService : IBaseEntityApplicationService<AuthorDto, AuthorDto, AuthorDto, AuthorDeleteDto>
     {
         Task<AuthorDto> GetAuthorAsync(string authorSlug, CancellationToken cancellationToken);
     }

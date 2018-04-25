@@ -10,7 +10,7 @@ namespace DND.EFPersistance.Configurations.Blog.Categories
         {
             HasKey(p => p.Id);
 
-            //Property(p => p.RowVersion).IsRowVersion();
+            Property(p => p.RowVersion).IsRowVersion();
 
             Property(p => p.Name)
                  .IsRequired()
