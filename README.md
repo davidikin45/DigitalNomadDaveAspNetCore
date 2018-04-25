@@ -55,4 +55,4 @@ This project is licensed under the MIT License
 
 * [Building a RESTful API with ASP.NET Core](https://app.pluralsight.com/library/courses/asp-dot-net-core-restful-api-building/table-of-contents)
 
-* [Enterprise Patterns: Concurrency in Business Applications] https://app.pluralsight.com/library/courses/enterprise-patterns-concurrency-business-applications/table-of-contents
+* [Enterprise Patterns: Concurrency in Business Applications] (https://app.pluralsight.com/library/courses/enterprise-patterns-concurrency-business-applications/table-of-contents)
