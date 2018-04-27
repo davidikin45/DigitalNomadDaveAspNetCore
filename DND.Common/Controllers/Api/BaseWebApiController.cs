@@ -70,19 +70,7 @@ namespace DND.Common.Controllers.Api
 
         protected virtual IActionResult ValidationErrors(string message, ModelStateDictionary modelState)
         {
-            var errors = modelState.Values.SelectMany(v => v.Errors);
-            var errorList = new List<string>();
-            foreach (var error in errors)
-            {
-                errorList.Add(error.ErrorMessage);
-            }
-
-            var response = WebApiMessage.CreateWebApiMessage(message, errorList, modelState);
-
-            var result = new ObjectResult(response);
-            result.StatusCode = 422;
-
-            return result;
+            return new UnprocessableEntityObjectResult(message, modelState);
         }
 
         //protected virtual IHttpActionResult BetterJsonError(string message, ValidationErrors errors, int errorStatusCode = 400)

@@ -15,7 +15,7 @@ namespace DND.Common.Swagger
         {
             if (context.SystemType == typeof(Microsoft.AspNetCore.JsonPatch.Operations.Operation))
             {
-                model.Example = new { op = "add/replace/remove", path = "/property", value = "value", from = "/property" };
+                model.Example = new { op = "add/replace/remove/copy/move/test", path = "/property", value = "value", from = "/property" };
             };
         }
     }

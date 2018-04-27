@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -105,6 +106,17 @@ namespace DND.Web
                     }
                 );
 
+            //Add this to controller or action using Authorize(Policy = "UserMustBeAdmin")
+            //Can create custom requirements by implementing IAuthorizationRequirement and AuthorizationHandler (Needs to be added to services as scoped)
+            services.AddAuthorization(options => {
+                options.AddPolicy("UserMustBeAdmin", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.RequireRole("Admin");
+                    //policyBuilder.AddRequirements();
+                });
+            });
+
             services.AddTransient<IEmailSender, EmailSender>();
 
             string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
@@ -167,6 +179,30 @@ namespace DND.Web
 
                 //Prevents returning object representation in default format when request format isn't available
                 options.ReturnHttpNotAcceptable = true;
+
+
+                //Variable resource representations
+                //Use RequestHeaderMatchesMediaTypeAttribute to route for Accept header. Version media types not URI!
+                var jsonOutputFormatter = options.OutputFormatters
+                   .OfType<JsonOutputFormatter>().FirstOrDefault();
+
+                if (jsonOutputFormatter != null)
+                {
+                   // jsonOutputFormatter.SupportedMediaTypes
+                   //.Add("application/vnd.dnd.tour.v1+json");
+                   // jsonOutputFormatter.SupportedMediaTypes
+                   //.Add("application/vnd.dnd.tourwithestimatedprofits.v1+json");
+                }
+
+                var jsonInputFormatter = options.InputFormatters
+                   .OfType<JsonInputFormatter>().FirstOrDefault();
+                if (jsonInputFormatter != null)
+                {
+                   // jsonInputFormatter.SupportedMediaTypes
+                   //.Add("application/vnd.dnd.tourforcreation.v1+json");
+                   // jsonInputFormatter.SupportedMediaTypes
+                   //.Add("application/vnd.dnd.tourwithmanagerforcreation.v1+json");
+                }
 
                 options.FormatterMappings.SetMediaTypeMappingForFormat(
                                            "xml", "application/xml");

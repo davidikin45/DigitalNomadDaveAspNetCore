@@ -17,6 +17,6 @@ namespace DND.Common.Implementation.Dtos
     {
         //Optimistic Concurrency
         [HiddenInput, Render(ShowForCreate = false, ShowForDisplay = false, ShowForEdit = true, ShowForGrid = false)]
-        public byte[] RowVersion { get; set; }
+        public virtual byte[] RowVersion { get; set; }
     }
 }

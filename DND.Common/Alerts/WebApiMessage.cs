@@ -45,18 +45,32 @@ namespace DND.Common.Alerts
             this.Message = message;
             this.Errors = errors;
 
-            this.ModelState = new Dictionary<string, List<string>>();
+            this.ModelState = new Dictionary<string, List<AngularFormattedValidationError>>();
 
             if (modelState != null)
             {
 
                 foreach (KeyValuePair<string, ModelStateEntry> property in modelState)
                 {
-                    var propertyMessages = new List<string>();
+                    var propertyMessages = new List<AngularFormattedValidationError>();
                     foreach (ModelError modelError in property.Value.Errors)
                     {
-                        propertyMessages.Add(modelError.ErrorMessage);
+                        var keyAndMessage = modelError.ErrorMessage.Split('|');
+                        if (keyAndMessage.Count() > 1)
+                        {
+                            //Formatted for Angular Binding
+                            //e.g required|Error Message
+                            propertyMessages.Add(new AngularFormattedValidationError(
+                                keyAndMessage[1],
+                                keyAndMessage[0]));
+                        }
+                        else
+                        {
+                            propertyMessages.Add(new AngularFormattedValidationError(
+                                keyAndMessage[0]));
+                        }
                     }
+
                     this.ModelState.Add(property.Key, propertyMessages);
                 }
 
@@ -95,7 +109,19 @@ namespace DND.Common.Alerts
 
         [DataMember]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IDictionary<string, List<string>> ModelState { get; private set; }
+        public IDictionary<string, List<AngularFormattedValidationError>> ModelState { get; private set; }
 
+    }
+
+    public class AngularFormattedValidationError
+    {
+        public string ValidatorKey { get; private set; }
+        public string Message { get; private set; }
+
+        public AngularFormattedValidationError(string message, string validatorKey = "")
+        {
+            ValidatorKey = validatorKey;
+            Message = message;
+        }
     }
 }

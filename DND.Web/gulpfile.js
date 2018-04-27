@@ -26,15 +26,21 @@ var regex = {
     js: /\.js$/
 };
 
-gulp.task("less", function () {
+function less()
+{
     return gulp.src('Styles/*.less')
         .pipe(less())
         .pipe(gulp.dest('wwwroot/css'));
-});
+}
 
-gulp.task("min", ["min:js", "min:css", "min:html"]);
+gulp.task("less", less);
 
-gulp.task("min:js", function () {
+var min = gulp.series(gulp.parallel(minjs, mincss, minhtml));
+
+gulp.task("min", min);
+
+function minjs()
+{
     var tasks = getBundles(regex.js).map(function (bundle) {
         return gulp.src(bundle.inputFiles, { base: "." })
             .pipe(concat(bundle.outputFileName))
@@ -42,9 +48,12 @@ gulp.task("min:js", function () {
             .pipe(gulp.dest("."));
     });
     return merge(tasks);
-});
+}
 
-gulp.task("min:css", function () {
+gulp.task("min:js", minjs);
+
+function mincss()
+{
     var tasks = getBundles(regex.css).map(function (bundle) {
         return gulp.src(bundle.inputFiles, { base: "." })
             .pipe(concat(bundle.outputFileName))
@@ -52,9 +61,12 @@ gulp.task("min:css", function () {
             .pipe(gulp.dest("."));
     });
     return merge(tasks);
-});
+}
 
-gulp.task("min:html", function () {
+gulp.task("min:css", mincss);
+
+function minhtml()
+{
     var tasks = getBundles(regex.html).map(function (bundle) {
         return gulp.src(bundle.inputFiles, { base: "." })
             .pipe(concat(bundle.outputFileName))
@@ -62,18 +74,22 @@ gulp.task("min:html", function () {
             .pipe(gulp.dest("."));
     });
     return merge(tasks);
-});
+}
 
-gulp.task("clean", function () {
+gulp.task("min:html", minhtml);
+
+function clean()
+{
     var files = bundleconfig.map(function (bundle) {
-        return bundle.outputFileName;
+        return bundle.outputFileName.toString();
     });
+   return del(files);
+}
 
-    return del(files);
-});
+gulp.task("clean", clean);
 
-gulp.task("watch", function () {
-
+function watch()
+{
     gulp.watch('Styles/*.less', ['less']);
     gulp.watch('Scripts/*.js', ['scripts']);
 
@@ -88,7 +104,9 @@ gulp.task("watch", function () {
     getBundles(regex.html).forEach(function (bundle) {
         gulp.watch(bundle.inputFiles, ["min:html"]);
     });
-});
+}
+
+gulp.task("watch", watch);
 
 function getBundles(regexPattern) {
     return bundleconfig.filter(function (bundle) {
@@ -153,8 +171,8 @@ var deps = {
 };
 
 
-gulp.task("scripts", function () {
-
+function scripts()
+{
     gulp.src(paths.scripts).pipe(gulp.dest('wwwroot/js'));
     //gulp.src(angularPaths.scripts).pipe(gulp.dest('wwwroot/js/clientapp'));
 
@@ -169,5 +187,6 @@ gulp.task("scripts", function () {
     }
 
     return merge(streams);
+}
 
-});
+gulp.task("scripts", scripts);

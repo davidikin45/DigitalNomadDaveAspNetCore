@@ -14,7 +14,7 @@
           "lib/net46/AspNetCoreRateLimit.dll": {}
         }
       },
-      "Autofac/4.7.0": {
+      "Autofac/4.8.0": {
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
@@ -1842,7 +1842,7 @@
           "lib/net45/Serilog.Sinks.File.dll": {}
         }
       },
-      "Serilog.Sinks.MSSqlServer/5.1.1": {
+      "Serilog.Sinks.MSSqlServer/5.1.2": {
         "type": "package",
         "dependencies": {
           "Serilog": "2.5.0",
@@ -2927,7 +2927,7 @@
           "lib/net46/AspNetCoreRateLimit.dll": {}
         }
       },
-      "Autofac/4.7.0": {
+      "Autofac/4.8.0": {
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
@@ -4718,7 +4718,7 @@
           "lib/net45/Serilog.Sinks.File.dll": {}
         }
       },
-      "Serilog.Sinks.MSSqlServer/5.1.1": {
+      "Serilog.Sinks.MSSqlServer/5.1.2": {
         "type": "package",
         "dependencies": {
           "Serilog": "2.5.0",
@@ -5694,12 +5694,12 @@
         "lib/netstandard1.6/AspNetCoreRateLimit.dll"
       ]
     },
-    "Autofac/4.7.0": {
-      "sha512": "y3QWj9NE+riKfgIxuouKJPmGchhj18jVSbw06S7PF8DMAnje2V74hF1yMzwXhtLkfB/L7oalhya4ZMNf80j73w==",
+    "Autofac/4.8.0": {
+      "sha512": "4U+vKK+a/JPF9Qo487NeR2MXG6NBkfbA77RSp4NMiZ5EkyjSsRnNtYp9HvLGBJNrYWNY2mMul9yYyHWipZ5TFw==",
       "type": "package",
-      "path": "autofac/4.7.0",
+      "path": "autofac/4.8.0",
       "files": [
-        "autofac.4.7.0.nupkg.sha512",
+        "autofac.4.8.0.nupkg.sha512",
         "autofac.nuspec",
         "lib/net45/Autofac.dll",
         "lib/net45/Autofac.xml",
@@ -7434,10 +7434,10 @@
         "serilog.sinks.file.nuspec"
       ]
     },
-    "Serilog.Sinks.MSSqlServer/5.1.1": {
-      "sha512": "JGg/KBbMChaD3QPg+4AnsoWu4TlULQsbgNPIv4IzTFrGInmVmEm94orlut1sHD6Si4FQZZbAlFuNns2Lzr9L/Q==",
+    "Serilog.Sinks.MSSqlServer/5.1.2": {
+      "sha512": "+FU05c8tKomMmKy0m1FXPciuKBkTPY1blBm5zrRTXCisuB87aT1bR8m8HGaUnSwIrIP7nSISub4+qyBHf+zpKw==",
       "type": "package",
-      "path": "serilog.sinks.mssqlserver/5.1.1",
+      "path": "serilog.sinks.mssqlserver/5.1.2",
       "files": [
         "lib/net45/Serilog.Sinks.MSSqlServer.dll",
         "lib/net45/Serilog.Sinks.MSSqlServer.xml",
@@ -7445,7 +7445,7 @@
         "lib/net452/Serilog.Sinks.MSSqlServer.xml",
         "lib/netstandard2.0/Serilog.Sinks.MSSqlServer.dll",
         "lib/netstandard2.0/Serilog.Sinks.MSSqlServer.xml",
-        "serilog.sinks.mssqlserver.5.1.1.nupkg.sha512",
+        "serilog.sinks.mssqlserver.5.1.2.nupkg.sha512",
         "serilog.sinks.mssqlserver.nuspec"
       ]
     },
@@ -10625,7 +10625,7 @@
     ".NETFramework,Version=v4.7": [
       "AspNetCoreRateLimit >= 2.1.0",
       "AutoMapper >= 6.2.2",
-      "Autofac >= 4.7.0",
+      "Autofac >= 4.8.0",
       "Autofac.Extensions.DependencyInjection >= 4.2.2",
       "DND.Common >= 1.0.0",
       "DND.Domain >= 1.0.0",
@@ -10652,7 +10652,7 @@
       "Serilog.Settings.Configuration >= 2.6.1",
       "Serilog.Sinks.Console >= 3.1.1",
       "Serilog.Sinks.Debug >= 1.0.1",
-      "Serilog.Sinks.MSSqlServer >= 5.1.1",
+      "Serilog.Sinks.MSSqlServer >= 5.1.2",
       "Serilog.Sinks.RollingFile >= 3.3.0",
       "Swashbuckle.AspNetCore >= 2.4.0",
       "System.Data.SQLite >= 1.0.108",
@@ -10726,7 +10726,7 @@
           },
           "Autofac": {
             "target": "Package",
-            "version": "[4.7.0, )"
+            "version": "[4.8.0, )"
           },
           "Autofac.Extensions.DependencyInjection": {
             "target": "Package",
@@ -10819,7 +10819,7 @@
           },
           "Serilog.Sinks.MSSqlServer": {
             "target": "Package",
-            "version": "[5.1.1, )"
+            "version": "[5.1.2, )"
           },
           "Serilog.Sinks.RollingFile": {
             "target": "Package",

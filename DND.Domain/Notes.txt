@@ -1,0 +1,3 @@
+﻿TODO: Need to refactor dtos for purpose. e.g CreateDto, ReadDto, UpdateDto, DeleteDto
+Better security and more control over differentiating add/update/delete validation
+This will mean can't inherit from base Dto with Id and RowVersion.
