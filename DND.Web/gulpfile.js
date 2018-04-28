@@ -35,7 +35,9 @@ function lessFunc()
 
 gulp.task("less", lessFunc);
 
-var min = gulp.series(gulp.parallel(minjs, mincss));
+var min = gulp.series(gulp.parallel(minjs, mincss, function (done) {
+    return minhtml(done);
+}));
 
 gulp.task("min", min);
 
@@ -65,7 +67,7 @@ function mincss()
 
 gulp.task("min:css", mincss);
 
-function minhtml()
+function minhtml(done)
 {
     var tasks = getBundles(regex.html).map(function (bundle) {
         return gulp.src(bundle.inputFiles, { base: "." })
@@ -73,10 +75,21 @@ function minhtml()
             .pipe(htmlmin({ collapseWhitespace: true, minifyCSS: true, minifyJS: true }))
             .pipe(gulp.dest("."));
     });
-    return merge(tasks);
+
+
+    if (tasks && tasks.length > 0)
+    {
+        return merge(tasks);
+    }
+    else
+    {
+        return done();
+    }
 }
 
-gulp.task("min:html", minhtml);
+gulp.task("min:html", function (done) {
+    return minhtml(done);
+});
 
 function clean()
 {
