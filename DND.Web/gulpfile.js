@@ -26,16 +26,16 @@ var regex = {
     js: /\.js$/
 };
 
-function less()
+function lessFunc()
 {
-    return gulp.src('Styles/*.less')
+   return gulp.src('Styles/*.less')
         .pipe(less())
         .pipe(gulp.dest('wwwroot/css'));
 }
 
-gulp.task("less", less);
+gulp.task("less", lessFunc);
 
-var min = gulp.series(gulp.parallel(minjs, mincss, minhtml));
+var min = gulp.series(gulp.parallel(minjs, mincss));
 
 gulp.task("min", min);
 
@@ -90,19 +90,19 @@ gulp.task("clean", clean);
 
 function watch()
 {
-    gulp.watch('Styles/*.less', ['less']);
-    gulp.watch('Scripts/*.js', ['scripts']);
+    gulp.watch('Styles/*.less', less);
+    gulp.watch('Scripts/*.js', scripts);
 
     getBundles(regex.js).forEach(function (bundle) {
-        gulp.watch(bundle.inputFiles, ["min:js"]);
+        gulp.watch(bundle.inputFiles, minjs);
     });
 
     getBundles(regex.css).forEach(function (bundle) {
-        gulp.watch(bundle.inputFiles, ["min:css"]);
+        gulp.watch(bundle.inputFiles, mincss);
     });
 
     getBundles(regex.html).forEach(function (bundle) {
-        gulp.watch(bundle.inputFiles, ["min:html"]);
+        gulp.watch(bundle.inputFiles, minhtml);
     });
 }
 
