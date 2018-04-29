@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/DND.Web",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:54428/",
       "sslPort": 0
@@ -16,7 +20,8 @@
       }
     },
     "DND.Web": {
-      "commandName": "Project",
+      "commandName": "Executable",
+      "executablePath": "C:\\Development\\DigitalNomadDaveAspNetCore\\DND.Web\\bin\\Debug\\net47\\DND.Web.exe",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

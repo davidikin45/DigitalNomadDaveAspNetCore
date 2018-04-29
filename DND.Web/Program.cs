@@ -11,6 +11,7 @@ using DND.Common.DependencyInjection.Autofac;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Collections.Generic;
 
 namespace DND.Web
 {
@@ -26,29 +27,46 @@ namespace DND.Web
         //Error = 4
         //Critical = 5
 
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+        //Default Environment
+        private static readonly Dictionary<string, string> defaults = new Dictionary<string, string> {{ WebHostDefaults.EnvironmentKey, "Production" }};
+
+        public static IConfiguration Configuration;
+
+        public static void LoadConfiguration(string[] args)
+        {
+            var config = new ConfigurationBuilder()
+           .AddInMemoryCollection(defaults)
           .SetBasePath(Directory.GetCurrentDirectory())
           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-          .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-          .AddEnvironmentVariables()
-          .Build();
+          .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true, reloadOnChange: true)
+          .AddEnvironmentVariables("ASPNETCORE_");
+
+            if (args != null)
+            {
+                config.AddCommandLine(args);
+            }
+
+            Configuration = config.Build();
+        }
 
         public static int Main(string[] args)
         {
+            LoadConfiguration(args);
+
             Log.Logger = new LoggerConfiguration()
               .ReadFrom.Configuration(Configuration)
               .Enrich.FromLogContext()
               .CreateLogger();
 
             //SQL Logging
-        //    {
-        //        "Name": "MSSqlServer",
-        //"Args": {
-        //            "connectionString": "Connection String",
-        //  "tableName": "Log",
-        //  "autoCreateSqlTable": true
-        //}
-        //    }
+            //    {
+            //        "Name": "MSSqlServer",
+            //"Args": {
+            //            "connectionString": "Connection String",
+            //  "tableName": "Log",
+            //  "autoCreateSqlTable": true
+            //}
+            //    }
 
             //Serilog.Debugging.SelfLog.Enable(msg =>
             //{
@@ -86,7 +104,7 @@ namespace DND.Web
             finally
             {
                 Log.CloseAndFlush();
-            }          
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

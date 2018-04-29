@@ -30,7 +30,7 @@ namespace DND.Web.Implementation.Gallery.Controllers
             _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
         }
 
-        //[ResponseCache(CacheProfileName = "Cache24HourParams")]
+        [ResponseCache(CacheProfileName = "Cache24HourParams")]
         [Route("")]
         public async Task<ActionResult> Index(int page = 1, int pageSize = 20, string orderColumn = nameof(DirectoryInfo.LastWriteTime), string orderType = OrderByType.Descending, string search = "")
 		{
