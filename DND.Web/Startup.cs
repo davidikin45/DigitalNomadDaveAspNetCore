@@ -372,7 +372,6 @@ namespace DND.Web
                      }
                 );
 
-
                 // Web Api
                 app.UseWhen(context => context.Request.Path.ToString().StartsWith("/api"),
                     appBranch =>
@@ -479,69 +478,11 @@ namespace DND.Web
 
             app.UseDefaultFiles();
 
-            //versioned files can have large expiry time
-            app.UseWhen(context => context.Request.Query.ContainsKey("v"),
-                   appBranch =>
-                   {
-                       //cache js, css
-                       app.UseStaticFiles(new StaticFileOptions
-                       {
-                           OnPrepareResponse = ctx =>
-                           {
-                               var days = 30;
-                               if (days > 0)
-                               {
-                                   TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
-                                   ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
-                                   ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                   {
-                                       Public = true,
-                                       MaxAge = timeSpan
-                                   };
-                               }
-                               else
-                               {
-                                   ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                   {
-                                       NoCache = true
-                                   };
-                               }
-                           }
-                       });
-                   }
-              );
+            //versioned files can have large cache expiry time
+            app.UseVersionedStaticFiles(30);
 
             //non versioned files
-            app.UseWhen(context => !context.Request.Query.ContainsKey("v"),
-                 appBranch =>
-                 {
-                       //cache js, css
-                       app.UseStaticFiles(new StaticFileOptions
-                     {
-                         OnPrepareResponse = ctx =>
-                         {
-                             var days = 1;
-                             if (days > 0)
-                             {
-                                 TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
-                                 ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
-                                 ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                 {
-                                     Public = true,
-                                     MaxAge = timeSpan
-                                 };
-                             }
-                             else
-                             {
-                                 ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                 {
-                                     NoCache = true
-                                 };
-                             }
-                         }
-                     });
-                 }
-            );
+            app.UseNonVersionedStaticFiles(1);
 
             app.UseAuthentication();
 

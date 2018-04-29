@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 namespace DND.Common.Middleware
 {
@@ -29,6 +31,74 @@ namespace DND.Common.Middleware
            this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<ResponseCachingCustomMiddleware>();
+        }
+
+        public static IApplicationBuilder UseVersionedStaticFiles(
+         this IApplicationBuilder app, int days)
+        {
+           return app.UseWhen(context => context.Request.Query.ContainsKey("v"),
+                  appBranch =>
+                  {
+                      //cache js, css
+                      appBranch.UseStaticFiles(new StaticFileOptions
+                      {
+                          OnPrepareResponse = ctx =>
+                          {
+                              if (days > 0)
+                              {
+                                  TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
+                                  ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
+                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                  {
+                                      Public = true,
+                                      MaxAge = timeSpan
+                                  };
+                              }
+                              else
+                              {
+                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                  {
+                                      NoCache = true
+                                  };
+                              }
+                          }
+                      });
+                  }
+             );
+        }
+
+        public static IApplicationBuilder UseNonVersionedStaticFiles(
+       this IApplicationBuilder app, int days)
+        {
+           return app.UseWhen(context => !context.Request.Query.ContainsKey("v"),
+                  appBranch =>
+                  {
+                      //cache js, css
+                      appBranch.UseStaticFiles(new StaticFileOptions
+                      {
+                          OnPrepareResponse = ctx =>
+                          {
+                              if (days > 0)
+                              {
+                                  TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
+                                  ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
+                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                  {
+                                      Public = true,
+                                      MaxAge = timeSpan
+                                  };
+                              }
+                              else
+                              {
+                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                  {
+                                      NoCache = true
+                                  };
+                              }
+                          }
+                      });
+                  }
+             );
         }
 
         public static IServiceCollection AddHangfireSqlServer(this IServiceCollection services, string connectionString)
