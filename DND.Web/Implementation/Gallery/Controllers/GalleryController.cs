@@ -47,7 +47,7 @@ namespace DND.Web.Implementation.Gallery.Controllers
                 var data = dataTask.Result;
                 var total = totalTask.Result;
 
-                var response = new WebApiPagedResponsedto<DirectoryInfo>
+                var response = new WebApiPagedResponseDto<DirectoryInfo>
                 {
                     Page = page,
                     PageSize = pageSize,
@@ -134,7 +134,7 @@ namespace DND.Web.Implementation.Gallery.Controllers
             }
         }
 
-        private async Task<WebApiPagedResponsedto<FileInfo>> GetGalleryViewModel(string physicalPath, int page = 1, int pageSize = 40, string orderColumn = nameof(FileInfo.LastWriteTime), string orderType = OrderByType.Descending)
+        private async Task<WebApiPagedResponseDto<FileInfo>> GetGalleryViewModel(string physicalPath, int page = 1, int pageSize = 40, string orderColumn = nameof(FileInfo.LastWriteTime), string orderType = OrderByType.Descending)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -147,7 +147,7 @@ namespace DND.Web.Implementation.Gallery.Controllers
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            var response = new WebApiPagedResponsedto<FileInfo>
+            var response = new WebApiPagedResponseDto<FileInfo>
             {
                 Page = page,
                 PageSize = pageSize,

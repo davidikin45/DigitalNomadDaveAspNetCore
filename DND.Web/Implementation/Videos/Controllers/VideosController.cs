@@ -80,7 +80,7 @@ namespace DND.Web.Implementation.Videos.Controllers
             }
         }
 
-        private async Task<WebApiPagedResponsedto<FileInfo>> GetVideosViewModel(string physicalPath, int page = 1, int pageSize = 40, string orderColumn = nameof(FileInfo.LastWriteTime), string orderType = OrderByType.Descending)
+        private async Task<WebApiPagedResponseDto<FileInfo>> GetVideosViewModel(string physicalPath, int page = 1, int pageSize = 40, string orderColumn = nameof(FileInfo.LastWriteTime), string orderType = OrderByType.Descending)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -93,7 +93,7 @@ namespace DND.Web.Implementation.Videos.Controllers
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            var response = new WebApiPagedResponsedto<FileInfo>
+            var response = new WebApiPagedResponseDto<FileInfo>
             {
                 Page = page,
                 PageSize = pageSize,

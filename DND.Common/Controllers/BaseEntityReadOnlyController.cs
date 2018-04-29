@@ -58,7 +58,7 @@ namespace DND.Common.Controllers
                 var data = dataTask.Result;
                 var total = totalTask.Result;
 
-                var response = new WebApiPagedResponsedto<TDto>
+                var response = new WebApiPagedResponseDto<TDto>
                 {
                     Page = page,
                     PageSize = pageSize,

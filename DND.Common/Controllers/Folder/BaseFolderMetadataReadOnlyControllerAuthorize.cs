@@ -68,7 +68,7 @@ namespace DND.Common.Controllers
                     dto.Id = dto.Id.Replace(PhysicalPath, "");
                 }
 
-                var response = new WebApiPagedResponsedto<FolderMetadataDto>
+                var response = new WebApiPagedResponseDto<FolderMetadataDto>
                 {
                     Page = page,
                     PageSize = pageSize,

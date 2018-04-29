@@ -40,7 +40,7 @@ namespace DND.Web.Implementation.Location.Controllers
                 var data = dataTask.Result;
                 var total = totalTask.Result;
 
-                var response = new WebApiPagedResponsedto<LocationDto>
+                var response = new WebApiPagedResponseDto<LocationDto>
                 {
                     Page = page,
                     PageSize = pageSize,

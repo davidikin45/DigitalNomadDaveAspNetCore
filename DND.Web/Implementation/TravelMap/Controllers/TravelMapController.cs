@@ -38,7 +38,7 @@ namespace DND.Web.Implementation.TravelMap.Controllers
                 var data = dataTask.Result;
                 var total = totalTask.Result;
 
-                var response = new WebApiPagedResponsedto<LocationDto>
+                var response = new WebApiPagedResponseDto<LocationDto>
                 {
                     Page = 1,
                     PageSize = total,

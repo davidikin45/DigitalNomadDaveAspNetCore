@@ -122,14 +122,12 @@
     <Folder Include="Implementation\TravelMap\Api\" />
     <Folder Include="Implementation\TravelMap\Models\" />
     <Folder Include="Implementation\TravelMap\ViewComponents\" />
-    <Folder Include="Implementation\TravelMap\Views\" />
     <Folder Include="Views\" />
     <Folder Include="ViewComponents\" />
     <Folder Include="Scripts_Compile\" />
     <Folder Include="Implementation\Videos\Api\" />
     <Folder Include="Implementation\Videos\Models\" />
     <Folder Include="Implementation\Videos\ViewComponents\" />
-    <Folder Include="Implementation\Videos\Views\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\FileManager\tmp\" />
     <Folder Include="wwwroot\images\" />

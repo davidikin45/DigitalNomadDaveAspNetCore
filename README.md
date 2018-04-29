@@ -20,6 +20,7 @@ A custom built Content Management System using Bootstrap 4, Angular and C# MVC C
 * [Hangfire](https://rometools.github.io/rome/) - Background job processing
 * [Swagger](https://swagger.io/) - API testing
 * [Http Cache Headers](https://github.com/KevinDockx/HttpCacheHeaders) - ETags
+* [WebSurge](http://websurge.west-wind.com/) - Load Testing
 
 ## Authors
 

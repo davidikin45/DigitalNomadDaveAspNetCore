@@ -37,7 +37,7 @@ namespace DND.Web.Implementation.Faq.ViewComponents
             total = totalTask.Result;
 
 
-            var response = new WebApiPagedResponsedto<FaqDto>
+            var response = new WebApiPagedResponseDto<FaqDto>
             {
                 Page = 1,
                 PageSize = total,

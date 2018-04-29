@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Dtos
 {
-    public class WebApiPagedResponsedto<T>
+    public class WebApiPagedResponseDto<T>
     {
         public int Page
         { get; set; }

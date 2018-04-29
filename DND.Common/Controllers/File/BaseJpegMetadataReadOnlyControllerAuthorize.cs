@@ -64,7 +64,7 @@ namespace DND.Common.Controllers
 
                 var rows = data.ToList().Select(Mapper.Map<JpegMetadata, JpegMetadataDto>).ToList();
 
-                var response = new WebApiPagedResponsedto<JpegMetadataDto>
+                var response = new WebApiPagedResponseDto<JpegMetadataDto>
                 {
                     Page = page,
                     PageSize = pageSize,

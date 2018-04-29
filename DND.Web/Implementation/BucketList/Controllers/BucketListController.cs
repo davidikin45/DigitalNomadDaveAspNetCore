@@ -46,7 +46,7 @@ namespace DND.Web.Implementation.BucketList.Controllers
                 var data = dataTask.Result;
                 var total = totalTask.Result;
 
-                var response = new WebApiPagedResponsedto<FileInfo>
+                var response = new WebApiPagedResponseDto<FileInfo>
                 {
                     Page = page,
                     PageSize = pageSize,

@@ -154,7 +154,7 @@ namespace DND.Common.Controllers.Api
         [HttpGet]
         //[HttpPost]
         [HttpHead]
-        [ProducesResponseType(typeof(WebApiPagedResponsedto<object>), 200)]
+        [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
         public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDto resourceParameters)
         {
             if (string.IsNullOrEmpty(resourceParameters.OrderBy))
@@ -176,7 +176,7 @@ namespace DND.Common.Controllers.Api
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            //var response = new WebApiPagedResponsedto<TDto>
+            //var response = new WebApiPagedResponseDto<TDto>
             //{
             //    Page = jqParams.Page,
             //    PageSize = jqParams.PageSize,
@@ -184,7 +184,7 @@ namespace DND.Common.Controllers.Api
             //    Rows = data.ToList()
             //};
 
-            var paginationMetadata = new WebApiPagedResponsedto<TDto>
+            var paginationMetadata = new WebApiPagedResponseDto<TDto>
             {
                 Page = resourceParameters.Page,
                 PageSize = resourceParameters.PageSize,
@@ -238,7 +238,7 @@ namespace DND.Common.Controllers.Api
         [Route("get-all-paged")]
         [Route("get-all-paged.{format}")]
         [HttpGet]
-        [ProducesResponseType(typeof(WebApiPagedResponsedto<object>), 200)]
+        [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
         public virtual async Task<IActionResult> GetAllPaged()
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -252,7 +252,7 @@ namespace DND.Common.Controllers.Api
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            //var response = new WebApiPagedResponsedto<TDto>
+            //var response = new WebApiPagedResponseDto<TDto>
             //{
             //    CurrentPage = 1,
             //    PageSize = total,
@@ -260,7 +260,7 @@ namespace DND.Common.Controllers.Api
             //    Rows = data.ToList()
             //};
 
-            var paginationMetadata = new WebApiPagedResponsedto<TDto>
+            var paginationMetadata = new WebApiPagedResponseDto<TDto>
             {
                 Page = 1,
                 PageSize = total,
