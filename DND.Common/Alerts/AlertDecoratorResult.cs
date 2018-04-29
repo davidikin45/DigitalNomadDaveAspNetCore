@@ -24,13 +24,13 @@ namespace DND.Common.Alerts
 
         public async override Task ExecuteResultAsync(ActionContext context)
         {
-            Controller.TempData.AddAlert(new Alert(AlertClass, Message));
+            Controller.TempData.AddAlert(new Alert(AlertClass, Message), context.HttpContext);
             await InnerResult.ExecuteResultAsync(context);
         }
 
         public override void ExecuteResult(ActionContext context)
 		{
-            Controller.TempData.AddAlert(new Alert(AlertClass, Message));
+            Controller.TempData.AddAlert(new Alert(AlertClass, Message), context.HttpContext);
 			InnerResult.ExecuteResult(context);
 		}
 	}

@@ -424,18 +424,48 @@ namespace DND.Web
 
             app.UseCors("AllowAnyOrigin");
 
+            //Cache-Control:max-age=0
+            //This is equivalent to clicking Refresh, which means, give me the latest copy unless I already have the latest copy.
+            //Cache-Control:no-cache 
+            //This is holding Shift while clicking Refresh, which means, just redo everything no matter what.
 
-            //Unsure about ETag and Response caching order. The pluralsight video restful api building has them the other way around.
-            //This is Etags *
-            app.UseHttpCacheHeaders();
+            //Should only be used for server side HTML cachcing or Read Only API. Doesn't really make sense to use Response Caching for CRUD API. 
+
+            //Will only attempt serve AND store caching if:
+            //1. Controller or Action has ResponseCache attribute with Location = ResponseCacheLocation.Any
+            //2. Request method is GET OR HEAD
+            //3. AND Authorization header is not included
+
+            //Will only attempt to serve from cache if:
+            //1. Request header DOES NOT contain Cache-Control: no-cache (HTTP/1.1) AND Pragma: no-cache (HTTP/1.0)
+            //2. AND Request header DOES NOT contain Cache-Control: max-age=0. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
+            //3. AND Request header If-None-Match != Cached ETag
+            //4. AND Request header If-Modified-Since < Cached Last Modified (Time it was stored in cache)
+
+            //Will only attempt to store in cache if:
+            //1. Request header DOES NOT contain Cache-Control: no-store
+            //2. AND Response header DOES NOT contain Cache-Control: no-store
+            //3. AND Response header does not contain Set-Cookie
+            //4. AND Response Status is 200
+
+            //When storing
+            //1. Stores all headers except Age
+            //2. Stores Body
+            //3. Stores Length
 
             //In memory cache
             //https://www.devtrends.co.uk/blog/a-guide-to-caching-in-asp.net-core
             //Unfortunately, the built-in response caching middleware makes this very difficult. 
             //Firstly, the same cache duration is used for both client and server caches. Secondly, currently there is no easy way to invalidate cache entries.
             //app.UseResponseCaching();
-            //Request Header Cache-Control: max-age:0 or no-cache will bypass Response Caching. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
+            //Request Header Cache-Control: max-age=0 or no-cache will bypass Response Caching. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
             app.UseResponseCachingCustom(); //Allows Invalidation
+
+            //Works for: GET, HEAD (efficiency, and saves bandwidth)
+            //Works for: PUT, PATCH (Concurrency)
+            //This is Etags
+            //Generating ETags is expensive. Putting this after response caching makes sense.
+            app.UseHttpCacheHeaders(true, true, true, true);   
 
             app.MapWhen(
                context => context.Request.Path.ToString().StartsWith("/uploads"),

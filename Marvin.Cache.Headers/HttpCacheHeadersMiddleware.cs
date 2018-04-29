@@ -5,6 +5,7 @@ using Marvin.Cache.Headers.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,21 @@ namespace Marvin.Cache.Headers
         private readonly ValidationModelOptions _validationModelOptions;
         private readonly ExpirationModelOptions _expirationModelOptions;
 
+        private readonly bool _checkGETHEAD;
+        private readonly bool _checkPATCHPUT;
+        private readonly bool _generateETag;
+        private readonly bool _addVaryHeaders;
+
         public HttpCacheHeadersMiddleware(
             RequestDelegate next,
             IValidationValueStore store,
             ILoggerFactory loggerFactory,
             IOptions<ExpirationModelOptions> expirationModelOptions,
-            IOptions<ValidationModelOptions> validationModelOptions)
+            IOptions<ValidationModelOptions> validationModelOptions,
+            bool checkGETHEAD, 
+            bool checkPATCHPUT,
+            bool generateETag,
+            bool addVaryHeaders)
         {
             if (next == null)
             {
@@ -65,108 +75,131 @@ namespace Marvin.Cache.Headers
             _expirationModelOptions = expirationModelOptions.Value;
             _validationModelOptions = validationModelOptions.Value;
             _logger = loggerFactory.CreateLogger<HttpCacheHeadersMiddleware>();
+
+            _checkGETHEAD = checkGETHEAD;
+            _checkPATCHPUT = checkPATCHPUT;
+            _generateETag = generateETag;
+            _addVaryHeaders = addVaryHeaders;
         }
 
         public async Task Invoke(HttpContext httpContext)
         {
             // check request ETag headers & dates
 
-            // GET & If-None-Match / IfModifiedSince: returns 304 when the resource hasn't
-            // been modified
-            if (await ConditionalGETorHEADIsValid(httpContext))
+            if(_checkGETHEAD)
             {
-                // still valid. Return 304, and update the Last-Modified date.
-                await Generate304NotModifiedResponse(httpContext);
-
-                // don't continue with the rest of the flow, we don't want
-                // to generate the response.
-                return;
-            }
-            else
-            {
-                _logger.LogInformation("Don't generate 304 - Not Modified.  Continue.");
-            }
-
-            // Check for If-Match / IfUnModifiedSince on PUT/PATCH.  Even though
-            // dates aren't guaranteed to be strong validators, the standard allows
-            // using these.  It's up to the server to ensure they are strong
-            // if they want to allow using them.
-            if (!(await ConditionalPUTorPATCHIsValid(httpContext)))
-            {
-                // not valid anymore.  Return a 412 response
-                await Generate412PreconditionFailedResponse(httpContext);
-
-                // don't continue with the rest of the flow, we don't want
-                // to generate the response.
-                return;
-            }
-            else
-            {
-                _logger.LogInformation("Don't generate 412 - Precondition Failed.  Continue.");
-            }
-
-            // We treat dates as weak tags.  There is no backup to IfUnmodifiedSince 
-            // for 412 responses. 
-
-            // work with an in-between memory buffer for the response body,
-            // otherwise we are unable to read it out (and thus cannot generate strong etags
-            // correctly)
-            // cfr: http://stackoverflow.com/questions/35458737/implement-http-cache-etag-in-asp-net-core-web-api
-
-            var stream = httpContext.Response.Body;
-            try
-            {
-                using (var buffer = new MemoryStream())
+                // GET & If-None-Match / IfModifiedSince: returns 304 when the resource hasn't
+                // been modified
+                if (await ConditionalGETorHEADIsValid(httpContext))
                 {
-                    // replace the context response with a temporary buffer
-                    httpContext.Response.Body = buffer;
+                    // still valid. Return 304, and update the Last-Modified date.
+                    await Generate304NotModifiedResponse(httpContext);
 
-                    // Call the next middleware delegate in the pipeline 
-                    await _next.Invoke(httpContext);
+                    // don't continue with the rest of the flow, we don't want
+                    // to generate the response.
+                    return;
+                }
+                else
+                {
+                    _logger.LogInformation("Don't generate 304 - Not Modified.  Continue.");
+                }
+            }
 
-                    // Handle the response (expiration, validation, vary headers)
+            if (_checkPATCHPUT)
+            {
+                // Check for If-Match / IfUnModifiedSince on PUT/PATCH.  Even though
+                // dates aren't guaranteed to be strong validators, the standard allows
+                // using these.  It's up to the server to ensure they are strong
+                // if they want to allow using them.
+                if (!(await ConditionalPUTorPATCHIsValid(httpContext)))
+                {
+                    // not valid anymore.  Return a 412 response
+                    await Generate412PreconditionFailedResponse(httpContext);
 
-                    // Handle expiration: Expires & Cache-Control headers
-                    // (these are also added for 304 / 412 responses)
+                    // don't continue with the rest of the flow, we don't want
+                    // to generate the response.
+                    return;
+                }
+                else
+                {
+                    _logger.LogInformation("Don't generate 412 - Precondition Failed.  Continue.");
+                }
+            }
 
-                    //Cache-control - Should probably use ResponseCache attribute instead. Gives more granularity at an action level
-                    //GenerateExpirationHeadersOnResponse(httpContext);
+            if(_generateETag || _addVaryHeaders)
+            {
+                // We treat dates as weak tags.  There is no backup to IfUnmodifiedSince 
+                // for 412 responses. 
 
-                    // Handle validation: ETag and Last-Modified headers
-                    GenerateValidationHeadersOnResponse(httpContext);
+                // work with an in-between memory buffer for the response body,
+                // otherwise we are unable to read it out (and thus cannot generate strong etags
+                // correctly)
+                // cfr: http://stackoverflow.com/questions/35458737/implement-http-cache-etag-in-asp-net-core-web-api
 
-                    // Generate Vary headers on the response
-                    GenerateVaryHeadersOnResponse(httpContext);
-
-                    // reset the buffer, read out the contents & copy it to the original stream.  This
-                    // will ensure our changes to the buffer are applied to the original stream.   
-                    if (httpContext.Response.StatusCode != 304)
+                var stream = httpContext.Response.Body;
+                try
+                {
+                    using (var buffer = new MemoryStream())
                     {
-                        buffer.Seek(0, SeekOrigin.Begin);
-                        var reader = new StreamReader(buffer);
-                        using (var bufferReader = new StreamReader(buffer))
+                        // replace the context response with a temporary buffer
+                        httpContext.Response.Body = buffer;
+
+                        // Call the next middleware delegate in the pipeline 
+                        await _next.Invoke(httpContext);
+
+                        // Handle the response (expiration, validation, vary headers)
+
+                        // Handle expiration: Expires & Cache-Control headers
+                        // (these are also added for 304 / 412 responses)
+
+                        //Cache-control - Should probably use ResponseCache attribute instead. Gives more granularity at an action level
+                        //GenerateExpirationHeadersOnResponse(httpContext);
+
+                        if (_generateETag)
                         {
-                            var body = await bufferReader.ReadToEndAsync();
+                            // Handle validation: ETag and Last-Modified headers
+                            GenerateValidationHeadersOnResponse(httpContext);
+                        }
 
-                            // reset to the start of the stream
+                        if (_addVaryHeaders)
+                        {
+                            // Generate Vary headers on the response
+                            GenerateVaryHeadersOnResponse(httpContext);
+                        }
+
+                        // reset the buffer, read out the contents & copy it to the original stream.  This
+                        // will ensure our changes to the buffer are applied to the original stream.   
+                        if (httpContext.Response.StatusCode != 304)
+                        {
                             buffer.Seek(0, SeekOrigin.Begin);
+                            var reader = new StreamReader(buffer);
+                            using (var bufferReader = new StreamReader(buffer))
+                            {
+                                var body = await bufferReader.ReadToEndAsync();
 
-                            // Copy the buffer content to the original stream.
-                            // This invokes Response.OnStarting (not used)  
-                            await buffer.CopyToAsync(stream);
+                                // reset to the start of the stream
+                                buffer.Seek(0, SeekOrigin.Begin);
 
-                            // set the response body back to the original stream
-                            httpContext.Response.Body = stream;
+                                // Copy the buffer content to the original stream.
+                                // This invokes Response.OnStarting (not used)  
+                                await buffer.CopyToAsync(stream);
+
+                                // set the response body back to the original stream
+                                httpContext.Response.Body = stream;
+                            }
                         }
                     }
                 }
+                catch
+                {
+                    httpContext.Response.Body = stream;
+                    throw;
+                }
             }
-            catch
+            else
             {
-                httpContext.Response.Body = stream;
-                throw;
+                await _next.Invoke(httpContext);
             }
-           
         }
 
         private async Task Generate412PreconditionFailedResponse(HttpContext httpContext)
@@ -238,6 +271,30 @@ namespace Marvin.Cache.Headers
             {
                 _logger.LogInformation("Not valid - method isn't GET or HEAD.");
                 return false;
+            }
+
+            //Check the Cache-Control and Pragma headers for no-cache
+            //No browser will ever send Cache-Control:no-cache AND an ETag but there is no reason why it's not possible.
+            if (false)
+            {
+                if (!StringValues.IsNullOrEmpty(httpContext.Request.Headers[HeaderNames.CacheControl]))
+                {
+                    if (HeaderUtilities.ContainsCacheDirective(httpContext.Request.Headers[HeaderNames.CacheControl], CacheControlHeaderValue.NoCacheString))
+                    {
+                        _logger.LogInformation("Contains Cache-Control: no-cache");
+                        return false;
+                    }
+                }
+                else
+                {
+                    // Support for legacy HTTP 1.0 cache directive
+                    var pragmaHeaderValues = httpContext.Request.Headers[HeaderNames.Pragma];
+                    if (HeaderUtilities.ContainsCacheDirective(httpContext.Request.Headers[HeaderNames.Pragma], CacheControlHeaderValue.NoCacheString))
+                    {
+                        _logger.LogInformation("Contains Pragma: no-cache");
+                        return false;
+                    }
+                }
             }
 
             // we should check ALL If-None-Match values (can be multiple eTags) (if available),

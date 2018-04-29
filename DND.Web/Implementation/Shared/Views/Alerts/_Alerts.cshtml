@@ -1,4 +1,9 @@
-﻿@if(TempData.GetAlerts().Count > 0)
+﻿@inject IHttpContextAccessor httpContextAccessor
+@{
+    var context = httpContextAccessor.HttpContext;
+}
+
+@if (TempData.GetAlertsForOutput(context).Count > 0)
 {
     <style>
         .alert-container {
@@ -8,12 +13,12 @@
             right: 0;
             padding-left: 3em;
             padding-right: 3em;
-            z-index:9999;
+            z-index: 9999;
         }
     </style>
     <script type="text/javascript">
 		$(function() {
-			@foreach (var alert in TempData.GetAlerts())
+			@foreach (var alert in TempData.GetAlertsForOutput(context))
 			{
 				<text>
 				window.alerts.showAlert({

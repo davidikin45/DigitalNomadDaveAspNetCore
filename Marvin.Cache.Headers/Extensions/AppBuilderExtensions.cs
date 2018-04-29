@@ -11,14 +11,14 @@ namespace Microsoft.AspNetCore.Builder
     /// </summary>
     public static class AppBuilderExtensions
     {
-        public static IApplicationBuilder UseHttpCacheHeaders(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseHttpCacheHeaders(this IApplicationBuilder builder, bool checkGETHEAD, bool checkPATCHPUT, bool generateETag, bool addVaryHeaders)
         {
             if (builder == null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.UseMiddleware<HttpCacheHeadersMiddleware>();
+            return builder.UseMiddleware<HttpCacheHeadersMiddleware>(checkGETHEAD, checkPATCHPUT, generateETag, addVaryHeaders);
         }
     }
 }

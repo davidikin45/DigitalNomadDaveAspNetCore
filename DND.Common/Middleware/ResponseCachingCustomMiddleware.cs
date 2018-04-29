@@ -30,6 +30,7 @@ namespace DND.Common.Middleware
                 policyProvider, 
                 keyProvider)
         {
+            loggerFactory.CreateLogger<ResponseCachingMiddleware>().LogInformation("Response Caching Middleware Initialised");
             Instance = this;
         }
 

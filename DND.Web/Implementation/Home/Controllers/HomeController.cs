@@ -114,7 +114,7 @@ namespace DND.Web.Implementation.Home.Controllers
             return View();
         }
 
-        //[ResponseCache(CacheProfileName = "Cache24HourNoParams")]
+        [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("about")]
         public ActionResult About()
         {
