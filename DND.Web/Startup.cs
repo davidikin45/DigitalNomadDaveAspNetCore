@@ -436,6 +436,8 @@ namespace DND.Web
             //"text/json",
             if (Configuration.GetValue<bool>("Settings:EnableResponseCompression"))
             {
+                //https://www.softfluent.com/blog/dev/Enabling-gzip-compression-with-ASP-NET-Core
+                //Concerning performance, the middleware is about 28% slower than the IIS compression (source). Additionally, IIS or nginx has a threshold for compression to avoid compressing very small files.
                 app.UseResponseCompression();
             }
 
