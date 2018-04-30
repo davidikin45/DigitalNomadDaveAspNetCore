@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -39,6 +40,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -71,9 +73,9 @@ namespace DND.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            bool enableMVCValidation = true;
+            bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
-            string cookieName = "SessionId";
+            string cookieName = Configuration.GetValue<string>("Settings:CookieName");
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
@@ -136,7 +138,17 @@ namespace DND.Web
             //Client Side Cache Time
             services.AddHttpCacheHeaders(opt => opt.MaxAge = 600);
 
-            services.AddResponseCompression();
+            //Compression
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+                //options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { ""});
+            });
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
 
             if (useSQLite)
             {
@@ -158,11 +170,16 @@ namespace DND.Web
                 options.Filters.Add<ExceptionHandlingFilter>();
                 options.Filters.Add<OperationCancelledExceptionFilter>();
 
+
+                //Accept = Response MIME type client is able to understand.
+                //Accept-Language = Response Language client is able to understand.
+                //Accept-Encoding = Response Compression client is able to understand.
+
                 //Cache-control: no-cache = store response on client browser but recheck with server each request 
                 //Cache-control: no-store = dont store response on client
                 options.CacheProfiles.Add("Cache24HourNoParams", new CacheProfile()
                 {
-                    VaryByHeader = "Accept,Accept-Language,Accept-Encoding",
+                    VaryByHeader = "Accept,Accept-Language",
                     //VaryByQueryKeys = "", Only used for server side caching
                     Duration = 60 * 60 * 24, // 24 hour,
                     Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
@@ -171,7 +188,8 @@ namespace DND.Web
 
                 options.CacheProfiles.Add("Cache24HourParams", new CacheProfile()
                 {
-                    VaryByHeader = "Accept,Accept-Language,Accept-Encoding",
+                    //IIS DynamicCompressionModule and StaticCompressionModule add the Accept-Encoding Vary header.
+                    VaryByHeader = "Accept,Accept-Language",
                     VaryByQueryKeys = new string[] { "*" }, //Only used for server side caching
                     Duration = 60 * 60 * 24, // 24 hour,
                     Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
@@ -223,7 +241,7 @@ namespace DND.Web
 
             //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
             //https://stackoverflow.com/questions/46374994/correct-way-to-disable-model-validation-in-asp-net-core-2-mvc
-            if (!enableMVCValidation)
+            if (!enableMVCModelValidation)
             {
                 var validator = services.FirstOrDefault(s => s.ServiceType == typeof(IObjectModelValidator));
                 if (validator != null)
@@ -340,7 +358,7 @@ namespace DND.Web
             string pluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "plugins\\");
             if (!Directory.Exists(pluginsPath)) Directory.CreateDirectory(pluginsPath);
 
-            var assemblyPrefix = "DND";
+            var assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
             Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains("DND.Common"));
             Func<string, Boolean> stringFunc = (s => (new FileInfo(s)).Name.Contains(assemblyPrefix) || (new FileInfo(s)).Name.Contains("DND.Common"));
 
@@ -356,7 +374,6 @@ namespace DND.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -417,10 +434,16 @@ namespace DND.Web
             //"text/xml",
             //"application/json",
             //"text/json",
-            //app.UseResponseCompression();
+            if (Configuration.GetValue<bool>("Settings:EnableResponseCompression"))
+            {
+                app.UseResponseCompression();
+            }
 
             //API rate limiting
-            //app.UseIpRateLimiting();
+            if (Configuration.GetValue<bool>("Settings:EnableIpRateLimiting"))
+            {
+                app.UseIpRateLimiting();
+            }
 
             app.UseCors("AllowAnyOrigin");
 
@@ -459,13 +482,19 @@ namespace DND.Web
             //Firstly, the same cache duration is used for both client and server caches. Secondly, currently there is no easy way to invalidate cache entries.
             //app.UseResponseCaching();
             //Request Header Cache-Control: max-age=0 or no-cache will bypass Response Caching. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
-            app.UseResponseCachingCustom(); //Allows Invalidation
+            if(Configuration.GetValue<bool>("Settings:EnableResponseCaching"))
+            {
+                app.UseResponseCachingCustom(); //Allows Invalidation
+            }
 
             //Works for: GET, HEAD (efficiency, and saves bandwidth)
-            //Works for: PUT, PATCH (Concurrency)
+            //Works for: PUT, PATCH (Concurrency)s
             //This is Etags
             //Generating ETags is expensive. Putting this after response caching makes sense.
-            app.UseHttpCacheHeaders(true, true, true, true);   
+            if (Configuration.GetValue<bool>("Settings:EnableETags"))
+            {
+                app.UseHttpCacheHeaders(true, true, true, true);
+            }
 
             app.MapWhen(
                context => context.Request.Path.ToString().StartsWith("/uploads"),
