@@ -1,0 +1,1 @@
+BuildPlugins.bat Release

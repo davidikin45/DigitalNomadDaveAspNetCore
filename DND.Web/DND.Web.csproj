@@ -197,25 +197,28 @@
     <Exec Command="gulp min" />
   </Target>
 
-  <Target Name="PluginBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;del /q %plugins%\*&#xD;&#xA;for /d %%x in (%plugins%\*) do @rd /s /q ^&quot;%%x^&quot;&#xD;&#xA;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild.exe&quot; &quot;$(ProjectDir)..\DND.EFPersistance\DND.EFPersistance.csproj&quot; /p:Configuration=$(ConfigurationName) /v:d&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; &quot;$(ProjectDir)..\DND.UnitOfWork\DND.UnitOfWork.csproj&quot; /p:Configuration=$(ConfigurationName) /v:d&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; &quot;$(ProjectDir)..\DND.Repository\DND.Repository.csproj&quot; /p:Configuration=$(ConfigurationName) /v:d&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; &quot;$(ProjectDir)..\DND.ApplicationServices\DND.ApplicationServices.csproj&quot; /p:Configuration=$(ConfigurationName) /v:d&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; &quot;$(ProjectDir)..\DND.DomainServices\DND.DomainServices.csproj&quot; /p:Configuration=$(ConfigurationName) /v:d&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y" />
-    <Message Importance="Normal" Text="Finished Plugin Build" />
-  </Target>
-
-  <Target Name="PluginCopy" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="SET bin=&quot;$(TargetDir)&quot;&#xD;&#xA;SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;SET project=&quot;$(ProjectDir)&quot;&#xD;&#xA;&#xD;&#xA;for %%F in (%plugins%*) do @if exist &quot;%bin%%%~nxF&quot; (del /q %plugins%%%~nxF)" />
     <Message Importance="Normal" Text="Finished Plugin Copy" />
   </Target>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;del /q %plugins%\*&#xD;&#xA;for /d %%x in (%plugins%\*) do @rd /s /q ^&quot;%%x^&quot;&#xD;&#xA;&#xD;&#xA;call &quot;$(ProjectDir)..\BatchFiles\BuildPlugins.bat&quot; $(ConfigurationName)&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y" />
+    <Message Importance="Normal" Text="Finished Plugin Build" />
+  </Target>
+  
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <ItemGroup>
-      <DocFile Include="bin\$(Configuration)\$(TargetFramework)\Api.xml" />
+      <DocFile Include="bin\$(Configuration)\$(TargetFramework)\*.xml" />
     </ItemGroup>
     <Copy SourceFiles="@(DocFile)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="false" />
+    <Message Importance="Normal" Text="Finished xml copy" />
   </Target>
 
   <Target Name="PluginCopyPublish" AfterTargets="AfterPublish">
     <Exec Command="$(ProjectDir)..\BatchFiles\PostBuildEventPublish.bat &quot;$(ProjectDir)bin\$(Configuration)\&quot; &quot;$(PublishUrl)&quot; &quot;$(ProjectDir)\$(PublishUrl)&quot; " />
     <Message Importance="Normal" Text="Finished PostBuildEventPublish.bat" />
   </Target>
+
+
 </Project>

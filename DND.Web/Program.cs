@@ -28,17 +28,33 @@ namespace DND.Web
         //Critical = 5
 
         //Default Environment
-        private static readonly Dictionary<string, string> defaults = new Dictionary<string, string> {{ WebHostDefaults.EnvironmentKey, "Production" }};
+        private static readonly Dictionary<string, string> defaults = new Dictionary<string, string> { { WebHostDefaults.EnvironmentKey, "Development" } };
 
         public static IConfiguration Configuration;
 
-        public static void LoadConfiguration(string[] args)
+        public static void LoadWebHostConfiguration(string[] args)
         {
+            //Environment Order ASC
+            //1. Command Line (environment=Development)
+            //2. Environment Variable (ASPNETCORE_ENVIRONMENT=Development). In Azure ASPNETCORE_ENVIRONMENT can be set in Settings --> Application settings
+            //3. Default from Dictionary
+
+            var configEnvironmentBuilder = new ConfigurationBuilder()
+                   .AddInMemoryCollection(defaults)
+                   .AddEnvironmentVariables("ASPNETCORE_");
+
+            if (args != null)
+            {
+                configEnvironmentBuilder.AddCommandLine(args);
+            }
+
+            var configEnvironment = configEnvironmentBuilder.Build();
+
             var config = new ConfigurationBuilder()
            .AddInMemoryCollection(defaults)
           .SetBasePath(Directory.GetCurrentDirectory())
           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-          .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true, reloadOnChange: true)
+          .AddJsonFile($"appsettings.{configEnvironment[WebHostDefaults.EnvironmentKey] ?? "Production"}.json", optional: true, reloadOnChange: true)
           .AddEnvironmentVariables("ASPNETCORE_");
 
             if (args != null)
@@ -51,7 +67,7 @@ namespace DND.Web
 
         public static int Main(string[] args)
         {
-            LoadConfiguration(args);
+            LoadWebHostConfiguration(args);
 
             Log.Logger = new LoggerConfiguration()
               .ReadFrom.Configuration(Configuration)
