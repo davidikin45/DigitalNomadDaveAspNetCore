@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
@@ -370,7 +371,8 @@ namespace DND.Common.Middleware
                 context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
                 {
                     Public = true,
-                    MaxAge = timeSpan
+                    MaxAge = timeSpan,
+
                 };
             }
             else
@@ -379,6 +381,14 @@ namespace DND.Common.Middleware
                 {
                     NoCache = true
                 };
+            }
+
+            //Vary cache by query string
+            //https://docs.microsoft.com/en-us/aspnet/core/performance/caching/middleware?view=aspnetcore-2.1
+            var responseCachingFeature = context.Response.HttpContext.Features.Get<IResponseCachingFeature>();
+            if (responseCachingFeature != null)
+            {
+                responseCachingFeature.VaryByQueryKeys = new[] { "*" };
             }
         }
 
