@@ -81,6 +81,7 @@ namespace DND.Web
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
             string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             string xmlDocumentationFileName = assemblyName + ".xml";
+            int responseCacheSizeMB = Configuration.GetValue<int>("Settings:ResponseCacheSizeMB");
 
             string bearerTokenIssuer = Configuration["Tokens:Issuer"];
             string bearerTokenAudience = Configuration["Tokens:Audience"];
@@ -152,7 +153,7 @@ namespace DND.Web
 
             services.AddResponseCaching(options =>
             {
-                options.SizeLimit = 300 * 1024 * 1024; //100Mb
+                options.SizeLimit = responseCacheSizeMB * 1024 * 1024; //100Mb
                 options.MaximumBodySize = 64 * 1024 * 1024; //64Mb
             });
 
