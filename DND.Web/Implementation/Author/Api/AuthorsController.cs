@@ -7,6 +7,7 @@ using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Implementation.Author.Api
 {
@@ -14,8 +15,8 @@ namespace DND.Web.Implementation.Author.Api
     [Route("api/authors")]
     public class AuthorsController : BaseEntityWebApiControllerAuthorize<AuthorDto, AuthorDto, AuthorDto, AuthorDeleteDto, IAuthorApplicationService>
     {
-        public AuthorsController(IAuthorApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
-            :base(service, mapper, emailService, urlHelper, typeHelperService)
+        public AuthorsController(IAuthorApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
+            :base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
 
         }

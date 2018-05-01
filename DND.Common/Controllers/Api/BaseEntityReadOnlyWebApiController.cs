@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DND.Common.Interfaces.Dtos;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers.Api
 {
@@ -43,8 +44,8 @@ namespace DND.Common.Controllers.Api
         public IEntityService Service { get; private set; }
         public ITypeHelperService TypeHelperService { get; private set; }
 
-        public BaseEntityReadOnlyWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)
-        : base(mapper, emailService, urlHelper)
+        public BaseEntityReadOnlyWebApiController(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, IConfiguration configuration = null)
+        : base(mapper, emailService, urlHelper, configuration)
         {
             Service = service;
             TypeHelperService = typeHelperService;

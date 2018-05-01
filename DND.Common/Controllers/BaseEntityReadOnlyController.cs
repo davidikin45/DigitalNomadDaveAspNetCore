@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using DND.Common.Interfaces.Dtos;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers
 {
@@ -34,8 +35,8 @@ namespace DND.Common.Controllers
         public IEntityService Service { get; private set; }
         public Boolean Admin { get; set; }
 
-        public BaseEntityReadOnlyController(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null)
-        : base(mapper, emailService)
+        public BaseEntityReadOnlyController(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
+        : base(mapper, emailService, configuration)
         {
             Admin = admin;
             Service = service;

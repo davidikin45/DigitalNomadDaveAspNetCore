@@ -73,9 +73,21 @@ namespace DND.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //Settings
             bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
             string cookieName = Configuration.GetValue<string>("Settings:CookieName");
+            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
+            string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
+            string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            string xmlDocumentationFileName = assemblyName + ".xml";
+
+            string bearerTokenIssuer = Configuration["Tokens:Issuer"];
+            string bearerTokenAudience = Configuration["Tokens:Audience"];
+            string bearerTokenKey = Configuration["Tokens:Key"];
+
+            string SQLiteConnectionString = ConnectionStrings.GetConnectionString("SQLite");
+            string SQLServerConnectionString = ConnectionStrings.GetConnectionString("DefaultConnectionString");
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
@@ -85,33 +97,44 @@ namespace DND.Web
                 return new UrlHelper(actionContext);
             });
 
-            if(useSQLite)
+            if (useSQLite)
             {
-                services.AddDbContextSqlite<ApplicationIdentityDbContext>(ConnectionStrings.GetConnectionString("SQLite"));
+                services.AddDbContextSqlite<ApplicationIdentityDbContext>(SQLiteConnectionString);
             }
             else
             {
-                services.AddDbContextSqlServer<ApplicationIdentityDbContext>(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+                services.AddDbContextSqlServer<ApplicationIdentityDbContext>(SQLServerConnectionString);
+            }
+
+            if (useSQLite)
+            {
+                services.AddHangfireSqlite(SQLiteConnectionString);
+            }
+            else
+            {
+                services.AddHangfireSqlServer(SQLServerConnectionString);
             }
 
             services.AddIdentity<ApplicationIdentityDbContext, User, IdentityRole>();
-         
+
             services.AddAuthentication()
-                .AddCookie(options => {
+                .AddCookie(options =>
+                {
                     options.Cookie.Name = cookieName;
                 })
                 .AddJwtBearer(cfg =>
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidIssuer = Configuration["Tokens:Issuer"],
-                        ValidAudience = Configuration["Tokens:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                        ValidIssuer = bearerTokenIssuer,
+                        ValidAudience = bearerTokenAudience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey))
                     }
                 );
 
             //Add this to controller or action using Authorize(Policy = "UserMustBeAdmin")
             //Can create custom requirements by implementing IAuthorizationRequirement and AuthorizationHandler (Needs to be added to services as scoped)
-            services.AddAuthorization(options => {
+            services.AddAuthorization(options =>
+            {
                 options.AddPolicy("UserMustBeAdmin", policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
@@ -122,7 +145,6 @@ namespace DND.Web
 
             services.AddTransient<IEmailSender, EmailSender>();
 
-            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.ViewLocationExpanders.Add(new CustomViewLocator(implementationFolder));
@@ -131,7 +153,7 @@ namespace DND.Web
             services.AddResponseCaching(options =>
             {
                 options.SizeLimit = 300 * 1024 * 1024; //100Mb
-                options.MaximumBodySize = 64 * 1024 * 1024 ; //64Mb
+                options.MaximumBodySize = 64 * 1024 * 1024; //64Mb
             });
 
             //https://stackoverflow.com/questions/46492736/asp-net-core-2-0-http-response-caching-middleware-nothing-cached
@@ -150,17 +172,9 @@ namespace DND.Web
                 options.Level = CompressionLevel.Fastest;
             });
 
-            if (useSQLite)
-            {
-                services.AddHangfireSqlite(ConnectionStrings.GetConnectionString("SQLite"));
-            }
-            else
-            {
-                services.AddHangfireSqlServer(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
-            }
-
             // Add framework services.
-            services.AddMvc(options => {
+            services.AddMvc(options =>
+            {
                 options.UseCustomModelBinding();
 
                 //DbGeography causes infinite validation loop
@@ -207,20 +221,20 @@ namespace DND.Web
 
                 if (jsonOutputFormatter != null)
                 {
-                   // jsonOutputFormatter.SupportedMediaTypes
-                   //.Add("application/vnd.dnd.tour.v1+json");
-                   // jsonOutputFormatter.SupportedMediaTypes
-                   //.Add("application/vnd.dnd.tourwithestimatedprofits.v1+json");
+                    // jsonOutputFormatter.SupportedMediaTypes
+                    //.Add("application/vnd.dnd.tour.v1+json");
+                    // jsonOutputFormatter.SupportedMediaTypes
+                    //.Add("application/vnd.dnd.tourwithestimatedprofits.v1+json");
                 }
 
                 var jsonInputFormatter = options.InputFormatters
                    .OfType<JsonInputFormatter>().FirstOrDefault();
                 if (jsonInputFormatter != null)
                 {
-                   // jsonInputFormatter.SupportedMediaTypes
-                   //.Add("application/vnd.dnd.tourforcreation.v1+json");
-                   // jsonInputFormatter.SupportedMediaTypes
-                   //.Add("application/vnd.dnd.tourwithmanagerforcreation.v1+json");
+                    // jsonInputFormatter.SupportedMediaTypes
+                    //.Add("application/vnd.dnd.tourforcreation.v1+json");
+                    // jsonInputFormatter.SupportedMediaTypes
+                    //.Add("application/vnd.dnd.tourwithmanagerforcreation.v1+json");
                 }
 
                 options.FormatterMappings.SetMediaTypeMappingForFormat(
@@ -262,7 +276,8 @@ namespace DND.Web
 
             //API rate limiting
             services.AddMemoryCache();
-            services.Configure<IpRateLimitOptions>((options)=> {
+            services.Configure<IpRateLimitOptions>((options) =>
+            {
                 options.GeneralRules = new List<RateLimitRule>()
                 {
                     new RateLimitRule()
@@ -311,7 +326,7 @@ namespace DND.Web
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info { Title = assemblyPrefix + " API", Version = "v1" });
 
                 c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new ApiKeyScheme
                 {
@@ -342,8 +357,8 @@ namespace DND.Web
                 // Set the comments path for the Swagger JSON and UI.
                 var location = System.Reflection.Assembly.GetEntryAssembly().Location;
                 var directory = System.IO.Path.GetDirectoryName(location);
-                var xmlPath = Path.Combine(directory, "Api.xml");
-              
+                var xmlPath = Path.Combine(directory, xmlDocumentationFileName);
+
                 c.IncludeXmlComments(xmlPath);
                 c.DescribeAllEnumsAsStrings();
 
@@ -353,14 +368,18 @@ namespace DND.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            //Settings
+            var assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
+            string pluginsFolder = @"plugins\";
+            string commonAssembly = "DND.Common";
+
             // Add services using your custom container here.
             string binPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            string pluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), "plugins\\");
+            string pluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), pluginsFolder);
             if (!Directory.Exists(pluginsPath)) Directory.CreateDirectory(pluginsPath);
 
-            var assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
-            Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains("DND.Common"));
-            Func<string, Boolean> stringFunc = (s => (new FileInfo(s)).Name.Contains(assemblyPrefix) || (new FileInfo(s)).Name.Contains("DND.Common"));
+            Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains(commonAssembly));
+            Func<string, Boolean> stringFunc = (s => (new FileInfo(s)).Name.Contains(assemblyPrefix) || (new FileInfo(s)).Name.Contains(commonAssembly));
 
             builder.RegisterModule(new AutofacConventionsDependencyInjectionModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacTasksModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
@@ -374,6 +393,22 @@ namespace DND.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner)
         {
+            //settings
+            bool enableHelloWord = Configuration.GetValue<bool>("Settings:EnableHelloWorld");
+            bool enableSwagger = Configuration.GetValue<bool>("Settings:EnableSwagger");
+            bool enableResponseCompression = Configuration.GetValue<bool>("Settings:EnableResponseCompression");
+            bool enableIpRateLimiting = Configuration.GetValue<bool>("Settings:EnableIpRateLimiting");
+            bool enableCors = Configuration.GetValue<bool>("Settings:EnableCors");
+            bool enableResponseCaching = Configuration.GetValue<bool>("Settings:EnableResponseCaching");
+            bool enableETags = Configuration.GetValue<bool>("Settings:EnableETags");
+            bool enableHangfire = Configuration.GetValue<bool>("Settings:EnableHangfire");
+
+            string publicUploadFoldersString = Configuration.GetValue<string>("Settings:PublicUploadFolders");
+            string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
+            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
+
+            string uploadsFolder = "/uploads";
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -404,20 +439,30 @@ namespace DND.Web
                     }
                );
             }
-            
-            app.UseRequestTasks();
-     
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
+            if (enableHelloWord)
             {
-               
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", Configuration.GetValue<string>("Settings:AssemblyPrefix") + " API V1");
-                c.DocExpansion(DocExpansion.None);
-            });
+                app.Run(async (context) =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                });
+            }
 
+            app.UseRequestTasks();
+
+            if(enableSwagger)
+            {
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+                app.UseSwaggerUI(c =>
+                {
+
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", assemblyPrefix + " API V1");
+                    c.DocExpansion(DocExpansion.None);
+                });
+            }
 
             //Use Response Compression Middleware when you're:
             //Unable to use the following server-based compression technologies:
@@ -434,7 +479,7 @@ namespace DND.Web
             //"text/xml",
             //"application/json",
             //"text/json",
-            if (Configuration.GetValue<bool>("Settings:EnableResponseCompression"))
+            if (enableResponseCompression)
             {
                 //https://www.softfluent.com/blog/dev/Enabling-gzip-compression-with-ASP-NET-Core
                 //Concerning performance, the middleware is about 28% slower than the IIS compression (source). Additionally, IIS or nginx has a threshold for compression to avoid compressing very small files.
@@ -442,12 +487,15 @@ namespace DND.Web
             }
 
             //API rate limiting
-            if (Configuration.GetValue<bool>("Settings:EnableIpRateLimiting"))
+            if (enableIpRateLimiting)
             {
                 app.UseIpRateLimiting();
             }
 
-            app.UseCors("AllowAnyOrigin");
+            if(enableCors)
+            {
+                app.UseCors("AllowAnyOrigin");
+            }
 
             //Cache-Control:max-age=0
             //This is equivalent to clicking Refresh, which means, give me the latest copy unless I already have the latest copy.
@@ -484,7 +532,7 @@ namespace DND.Web
             //Firstly, the same cache duration is used for both client and server caches. Secondly, currently there is no easy way to invalidate cache entries.
             //app.UseResponseCaching();
             //Request Header Cache-Control: max-age=0 or no-cache will bypass Response Caching. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
-            if(Configuration.GetValue<bool>("Settings:EnableResponseCaching"))
+            if (enableResponseCaching)
             {
                 app.UseResponseCachingCustom(); //Allows Invalidation
             }
@@ -493,18 +541,19 @@ namespace DND.Web
             //Works for: PUT, PATCH (Concurrency)s
             //This is Etags
             //Generating ETags is expensive. Putting this after response caching makes sense.
-            if (Configuration.GetValue<bool>("Settings:EnableETags"))
+            if (enableETags)
             {
                 app.UseHttpCacheHeaders(true, true, true, true);
             }
 
             app.MapWhen(
-               context => context.Request.Path.ToString().StartsWith("/uploads"),
-               appBranch => {
+               context => context.Request.Path.ToString().StartsWith(uploadsFolder),
+               appBranch =>
+               {
                    // ... optionally add more middleware to this branch
                    char[] seperator = { ',' };
-                   List<string> publicUploadFolders = Configuration.GetValue<string>("Settings:PublicUploadFolders").Split(seperator).ToList();
-                   appBranch.UseContentHandler(publicUploadFolders);
+                   List<string> publicUploadFolders = publicUploadFoldersString.Split(seperator).ToList();
+                   appBranch.UseContentHandler(Configuration, publicUploadFolders);
                });
 
             app.UseDefaultFiles();
@@ -517,7 +566,10 @@ namespace DND.Web
 
             app.UseAuthentication();
 
-            app.UseHangfire();
+            if(enableHangfire)
+            {
+                app.UseHangfire();
+            }
 
             app.UseMvc(routes =>
             {
@@ -538,7 +590,6 @@ namespace DND.Web
             StaticProperties.HostingEnvironment = HostingEnvironment;
             StaticProperties.Configuration = Configuration;
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
             NavigationMenuHelper.ImplementationFolder = implementationFolder;
 
             DomainEvents.Init();

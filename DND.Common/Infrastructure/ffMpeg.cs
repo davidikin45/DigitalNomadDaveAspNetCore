@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -39,17 +40,20 @@ namespace DND.Common.Infrastructure
             }
         }
 
+        public IConfiguration Configuration { get; }
+
         #endregion
 
         #region Constructors
-        public VideoConverter()
+        public VideoConverter(IConfiguration configuration)
         {
+            Configuration = configuration;
             Initialize();
         }
-        public VideoConverter(string path)
+        public VideoConverter(string folderPath)
         {
-            _ffExe = path + "ffmpeg.exe";
-            _WorkingPath = path;
+            _ffExe = folderPath + "ffmpeg.exe";
+            _WorkingPath = folderPath;
             Initialize();
         }
         #endregion
@@ -60,7 +64,7 @@ namespace DND.Common.Infrastructure
             //first make sure we have a value for the ffexe file setting
             if (string.IsNullOrEmpty(_ffExe))
             {
-                object o = ConfigurationManager.AppSettings("ffmpeg-ExeLocation");
+                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg-ExeLocation");
                 if (o == null)
                 {
                     throw new Exception("Could not find the location of the ffmpeg exe file.  The path for ffmpeg.exe " +
@@ -71,7 +75,7 @@ namespace DND.Common.Infrastructure
                 {
                     if (string.IsNullOrEmpty(o.ToString()))
                     {
-                        throw new Exception("No value was found in the app setting for ffmpeg:ExeLocation");
+                        throw new Exception("No value was found in the app setting for FFMpeg:ExeLocation");
                     }
                     _ffExe = o.ToString();
                 }
@@ -89,7 +93,7 @@ namespace DND.Common.Infrastructure
             //now see if we have a temporary place to work
             if (string.IsNullOrEmpty(_WorkingPath))
             {
-                object o = ConfigurationManager.AppSettings("ffmpeg-WorkingPath");
+                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg-WorkingPath");
                 if (o != null)
                 {
                     _WorkingPath = o.ToString();

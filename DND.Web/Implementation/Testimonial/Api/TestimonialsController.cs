@@ -5,6 +5,7 @@ using DND.Common.Interfaces.Services;
 using DND.Domain.CMS.Testimonials.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Implementation.Testimonial.Api
 {
@@ -12,8 +13,8 @@ namespace DND.Web.Implementation.Testimonial.Api
     [Route("api/testimonials")]
     public class TestimonialsController : BaseEntityWebApiControllerAuthorize<TestimonialDto, TestimonialDto, TestimonialDto, TestimonialDeleteDto, ITestimonialApplicationService>
     {
-        public TestimonialsController(ITestimonialApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
-            : base(service, mapper, emailService, urlHelper, typeHelperService)
+        public TestimonialsController(ITestimonialApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
+            : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
 
         }

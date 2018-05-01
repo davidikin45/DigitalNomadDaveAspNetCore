@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
+using DND.Common.Email;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Repository;
@@ -7,6 +8,7 @@ using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +20,8 @@ namespace DND.Web.Implementation.Location.Controllers
     {
         private readonly ILocationApplicationService _locationService;
 
-        public LocationController(ILocationApplicationService locationService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
-             : base(mapper)
+        public LocationController(ILocationApplicationService locationService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
+             : base(mapper, emailService, configuration)
         {
             _locationService = locationService;
         }

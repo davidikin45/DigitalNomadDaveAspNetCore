@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Middleware
 {
@@ -22,9 +23,9 @@ namespace DND.Common.Middleware
         }
 
         public static IApplicationBuilder UseContentHandler(
-           this IApplicationBuilder builder, List<string> publicUploadFolders)
+           this IApplicationBuilder builder, IConfiguration configuration, List<string> publicUploadFolders)
         {
-            return builder.UseMiddleware<ContentHandlerMiddleware>(publicUploadFolders);
+            return builder.UseMiddleware<ContentHandlerMiddleware>(publicUploadFolders, configuration);
         }
 
         public static IApplicationBuilder UseResponseCachingCustom(

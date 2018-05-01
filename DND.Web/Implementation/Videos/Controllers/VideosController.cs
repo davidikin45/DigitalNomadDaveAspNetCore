@@ -12,6 +12,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using DND.Common.Email;
 
 namespace DND.Web.Implementation.Videos.Controllers
 {
@@ -21,8 +23,8 @@ namespace DND.Web.Implementation.Videos.Controllers
         private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
 
 
-        public VideosController(IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
-             : base(mapper)
+        public VideosController(IMapper mapper, IEmailService emailService, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IConfiguration configuration)
+             : base(mapper, emailService, configuration)
         {
             _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
         }

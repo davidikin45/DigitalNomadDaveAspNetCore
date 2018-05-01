@@ -5,6 +5,7 @@ using DND.Common.Interfaces.Services;
 using DND.Domain.CMS.MailingLists.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Implementation.MailingList.Api
 {
@@ -12,8 +13,8 @@ namespace DND.Web.Implementation.MailingList.Api
     [Route("api/mailing-list")]
     public class MailingListController : BaseEntityWebApiControllerAuthorize<MailingListDto, MailingListDto, MailingListDto, MailingListDeleteDto, IMailingListApplicationService>
     {
-        public MailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
-            : base(service, mapper, emailService, urlHelper, typeHelperService)
+        public MailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
+            : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
 
         }

@@ -5,6 +5,7 @@ using DND.Common.Helpers;
 using DND.Domain.FlightSearch.Markets.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -30,8 +31,8 @@ namespace DND.Web.Implementation.FlightSearch.Api
     {
         private readonly IMarketApplicationService _marketService;
 
-        public MarketsController(IMarketApplicationService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
-             : base(mapper, emailService, urlHelper)
+        public MarketsController(IMarketApplicationService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, IConfiguration configuration)
+             : base(mapper, emailService, urlHelper, configuration)
         {
             _marketService = marketService;
         }

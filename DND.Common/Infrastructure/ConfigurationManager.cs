@@ -12,7 +12,12 @@ namespace DND.Common.Infrastructure
     {
        public static string AppSettings(string key)
         {
-            return StaticProperties.Configuration.GetValue<string>("Settings:" + key);
+            return AppSettings(StaticProperties.Configuration, key);
+        }
+
+        public static string AppSettings(IConfiguration configuration, string key)
+        {
+            return configuration.GetValue<string>("Settings:" + key);
         }
     }
 }

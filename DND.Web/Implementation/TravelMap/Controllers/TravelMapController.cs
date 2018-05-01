@@ -6,6 +6,7 @@ using DND.Common.Implementation.Dtos;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,8 +17,8 @@ namespace DND.Web.Implementation.TravelMap.Controllers
 	{
         private readonly ILocationApplicationService Service;
 
-        public TravelMapController(ILocationApplicationService service, IMapper mapper, IEmailService emailService)
-            :base(mapper, emailService)
+        public TravelMapController(ILocationApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)
+            :base(mapper, emailService, configuration)
 		{
             Service = service;
         }

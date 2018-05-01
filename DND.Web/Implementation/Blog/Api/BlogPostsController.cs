@@ -5,6 +5,7 @@ using DND.Common.Interfaces.Services;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Controllers.Api
 {
@@ -12,8 +13,8 @@ namespace DND.Web.Controllers.Api
     [Route("api/blog-posts")]
     public class BlogPostsController : BaseEntityWebApiControllerAuthorize<BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto, IBlogPostApplicationService>
     {
-        public BlogPostsController(IBlogPostApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
-            : base(service, mapper, emailService, urlHelper, typeHelperService)
+        public BlogPostsController(IBlogPostApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
+            : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
 
         }

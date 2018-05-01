@@ -16,6 +16,7 @@ using DND.Common.Helpers;
 using DND.Common.Extensions;
 using DND.Common.Email;
 using DND.Common.Interfaces.Dtos;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers
 {
@@ -24,16 +25,18 @@ namespace DND.Common.Controllers
     {
         public IMapper Mapper { get; }
         public IEmailService EmailService { get; }
+        public IConfiguration Configuration { get; }
 
         public BaseController()
         {
 
         }
 
-        public BaseController(IMapper mapper = null, IEmailService emailService = null)
+        public BaseController(IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
         {
             Mapper = mapper;
             EmailService = emailService;
+            Configuration = configuration;
         }
 
         protected virtual BetterJsonResult BetterJsonError(string message, ModelStateDictionary modelState)

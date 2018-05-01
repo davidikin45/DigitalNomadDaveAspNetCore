@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
+using DND.Common.Email;
 using DND.Common.Helpers;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.Implementation.Blog.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,8 +17,8 @@ namespace DND.Web.Implementation.Blog.Controllers
     {
         private readonly IBlogApplicationService _blogService;
 
-        public BlogController(IBlogApplicationService blogService, IMapper mapper)
-            : base(mapper)
+        public BlogController(IBlogApplicationService blogService, IMapper mapper, IEmailService emailService, IConfiguration configuration)
+            : base(mapper, emailService, configuration)
         {
             _blogService = blogService;
         }

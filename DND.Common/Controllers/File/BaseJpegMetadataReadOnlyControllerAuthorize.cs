@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers
 {
@@ -35,8 +36,8 @@ namespace DND.Common.Controllers
         public Boolean IncludeSubDirectories { get; set; }
         public String PhysicalPath { get; set; }
 
-        public BaseJpegMetadataReadOnlyControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper = null, IEmailService emailService = null)
-        : base(mapper, emailService)
+        public BaseJpegMetadataReadOnlyControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
+        : base(mapper, emailService, configuration)
         {
             PhysicalPath = physicalPath;
             IncludeSubDirectories = includeSubDirectories;

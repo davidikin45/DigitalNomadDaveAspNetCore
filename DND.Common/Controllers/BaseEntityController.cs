@@ -9,6 +9,7 @@ using DND.Common.Interfaces.Services;
 using System;
 using System.Threading.Tasks;
 using DND.Common.Interfaces.Dtos;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers
 {
@@ -30,8 +31,8 @@ namespace DND.Common.Controllers
         where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
-        public BaseEntityController(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null)
-        : base(admin, service, mapper,emailService)
+        public BaseEntityController(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
+        : base(admin, service, mapper,emailService, configuration)
         {
         }
         

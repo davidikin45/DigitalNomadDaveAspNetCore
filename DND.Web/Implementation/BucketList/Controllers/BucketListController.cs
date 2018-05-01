@@ -12,6 +12,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DND.Common.Email;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Implementation.BucketList.Controllers
 {
@@ -22,8 +24,8 @@ namespace DND.Web.Implementation.BucketList.Controllers
         private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
 
 
-        public BucketListController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
-             : base(mapper)
+        public BucketListController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
+             : base(mapper, emailService, configuration)
         {
             _blogService = blogService;
             _fileSystemRepositoryFactory = fileSystemRepositoryFactory;

@@ -12,6 +12,7 @@ using System.Threading;
 using System.Web;
 using DND.Common.Implementation.Validation;
 using DND.Common.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers.Api
 {
@@ -30,17 +31,19 @@ namespace DND.Common.Controllers.Api
         public IMapper Mapper { get; }
         public IEmailService EmailService { get; }
         public IUrlHelper UrlHelper { get; }
+        public IConfiguration Configuration { get; }
 
         public BaseWebApiController()
         {
 
         }
 
-        public BaseWebApiController(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null)
+        public BaseWebApiController(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, IConfiguration configuration = null)
         {
             Mapper = mapper;
             EmailService = emailService;
             UrlHelper = urlHelper;
+            Configuration = configuration;
         }
 
         protected IActionResult ValidationErrors(Result failure)

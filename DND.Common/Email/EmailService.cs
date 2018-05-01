@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Email
 {
@@ -24,17 +25,20 @@ namespace DND.Common.Email
         private const string EmailPortKey = "EmailPort";
         private const string EmailSslKey = "EmailSsl";
 
-        public EmailService()
+        public IConfiguration Configuration { get; }
+
+        public EmailService(IConfiguration configuration)
         {
+            Configuration = configuration;
             _config = new SmtpConfiguration();
 
-            var fromDisplayName = ConfigurationManager.AppSettings(EmailFromDisplayNameKey);
-            var fromEmail = ConfigurationManager.AppSettings(EmailFromEmailKey);
-            var username = ConfigurationManager.AppSettings(EmailFromEmailKey);
-            var password = ConfigurationManager.AppSettings(EmailPasswordKey);
-            var host = ConfigurationManager.AppSettings(EmailHostKey);
-            var port = Int32.Parse(ConfigurationManager.AppSettings(EmailPortKey));
-            var ssl = Boolean.Parse(ConfigurationManager.AppSettings(EmailSslKey));
+            var fromDisplayName = ConfigurationManager.AppSettings(Configuration, EmailFromDisplayNameKey);
+            var fromEmail = ConfigurationManager.AppSettings(Configuration, EmailFromEmailKey);
+            var username = ConfigurationManager.AppSettings(Configuration, EmailFromEmailKey);
+            var password = ConfigurationManager.AppSettings(Configuration, EmailPasswordKey);
+            var host = ConfigurationManager.AppSettings(Configuration, EmailHostKey);
+            var port = Int32.Parse(ConfigurationManager.AppSettings(Configuration, EmailPortKey));
+            var ssl = Boolean.Parse(ConfigurationManager.AppSettings(Configuration, EmailSslKey));
 
             _config.FromDisplayName = fromDisplayName;
             _config.FromEmail = fromEmail;
@@ -47,8 +51,8 @@ namespace DND.Common.Email
 
         public bool SendEmailMessageToAdmin(EmailMessage message)
         {
-            message.ToEmail = ConfigurationManager.AppSettings(EmailToEmailKey);
-            message.ToDisplayName = ConfigurationManager.AppSettings(EmailToDisplayNameKey);
+            message.ToEmail = ConfigurationManager.AppSettings(Configuration, EmailToEmailKey);
+            message.ToDisplayName = ConfigurationManager.AppSettings(Configuration, EmailToDisplayNameKey);
             return SendEmailMessage(message);
         }
 

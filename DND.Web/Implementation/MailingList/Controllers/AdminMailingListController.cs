@@ -8,6 +8,7 @@ using DND.Domain.CMS.MailingLists.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.Implementation.MailingList.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,8 +18,8 @@ namespace DND.Web.Controllers.Admin
     [Route("admin/mailing-list")]
     public class AdminMailingListController : BaseEntityControllerAuthorize<MailingListDto, MailingListDto, MailingListDto, MailingListDeleteDto, IMailingListApplicationService>
     {
-        public AdminMailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService)
-             : base(true, service, mapper, emailService)
+        public AdminMailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)
+             : base(true, service, mapper, emailService, configuration)
         {
         }
 

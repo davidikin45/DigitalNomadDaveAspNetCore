@@ -7,6 +7,7 @@ using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Services;
 using DND.Common.Interfaces.Dtos;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers.Api
 {
@@ -31,8 +32,8 @@ namespace DND.Common.Controllers.Api
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {   
 
-        public BaseEntityWebApiControllerAuthorize(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null)
-        : base(service, mapper , emailService, urlHelper, typeHelperService)
+        public BaseEntityWebApiControllerAuthorize(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, IConfiguration configuration = null)
+        : base(service, mapper , emailService, urlHelper, typeHelperService, configuration)
         {
           
         }

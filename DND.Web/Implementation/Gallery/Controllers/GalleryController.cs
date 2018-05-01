@@ -13,6 +13,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DND.Common.Email;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Implementation.Gallery.Controllers
 {
@@ -23,8 +25,8 @@ namespace DND.Web.Implementation.Gallery.Controllers
         private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
 
 
-        public GalleryController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory)
-             : base(mapper)
+        public GalleryController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
+             : base(mapper, emailService, configuration)
         {
             _blogService = blogService;
             _fileSystemRepositoryFactory = fileSystemRepositoryFactory;

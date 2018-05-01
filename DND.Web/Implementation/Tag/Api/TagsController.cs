@@ -5,6 +5,7 @@ using DND.Common.Interfaces.Services;
 using DND.Domain.Blog.Tags.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Implementation.Tag.Api
 {
@@ -12,8 +13,8 @@ namespace DND.Web.Implementation.Tag.Api
     [Route("api/tags")]
     public class TagsController : BaseEntityWebApiControllerAuthorize<TagDto, TagDto, TagDto, TagDeleteDto, ITagApplicationService>
     {
-        public TagsController(ITagApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
-            : base(service, mapper, emailService, urlHelper, typeHelperService)
+        public TagsController(ITagApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
+            : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
 
         }

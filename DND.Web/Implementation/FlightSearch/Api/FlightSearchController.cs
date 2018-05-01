@@ -6,6 +6,7 @@ using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,8 +30,8 @@ namespace DND.Web.Implementation.FlightSearch.Api
     {
         private readonly IFlightSearchApplicationService _flightSearchService;
 
-        public FlightSearchController(IFlightSearchApplicationService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
-            : base(mapper, emailService, urlHelper)
+        public FlightSearchController(IFlightSearchApplicationService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, IConfiguration configuration)
+            : base(mapper, emailService, urlHelper, configuration)
         {
 
             _flightSearchService = flightSearchService;

@@ -2,14 +2,16 @@
 using Microsoft.AspNetCore.Mvc;
 using DND.Common.Middleware;
 using System;
+using DND.Common.Email;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers.Admin
 {
     public abstract class BaseAdminControllerAuthorize : BaseControllerAuthorize
     {
 
-        public BaseAdminControllerAuthorize(IMapper mapper)
-             : base(mapper)
+        public BaseAdminControllerAuthorize(IMapper mapper, IEmailService emailService, IConfiguration configuration)
+             : base(mapper, emailService, configuration)
         {
         }
 

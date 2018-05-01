@@ -5,6 +5,7 @@ using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Models;
 using System;
 using DND.Common.Interfaces.Dtos;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers
 {
@@ -27,8 +28,8 @@ namespace DND.Common.Controllers
         where TDelete : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreate, TRead, TUpdate, TDelete>
     {
-        public BaseEntityControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null)
-        : base(admin, service, mapper, emailService)
+        public BaseEntityControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
+        : base(admin, service, mapper, emailService, configuration)
         {
         }
 

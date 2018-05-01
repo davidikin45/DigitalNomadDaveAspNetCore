@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Controllers
 {
@@ -23,8 +24,8 @@ namespace DND.Common.Controllers
 
         }
 
-        public BaseHomeController(IMapper mapper = null, IEmailService emailService = null)
-            : base(mapper, emailService)
+        public BaseHomeController(IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
+            : base(mapper, emailService, configuration)
         {
 
         }
@@ -51,7 +52,7 @@ namespace DND.Common.Controllers
         //0.4-0.7: Articles and blog entries, category pages, FAQs
         protected async virtual Task<IList<SitemapNode>> GetSitemapNodes(CancellationToken cancellationToken)
         {
-            var siteUrl = ConfigurationManager.AppSettings("SiteUrl");
+            var siteUrl = ConfigurationManager.AppSettings(Configuration, "SiteUrl");
 
             List<SitemapNode> nodes = new List<SitemapNode>();
 

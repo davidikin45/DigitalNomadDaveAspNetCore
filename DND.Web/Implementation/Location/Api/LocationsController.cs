@@ -5,6 +5,7 @@ using DND.Common.Interfaces.Services;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.Implementation.Location.Api
 {
@@ -12,8 +13,8 @@ namespace DND.Web.Implementation.Location.Api
     [Route("api/locations")]
     public class LocationsController : BaseEntityWebApiControllerAuthorize<LocationDto, LocationDto, LocationDto, LocationDeleteDto, ILocationApplicationService>
     {
-        public LocationsController(ILocationApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService)
-            : base(service, mapper, emailService, urlHelper, typeHelperService)
+        public LocationsController(ILocationApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
+            : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
 
         }
