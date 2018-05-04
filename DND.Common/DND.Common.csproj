@@ -222,11 +222,11 @@
     <Reference Include="Microsoft.AspNetCore.WebUtilities, Version=2.0.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.WebUtilities.2.0.2\lib\netstandard2.0\Microsoft.AspNetCore.WebUtilities.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CodeAnalysis, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.7.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
+    <Reference Include="Microsoft.CodeAnalysis, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.8.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.2.7.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.2.8.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Razor, Version=2.0.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Razor.2.0.2\lib\net46\Microsoft.CodeAnalysis.Razor.dll</HintPath>
@@ -368,17 +368,17 @@
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_green, Version=1.1.10.86, Culture=neutral, PublicKeyToken=a84b7dcfb1391f7f, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.10\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
+    <Reference Include="SQLitePCLRaw.batteries_green, Version=1.1.11.121, Culture=neutral, PublicKeyToken=a84b7dcfb1391f7f, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
     </Reference>
-    <Reference Include="SQLitePCLRaw.batteries_v2, Version=1.1.10.86, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.10\lib\net45\SQLitePCLRaw.batteries_v2.dll</HintPath>
+    <Reference Include="SQLitePCLRaw.batteries_v2, Version=1.1.11.121, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_v2.dll</HintPath>
     </Reference>
-    <Reference Include="SQLitePCLRaw.core, Version=1.1.10.86, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.core.1.1.10\lib\net45\SQLitePCLRaw.core.dll</HintPath>
+    <Reference Include="SQLitePCLRaw.core, Version=1.1.11.121, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.core.1.1.11\lib\net45\SQLitePCLRaw.core.dll</HintPath>
     </Reference>
-    <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.1.10.86, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
-      <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.10\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
+    <Reference Include="SQLitePCLRaw.provider.e_sqlite3, Version=1.1.11.121, Culture=neutral, PublicKeyToken=9c301db686d0bd12, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.11\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
     </Reference>
     <Reference Include="Swashbuckle.AspNetCore.Swagger, Version=2.4.0.0, Culture=neutral, PublicKeyToken=62657d7474907593, processorArchitecture=MSIL">
       <HintPath>..\packages\Swashbuckle.AspNetCore.Swagger.2.4.0\lib\net451\Swashbuckle.AspNetCore.Swagger.dll</HintPath>
@@ -470,8 +470,8 @@
       <HintPath>..\packages\System.Linq.Expressions.4.3.0\lib\net463\System.Linq.Expressions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.4\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.5\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reflection">
@@ -852,14 +852,14 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.10.1\build\NUnit.props'))" />
     <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets'))" />
-    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets'))" />
-    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets'))" />
-    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets'))" />
     <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.2\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.2\build\netstandard2.0\NETStandard.Library.targets'))" />
+    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets'))" />
+    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets'))" />
+    <Error Condition="!Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets'))" />
   </Target>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.108.0\build\net46\System.Data.SQLite.Core.targets')" />
-  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
-  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" />
-  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.10\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" />
   <Import Project="..\packages\NETStandard.Library.2.0.2\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.2\build\netstandard2.0\NETStandard.Library.targets')" />
+  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
+  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" />
+  <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" />
 </Project>
