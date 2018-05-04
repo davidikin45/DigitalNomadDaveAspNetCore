@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DND.Web.Implementation.Blog.Controllers
 {
-    [Route("blog/[action]")]
+    [Route("blog")]
     public class BlogController : BaseController
     {
         private readonly IBlogApplicationService _blogService;
