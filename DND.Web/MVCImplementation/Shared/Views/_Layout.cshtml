@@ -19,8 +19,7 @@
     <meta property="og:site_name" content="@(Settings.GetValue<String>("SiteTitle"))">
     <meta property="fb:app_id" content="@(Settings.GetValue<String>("FacebookAppId"))" />
 
-    @*<meta property="og:title" content="@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle</text>} else {@(Settings.GetValue<String>("SiteTitle"))}">*@
-    <meta property="og:title" content="@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle | </text>}@(Settings.GetValue<String>("SiteTitle"))">
+    <meta property="og:title" content="@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle @(Settings.GetValue<string>("TitleSeparator")) </text>}@(Settings.GetValue<String>("SiteTitle"))">
     <meta property="og:description" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>@ViewBag.Description</text>} else {@(Settings.GetValue<String>("SiteDescription"))} ">
     <meta property="og:url" content="@((Settings.GetValue<String>("SiteUrl")))@(HttpContext.HttpContext.Request.Path)" />
     @if (!string.IsNullOrEmpty(ViewBag.MainImage))
