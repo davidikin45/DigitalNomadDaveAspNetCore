@@ -1,5 +1,8 @@
 {
-  "include": [ "Scripts/**/*.ts"],
+  "include": [
+    "Scripts/**/*.ts"
+    ,"./ClientApp"
+  ],
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./Scripts_Compile",

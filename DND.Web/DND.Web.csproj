@@ -14,16 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ClientApp\**" />
-    <Content Remove="ClientApp\**" />
-    <EmbeddedResource Remove="ClientApp\**" />
-    <None Remove="ClientApp\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="App_Data\airlines.json" />
     <Content Remove="App_Data\airportsAll.json" />
     <Content Remove="App_Data\countries.json" />
+    <Content Remove="ClientApp\tsconfig.app.json" />
     <Content Remove="MVCImplementation\Shared\Views\EditorTemplates\DestinationType.cshtml" />
   </ItemGroup>
 
@@ -136,6 +130,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="ClientApp\tsconfig.app.json" />
     <None Include="wwwroot\FileManager\js\custom.js" />
     <None Include="wwwroot\FileManager\js\directory.js" />
     <None Include="wwwroot\FileManager\js\file.js" />

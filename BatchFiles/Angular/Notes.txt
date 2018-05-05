@@ -1,0 +1,30 @@
+https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents
+10.Client-side-Development-with-Angular
+
+
+1. Run NewAngularApp.bat
+2. Run NewAngularClientApp.bat
+3. Copy ClientApp folder to the root of web app.
+3. Copy AngularApp\.angular-cli.json and AngularApp\tsconfig.json to the root of web app.
+4. Copy contents of AngularApp\package.json into web app package.json.
+5. Edit web app tsconfig.json
+- Set outDir to "./wwwroot/clientapp/out-tsc"
+- Add 
+"include": [
+"./ClientApp"
+, "./wwwroot/ts"  ]
+6. Edit web app .angular-cli.json
+- Set root to "ClientApp"
+- set outDir to "./wwwroot/ClientApp/dist"
+7. Open command prompt to root of web app
+8. npm install
+9. Run ng build --watch
+10. include the following files
+<script src="~/ClientApp/dist/inline.bundle.js"></script>
+<script src="~/ClientApp/dist/polyfills.bundle.js"></script>
+<script src="~/ClientApp/dist/styles.bundle.js"></script>
+<script src="~/ClientApp/dist/vendor.bundle.js"></script>
+<script src="~/ClientApp/dist/main.bundle.js"></script>
+11. The selector in app.component.ts sets the tag where the app is built. e.g app-root
+ 
+

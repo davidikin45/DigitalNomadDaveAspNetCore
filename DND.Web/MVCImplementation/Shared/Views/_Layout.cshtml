@@ -124,25 +124,25 @@
     }   
 </head>
 <body ng-cloak class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page") @(ViewBag.FullWidthPage == true ? "full-width-page" : "")">
-        @if ((ViewBag.Admin == null || !ViewBag.Admin))
+    @if ((ViewBag.Admin == null || !ViewBag.Admin))
+    {
+        @(Html.FacebookCommentsScript((Settings.GetValue<String>("FacebookAppId"))))
+    }
+    <div id="wrapper">
+        <!--Navbar-->
+        @Html.Partial("_Navigation")
+        <!--/.Navbar-->
+        <!--Mask-->
+        @if (ViewBag.Admin == true)
         {
-            @(Html.FacebookCommentsScript((Settings.GetValue<String>("FacebookAppId"))))
-        }
-        <div id="wrapper">
-            <!--Navbar-->
-            @Html.Partial("_Navigation")
-            <!--/.Navbar-->
-            <!--Mask-->
-            @if (ViewBag.Admin == true)
-        {
-        <div class="container-fluid">
-            <div class="row">
-                @Html.Partial("_AdminNavigation")
-                <main class="col-9 offset-3 col-md-10 offset-md-2 pt-3">
-                    @RenderBody()
-                </main>
+            <div class="container-fluid">
+                <div class="row">
+                    @Html.Partial("_AdminNavigation")
+                    <main class="col-9 offset-3 col-md-10 offset-md-2 pt-3">
+                        @RenderBody()
+                    </main>
+                </div>
             </div>
-        </div>
         }
         else
         {
@@ -150,91 +150,91 @@
             {
                 if (ViewBag.FullWidthPage == true)
                 {
-        <div class="view view-full-screen">
-            <div class="container-fluid container-full">
-                @RenderBody()
-            </div>
-        </div>
+                    <div class="view view-full-screen">
+                        <div class="container-fluid container-full">
+                            @RenderBody()
+                        </div>
+                    </div>
                 }
                 else if (ViewBag.FullPageBackground == true)
                 {
-        <div class="view view-bg hm-black-strong">
-            <div class="full-bg-img flex-center">
-                <div id="m" class="container-fluid container-full">
+                    <div class="view view-bg hm-black-strong">
+                        <div class="full-bg-img flex-center">
+                            <div id="m" class="container-fluid container-full">
 
-                    @RenderBody()
+                                @RenderBody()
 
-                </div>
-            </div>
-        </div>
+                            </div>
+                        </div>
+                    </div>
                 }
                 else
                 {
-        <div class="container-fluid container-full">
-            @RenderBody()
-        </div>
+                    <div class="container-fluid container-full">
+                        @RenderBody()
+                    </div>
                 }
             }
             else
             {
                 if (ViewBag.FullWidthPage == true)
                 {
-        <div class="container-fluid container-full">
-            @RenderBody()
-        </div>
+                    <div class="container-fluid container-full">
+                        @RenderBody()
+                    </div>
                 }
                 else
                 {
                     if (ViewBag.Blog != null && ViewBag.Blog == true)
                     {
-        <div class="container @if (ViewBag.BlogFullWidth != null && ViewBag.BlogFullWidth == true){<text>container-blog</text>}">
-            <div class="row">
-                <div class="col-lg-8 blog-main">
-                    @if (ViewBag.c == null || ViewBag.CustomPageHeader == false)
+                        <div class="container @if (ViewBag.BlogFullWidth != null && ViewBag.BlogFullWidth == true){<text>container-blog</text>}">
+                            <div class="row">
+                                <div class="col-lg-8 blog-main">
+                                    @if (ViewBag.c == null || ViewBag.CustomPageHeader == false)
                                     {
-                                    <div class="page-header">
-                                        <h1>@ViewBag.PageTitle</h1>
-                                    </div>
+                                        <div class="page-header">
+                                            <h1>@ViewBag.PageTitle</h1>
+                                        </div>
                                     }
-                    @RenderBody()
-                </div>
-                <div class="col-lg-3 offset-lg-1 blog-sidebar">
-                    @await Component.InvokeAsync(nameof(SidebarViewComponent).Replace("ViewComponent",""))
-                </div>
-            </div>
-        </div>
+                                    @RenderBody()
+                                </div>
+                                <div class="col-lg-3 offset-lg-1 blog-sidebar">
+                                    @await Component.InvokeAsync(nameof(SidebarViewComponent).Replace("ViewComponent", ""))
+                                </div>
+                            </div>
+                        </div>
                     }
                     else
                     {
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    @if (ViewBag.CustomPageHeader == null || ViewBag.CustomPageHeader == false)
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    @if (ViewBag.CustomPageHeader == null || ViewBag.CustomPageHeader == false)
                                     {
-                                    <div class="page-header">
-                                        <h1>@ViewBag.PageTitle</h1>
-                                    </div>
+                                        <div class="page-header">
+                                            <h1>@ViewBag.PageTitle</h1>
+                                        </div>
                                     }
-                    @RenderBody()
-                </div>
-            </div>
-        </div>
+                                    @RenderBody()
+                                </div>
+                            </div>
+                        </div>
                     }
                 }
             }
         }
 
-            @RenderSection("footerContent", required: false)
-            @if (ViewBag.LandingPage == true)
-        {
-        @Html.Partial("_Footer")
-        }
-        </div>
-        @if (ViewBag.LandingPage == null || ViewBag.LandingPage == false)
+        @RenderSection("footerContent", required: false)
+        @if (ViewBag.LandingPage == true)
         {
             @Html.Partial("_Footer")
         }
-        @Html.ReturnToTop()
+    </div>
+    @if (ViewBag.LandingPage == null || ViewBag.LandingPage == false)
+    {
+        @Html.Partial("_Footer")
+    }
+    @Html.ReturnToTop()
 
     <!-- SCRIPTS -->
     <script>
@@ -246,7 +246,10 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=@((Settings.GetValue<String>("GoogleMapsApiKey")) + "&libraries=places")"></script>
 
     @Html.Partial("_JS")
-    @*@Html.Partial("_Angular5")*@
+    @if (Settings.GetValue<bool>("AngularApp"))
+    {
+        @Html.Partial("_Angular5")
+    }
 
     @if (ViewBag.Admin == true)
     {
@@ -277,7 +280,7 @@
             $(".instagram-bio").append(data.data.bio.replace(/[|]/g, " | ").replace(/\n/g, "<br/>"));
         });
     </script>
- 
+
     @if (!String.IsNullOrEmpty((Settings.GetValue<String>("AddThisId"))) && (ViewBag.Admin == null || !ViewBag.Admin))
     {
         @Html.AddThisScript((Settings.GetValue<String>("AddThisId")))
