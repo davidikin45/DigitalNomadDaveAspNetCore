@@ -1,1 +1,1 @@
-BuildPlugins.bat Debug
+Build\BuildPlugins.bat Debug

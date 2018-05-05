@@ -1,0 +1,1 @@
+xcopy /s ".\AngularApp\src\*.*" ".\ClientApp\"
