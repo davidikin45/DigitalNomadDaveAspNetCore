@@ -15,7 +15,8 @@ https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angu
 , "./wwwroot/ts"  ]
 6. Edit web app .angular-cli.json
 - Set root to "ClientApp"
-- set outDir to "./wwwroot/ClientApp/dist"
+- Set outDir to "./wwwroot/ClientApp/dist"
+- Delete index
 7. Open command prompt to root of web app
 8. npm install
 9. Run ng build --watch
