@@ -14,7 +14,7 @@ using DND.Common.Swagger;
 using DND.Common.Tasks;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
-using DND.Web.Implementation.Services;
+using DND.Web.MVCImplementation.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -77,7 +77,7 @@ namespace DND.Web
             bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
             string cookieName = Configuration.GetValue<string>("Settings:CookieName");
-            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
+            string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
             string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             string xmlDocumentationFileName = assemblyName + ".xml";
@@ -148,7 +148,7 @@ namespace DND.Web
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
-                options.ViewLocationExpanders.Add(new CustomViewLocator(implementationFolder));
+                options.ViewLocationExpanders.Add(new CustomViewLocator(mvcImplementationFolder));
             });
 
             services.AddResponseCaching(options =>
@@ -406,7 +406,7 @@ namespace DND.Web
 
             string publicUploadFoldersString = Configuration.GetValue<string>("Settings:PublicUploadFolders");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
-            string implementationFolder = Configuration.GetValue<string>("Settings:ImplementationFolder");
+            string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
 
             string uploadsFolder = "/uploads";
 
@@ -591,7 +591,7 @@ namespace DND.Web
             StaticProperties.HostingEnvironment = HostingEnvironment;
             StaticProperties.Configuration = Configuration;
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-            NavigationMenuHelper.ImplementationFolder = implementationFolder;
+            NavigationMenuHelper.MVCImplementationFolder = mvcImplementationFolder;
 
             DomainEvents.Init();
 

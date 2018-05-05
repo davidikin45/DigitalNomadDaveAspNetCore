@@ -9,32 +9,32 @@ namespace DND.Common.Infrastructure
 {
     public class CustomViewLocator : IViewLocationExpander
     {
-        private string ImplementationFolder { get; set; }
+        private string MVCImplementationFolder { get; set; }
 
-        public CustomViewLocator(string implementationFolder)
+        public CustomViewLocator(string mvcImplementationFolder)
         {
-            ImplementationFolder = implementationFolder;
+            MVCImplementationFolder = mvcImplementationFolder;
         }
 
         private string[] Locations()
         {
             string[] locations = {
-                "~/" + ImplementationFolder + "{1}/Views/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "{1}/Views/{0}.cshtml",
 
-                "~/" + ImplementationFolder + "Shared/Views/{0}.cshtml",
-                "~/" + ImplementationFolder + "Shared/Views/Bundles/{0}.cshtml",
-                "~/" + ImplementationFolder + "Shared/Views/Sidebar/{0}.cshtml",
-                "~/" + ImplementationFolder + "Shared/Views/CRUD/{0}.cshtml",
-                 "~/" + ImplementationFolder + "Shared/Views/Navigation/{0}.cshtml",
-                 "~/" + ImplementationFolder + "Shared/Views/Footer/{0}.cshtml",
-                 "~/" + ImplementationFolder + "Shared/Views/Alerts/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Shared/Views/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Shared/Views/Bundles/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Shared/Views/Sidebar/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Shared/Views/CRUD/{0}.cshtml",
+                 "~/" + MVCImplementationFolder + "Shared/Views/Navigation/{0}.cshtml",
+                 "~/" + MVCImplementationFolder + "Shared/Views/Footer/{0}.cshtml",
+                 "~/" + MVCImplementationFolder + "Shared/Views/Alerts/{0}.cshtml",
 
-                "~/" + ImplementationFolder + "Views/Shared/Bundles/{0}.cshtml",
-                "~/" + ImplementationFolder + "Views/Shared/Sidebar/{0}.cshtml",
-                "~/" + ImplementationFolder + "Views/Shared/CRUD/{0}.cshtml",
-                "~/" + ImplementationFolder + "Views/Shared/Navigation/{0}.cshtml",
-                "~/" + ImplementationFolder + "Views/Shared/Footer/{0}.cshtml",
-                 "~/" + ImplementationFolder + "Views/Shared/Alerts/{0}.cshtml"
+                "~/" + MVCImplementationFolder + "Views/Shared/Bundles/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Views/Shared/Sidebar/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Views/Shared/CRUD/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Views/Shared/Navigation/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Views/Shared/Footer/{0}.cshtml",
+                 "~/" + MVCImplementationFolder + "Views/Shared/Alerts/{0}.cshtml"
             };
 
             return locations;
