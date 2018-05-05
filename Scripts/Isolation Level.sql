@@ -11,5 +11,4 @@ where session_id = @@SPID
 SELECT name, is_read_committed_snapshot_on 
 FROM sys.databases
 
-
-ALTER DATABASE DNDAspNetCore2 SET READ_COMMITTED_SNAPSHOT ON
+ALTER DATABASE DND SET READ_COMMITTED_SNAPSHOT ON
