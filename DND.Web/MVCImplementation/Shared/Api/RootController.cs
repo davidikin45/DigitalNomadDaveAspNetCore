@@ -9,7 +9,7 @@ namespace DND.Web.MVCImplementation.Shared.Api
 {
     [ApiVersion("1.0")]
     [Route("api")]
-    public class RootController : BaseWebApiControllerAuthorize
+    public class RootController : BaseWebApiController
     {
         public RootController(IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
             : base(mapper, emailService, urlHelper)
