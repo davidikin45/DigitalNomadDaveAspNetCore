@@ -131,6 +131,10 @@ namespace DND.Common.Helpers
                         if (commentRefQuery != null)
                         {
                             string commentRef = System.Text.Encoding.ASCII.GetString(commentRefQuery.Value).Replace("\0", "");
+                            if(commentRef == null || commentRef.Contains("."))
+                            {
+                                return "";
+                            }
                             return commentRef;
                         }
                     }

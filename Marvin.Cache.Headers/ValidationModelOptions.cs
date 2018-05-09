@@ -18,7 +18,7 @@ namespace Marvin.Cache.Headers
         /// Defaults to Accept, Accept-Language, Accept-Encoding.  * indicates all request headers can be taken into account.
         /// </summary>
         public IEnumerable<string> Vary { get; set; } 
-            = new List<string>() { "Accept", "Accept-Language"};
+            = new List<string>() { "Accept", "Accept-Language, X-Requested-With" };
 
         //IIS DynamicCompressionModule and StaticCompressionModule add the Accept-Encoding Vary header.
         //Accept = Response MIME type client is able to understand.

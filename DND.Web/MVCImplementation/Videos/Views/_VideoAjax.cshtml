@@ -1,0 +1,4 @@
+﻿@model WebApiPagedResponseDto<FileInfo>
+@Html.Partial("_VideoList", Model)
+@{Func<int, string> link = pageIndex => Url.Action("Index", new { page = pageIndex });}
+@HtmlHelperExtensions.BootstrapPager(Html, Model.Page, link, Model.TotalItems, Model.PageSize, 5)

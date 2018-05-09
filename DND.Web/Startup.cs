@@ -194,7 +194,7 @@ namespace DND.Web
                 //Cache-control: no-store = dont store response on client
                 options.CacheProfiles.Add("Cache24HourNoParams", new CacheProfile()
                 {
-                    VaryByHeader = "Accept,Accept-Language",
+                    VaryByHeader = "Accept,Accept-Language,X-Requested-With",
                     //VaryByQueryKeys = "", Only used for server side caching
                     Duration = 60 * 60 * 24, // 24 hour,
                     Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
@@ -204,7 +204,7 @@ namespace DND.Web
                 options.CacheProfiles.Add("Cache24HourParams", new CacheProfile()
                 {
                     //IIS DynamicCompressionModule and StaticCompressionModule add the Accept-Encoding Vary header.
-                    VaryByHeader = "Accept,Accept-Language",
+                    VaryByHeader = "Accept,Accept-Language,X-Requested-With",
                     VaryByQueryKeys = new string[] { "*" }, //Only used for server side caching
                     Duration = 60 * 60 * 24, // 24 hour,
                     Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only

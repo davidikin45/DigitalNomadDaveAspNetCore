@@ -120,15 +120,20 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
         {
             try
             {
-                name = name.ToLower().Replace("-", " ");
                 string physicalPath = Server.GetWwwFolderPhysicalPathById(Folders.Gallery) + name;
+
+                if (!System.IO.Directory.Exists(physicalPath))
+                {
+                    name = name.ToLower().Replace("-", " ");
+                    physicalPath = Server.GetWwwFolderPhysicalPathById(Folders.Gallery) + name;
+                }
 
                 if (!System.IO.Directory.Exists(physicalPath))
                     return HandleReadException();
 
                 var response = await GetGalleryViewModel(physicalPath, page, pageSize, orderColumn, orderType);
 
-                return PartialView("_GalleryList",response);
+                return PartialView("_GalleryAjax",response);
             }
             catch (Exception ex)
             {

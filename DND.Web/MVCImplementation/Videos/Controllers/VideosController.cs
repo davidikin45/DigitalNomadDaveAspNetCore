@@ -74,7 +74,7 @@ namespace DND.Web.MVCImplementation.Videos.Controllers
 
                 var response = await GetVideosViewModel(physicalPath, page, pageSize, orderColumn, orderType);
 
-                return PartialView("_GalleryList",response);
+                return PartialView("_VideoAjax",response);
             }
             catch (Exception ex)
             {
