@@ -23,9 +23,9 @@ namespace DND.Common.Middleware
         }
 
         public static IApplicationBuilder UseContentHandler(
-           this IApplicationBuilder builder, IConfiguration configuration, List<string> publicUploadFolders)
+           this IApplicationBuilder builder, IConfiguration configuration, List<string> publicUploadFolders, int cacheDays)
         {
-            return builder.UseMiddleware<ContentHandlerMiddleware>(publicUploadFolders, configuration);
+            return builder.UseMiddleware<ContentHandlerMiddleware>(publicUploadFolders, configuration, cacheDays);
         }
 
         public static IApplicationBuilder UseResponseCachingCustom(

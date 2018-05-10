@@ -470,6 +470,12 @@ namespace DND.Web
 
             string uploadsFolder = "/uploads";
 
+            //cache
+            int uploadFilesDays = Configuration.GetValue<int>("Settings:Cache:UploadFilesDays");
+            int versionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:VersionedStaticFilesDays");
+            int nonVersionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:NonVersionedStaticFilesDays");
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -614,16 +620,16 @@ namespace DND.Web
                    // ... optionally add more middleware to this branch
                    char[] seperator = { ',' };
                    List<string> publicUploadFolders = publicUploadFoldersString.Split(seperator).ToList();
-                   appBranch.UseContentHandler(Configuration, publicUploadFolders);
+                   appBranch.UseContentHandler(Configuration, publicUploadFolders, uploadFilesDays);
                });
 
             app.UseDefaultFiles();
 
             //versioned files can have large cache expiry time
-            app.UseVersionedStaticFiles(30);
+            app.UseVersionedStaticFiles(versionedStaticFilesDays);
 
             //non versioned files
-            app.UseNonVersionedStaticFiles(1);
+            app.UseNonVersionedStaticFiles(nonVersionedStaticFilesDays);
 
             app.UseAuthentication();
 

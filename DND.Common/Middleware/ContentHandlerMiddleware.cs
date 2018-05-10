@@ -17,18 +17,20 @@ namespace DND.Common.Middleware
         private readonly RequestDelegate _next;
         private IList<string> _validFolders;
         public IConfiguration Configuration { get; }
+        public int CacheDays { get; }
 
         // Must have constructor with this signature, otherwise exception at run time
-        public ContentHandlerMiddleware(RequestDelegate next, IList<string> validFolders, IConfiguration configuration)
+        public ContentHandlerMiddleware(RequestDelegate next, IList<string> validFolders, IConfiguration configuration, int cacheDays)
         { 
              _next = next;
             _validFolders = validFolders;
             Configuration = configuration;
+            CacheDays = cacheDays;
         }
 
         public async Task Invoke(HttpContext context)
         {
-           await new ContentHttpHandler(_validFolders, Configuration).ProcessRequestAsync(context);
+           await new ContentHttpHandler(_validFolders, Configuration, CacheDays).ProcessRequestAsync(context);
             // await _next.Invoke(context); 
         }
     }
@@ -37,10 +39,12 @@ namespace DND.Common.Middleware
     {
         private IList<string> _validFolders;
         public IConfiguration Configuration { get; }
-        public ContentHttpHandler(IList<string> validFolders, IConfiguration configuration)
+        private int _cacheDays;
+        public ContentHttpHandler(IList<string> validFolders, IConfiguration configuration, int cacheDays)
         {
             _validFolders = validFolders;
             Configuration = configuration;
+            _cacheDays = cacheDays;
         }
 
         private Boolean _outputFile;
@@ -66,7 +70,7 @@ namespace DND.Common.Middleware
 
         public override int CacheDays()
         {
-            return 7;
+            return _cacheDays;
         }
 
         public override int BufferSize => 4096;
