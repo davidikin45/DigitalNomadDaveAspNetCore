@@ -475,6 +475,30 @@ namespace DND.Common.Extensions
             return new HtmlString(script.ToString());
         }
 
+        public static HtmlString DeferredIFrameLoad(this IHtmlHelper helper)
+        {
+            HtmlTag script = new HtmlTag("script");
+            script.Attr("type", "text/javascript");
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("function init() ");
+            sb.AppendLine("{");
+            sb.AppendLine("var vidDefer = document.getElementsByTagName('iframe');");
+            sb.AppendLine("for (var i = 0; i < vidDefer.length; i++)");
+            sb.AppendLine("{");
+            sb.AppendLine("if (vidDefer[i].getAttribute('data-src'))");
+            sb.AppendLine("{");
+            sb.AppendLine("vidDefer[i].setAttribute('src', vidDefer[i].getAttribute('data-src'));");
+            sb.AppendLine("}");
+            sb.AppendLine("}");
+            sb.AppendLine("}");
+            sb.AppendLine("window.onload = init;");
+
+            script.AppendHtml(sb.ToString());
+
+            return new HtmlString(script.ToString());
+        }
+
         public static HtmlString GoogleFontAsync(this IHtmlHelper helper, List<string> fonts, bool regular = true, bool bold = false, bool black = false, bool italic = false, bool boldItalic = false, Boolean hideTextWhileLoading = true, int timeout = 5000)
         {
             var html = Google.Font.GetFontScriptAsync(fonts, regular, bold, black, italic, boldItalic, hideTextWhileLoading, timeout);

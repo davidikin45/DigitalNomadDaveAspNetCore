@@ -281,6 +281,8 @@
         });
     </script>
 
+    @Html.DeferredIFrameLoad()
+
     @if (!String.IsNullOrEmpty((Settings.GetValue<String>("AddThisId"))) && (ViewBag.Admin == null || !ViewBag.Admin))
     {
         @Html.AddThisScript((Settings.GetValue<String>("AddThisId")))
