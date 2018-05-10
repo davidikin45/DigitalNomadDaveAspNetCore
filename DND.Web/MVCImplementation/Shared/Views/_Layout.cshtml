@@ -225,12 +225,12 @@
         }
 
         @RenderSection("footerContent", required: false)
-        @if (ViewBag.LandingPage == true)
+        @if (ViewBag.LandingPage == true && (ViewBag.Admin == null || ViewBag.Admin == false))
         {
             @Html.Partial("_Footer")
         }
     </div>
-    @if (ViewBag.LandingPage == null || ViewBag.LandingPage == false)
+    @if ((ViewBag.LandingPage == null || ViewBag.LandingPage == false) && (ViewBag.Admin == null || ViewBag.Admin == false))
     {
         @Html.Partial("_Footer")
     }

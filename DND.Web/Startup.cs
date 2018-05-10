@@ -74,9 +74,10 @@ namespace DND.Web
         public void ConfigureServices(IServiceCollection services)
         {
             //Settings
-            bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:EnableMVCModelValidation");
+            bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:Switches:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
-            string cookieName = Configuration.GetValue<string>("Settings:CookieName");
+            string cookieAuthName = Configuration.GetValue<string>("Settings:CookieAuthName");
+            string cookieTempDataName = Configuration.GetValue<string>("Settings:CookieTempDataName");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
             string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
@@ -89,6 +90,30 @@ namespace DND.Web
 
             string SQLiteConnectionString = ConnectionStrings.GetConnectionString("SQLite");
             string SQLServerConnectionString = ConnectionStrings.GetConnectionString("DefaultConnectionString");
+
+            //password
+            bool requireDigit = Configuration.GetValue<bool>("Settings:Password:RequireDigit");
+            int requiredLength = Configuration.GetValue<int>("Settings:Password:RequiredLength");
+            int requiredUniqueChars = Configuration.GetValue<int>("Settings:Password:RequiredUniqueChars");
+            bool requireLowercase = Configuration.GetValue<bool>("Settings:Password:RequireLowercase");
+            bool requireNonAlphanumeric = Configuration.GetValue<bool>("Settings:Password:RequireNonAlphanumeric");
+            bool requireUppercase = Configuration.GetValue<bool>("Settings:Password:RequireUppercase");
+
+            //user
+            bool requireConfirmedEmail = Configuration.GetValue<bool>("Settings:User:RequireConfirmedEmail");
+            int registrationEmailConfirmationExprireDays = Configuration.GetValue<int>("Settings:User:RegistrationEmailConfirmationExprireDays");
+            int forgotPasswordEmailConfirmationExpireHours = Configuration.GetValue<int>("Settings:User:ForgotPasswordEmailConfirmationExpireHours");
+            int userDetailsChangeLogoutMinutes = Configuration.GetValue<int>("Settings:User:UserDetailsChangeLogoutMinutes");
+
+            //External Logins
+            bool enableGoogleLogin = Configuration.GetValue<bool>("Settings:Login:Google:Enable");
+            string googleClientId = Configuration.GetValue<string>("Settings:Login:Google:ClientId");
+            string googleClientSecret = Configuration.GetValue<string>("Settings:Login:Google:ClientSecret");
+
+            bool enableFacebookLogin = Configuration.GetValue<bool>("Settings:Login:Facebook:Enable");
+            string facebookClientId = Configuration.GetValue<string>("Settings:Login:Facebook:ClientId");
+            string facebookClientSecret = Configuration.GetValue<string>("Settings:Login:Facebook:ClientSecret");
+
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
@@ -116,21 +141,49 @@ namespace DND.Web
                 services.AddHangfireSqlServer(SQLServerConnectionString);
             }
 
-            services.AddIdentity<ApplicationIdentityDbContext, User, IdentityRole>();
+            //Adds "Identity.Application"/IdentityConstants.ApplicationScheme cookie authentication scheme 
+            services.AddIdentity<ApplicationIdentityDbContext, User, IdentityRole>(requireDigit, requiredLength, requiredUniqueChars, requireLowercase, requireNonAlphanumeric,
+                requireUppercase, requireConfirmedEmail, registrationEmailConfirmationExprireDays, forgotPasswordEmailConfirmationExpireHours, userDetailsChangeLogoutMinutes);
 
-            services.AddAuthentication()
-                .AddCookie(options =>
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.Cookie.Name = cookieAuthName;
+            });
+
+            var authenticationBuilder = services.AddAuthentication()
+                 //.AddCookie(options => {
+                 //    options.CookieName = cookieAuthName;
+                 //    options.LoginPath = "/account/Login";
+                 //})
+                 .AddJwtBearer(cfg =>
+                     cfg.TokenValidationParameters = new TokenValidationParameters()
+                     {
+                         ValidIssuer = bearerTokenIssuer,
+                         ValidAudience = bearerTokenAudience,
+                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey))
+                     }
+                 );
+
+            if (enableGoogleLogin)
+            {
+                authenticationBuilder.AddGoogle("Google", options =>
                 {
-                    options.Cookie.Name = cookieName;
-                })
-                .AddJwtBearer(cfg =>
-                    cfg.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidIssuer = bearerTokenIssuer,
-                        ValidAudience = bearerTokenAudience,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey))
-                    }
-                );
+                    options.ClientId = "clientId";
+                    options.ClientSecret = "clientSecret";
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
+                });
+            }
+
+            if (enableFacebookLogin)
+            {
+                authenticationBuilder.AddFacebook("Facebook", options =>
+                {
+                    options.ClientId = "clientId";
+                    options.ClientSecret = "clientSecret";
+                    options.SignInScheme = IdentityConstants.ExternalScheme;
+                });
+            }
 
             //Add this to controller or action using Authorize(Policy = "UserMustBeAdmin")
             //Can create custom requirements by implementing IAuthorizationRequirement and AuthorizationHandler (Needs to be added to services as scoped)
@@ -252,7 +305,12 @@ namespace DND.Web
             })
             .AddXmlSerializerFormatters() //XML Opt out. Contract Serializer is Opt in
             .AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices()
-            .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+            .AddCookieTempDataProvider(options =>
+            {
+                // new API
+                options.Cookie.Name = cookieTempDataName;
+            });
 
             //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
             //https://stackoverflow.com/questions/46374994/correct-way-to-disable-model-validation-in-asp-net-core-2-mvc
@@ -337,10 +395,12 @@ namespace DND.Web
                     Type = "apiKey"
                 });
 
-                c.AddSecurityDefinition(CookieAuthenticationDefaults.AuthenticationScheme, new ApiKeyScheme
+
+                //CookieAuthenticationDefaults.AuthenticationScheme
+                c.AddSecurityDefinition(IdentityConstants.ApplicationScheme, new ApiKeyScheme
                 {
                     Description = "Cookie Authorization scheme. Example: \"Set-Cookie: Key=Value\"",
-                    Name = cookieName,
+                    Name = cookieAuthName,
                     In = "cookie",
                     Type = "apiKey"
                 });
@@ -395,14 +455,14 @@ namespace DND.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner)
         {
             //settings
-            bool enableHelloWord = Configuration.GetValue<bool>("Settings:EnableHelloWorld");
-            bool enableSwagger = Configuration.GetValue<bool>("Settings:EnableSwagger");
-            bool enableResponseCompression = Configuration.GetValue<bool>("Settings:EnableResponseCompression");
-            bool enableIpRateLimiting = Configuration.GetValue<bool>("Settings:EnableIpRateLimiting");
-            bool enableCors = Configuration.GetValue<bool>("Settings:EnableCors");
-            bool enableResponseCaching = Configuration.GetValue<bool>("Settings:EnableResponseCaching");
-            bool enableETags = Configuration.GetValue<bool>("Settings:EnableETags");
-            bool enableHangfire = Configuration.GetValue<bool>("Settings:EnableHangfire");
+            bool enableHelloWord = Configuration.GetValue<bool>("Settings:Switches:EnableHelloWorld");
+            bool enableSwagger = Configuration.GetValue<bool>("Settings:Switches:EnableSwagger");
+            bool enableResponseCompression = Configuration.GetValue<bool>("Settings:Switches:EnableResponseCompression");
+            bool enableIpRateLimiting = Configuration.GetValue<bool>("Settings:Switches:EnableIpRateLimiting");
+            bool enableCors = Configuration.GetValue<bool>("Settings:Switches:EnableCors");
+            bool enableResponseCaching = Configuration.GetValue<bool>("Settings:Switches:EnableResponseCaching");
+            bool enableETags = Configuration.GetValue<bool>("Settings:Switches:EnableETags");
+            bool enableHangfire = Configuration.GetValue<bool>("Settings:Switches:EnableHangfire");
 
             string publicUploadFoldersString = Configuration.GetValue<string>("Settings:PublicUploadFolders");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
@@ -451,7 +511,7 @@ namespace DND.Web
 
             app.UseRequestTasks();
 
-            if(enableSwagger)
+            if (enableSwagger)
             {
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
                 app.UseSwagger();
@@ -493,7 +553,7 @@ namespace DND.Web
                 app.UseIpRateLimiting();
             }
 
-            if(enableCors)
+            if (enableCors)
             {
                 app.UseCors("AllowAnyOrigin");
             }
@@ -567,7 +627,7 @@ namespace DND.Web
 
             app.UseAuthentication();
 
-            if(enableHangfire)
+            if (enableHangfire)
             {
                 app.UseHangfire();
             }

@@ -21,7 +21,7 @@
         </li>
         <li>
             <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-            <div class="alert alert-info">To enable QR code generation please read our <a href="https://go.microsoft.com/fwlink/?Linkid=852423">documentation</a>.</div>
+            @*<div class="alert alert-info">To enable QR code generation please read our <a href="https://go.microsoft.com/fwlink/?Linkid=852423">documentation</a>.</div>*@
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(Model.AuthenticatorUri)"></div>
         </li>
@@ -32,13 +32,13 @@
             </p>
             <div class="row">
                 <div class="col-md-6">
-                    <form method="post">
+                    <form ng-non-bindable method="post">
                         <div class="form-group">
                             <label asp-for="Code" class="control-label">Verification Code</label>
                             <input asp-for="Code" class="form-control" autocomplete="off" />
                             <span asp-validation-for="Code" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-default">Verify</button>
+                        <button type="submit" class="btn btn-primary">Verify</button>
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     </form>
                 </div>
@@ -48,5 +48,12 @@
 </div>
 
 @section Scripts {
-    
+<script type="text/javascript">
+        new QRCode(document.getElementById("qrCode"),
+            {
+                text: "@Html.Raw(Model.AuthenticatorUri)",
+                width: 150,
+                height: 150
+            });
+</script>
 }

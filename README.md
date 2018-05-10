@@ -59,3 +59,5 @@ This project is licensed under the MIT License
 
 * [Enterprise Patterns: Concurrency in Business Applications](https://app.pluralsight.com/library/courses/enterprise-patterns-concurrency-business-applications/table-of-contents)
 
+* [ASP.NET Core Identity Deep Dive](https://app.pluralsight.com/library/courses/aspdotnet-core-identity-deep-dive/table-of-contents)
+

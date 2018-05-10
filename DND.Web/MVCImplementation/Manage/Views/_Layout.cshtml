@@ -1,5 +1,10 @@
-﻿@{ 
-    Layout = "/Implementation/Shared/Views/_Layout.cshtml";
+﻿@inject IConfiguration Configuration
+@{
+    var Settings = Configuration.GetSection("Settings");
+}
+
+@{
+    Layout = "/"+ (Settings.GetValue<string>("MVCImplementationFolder")) + "Shared/Views/_Layout.cshtml";
 }
 
 <h2>Manage your account</h2>
@@ -20,4 +25,4 @@
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }
-        
+

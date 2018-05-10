@@ -5,6 +5,11 @@
     "LinkText": "Admin"
   },
   {
+    "Controller": "Manage",
+    "Action": "Index",
+    "LinkText": "Manage"
+  },
+  {
     "Controller": "AdminCarouselItem",
     "Action": "Index",
     "LinkText": "Carousel"

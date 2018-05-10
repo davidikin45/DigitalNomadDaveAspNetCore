@@ -54,6 +54,7 @@
       "wwwroot/js/non-sucky-youtube-embed.js",
       "wwwroot/js/db-geography.js",
       "wwwroot/js/modal.js",
+      "wwwroot/js/qrcode.js",
       "wwwroot/js/return-to-top.js",
       "wwwroot/js/scroll-position.js",
       "wwwroot/js/site.js"
