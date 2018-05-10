@@ -203,7 +203,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
                    });
             }
 
-            foreach (CategoryDto c in (await _blogService.CategoryApplicationService.GetAllAsync(cancellationToken, null, null, null)))
+            foreach (CategoryDto c in (await _blogService.CategoryApplicationService.GetAsync(cancellationToken, c => c.Published, null, null)))
             {
                 nodes.Add(
                    new SitemapNode()
@@ -264,7 +264,8 @@ namespace DND.Web.MVCImplementation.Home.Controllers
                       HtmlOutputHelper.RelativeToAbsoluteUrls(p.Description, ConfigurationManager.AppSettings(Configuration, "SiteUrl")),
                       new Uri(Url.AbsoluteUrl<BlogController>(c => c.Post(p.DateCreated.Year, p.DateCreated.Month, p.UrlSlug)))
                   )
-            );
+                 
+            ).ToList();
 
             return posts;
         }

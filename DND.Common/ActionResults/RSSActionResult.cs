@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel.Syndication;
 using System.Xml;
+using Microsoft.AspNetCore.Http;
 
 namespace DND.Common.ActionResults
 {
@@ -24,7 +25,7 @@ namespace DND.Common.ActionResults
             _feed = feed;
         }
 
-        public override void ExecuteResult(ActionContext context)
+        public override async Task ExecuteResultAsync(ActionContext context)
         {
             if (context == null)
                 throw new ArgumentNullException("context");
@@ -33,11 +34,21 @@ namespace DND.Common.ActionResults
             response.ContentType = !string.IsNullOrEmpty(ContentType) ? ContentType : "application/rss+xml";
 
             if (_feed != null)
-                using (var xmlWriter = new XmlTextWriter(response.Body, null))
-                {
-                    xmlWriter.Formatting = Formatting.Indented;
-                    _feed.WriteTo(xmlWriter);
-                }
+            {
+                var xmlWriter = CreateXmlWriter(response);
+                _feed.WriteTo(xmlWriter);
+                await xmlWriter.FlushAsync();
+            }
+        }
+
+        private XmlWriter CreateXmlWriter(HttpResponse response)
+        {
+            return XmlWriter.Create(response.Body, new XmlWriterSettings()
+            {
+                Async = true,
+                Encoding = Encoding.UTF8,
+                Indent = true
+            });
         }
     }
 }

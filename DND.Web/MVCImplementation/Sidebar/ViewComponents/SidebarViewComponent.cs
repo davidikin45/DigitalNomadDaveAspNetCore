@@ -38,7 +38,7 @@ namespace DND.Web.MVCImplementation.Sidebar.ViewComponents
             IEnumerable<BlogPostDto> posts = null;
             IEnumerable<FileInfo> photos = null;
 
-            var categoriesTask = _blogService.CategoryApplicationService.GetAllAsync(cts.Token);
+            var categoriesTask = _blogService.CategoryApplicationService.GetAsync(cts.Token, c => c.Published);
             var tagsTask = _blogService.TagApplicationService.GetAllAsync(cts.Token);
             var postsTask = _blogService.BlogPostApplicationService.GetPostsAsync(0, 10, cts.Token);
             var photosTask = repository.GetAllAsync(d => d.OrderByDescending(f => f.LastWriteTime), 0, 6);

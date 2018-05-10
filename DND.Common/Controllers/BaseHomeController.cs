@@ -14,6 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Extensions.Configuration;
+using System.Net.Mime;
+using System.Xml;
 
 namespace DND.Common.Controllers
 {
@@ -84,6 +86,14 @@ namespace DND.Common.Controllers
             // Create a collection of SyndicationItemobjects from the latest posts
             var rssItems = await RSSItems(cts.Token);
 
+            foreach (var item in rssItems)
+            {
+                if(item.Id == null)
+                {
+                    item.Id = item.Links[0].Uri.ToString();
+                }
+            }
+
             // Create an instance of SyndicationFeed class passing the SyndicationItem collection
             var feed = new SyndicationFeed(SiteTitle, SiteDescription, new Uri(SiteUrl), rssItems)
             {
@@ -91,8 +101,18 @@ namespace DND.Common.Controllers
                 Language = Thread.CurrentThread.CurrentUICulture.Name
             };
 
+            // self link (Required) - The URL for the syndication feed.
+            string feedLink = Url.AbsoluteUrl("Feed", "Home", new { });
+
             // Format feed in RSS format through Rss20FeedFormatter formatter
             var feedFormatter = new Rss20FeedFormatter(feed);
+            feedFormatter.SerializeExtensionsAsAtom = false;
+
+            XNamespace atom = "http://www.w3.org/2005/Atom";
+            feed.AttributeExtensions.Add(new XmlQualifiedName("atom", XNamespace.Xmlns.NamespaceName), atom.NamespaceName);
+
+            feed.ElementExtensions.Add(new XElement(atom + "link", new XAttribute("href", feedLink), new XAttribute("rel", "self"), new XAttribute("type", "application/rss+xml")));
+            feed.ElementExtensions.Add(new XElement(atom + "link", new XAttribute("href", SiteUrl), new XAttribute("rel", "alternate"), new XAttribute("type", "text/html")));
 
             // Call the custom action that write the feed to the response
             return new RSSActionResult(feedFormatter);

@@ -28,6 +28,9 @@ namespace DND.Domain.Blog.Categories.Dtos
         [Render(ShowForCreate = false, ShowForEdit = false, ShowForGrid = false, ShowForDisplay = false)]
         public int Count { get; set; }
 
+        [Required]
+        public bool Published { get; set; }
+
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             yield break;

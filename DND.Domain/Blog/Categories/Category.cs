@@ -21,6 +21,9 @@ namespace DND.Domain.Blog.Categories
         //public virtual IList<Post> Posts
         //{ get; set; }
 
+        public bool Published
+        { get; set; }
+
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var errors = new List<ValidationResult>();

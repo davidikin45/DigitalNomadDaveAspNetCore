@@ -44,13 +44,12 @@ html.content-page {
   background-color: #372f45;
 }
 .navbar-brand {
-  width: 230px;
+  width: 200px;
+  color: white !important;
+  margin-right: 0.9rem;
 }
 .top-nav-collapse {
   background-color: #372f45 !important;
-}
-.navbar-brand {
-  color: white !important;
 }
 .navbar-brand img {
   padding-right: 5px;

@@ -133,6 +133,9 @@ namespace DND.Web.MVCImplementation.Blog.Controllers
             if (blogPostListViewModel.Category == null)
                 return NotFound();
 
+            if (blogPostListViewModel.Category.Published == false && User.Identity.IsAuthenticated == false)
+                return Unauthorized();
+
             ViewBag.PageTitle = String.Format(@"Latest posts on category ""{0}""", blogPostListViewModel.Category.Name);
 
             return View("PostList", blogPostListViewModel);
