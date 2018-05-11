@@ -55,7 +55,7 @@
             //window.open('https://maps.google.com?saddr=Current+Location&daddr=' + this.position.lat() + ',' + this.position.lng(), '_blank');
         };
         vm.openLocation = function (evt, slug) {
-            window.location.href = '/location/' + slug;
+            window.location.href = '/locations/' + slug;
         };
     }]);
 
