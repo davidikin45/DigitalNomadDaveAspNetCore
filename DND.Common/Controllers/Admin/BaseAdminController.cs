@@ -29,7 +29,7 @@ namespace DND.Common.Controllers.Admin
 
         //https://stackoverflow.com/questions/565239/any-way-to-clear-flush-remove-outputcache/16038654
         [Route("clear-cache")]
-        public ActionResult ClearCache()
+        public virtual ActionResult ClearCache()
         {
             ResponseCachingCustomMiddleware.ClearResponseCache();
             return View();

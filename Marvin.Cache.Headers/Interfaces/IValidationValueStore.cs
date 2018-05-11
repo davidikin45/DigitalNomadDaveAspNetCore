@@ -9,5 +9,6 @@ namespace Marvin.Cache.Headers.Interfaces
     {      
         Task<ValidationValue> GetAsync(string key);
         Task SetAsync(string key, ValidationValue eTag);
+        void Clear();
     }
 }

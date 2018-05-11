@@ -12,6 +12,11 @@ namespace Marvin.Cache.Headers.Stores
         private readonly ConcurrentDictionary<string, ValidationValue> _store
             = new ConcurrentDictionary<string, ValidationValue>();
 
+        public void Clear()
+        {
+            _store.Clear();
+        }
+
         public Task<ValidationValue> GetAsync(string key)
         {
             if (_store.ContainsKey(key))

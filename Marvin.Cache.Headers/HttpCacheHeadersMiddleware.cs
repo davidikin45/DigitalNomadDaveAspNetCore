@@ -24,7 +24,7 @@ namespace Marvin.Cache.Headers
         // RequestDelegate is the middleware delegate that should be called
         // after this middleware delegate is finished
         private readonly RequestDelegate _next;
-        private readonly IValidationValueStore _store;
+        public readonly IValidationValueStore _store;
         private readonly ILogger _logger;
         private readonly ValidationModelOptions _validationModelOptions;
         private readonly ExpirationModelOptions _expirationModelOptions;
@@ -33,6 +33,13 @@ namespace Marvin.Cache.Headers
         private readonly bool _checkPATCHPUT;
         private readonly bool _generateETag;
         private readonly bool _addVaryHeaders;
+
+        public static HttpCacheHeadersMiddleware Instance;
+
+        public static void ClearCache()
+        {
+            Instance._store.Clear();
+        }
 
         public HttpCacheHeadersMiddleware(
             RequestDelegate next,
@@ -80,6 +87,8 @@ namespace Marvin.Cache.Headers
             _checkPATCHPUT = checkPATCHPUT;
             _generateETag = generateETag;
             _addVaryHeaders = addVaryHeaders;
+
+            Instance = this;
         }
 
         public async Task Invoke(HttpContext httpContext)
