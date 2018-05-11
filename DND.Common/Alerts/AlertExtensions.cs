@@ -14,8 +14,9 @@ namespace DND.Common.Alerts
         public static List<Alert> GetAlertsForOutput(this ITempDataDictionary tempData, HttpContext context)
         {
             //As soon as tempdata is accessed a Cookie ".AspNetCore.Mvc.CookieTempDataProvider" is created which doesn't allow caching!
-            if (!context.Items.ContainsKey(AlertAdded))
+            if (tempData.Count == 0)
             {
+                tempData.SetFieldValue("_loaded", false);
                 return new List<Alert>();
             }
             else

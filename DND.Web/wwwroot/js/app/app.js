@@ -32,7 +32,10 @@
         //$http.get('/site/template/localeMarketCurrency.tmpl.cshtml', { cache: $templateCache });
 
         NgMap.getMap().then(function (map) {
+            console.log('map initialized');
             $rootScope.map = map;
+        }).catch(function (map) {
+            console.error('map error: ', map);
         });
     }])
 
