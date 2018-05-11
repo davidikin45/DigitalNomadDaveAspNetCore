@@ -210,6 +210,9 @@
     <Reference Include="Microsoft.AspNetCore.ResponseCaching.Abstractions, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.ResponseCaching.Abstractions.2.0.3\lib\netstandard2.0\Microsoft.AspNetCore.ResponseCaching.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.Rewrite, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Rewrite.2.0.3\lib\netstandard2.0\Microsoft.AspNetCore.Rewrite.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Routing, Version=2.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Routing.2.0.3\lib\netstandard2.0\Microsoft.AspNetCore.Routing.dll</HintPath>
     </Reference>
@@ -808,8 +811,10 @@
     <Compile Include="Middleware\ApiErrorHandlingMiddleware.cs" />
     <Compile Include="Middleware\ContentHandlerMiddleware.cs" />
     <Compile Include="Middleware\MiddlewareExtensions.cs" />
+    <Compile Include="Middleware\RedirectToWwwRule.cs" />
     <Compile Include="Middleware\RequestTasksMiddleware.cs" />
     <Compile Include="Middleware\ResponseCachingCustomMiddleware.cs" />
+    <Compile Include="Middleware\RewriteOptionsExtensions.cs" />
     <Compile Include="ModelMetadataCustom\ConventionFilters\HtmlByNameFilter.cs" />
     <Compile Include="ModelMetadataCustom\ConventionFilters\LabelConventionFilter.cs" />
     <Compile Include="ModelMetadataCustom\ConventionFilters\TextAreaByNameFilter.cs" />

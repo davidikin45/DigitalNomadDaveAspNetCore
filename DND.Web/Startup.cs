@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -455,6 +456,7 @@ namespace DND.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner)
         {
             //settings
+            bool enableRedirectNonWwwToWww = Configuration.GetValue<bool>("Settings:Switches:EnableRedirectNonWwwToWww");
             bool enableHelloWord = Configuration.GetValue<bool>("Settings:Switches:EnableHelloWorld");
             bool enableSwagger = Configuration.GetValue<bool>("Settings:Switches:EnableSwagger");
             bool enableResponseCompression = Configuration.GetValue<bool>("Settings:Switches:EnableResponseCompression");
@@ -475,6 +477,13 @@ namespace DND.Web
             int versionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:VersionedStaticFilesDays");
             int nonVersionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:NonVersionedStaticFilesDays");
 
+
+            if(enableRedirectNonWwwToWww)
+            {
+                var options = new RewriteOptions();
+                options.AddRedirectToWww();
+                app.UseRewriter(options);
+            }
 
             if (env.IsDevelopment())
             {
