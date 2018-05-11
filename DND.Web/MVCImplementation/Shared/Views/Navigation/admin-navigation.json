@@ -65,7 +65,7 @@
     "LinkText": "Tags"
   },
   {
-    "Controller": "AdminLocation",
+    "Controller": "AdminLocations",
     "Action": "Index",
     "LinkText": "Locations"
   },

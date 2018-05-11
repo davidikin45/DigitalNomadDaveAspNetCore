@@ -144,7 +144,7 @@ else
         {
             foreach (LocationDto location in Model.Locations.OrderBy(l => l.DateCreated))
             {
-                @Html.Partial("~/"+ (Settings.GetValue<string>("MVCImplementationFolder")) +"Location/Views/_Location.cshtml", location)
+                @Html.Partial("~/"+ (Settings.GetValue<string>("MVCImplementationFolder")) +"Locations/Views/_Location.cshtml", location)
             }
                 }
 

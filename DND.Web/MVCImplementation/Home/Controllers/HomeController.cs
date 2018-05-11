@@ -16,7 +16,7 @@ using DND.Domain.Constants;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.MVCImplementation.Blog.Controllers;
 using DND.Web.MVCImplementation.Contact.Models;
-using DND.Web.MVCImplementation.Location.Controllers;
+using DND.Web.MVCImplementation.Locations.Controllers;
 using DND.Web.MVCImplementation.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -188,7 +188,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             nodes.Add(
                  new SitemapNode()
                  {
-                     Url = Url.AbsoluteUrl<LocationController>(c => c.Index(1, 20, nameof(LocationDto.Name), OrderByType.Ascending, ""), false),
+                     Url = Url.AbsoluteUrl<LocationsController>(c => c.Index(1, 20, nameof(LocationDto.Name), OrderByType.Ascending, ""), false),
                      Priority = 0.9
                  });
 
@@ -244,7 +244,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
                     nodes.Add(
                        new SitemapNode()
                        {
-                           Url = Url.AbsoluteUrl<LocationController>(lc => lc.Location(l.UrlSlug)),
+                           Url = Url.AbsoluteUrl<LocationsController>(lc => lc.Location(l.UrlSlug)),
                            Frequency = SitemapFrequency.Weekly,
                            Priority = 0.6
                        });

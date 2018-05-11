@@ -110,8 +110,8 @@
     <Folder Include="MVCImplementation\Gallery\Api\" />
     <Folder Include="MVCImplementation\Gallery\Models\" />
     <Folder Include="MVCImplementation\Gallery\ViewComponents\" />
-    <Folder Include="MVCImplementation\Location\Models\" />
-    <Folder Include="MVCImplementation\Location\ViewComponents\" />
+    <Folder Include="MVCImplementation\Locations\Models\" />
+    <Folder Include="MVCImplementation\Locations\ViewComponents\" />
     <Folder Include="MVCImplementation\MailingList\ViewComponents\" />
     <Folder Include="MVCImplementation\MailingList\Views\" />
     <Folder Include="MVCImplementation\Project\Views\" />
