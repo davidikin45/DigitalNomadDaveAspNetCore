@@ -38,7 +38,10 @@ namespace Marvin.Cache.Headers
 
         public static void ClearCache()
         {
-            Instance._store.Clear();
+            if(Instance != null)
+            {
+                Instance._store.Clear();
+            }
         }
 
         public HttpCacheHeadersMiddleware(
