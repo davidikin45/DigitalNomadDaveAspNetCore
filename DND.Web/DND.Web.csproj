@@ -77,6 +77,7 @@
     <Folder Include="MVCImplementation\Admin\ViewComponents\" />
     <Folder Include="MVCImplementation\Author\ViewComponents\" />
     <Folder Include="MVCImplementation\BucketList\ViewComponents\" />
+    <Folder Include="MVCImplementation\Countries\Api\" />
     <Folder Include="MVCImplementation\FlightSearch\Controllers\" />
     <Folder Include="MVCImplementation\FlightSearch\Models\" />
     <Folder Include="MVCImplementation\FlightSearch\ViewComponents\" />
@@ -84,6 +85,8 @@
     <Folder Include="MVCImplementation\Home\Api\" />
     <Folder Include="MVCImplementation\Home\Models\" />
     <Folder Include="MVCImplementation\Home\ViewComponents\" />
+    <Folder Include="MVCImplementation\Countries\Models\" />
+    <Folder Include="MVCImplementation\Countries\ViewComponents\" />
     <Folder Include="MVCImplementation\Manage\Api\" />
     <Folder Include="MVCImplementation\Manage\ViewComponents\" />
     <Folder Include="MVCImplementation\Sidebar\Views\" />

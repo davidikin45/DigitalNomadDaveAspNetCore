@@ -3,13 +3,16 @@ using DND.Common.Controllers;
 using DND.Common.Email;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Dtos;
+using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Repository;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Domain.Blog.Locations.Dtos;
+using DND.Domain.Constants;
 using DND.Domain.Interfaces.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,11 +22,13 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
     public class LocationsController : BaseController
     {
         private readonly ILocationApplicationService _locationService;
+        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
 
         public LocationsController(ILocationApplicationService locationService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
              : base(mapper, emailService, configuration)
         {
             _locationService = locationService;
+            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
         }
 
         [ResponseCache(CacheProfileName = "Cache24HourParams")]
@@ -80,6 +85,9 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
                 if (data == null)
                     return NotFound();
 
+                //TODO: Locations need image paging
+                string physicalPath = Server.GetWwwFolderPhysicalPathById(Folders.Gallery) + data.Album;
+
                 return View("Location", data);
             }
             catch (Exception ex)
@@ -94,6 +102,32 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
                 }
             }
 
+        }
+
+        private async Task<WebApiPagedResponseDto<FileInfo>> GetLocationViewModel(string physicalPath, int page = 1, int pageSize = 40, string orderColumn = nameof(FileInfo.LastWriteTime), string orderType = OrderByType.Descending)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var repository = _fileSystemRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".jpg", ".jpeg", ".mp4", ".txt");
+            var dataTask = repository.GetAllAsync(LamdaHelper.GetOrderByFunc<FileInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
+            var totalTask = repository.GetCountAsync(null);
+
+            await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
+
+            var data = dataTask.Result;
+            var total = totalTask.Result;
+
+            var response = new WebApiPagedResponseDto<FileInfo>
+            {
+                Page = page,
+                PageSize = pageSize,
+                Records = total,
+                Rows = data.ToList(),
+                OrderColumn = orderColumn,
+                OrderType = orderType
+            };
+
+            return response;
         }
 
     }

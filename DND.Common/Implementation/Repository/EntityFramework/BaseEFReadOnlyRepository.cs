@@ -91,37 +91,56 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             var sql = query.ToString();
         }
 
-        protected virtual IQueryable<TEntity> CreateSearchQuery(IQueryable<TEntity> query, string value)
+        protected virtual IQueryable<TEntity> CreateSearchQuery(IQueryable<TEntity> query, string values)
         {
-            List<Expression> expressions = new List<Expression>();
+
+            List<Expression> andExpressions = new List<Expression>();
 
             ParameterExpression parameter = Expression.Parameter(typeof(TEntity), "p");
 
             MethodInfo contains_method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
 
-            foreach (PropertyInfo prop in typeof(TEntity).GetProperties().Where(x => x.PropertyType == typeof(string)))
+
+            foreach (var value in values.Split('&'))
             {
-                MemberExpression member_expression = Expression.PropertyOrField(parameter, prop.Name);
+                List<Expression> orExpressions = new List<Expression>();
 
-                ConstantExpression value_expression = Expression.Constant(value, typeof(string));
+                foreach (PropertyInfo prop in typeof(TEntity).GetProperties().Where(x => x.PropertyType == typeof(string)))
+                {
+                    MemberExpression member_expression = Expression.PropertyOrField(parameter, prop.Name);
 
-                MethodCallExpression contains_expression = Expression.Call(member_expression, contains_method, value_expression);
+                    ConstantExpression value_expression = Expression.Constant(value, typeof(string));
 
-                expressions.Add(contains_expression);
+                    MethodCallExpression contains_expression = Expression.Call(member_expression, contains_method, value_expression);
+
+                    orExpressions.Add(contains_expression);
+                }
+
+                if (orExpressions.Count == 0)
+                    return query;
+
+                Expression or_expression = orExpressions[0];
+
+                for (int i = 1; i < orExpressions.Count; i++)
+                {
+                    or_expression = Expression.OrElse(or_expression, orExpressions[i]);
+                }
+
+                andExpressions.Add(or_expression);
             }
 
-            if (expressions.Count == 0)
+            if (andExpressions.Count == 0)
                 return query;
 
-            Expression or_expression = expressions[0];
+            Expression and_expression = andExpressions[0];
 
-            for (int i = 1; i < expressions.Count; i++)
+            for (int i = 1; i < andExpressions.Count; i++)
             {
-                or_expression = Expression.OrElse(or_expression, expressions[i]);
+                and_expression = Expression.AndAlso(and_expression, andExpressions[i]);
             }
 
             Expression<Func<TEntity, bool>> expression = Expression.Lambda<Func<TEntity, bool>>(
-                or_expression, parameter);
+                and_expression, parameter);
 
             return query.Where(expression);
         }

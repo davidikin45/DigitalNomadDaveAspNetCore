@@ -16,6 +16,7 @@ using DND.Domain.Constants;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Web.MVCImplementation.Blog.Controllers;
 using DND.Web.MVCImplementation.Contact.Models;
+using DND.Web.MVCImplementation.Countries.Controllers;
 using DND.Web.MVCImplementation.Locations.Controllers;
 using DND.Web.MVCImplementation.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -191,6 +192,14 @@ namespace DND.Web.MVCImplementation.Home.Controllers
                      Url = Url.AbsoluteUrl<LocationsController>(c => c.Index(1, 20, nameof(LocationDto.Name), OrderByType.Ascending, ""), false),
                      Priority = 0.9
                  });
+
+            //countries
+            nodes.Add(
+             new SitemapNode()
+             {
+                 Url = Url.AbsoluteUrl<CountriesController>(c => c.Index(1, 20, nameof(LocationDto.Name), OrderByType.Ascending, ""), false),
+                 Priority = 0.9
+             });
 
             foreach (TagDto t in (await _blogService.TagApplicationService.GetAllAsync(cancellationToken, null, null, null)))
             {
