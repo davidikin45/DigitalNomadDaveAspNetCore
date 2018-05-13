@@ -37,7 +37,7 @@ This project is licensed under the MIT License
 * [Favicon.io](https://favicon.io/)
 * [Favic-o-matic](http://www.favicomatic.com/)
 
-## Pluralsight Courses
+## Pluralsight Courses for Blog
 
 * [Building a Web App with ASP.NET Core, MVC, Entity Framework Core, Bootstrap, and Angular](https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents)
 * [Build Your Own Application Framework with ASP.NET MVC 5](https://app.pluralsight.com/library/courses/build-application-framework-aspdotnet-mvc-5/table-of-contents)
@@ -61,3 +61,5 @@ This project is licensed under the MIT License
 
 * [ASP.NET Core Identity Deep Dive](https://app.pluralsight.com/library/courses/aspdotnet-core-identity-deep-dive/table-of-contents)
 
+## Pluralsight Courses for Chatbot
+* [Creating Voice and Chatbots That Work Everywhere](https://app.pluralsight.com/library/courses/creating-voice-chatbots-work-everywhere/table-of-contents)
