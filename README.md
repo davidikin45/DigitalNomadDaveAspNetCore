@@ -61,5 +61,9 @@ This project is licensed under the MIT License
 
 * [ASP.NET Core Identity Deep Dive](https://app.pluralsight.com/library/courses/aspdotnet-core-identity-deep-dive/table-of-contents)
 
+## Pluralsight Courses for Testing
+* [ASP.NET Core MVC Testing Fundamentals](https://app.pluralsight.com/library/courses/aspdotnet-core-mvc-testing-fundamentals/table-of-contents)
+* [Mocking in .NET Core Unit Tests with Moq: Getting Started](https://app.pluralsight.com/library/courses/moq-dot-net-core-unit-tests/table-of-contents)
+
 ## Pluralsight Courses for Chatbot
 * [Creating Voice and Chatbots That Work Everywhere](https://app.pluralsight.com/library/courses/creating-voice-chatbots-work-everywhere/table-of-contents)
