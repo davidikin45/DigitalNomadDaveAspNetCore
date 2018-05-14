@@ -11,12 +11,23 @@ using System.Reflection;
 using DND.Common.Extensions;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace DND.IntegrationTests2
 {
     [DeploymentItem("Microsoft.VisualStudio.TestPlatform.ObjectModel.dll")]
     public class DNDWebApplicationShould
     {
+        private static string ContentPath
+        {
+            get
+            {
+                var path = PlatformServices.Default.Application.ApplicationBasePath;
+                var contentPath = Path.GetFullPath(Path.Combine(path, $@"..\..\..\DND.Web"));
+                return contentPath;
+            }
+        }
+
         [Fact]
         public async Task RenderHomePage()
         {
@@ -24,8 +35,8 @@ namespace DND.IntegrationTests2
             //Todo: This is not working
 
             var builder = new WebHostBuilder();
-
-            builder.UseContentRoot(@"C:\Development\DigitalNomadDaveAspNetCore\DND.Web")
+            
+            builder.UseContentRoot(ContentPath)
            .UseEnvironment("Development")
            .ConfigureLogging(factory =>
            {
