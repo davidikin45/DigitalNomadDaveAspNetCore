@@ -10,7 +10,7 @@ using DND.Domain.Interfaces.Persistance;
 using DND.DomainServices.FlightSearch.Search.Services;
 using DND.EFPersistance;
 using DND.EFPersistance.Identity;
-using DND.Web.Implementation.FlightSearch.Api;
+using DND.Web.MVCImplementation.FlightSearch.Api;
 using Moq;
 using NUnit.Framework;
 using System.Linq;

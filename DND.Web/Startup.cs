@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -471,6 +472,7 @@ namespace DND.Web
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
 
             string uploadsFolder = "/uploads";
+            string commonAssembly = "DND.Common";
 
             //cache
             int uploadFilesDays = Configuration.GetValue<int>("Settings:Cache:UploadFilesDays");
@@ -668,7 +670,8 @@ namespace DND.Web
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
             NavigationMenuHelper.MVCImplementationFolder = mvcImplementationFolder;
 
-            DomainEvents.Init();
+            Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains(commonAssembly));
+            DomainEvents.Init(filterFunc);
 
             taskRunner.RunTasksAtStartup();
         }

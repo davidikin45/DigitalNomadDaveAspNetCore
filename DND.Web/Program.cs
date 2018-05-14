@@ -32,7 +32,7 @@ namespace DND.Web
 
         public static IConfiguration Configuration;
 
-        public static void LoadWebHostConfiguration(string[] args)
+        public static IConfiguration BuildWebHostConfiguration(string[] args, string contentRoot)
         {
             //Environment Order ASC
             //1. Command Line (environment=Development)
@@ -52,7 +52,7 @@ namespace DND.Web
 
             var config = new ConfigurationBuilder()
            .AddInMemoryCollection(defaults)
-          .SetBasePath(Directory.GetCurrentDirectory())
+          .SetBasePath(contentRoot)
           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
           .AddJsonFile($"appsettings.{configEnvironment[WebHostDefaults.EnvironmentKey] ?? "Production"}.json", optional: true, reloadOnChange: true)
           .AddEnvironmentVariables("ASPNETCORE_");
@@ -62,12 +62,12 @@ namespace DND.Web
                 config.AddCommandLine(args);
             }
 
-            Configuration = config.Build();
+          return config.Build();
         }
 
         public static int Main(string[] args)
         {
-            LoadWebHostConfiguration(args);
+            Configuration = BuildWebHostConfiguration(args, Directory.GetCurrentDirectory());
 
             Log.Logger = new LoggerConfiguration()
               .ReadFrom.Configuration(Configuration)

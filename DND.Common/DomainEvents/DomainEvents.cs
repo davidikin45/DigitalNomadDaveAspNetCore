@@ -13,18 +13,11 @@ namespace DND.Common.DomainEvents
     {
         public static List<Type> _handlers;
 
-        static DomainEvents()
-        {
-            if(_handlers is null)
-            {
-                Init();
-            }
-        }
-
-        public static void Init()
+        public static void Init(Func<Assembly, Boolean> filterFunc)
         {
             var type = typeof(IDomainEventHandler<>);
             _handlers = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(filterFunc)
                 .SelectMany(s => s.GetTypes())
                 .Where(x => x.GetInterfaces().Any(y => y.IsGenericType && y.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)))
                 .ToList();
@@ -39,7 +32,7 @@ namespace DND.Common.DomainEvents
                     && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
                     && x.GenericTypeArguments[0] == domainEvent.GetType());
 
-                if(canHandleEvent)
+                if (canHandleEvent)
                 {
                     dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
                     handler.HandlePreCommit((dynamic)domainEvent);
