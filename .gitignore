@@ -321,9 +321,10 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 
-/DND.Web/App_Data/Logs/*
-/DND.Web/appsettings.Production.json
-/DND.Web/uploads/gallery/australia
-/DND.Web/uploads/gallery/australia-two
-/DND.Web/Scripts_Compile/*
-/Publish/*
+src/DND.Web/App_Data/Logs/*
+src/DND.Web/appsettings.Production.json
+src/DND.Web/uploads/gallery/australia
+src/DND.Web/uploads/gallery/australia-two
+src/DND.Web/Scripts_Compile/*
+src/Publish/*
+src/publish/*

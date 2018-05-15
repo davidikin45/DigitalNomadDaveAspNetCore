@@ -1,2 +1,2 @@
-cd ..\..\DND.UnitTests
+cd ..\..\tests\DND.UnitTests
 dotnet test --no-build

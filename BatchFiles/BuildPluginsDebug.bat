@@ -1,1 +1,1 @@
-Build\BuildPlugins.bat Debug
+Build\BuildPlugins.bat Debug %cd%
