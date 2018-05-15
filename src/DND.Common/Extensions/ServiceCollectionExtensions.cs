@@ -15,6 +15,12 @@ namespace DND.Common.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void AddDbContextInMemory<TContext>(this IServiceCollection services) where TContext : DbContext
+        {
+            services.AddDbContext<TContext>(options =>
+                    options.UseInMemoryDatabase());
+        }
+
         public static void AddDbContextSqlServer<TContext>(this IServiceCollection services, string connectionString) where TContext : DbContext
         {
             services.AddDbContext<TContext>(options =>
@@ -82,7 +88,7 @@ namespace DND.Common.Extensions
             });
         }
 
-        public static IServiceCollection ConfigureRazorViewEngineForTestServer(this IServiceCollection services, Assembly assembly)
+        public static IServiceCollection ConfigureRazorViewEngineForTestServer(this IServiceCollection services, Assembly assembly, string netVersion)
         {
             //https://github.com/aspnet/Hosting/issues/954
             return services.Configure<RazorViewEngineOptions>(options =>
@@ -90,7 +96,7 @@ namespace DND.Common.Extensions
                 var previous = options.CompilationCallback;
                 options.CompilationCallback = (context) =>
                 {
-                    previous?.Invoke(context);
+                   previous?.Invoke(context);
 
                     var assemblies = new List<PortableExecutableReference>();
                     foreach (var x in assembly.GetReferencedAssemblies())
@@ -100,15 +106,8 @@ namespace DND.Common.Extensions
                         assemblies.Add(refAssembly);
                     }
 
-                    //NETStandard.Library.NETFramework
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("netstandard")).Location));
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("System.Private.Corelib")).Location));
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Razor.Runtime")).Location));
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Mvc")).Location));
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Razor")).Location));
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Mvc.Razor")).Location));
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Html.Abstractions")).Location));
-                    //assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("System.Text.Encodings.Web")).Location));
+                    assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Html.Abstractions")).Location));
+                    assemblies.Add(MetadataReference.CreateFromFile(Assembly.LoadFrom(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\"+ netVersion + @"\Facades\netstandard.dll").Location));
 
                     context.Compilation = context.Compilation.AddReferences(assemblies);
                 };

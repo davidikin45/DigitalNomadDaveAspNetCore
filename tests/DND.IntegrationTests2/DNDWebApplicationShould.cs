@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,6 +15,10 @@ namespace DND.IntegrationTests2
 {
     public class DNDWebApplicationShould
     {
+
+        private const string AntiForgeryFieldName = "__AFTField";
+        private const string AntiForgeryCookieName = "AFTCookie";
+
         private static string ContentPath
         {
             get
@@ -24,14 +29,20 @@ namespace DND.IntegrationTests2
             }
         }
 
-        [Fact]
-        public async Task RenderHomePage()
+        [Theory]
+        [InlineData("")]
+        //[InlineData("/blog")]
+        //[InlineData("/gallery")]
+        //[InlineData("/videos")]
+        //[InlineData("/bucket-list")]
+        //[InlineData("/travel-map")]
+        //[InlineData("/about")]
+        //[InlineData("/work-with-me")]
+        //[InlineData("/contact")]
+        public async Task RenderHomePage(string path)
         {
-
-            //Todo: This is not working
-
             var builder = new WebHostBuilder();
-            
+
             builder.UseContentRoot(ContentPath)
            .UseEnvironment("Development")
            .ConfigureLogging(factory =>
@@ -43,23 +54,32 @@ namespace DND.IntegrationTests2
            .UseStartup<Startup>()
            .ConfigureServices(services =>
            {
+
+               services.AddAntiforgery(options => {
+                   options.CookieName = AntiForgeryCookieName;
+                   options.FormFieldName = AntiForgeryCookieName;
+               });
+
                //Test Server Fix
                //https://github.com/aspnet/Hosting/issues/954
-               var assembly = typeof(Startup).GetTypeInfo().Assembly;
-               services.ConfigureRazorViewEngineForTestServer(assembly);
-
                //https://github.com/Microsoft/vstest/issues/428
+               var assembly = typeof(Startup).GetTypeInfo().Assembly;
+               services.ConfigureRazorViewEngineForTestServer(assembly, "v4.7.2");
            });
 
-            var server = new TestServer(builder);
+            var testServer = new TestServer(builder);
 
-            var client = server.CreateClient();
+            var client = testServer.CreateClient();
 
-            var response = await client.GetAsync("");
+            var response = await client.GetAsync(path);
 
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
+
+            testServer.Dispose();
+
+            Assert.True(true);
         }
     }
 }
