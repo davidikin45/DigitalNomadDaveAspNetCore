@@ -116,6 +116,8 @@ namespace DND.Web
             string facebookClientId = Configuration.GetValue<string>("Settings:Login:Facebook:ClientId");
             string facebookClientSecret = Configuration.GetValue<string>("Settings:Login:Facebook:ClientSecret");
 
+            var bin = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
@@ -418,9 +420,10 @@ namespace DND.Web
                 c.SchemaFilter<SwaggerModelExamples>();
 
                 // Set the comments path for the Swagger JSON and UI.
-                var location = System.Reflection.Assembly.GetEntryAssembly().Location;
-                var directory = System.IO.Path.GetDirectoryName(location);
-                var xmlPath = Path.Combine(directory, xmlDocumentationFileName);
+                //var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+                //var directory = System.IO.Path.GetDirectoryName(location);
+
+                var xmlPath = Path.Combine(bin, xmlDocumentationFileName);
 
                 c.IncludeXmlComments(xmlPath);
                 c.DescribeAllEnumsAsStrings();
