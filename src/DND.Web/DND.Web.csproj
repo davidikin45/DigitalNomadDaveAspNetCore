@@ -6,12 +6,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net47\DND.Web.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\net472\DND.Web.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\net47\DND.Web.xml</DocumentationFile>
-    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>bin\Debug\net472\DND.Web.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -56,7 +55,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.3" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.3" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />
