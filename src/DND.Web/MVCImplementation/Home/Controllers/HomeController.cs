@@ -145,8 +145,9 @@ namespace DND.Web.MVCImplementation.Home.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("contact")]
-        public IActionResult Contact(ContactViewModel contact)
+        public async Task<IActionResult> Contact(ContactViewModel contact)
         {
             if (ModelState.IsValid)
             {
@@ -159,13 +160,20 @@ namespace DND.Web.MVCImplementation.Home.Controllers
                     message.ReplyDisplayName = contact.Name;
                     message.ReplyEmail = contact.Email;
 
-                    EmailService.SendEmailMessageToAdmin(message);
+                    var result = await EmailService.SendEmailMessageToAdminAsync(message);
 
-                    //Clears all post data
-                    //https://stackoverflow.com/questions/1775170/asp-net-mvc-modelstate-clear
-                    ViewData.ModelState.Clear();
+                    if (result.IsSuccess)
+                    {
+                        //Clears all post data
+                        //https://stackoverflow.com/questions/1775170/asp-net-mvc-modelstate-clear
+                        ViewData.ModelState.Clear();
 
-                    return View().WithSuccess(this, "Thankyou, your message was sent successfully."); ;
+                        return View().WithSuccess(this, Messages.MessageSentSuccessfully);
+                    }
+                    else
+                    {
+                        HandleUpdateException(result, null, true);
+                    }
                 }
                 catch (Exception ex)
                 {

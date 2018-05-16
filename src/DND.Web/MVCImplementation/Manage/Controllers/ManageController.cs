@@ -1,4 +1,5 @@
-﻿using DND.Common.Interfaces.Services;
+﻿using DND.Common.Email;
+using DND.Common.Interfaces.Services;
 using DND.Domain.Models;
 using DND.Web.MVCImplementation.Extensions;
 using DND.Web.MVCImplementation.Manage.Models;
@@ -22,7 +23,7 @@ namespace DND.Web.MVCImplementation.Manage.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
 
@@ -31,7 +32,7 @@ namespace DND.Web.MVCImplementation.Manage.Controllers
         public ManageController(
           UserManager<User> userManager,
           SignInManager<User> signInManager,
-          IEmailSender emailSender,
+          IEmailService emailSender,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {

@@ -202,7 +202,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DNDWebApplicationShould.cs" />
+    <Compile Include="FlightSearchApiShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestServerFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -138,6 +138,7 @@ namespace DND.Common.Implementation.Validation
     {
         ObjectDoesNotExist,
         ObjectValidationFailed,
-        ConcurrencyConflict
+        ConcurrencyConflict,
+        EmailSendFailed
     }
 }

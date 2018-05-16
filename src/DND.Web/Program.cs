@@ -32,6 +32,11 @@ namespace DND.Web
 
         public static IConfiguration Configuration;
 
+        public static IConfiguration BuildWebHostConfiguration(string contentRoot)
+        {
+            return BuildWebHostConfiguration(null, contentRoot);
+        }
+
         public static IConfiguration BuildWebHostConfiguration(string[] args, string contentRoot)
         {
             //Environment Order ASC
@@ -62,7 +67,7 @@ namespace DND.Web
                 config.AddCommandLine(args);
             }
 
-          return config.Build();
+            return config.Build();
         }
 
         public static int Main(string[] args)

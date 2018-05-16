@@ -107,6 +107,8 @@ namespace DND.Common.Extensions
                     }
 
                     assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Html.Abstractions")).Location));
+                    assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Http.Features")).Location));
+                    assemblies.Add(MetadataReference.CreateFromFile(Assembly.Load(new AssemblyName("Microsoft.Extensions.Primitives")).Location));
                     assemblies.Add(MetadataReference.CreateFromFile(Assembly.LoadFrom(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\"+ netVersion + @"\Facades\netstandard.dll").Location));
 
                     context.Compilation = context.Compilation.AddReferences(assemblies);

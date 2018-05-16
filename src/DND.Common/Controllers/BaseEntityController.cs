@@ -60,7 +60,7 @@ namespace DND.Common.Controllers
                     var result = await Service.CreateAsync(dto, cts.Token);
                     if (result.IsFailure)
                     {
-                        HandleUpdateException(result, null);
+                        HandleUpdateException(result, null, true);
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace DND.Common.Controllers
                     var result = await Service.UpdateAsync(id, dto, cts.Token);
                     if (result.IsFailure)
                     {
-                        HandleUpdateException(result, dto);
+                        HandleUpdateException(result, dto, true);
                     }
                     else
                     {
@@ -163,7 +163,7 @@ namespace DND.Common.Controllers
                     var result = await Service.DeleteAsync(dto, cts.Token); // This should give concurrency checking
                     if (result.IsFailure)
                     {
-                        HandleUpdateException(result, dto);
+                        HandleUpdateException(result, dto, true);
                     }
                     else
                     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DND.Common.Implementation.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,9 @@ namespace DND.Common.Email
 {
     public interface IEmailService
     {
-        bool SendEmailMessage(EmailMessage message);
+        Task<Result> SendEmailMessageAsync(EmailMessage message);
+        Task<Result> SendEmailAsync(string email, string subject, string message);
         bool SendEmailMessages(IList<EmailMessage> messages);
-        bool SendEmailMessageToAdmin(EmailMessage message);
+        Task<Result> SendEmailMessageToAdminAsync(EmailMessage message);
     }
 }

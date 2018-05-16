@@ -21,5 +21,7 @@ namespace DND.Common.Alerts
 
         public const string FieldsInvalid = "One or more of the fields are invalid.";
 
+        public const string MessageSentSuccessfully = "Thankyou, your message was sent successfully.";
+
     }
 }

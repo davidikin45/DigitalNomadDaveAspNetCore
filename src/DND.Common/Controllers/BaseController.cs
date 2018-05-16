@@ -130,10 +130,15 @@ namespace DND.Common.Controllers
             return RedirectToControllerDefault().WithError(this, Messages.RequestInvalid);
         }
 
-        protected void HandleUpdateException(Result failure, IBaseDtoConcurrencyAware dto)
+        protected void HandleUpdateException(Result failure, IBaseDtoConcurrencyAware dto, bool clearPostData)
         {
             //TODO: Need to research how to turn off automatic model validation if doing it in application service layer
-            ModelState.Clear();
+            //Clears all Post Data
+            if(clearPostData)
+            {
+                ModelState.Clear();
+            }
+
             switch (failure.ErrorType)
             {
                 case ErrorType.ObjectValidationFailed:

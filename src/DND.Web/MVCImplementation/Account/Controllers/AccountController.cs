@@ -1,4 +1,5 @@
-﻿using DND.Common.Interfaces.Services;
+﻿using DND.Common.Email;
+using DND.Common.Interfaces.Services;
 using DND.Domain.Models;
 using DND.Web.MVCImplementation.Account.Models;
 using DND.Web.MVCImplementation.Extensions;
@@ -22,14 +23,14 @@ namespace DND.Web.MVCImplementation.Account.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IEmailSender emailSender,
+            IEmailService emailSender,
             ILogger<AccountController> logger,
             IConfiguration configuration)
         {

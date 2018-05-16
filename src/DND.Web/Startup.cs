@@ -4,18 +4,16 @@ using DND.Common.Alerts;
 using DND.Common.Controllers.Admin;
 using DND.Common.DependencyInjection.Autofac.Modules;
 using DND.Common.DomainEvents;
+using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
 using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
-using DND.Common.Interfaces.Services;
 using DND.Common.Middleware;
 using DND.Common.Swagger;
 using DND.Common.Tasks;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
-using DND.Web.MVCImplementation.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,7 +34,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
@@ -118,6 +115,30 @@ namespace DND.Web
 
             var bin = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
 
+            //Email
+            var fromDisplayName = Configuration.GetValue<string>("Settings:Email:FromDisplayName");
+            var fromEmail = Configuration.GetValue<string>("Settings:Email:FromEmail");
+
+            var toEmail = Configuration.GetValue<string>("Settings:Email:ToEmail"); 
+            var toDisplayName = Configuration.GetValue<string>("Settings:Email:ToDisplayName");
+
+            //Smtp
+            bool sendEmailsViaSmtp = Configuration.GetValue<bool>("Settings:Email:SendEmailsViaSmtp");
+            var username = Configuration.GetValue<string>("Settings:Email:Username");
+            var password = Configuration.GetValue<string>("Settings:Email:Password");
+            var host = Configuration.GetValue<string>("Settings:Email:Host");
+            int port = Configuration.GetValue<int>("Settings:Email:Port");
+            bool ssl = Configuration.GetValue<bool>("Settings:Email:Ssl"); 
+
+            //Write to disk
+            bool writeEmailsToFileSystem = Configuration.GetValue<bool>("Settings:Email:WriteEmailsToFileSystem");
+            string fileSystemFolder = Configuration.GetValue<string>("Settings:Email:FileSystemFolder");
+
+            var emailsFileSystemPath = fileSystemFolder;
+            if(!emailsFileSystemPath.Contains(@":\"))
+            {
+                emailsFileSystemPath = Path.Combine(bin, fileSystemFolder);
+            }
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
@@ -201,7 +222,37 @@ namespace DND.Web
                 });
             });
 
-            services.AddTransient<IEmailSender, EmailSender>();
+
+            services.Configure<EmailServiceOptions>(options =>
+            {
+                options.FromDisplayName = fromDisplayName;
+                options.FromEmail = fromEmail;
+
+                options.ToDisplayName = toDisplayName;
+                options.ToEmail = toEmail;
+
+                options.Username = username;
+                options.Password = password;
+                options.Host = host;
+                options.Port = port;
+                options.Ssl = ssl;
+
+                options.PickupDirectoryLocation = emailsFileSystemPath;
+
+                options.SendEmailsViaSmtp = sendEmailsViaSmtp;
+                options.WriteEmailsToFileSystem = writeEmailsToFileSystem;
+            });
+
+            if (sendEmailsViaSmtp)
+            {
+                services.AddTransient<IEmailService, EmailServiceSmtp>();
+            }
+            else
+            {
+                services.AddTransient<IEmailService, EmailServiceFileSystem>();
+            }
+
+            //services.AddTransient<IEmailSender, EmailSender>();
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
@@ -483,7 +534,7 @@ namespace DND.Web
             int nonVersionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:NonVersionedStaticFilesDays");
 
 
-            if(enableRedirectNonWwwToWww)
+            if (enableRedirectNonWwwToWww)
             {
                 var options = new RewriteOptions();
                 options.AddRedirectToWww();

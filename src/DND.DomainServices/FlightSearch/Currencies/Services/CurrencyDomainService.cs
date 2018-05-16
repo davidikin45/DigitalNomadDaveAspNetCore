@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace DND.DomainServices.FlightSearch.Currencies.Services
 {
-    public class CurrencyApplicationService : BaseDomainService, ICurrencyDomainService
+    public class CurrencyDomainService : BaseDomainService, ICurrencyDomainService
     {
-        public CurrencyApplicationService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public CurrencyDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 

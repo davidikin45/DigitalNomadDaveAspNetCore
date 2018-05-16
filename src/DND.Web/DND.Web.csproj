@@ -91,6 +91,7 @@
     <Folder Include="MVCImplementation\Countries\ViewComponents\" />
     <Folder Include="MVCImplementation\Manage\Api\" />
     <Folder Include="MVCImplementation\Manage\ViewComponents\" />
+    <Folder Include="MVCImplementation\Services\" />
     <Folder Include="MVCImplementation\Sidebar\Views\" />
     <Folder Include="MVCImplementation\Tag\Models\" />
     <Folder Include="MVCImplementation\Tag\ViewComponents\" />
