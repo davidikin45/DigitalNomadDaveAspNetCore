@@ -28,6 +28,7 @@ namespace DND.UITests
             var pages = new List<SeleniumPage>();
 
             pages.Add(new SeleniumPage(_fixture.Driver, ""));
+            pages.Add(new SeleniumPage(_fixture.Driver, "blog"));
             pages.Add(new SeleniumPage(_fixture.Driver, "gallery"));
             pages.Add(new SeleniumPage(_fixture.Driver, "videos"));
             pages.Add(new SeleniumPage(_fixture.Driver, "bucket-list"));
@@ -50,10 +51,10 @@ namespace DND.UITests
             _contactPage.NavigateTo();
 
             // Don't enter a name
-            _contactPage.EnterValue(nameof(ContactViewModel.Email), "test@gmail.com");
-            _contactPage.EnterValue(nameof(ContactViewModel.Website), "");
-            _contactPage.EnterValue(nameof(ContactViewModel.Subject), "Enquiry");
-            _contactPage.EnterValue(nameof(ContactViewModel.Message), "This is a test message");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Email), "test@gmail.com");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Website), "");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Subject), "Enquiry");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Message), "This is a test message");
 
             var responsePage = _contactPage.Submit("ContactSubmit");
 
@@ -70,15 +71,15 @@ namespace DND.UITests
         {
             _contactPage.NavigateTo();
 
-            _contactPage.EnterValue(nameof(ContactViewModel.Name), "James Smith");
-            _contactPage.EnterValue(nameof(ContactViewModel.Email), "test@gmail.com");
-            _contactPage.EnterValue(nameof(ContactViewModel.Website), "");
-            _contactPage.EnterValue(nameof(ContactViewModel.Subject), "Enquiry");
-            _contactPage.EnterValue(nameof(ContactViewModel.Message), "This is a test message");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Name), "James Smith");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Email), "test@gmail.com");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Website), "");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Subject), "Enquiry");
+            _contactPage.EnterFormValue(nameof(ContactViewModel.Message), "This is a test message");
 
             var responsePage = _contactPage.Submit("ContactSubmit");
 
-            Assert.Equal("Contact Me | Digital Nomad Dave", responsePage.Driver.Title);
+            Assert.Contains(Messages.MessageSentSuccessfully, responsePage.Html);
         }
 
         private static void DelayForDemoVideo()

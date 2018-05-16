@@ -22,6 +22,20 @@ namespace DND.Common.Testing.Selenium
             PageFactory.InitElements(driver, this);
         }
 
+        public string Path { get
+            {
+                return new Uri(Driver.Url).GetLeftPart(UriPartial.Path).Replace(new Uri(Driver.Url).GetLeftPart(UriPartial.Authority)+"/","");
+            }
+        }
+    
+        public string Html
+        {
+            get
+            {
+                return Driver.FindElement(By.XPath("//*")).GetAttribute("outerHTML");
+            }
+        }
+
         public void NavigateTo()
         {
             var root = new Uri(Driver.Url).GetLeftPart(UriPartial.Authority);
@@ -37,9 +51,16 @@ namespace DND.Common.Testing.Selenium
         public string FirstErrorMessage => FirstError.Text;
 
 
-        public void EnterValue(string id, string value)
+        public void EnterFormValue(string id, string value)
         {
             Driver.FindElement(By.Id(id)).SendKeys(value);
+        }
+
+        public SeleniumPage ClickLink(string text, string cssClass)
+        {
+            Driver.FindElement(By.XPath($@"//a[contains(text(), ""{text}"") and @class=""{cssClass}""]")).Click();
+
+            return new SeleniumPage(Driver, Path);
         }
 
         public SeleniumPage Submit(string id = "Submit")
