@@ -17,8 +17,8 @@ namespace DND.Common.Testing.Selenium
 
         public SeleniumPage(IWebDriver driver, string pagePath)
         {
+            _pagePath = pagePath;
             Driver = driver;
-
             PageFactory.InitElements(driver, this);
         }
 

@@ -1,0 +1,2 @@
+IntegrationTests.bat
+UITests.bat
