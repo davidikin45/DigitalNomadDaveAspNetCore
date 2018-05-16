@@ -66,7 +66,7 @@ This project is licensed under the MIT License
 
 ## Pluralsight Courses for Testing
 * [ASP.NET Core MVC Testing Fundamentals](https://app.pluralsight.com/library/courses/aspdotnet-core-mvc-testing-fundamentals/table-of-contents)
-* [Mocking in .NET Core Unit Tests with Moq: Getting Started](https://app.pluralsight.com/library/courses/moq-dot-net-core-unit-tests/table-of-contents
+* [Mocking in .NET Core Unit Tests with Moq: Getting Started](https://app.pluralsight.com/library/courses/moq-dot-net-core-unit-tests/table-of-contents)
 * [Automated Business Readable Web Tests with Selenium and SpecFlow](https://app.pluralsight.com/library/courses/selenium-specflow-automated-business-readable-web-tests/table-of-contents)
 * [Business Readable Automated Tests with SpecFlow 2.0](https://app.pluralsight.com/library/courses/specflow-2-0-business-readable-automated-tests/exercise-files)
 
