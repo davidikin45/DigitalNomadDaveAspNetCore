@@ -46,7 +46,7 @@ set folder="..\..\Marvin.Cache.Headers\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 
-set folder="..\..\..\tests\DND.UnitTests\bin"
+set folder="..\..\..\test\DND.UnitTests\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 

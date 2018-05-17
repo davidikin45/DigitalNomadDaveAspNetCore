@@ -1,2 +1,2 @@
-cd ..\..\tests\DND.IntegrationTestsNUnit
+cd ..\..\test\DND.IntegrationTestsNUnit
 dotnet test
