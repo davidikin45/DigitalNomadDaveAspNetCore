@@ -15,7 +15,7 @@ namespace DND.IntegrationTestsXUnit
     public class GlobalSetup : BaseIntegrationTestSetup<GlobalSetup>, IDisposable
     {
         public GlobalSetup()
-            :base("DNDIntegrationTests")
+            :base(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"))
         {
             OneTimeSetup();
         }
@@ -25,11 +25,9 @@ namespace DND.IntegrationTestsXUnit
             DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactory(), new ApplicationDbInitializerMigrate(), true, true);
             var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
             context.Database.Migrate();
-
-            Seed();
         }
 
-        public void Seed()
+        public override void Seed()
         {
             var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
 

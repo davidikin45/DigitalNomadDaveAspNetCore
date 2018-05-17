@@ -1,5 +1,6 @@
 ﻿using DND.Common.Infrastructure;
 using DND.Common.Testing;
+using DND.Domain;
 using DND.Domain.Models;
 using DND.EFPersistance;
 using DND.EFPersistance.Identity;
@@ -19,7 +20,7 @@ namespace DND.IntegrationTestsNUnit
     public class GlobalSetup : BaseIntegrationTestSetup<GlobalSetup>, IDisposable
     {
         public GlobalSetup()
-             : base("DNDIntegrationTests")
+             : base(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"))
         {
         }
 
@@ -28,11 +29,9 @@ namespace DND.IntegrationTestsNUnit
             DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactory(), new ApplicationDbInitializerMigrate(), true, true);
             var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
             context.Database.Migrate();
-
-            Seed();
         }
 
-        public void Seed()
+        public override void Seed()
         {
             var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
 

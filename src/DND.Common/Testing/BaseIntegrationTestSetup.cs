@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -13,9 +14,17 @@ namespace DND.Common.Testing
     public abstract class BaseIntegrationTestSetup<T> where T : class, IDisposable
     {
         public string DBName { get; }
-        public BaseIntegrationTestSetup(string dbName)
+        public BaseIntegrationTestSetup(string MSSQLLocalDBDbNameOrConnectionString)
         {
-            DBName = dbName;
+            if(MSSQLLocalDBDbNameOrConnectionString.Contains("Server"))
+            {
+                IDbConnection connection = new SqlConnection(MSSQLLocalDBDbNameOrConnectionString);
+                DBName = connection.Database;
+            }
+            else
+            {
+                DBName = MSSQLLocalDBDbNameOrConnectionString;
+            }
         }
 
         [OneTimeSetUp]
@@ -33,9 +42,11 @@ namespace DND.Common.Testing
                 FILENAME = '{MdfFilename}')");
 
             MigrateDatabase();
+            Seed();
         }
 
         public abstract void MigrateDatabase();
+        public abstract void Seed();
 
         public void DestroyDatabase()
         {
