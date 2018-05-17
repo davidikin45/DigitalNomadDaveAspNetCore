@@ -873,6 +873,7 @@
     <Compile Include="Tasks\IRunOnEachRequest.cs" />
     <Compile Include="Tasks\IRunOnError.cs" />
     <Compile Include="Tasks\TaskRunner.cs" />
+    <Compile Include="Testing\BaseIntegrationTestSetup.cs" />
     <Compile Include="Testing\Isolated.cs" />
     <Compile Include="Testing\Selenium\BaseSeleniumChromeBrowserFixture.cs" />
     <Compile Include="Testing\Selenium\SeleniumPage.cs" />

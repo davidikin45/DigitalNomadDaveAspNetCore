@@ -1,45 +1,35 @@
 ﻿using DND.Common.Infrastructure;
+using DND.Common.Testing;
 using DND.Domain.Models;
 using DND.EFPersistance;
 using DND.EFPersistance.Identity;
 using DND.EFPersistance.Initializers;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
-
+using System.Reflection;
 
 namespace DND.IntegrationTestsNUnit
 {
     [SetUpFixture]
-    public class GlobalSetup
+    public class GlobalSetup : BaseIntegrationTestSetup<GlobalSetup>, IDisposable
     {
-        [OneTimeSetUp]
-        public void Setup()
+        public GlobalSetup()
+             : base("DNDIntegrationTests")
         {
-            SetConfiguration();
-            MigrateDbToLatestVersion();
-            Seed();
         }
 
-        public void SetConfiguration()
+        public override void MigrateDatabase()
         {
-            //SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
-            //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
-        }
-
-        public void MigrateDbToLatestVersion()
-        {
-            DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactory(), new ApplicationDbInitializerDropCreateForce(), true, true);
-
+            DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactory(), new ApplicationDbInitializerMigrate(), true, true);
             var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
-            //context.Database.EnsureDeleted();
-            //context.Database.EnsureCreated();
             context.Database.Migrate();
 
-
-            //var configuration = new ApplicationDbConfiguration();
-            //var migrator = new DbMigrator(configuration);
-            //migrator.Update();
+            Seed();
         }
 
         public void Seed()

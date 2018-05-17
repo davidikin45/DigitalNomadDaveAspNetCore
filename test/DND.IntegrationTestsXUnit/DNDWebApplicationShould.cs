@@ -11,7 +11,7 @@ using System.Net;
 
 namespace DND.IntegrationTestsXUnit
 {
-    public class DNDWebApplicationShould : IClassFixture<TestServerFixture>, IAssemblyFixture<GlobalSetup>
+    public class DNDWebApplicationShould : IAssemblyFixture<GlobalSetup>, IAssemblyFixture<TestServerFixture>
     {
         private readonly TestServerFixture _fixture;
      

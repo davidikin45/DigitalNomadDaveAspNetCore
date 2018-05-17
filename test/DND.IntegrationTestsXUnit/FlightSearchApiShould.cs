@@ -3,7 +3,7 @@ using Xunit;
 
 namespace DND.IntegrationTestsXUnit
 {
-    public class FlightSearchApiShould : IClassFixture<TestServerFixture>, IAssemblyFixture<GlobalSetup>
+    public class FlightSearchApiShould : IAssemblyFixture<GlobalSetup>, IAssemblyFixture<TestServerFixture>
     {    
         private readonly TestServerFixture _fixture;
 
