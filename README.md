@@ -21,6 +21,8 @@ A custom built Content Management System using Bootstrap 4, Angular and C# MVC C
 * [Swagger](https://swagger.io/) - API testing
 * [Http Cache Headers](https://github.com/KevinDockx/HttpCacheHeaders) - ETags
 * [WebSurge](http://websurge.west-wind.com/) - Load Testing
+* [xUnit](https://xunit.github.io/) - Open Source .NET Testing framework
+* [NUnit](http://nunit.org/) - .NET Testing framework
 * [Moq](https://github.com/Moq) - .NET mocking framework
 * [SpecFlow](http://specflow.org/) - Behaviour Driven Development (BDD) testing framework
 * [Selenium](https://www.seleniumhq.org/) - Browser Automation
