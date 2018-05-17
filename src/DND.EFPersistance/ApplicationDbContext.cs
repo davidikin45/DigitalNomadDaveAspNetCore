@@ -32,6 +32,7 @@ using DND.EFPersistance.Configurations.CMS.CarouselItems;
 
 namespace DND.EFPersistance
 {
+    [DbConfigurationType(typeof(DbConfigurationSwitcher))]
     public class ApplicationDbContext : BaseDbContext, IApplicationDbContext
     {
         public IDbSet<Faq> Faqs { get; set; }

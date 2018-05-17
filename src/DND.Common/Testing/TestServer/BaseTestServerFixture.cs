@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace DND.Common.Testing.TestServer
 {
@@ -26,7 +27,7 @@ namespace DND.Common.Testing.TestServer
         public static readonly string AntiForgeryFieldName = "__AFTField";
         public static readonly string AntiForgeryCookieName = "AFTCookie";
 
-        public BaseTestServerFixture(string webAppRelativePath, string environment, string netVersion, Func<string, IConfiguration> configBuilder)
+        public BaseTestServerFixture(string webAppRelativePath, string environment, string netVersion, Func<string, string, IConfiguration> configBuilder)
         {
             _webAppRelativePath = webAppRelativePath;
             // Do "global" initialization here; Only called once.
@@ -40,7 +41,7 @@ namespace DND.Common.Testing.TestServer
                factory.AddConsole();
            })
            .UseAutofac()
-           .UseConfiguration(configBuilder.Invoke(builder.GetSetting(WebHostDefaults.ContentRootKey)))
+           .UseConfiguration(configBuilder.Invoke(environment, builder.GetSetting(WebHostDefaults.ContentRootKey)))
            .UseStartup<T>()
            .ConfigureServices(services =>
            {

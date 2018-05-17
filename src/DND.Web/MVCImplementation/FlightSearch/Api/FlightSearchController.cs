@@ -7,6 +7,7 @@ using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,12 +51,24 @@ namespace DND.Web.MVCImplementation.FlightSearch.Api
         [ProducesResponseType(typeof(FlightSearchResponseDto), 200)]
         public virtual async Task<IActionResult> Search(FlightSearchClientRequestForm requestForm, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(cancellationToken, ClientDisconnectedToken());
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return ValidationErrors(ModelState);
+                }
 
-            var request = Mapper.Map<FlightSearchClientRequestForm, FlightSearchRequestDto>(requestForm);
-            var response = await _flightSearchService.SearchAsync(request, cts.Token);
+                var cts = TaskHelper.CreateChildCancellationTokenSource(cancellationToken, ClientDisconnectedToken());
 
-            return Success(response);
+                var request = Mapper.Map<FlightSearchClientRequestForm, FlightSearchRequestDto>(requestForm);
+                var response = await _flightSearchService.SearchAsync(request, cts.Token);
+
+                return Success(response);
+            }
+            catch(Exception ex)
+            {
+                return HandleException(ex);
+            }
         }
 
         //[NonAction]  

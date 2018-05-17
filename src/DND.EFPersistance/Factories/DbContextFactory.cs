@@ -3,6 +3,7 @@ using DND.Common.Implementation.Persistance;
 using DND.Common.Interfaces.Persistance;
 using System;
 using System.Data.SQLite;
+using DND.Domain;
 
 namespace DND.EFPersistance
 {
@@ -10,21 +11,22 @@ namespace DND.EFPersistance
     {
         public DbContextFactory()
         {
+            var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
         }
 
         public IBaseDbContext CreateDefault()
         {
-            if (bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite")))
+            if (bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite")))
             {
                 var con = new SQLiteConnection()
                 {
-                    ConnectionString = ConnectionStrings.GetConnectionString("SQLite")
+                    ConnectionString = DNDConnectionStrings.GetConnectionString("SQLite")
                 };
                 return new ApplicationDbContext(con);
             }
             else
             {
-                return new ApplicationDbContext(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"));
             }
         }
 

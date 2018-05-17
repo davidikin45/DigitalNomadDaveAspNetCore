@@ -9,6 +9,7 @@ using System.Transactions;
 
 namespace DND.Common.Testing
 {
+    ////EF Core Doesn't support Ambient Transactions!!!
     public class Isolated : Attribute, ITestAction
     {
         private TransactionScope _transactionScope;

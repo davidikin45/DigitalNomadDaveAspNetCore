@@ -10,9 +10,12 @@ namespace DND.Domain
 {
     public static class DNDConnectionStrings 
     {
+        //Used for Integration Tests
         static DNDConnectionStrings()
         {
-            ConnectionStrings.AddConnectionStringIfNotExists("DefaultConnectionString", "Data Source=Dave; Initial Catalog=DNDAspNetCore; Integrated Security=true; MultipleActiveResultSets=True");
+            ConnectionStrings.AddConnectionStringIfNotExists("DefaultConnectionString", "Server=(localdb)\\mssqllocaldb;Database=DND-IntegrationTest;Trusted_Connection=True;MultipleActiveResultSets=true");
+            ConnectionStrings.AddConnectionStringIfNotExists("UseSQLite", "false");
+            ConnectionStrings.AddConnectionStringIfNotExists("SQLite", "Data Source=DND.db;foreign keys=true;");
         }
 
         public static void AddConnectionString(string name, string connectionString)

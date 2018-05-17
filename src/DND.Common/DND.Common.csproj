@@ -749,6 +749,7 @@
     <Compile Include="Implementation\Persistance\BaseDbContext.cs" />
     <Compile Include="Implementation\Persistance\BaseIdentityDbContext.cs" />
     <Compile Include="Implementation\Persistance\ConnectionStrings.cs" />
+    <Compile Include="Implementation\Persistance\DbConfigurationSwitcher.cs" />
     <Compile Include="Implementation\Repository\BaseRepositoryFactory.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\BaseEFReadOnlyRepository.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\BaseEFRepository.cs" />
@@ -860,6 +861,7 @@
     <Compile Include="ModelMetadataCustom\Providers\AttributeMetadataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\DashedRoutingConvention.cs" />
+    <Compile Include="Routing\GetAllRoutes.cs" />
     <Compile Include="Scripts\IScriptManagerSingleton.cs" />
     <Compile Include="Scripts\ScriptManagerSingleton.cs" />
     <Compile Include="Swagger\SwaggerModelExamples.cs" />

@@ -50,11 +50,15 @@ set folder="..\..\..\tests\DND.UnitTests\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 
-set folder="..\..\DND.IntegrationTests\bin"
+set folder="..\..\DND.IntegrationTestsNUnit\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 
-set folder="..\..\DND.IntegrationTests2\bin"
+set folder="..\..\DND.IntegrationTestsXUnit\bin"
+cd /d %folder%
+for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
+
+set folder="..\..\DND.UITests\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 

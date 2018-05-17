@@ -1,2 +1,4 @@
-IntegrationTests.bat
+UnitTests.bat
+IntegrationTestsXUnit.bat
+IntegrationTestsNUnit.bat
 UITests.bat

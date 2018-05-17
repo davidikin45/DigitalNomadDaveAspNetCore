@@ -3,6 +3,7 @@ using DND.Domain.Models;
 using DND.EFPersistance;
 using DND.EFPersistance.Identity;
 using DND.EFPersistance.Initializers;
+using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System.Linq;
 
@@ -31,10 +32,11 @@ namespace DND.IntegrationTestsNUnit
             DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactory(), new ApplicationDbInitializerDropCreateForce(), true, true);
 
             var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
+            context.Database.Migrate();
 
-            
+
             //var configuration = new ApplicationDbConfiguration();
             //var migrator = new DbMigrator(configuration);
             //migrator.Update();
@@ -47,8 +49,8 @@ namespace DND.IntegrationTestsNUnit
             if (context.Users.Any())
                 return;
 
-            context.Users.Add(new User { UserName = "user1", Name = "user1", Email = "-", PasswordHash = "-" });
-            context.Users.Add(new User { UserName = "user2", Name = "user2", Email = "-", PasswordHash = "-" });
+            context.Users.Add(new User { UserName = "user1", Name = "user1", Email = "-", PasswordHash = "-", EmailConfirmed = true });
+            context.Users.Add(new User { UserName = "user2", Name = "user2", Email = "-", PasswordHash = "-", EmailConfirmed = true });
             context.SaveChanges();
         }
     }

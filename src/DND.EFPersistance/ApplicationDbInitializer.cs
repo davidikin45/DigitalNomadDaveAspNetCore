@@ -3,6 +3,7 @@ using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Persistance;
 using DND.Common.Tasks;
+using DND.Domain;
 
 namespace DND.EFPersistance
 {
@@ -18,7 +19,7 @@ namespace DND.EFPersistance
         {
             //DbContextInitializer<ApplicationDbContext>.SetInitializer(new ApplicationDbInitializerDropCreate(), true, true);
 
-            if(bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite")))
+            if(bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite")))
             {
                 DbContextInitializer<ApplicationDbContext>.SetInitializer(_dbContextFactory, new ApplicationDbInitializerMigrateSQLite(), true, true);
             }

@@ -25,34 +25,40 @@ namespace DND.Common.DomainEvents
 
         public static void DispatchPreCommit(IDomainEvent domainEvent)
         {
-            foreach (Type handlerType in _handlers)
+            if(_handlers != null)
             {
-                bool canHandleEvent = handlerType.GetInterfaces()
-                    .Any(x => x.IsGenericType
-                    && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
-                    && x.GenericTypeArguments[0] == domainEvent.GetType());
-
-                if (canHandleEvent)
+                foreach (Type handlerType in _handlers)
                 {
-                    dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
-                    handler.HandlePreCommit((dynamic)domainEvent);
+                    bool canHandleEvent = handlerType.GetInterfaces()
+                        .Any(x => x.IsGenericType
+                        && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
+                        && x.GenericTypeArguments[0] == domainEvent.GetType());
+
+                    if (canHandleEvent)
+                    {
+                        dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
+                        handler.HandlePreCommit((dynamic)domainEvent);
+                    }
                 }
             }
         }
 
         public static void DispatchPostCommit(IDomainEvent domainEvent)
         {
-            foreach (Type handlerType in _handlers)
+            if (_handlers != null)
             {
-                bool canHandleEvent = handlerType.GetInterfaces()
-                    .Any(x => x.IsGenericType
-                    && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
-                    && x.GenericTypeArguments[0] == domainEvent.GetType());
-
-                if (canHandleEvent)
+                foreach (Type handlerType in _handlers)
                 {
-                    dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
-                    handler.HandlePostCommit((dynamic)domainEvent);
+                    bool canHandleEvent = handlerType.GetInterfaces()
+                        .Any(x => x.IsGenericType
+                        && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
+                        && x.GenericTypeArguments[0] == domainEvent.GetType());
+
+                    if (canHandleEvent)
+                    {
+                        dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
+                        handler.HandlePostCommit((dynamic)domainEvent);
+                    }
                 }
             }
         }

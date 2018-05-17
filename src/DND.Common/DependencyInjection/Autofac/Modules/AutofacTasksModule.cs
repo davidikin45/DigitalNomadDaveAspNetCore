@@ -26,6 +26,8 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
             tasks.Add(typeof(IRunOnError));
             tasks.Add(typeof(IRunAfterEachRequest));
 
+            var added = new HashSet<string>();
+
             foreach (string path in Paths)
             {
                 var assemblies = Directory.GetFiles(path, "*.dll", SearchOption.TopDirectoryOnly)
@@ -45,8 +47,9 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
                         {
                             if (!type.IsAbstract)
                             {
-                                if (!type.IsGenericType)
+                                if (!type.IsGenericType && !added.Contains(type.FullName+inter.FullName))
                                 {
+                                    added.Add(type.FullName+inter.FullName);
                                     builder.RegisterType(type).As(inter);
                                 }
                             }

@@ -7,9 +7,17 @@ using Moq;
 using System.Collections.Generic;
 using System.Threading;
 using Xunit;
+using DND.Common.Testing;
+using Microsoft.AspNetCore.Identity;
+using DND.Common.ActionResults;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DND.UnitTests.Controllers.Api
 {
+    //1. Don't test validation in your controller tests. Either you trust MVC's validation or write your own. 
+    //2. If you do want to test validation is doing what you expect, test it in your model tests.
+    //3. What you really want to test here is that your controller does what you expect it to do when validation fails.
     public class FlightSearchControllerShould
     {
         private FlightSearchController _controller;
@@ -24,31 +32,27 @@ namespace DND.UnitTests.Controllers.Api
             mockMapper.Setup(x => x.Map<FlightSearchClientRequestForm, FlightSearchRequestDto>(It.IsAny<FlightSearchClientRequestForm>()))
                 .Returns(expected);
 
-            //var mockLogger = new Mock<ILogFactory>();
-
             _controller = new FlightSearchController(mockService.Object, mockMapper.Object, null, null, null);
-            //_controller.MockHttpContext("1", "d.ikin@test.com");
+            _controller.MockCurrentUser("1", "d.ikin@test.com", IdentityConstants.ApplicationScheme);
         }
 
         [Fact]
-        public void ShouldReturnBetterJsonResultResponseForSearchRequest()
+        public async void ShouldReturnOkObjectResponseForSearchRequest()
         {
             var model = new FlightSearchClientRequestForm();
-            //var task = _controller.Search(model);
-            //task.Wait();
-            // result = task.Result;
-            // result.Should().BeOfType<BetterJsonResult<FlightSearchResponseDto>>();
+            var result = await _controller.Search(model);
+            result.Should().BeOfType<OkObjectResult>();
         }
 
         [Fact]
-        public void ReturnErrorForInvalidSearchRequest()
+        public async void ReturnErrorForInvalidSearchRequest()
         {
             var model = new FlightSearchClientRequestForm();
-            // _controller.BindModelToController(model);
 
-            //var task = _controller.Search(new FlightSearchClientRequestForm());
-            //  task.Wait();
-            //var result = (BetterJsonResult)task.Result;
+            _controller.ViewData.ModelState.AddModelError("Key", "ErrorMessage");
+
+            var result = await _controller.Search(model);
+            result.Should().BeOfType<UnprocessableEntityObjectResult>();
         }
     }
 }

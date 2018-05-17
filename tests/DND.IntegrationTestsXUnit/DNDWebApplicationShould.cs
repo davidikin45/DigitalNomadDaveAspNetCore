@@ -1,18 +1,21 @@
 ﻿using DND.Common.Alerts;
 using DND.Web.MVCImplementation.Contact.Models;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using System.Linq;
+using System.Net;
 
 namespace DND.IntegrationTestsXUnit
 {
-    public class DNDWebApplicationShould : IClassFixture<TestServerFixture>
+    public class DNDWebApplicationShould : IClassFixture<TestServerFixture>, IAssemblyFixture<GlobalSetup>
     {
         private readonly TestServerFixture _fixture;
-
-        public DNDWebApplicationShould(TestServerFixture fixture)
+     
+        public DNDWebApplicationShould(TestServerFixture fixture, GlobalSetup globalSetup)
         {
             this._fixture = fixture;
         }
@@ -34,6 +37,42 @@ namespace DND.IntegrationTestsXUnit
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
+
+            Assert.True(true);
+        }
+
+        [Fact]
+        public async Task GetAllPublicRoutesAndRenderPagesSuccessfully()
+        {
+            var response = await _fixture.Client.GetAsync("/all-routes");
+
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic routes = JsonConvert.DeserializeObject(responseString);
+
+            var testRoutes = new List<string>();
+            foreach (var action in routes.actions)
+            {
+                string template = action.Template;
+                IEnumerable<string> httpMethods = action.HttpMethods.ToObject<List<string>>();
+                bool authorized = action.Authorized;
+
+                if (!authorized && template != null && (httpMethods == null || httpMethods.ToList().Contains(HttpMethod.Get.Method)))
+                {
+                    testRoutes.Add("/"+template);
+                }           
+            }
+
+            foreach (var route in testRoutes)
+            {
+                if(!route.Contains("{") && !route.Contains("api"))
+                {
+                    response = await _fixture.Client.GetAsync(route);
+                    Assert.NotEqual(HttpStatusCode.InternalServerError, response.StatusCode);
+                }
+            }
 
             Assert.True(true);
         }
@@ -72,6 +111,8 @@ namespace DND.IntegrationTestsXUnit
 
             Assert.Contains(Messages.MessageSentSuccessfully, responseString);
         }
+
+
     }
 
 }

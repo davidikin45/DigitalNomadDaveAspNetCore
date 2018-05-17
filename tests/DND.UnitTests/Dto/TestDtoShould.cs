@@ -21,7 +21,7 @@ namespace DND.UnitTests.Dto
         }
 
         [Fact]
-        public void NotBeEqual()
+        public void BeEqual2()
         {
             //Arrange
             var a = new TestDto() { A = "abc" };
@@ -29,6 +29,7 @@ namespace DND.UnitTests.Dto
 
             //Act
             var isEqual = a == b;
+
             //Asset
             Assert.True(isEqual);
         }

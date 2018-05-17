@@ -22,7 +22,7 @@ namespace DND.Common.Extensions
             var controllerActionDescriptor = actionDescriptor as ControllerActionDescriptor;
             if (controllerActionDescriptor != null)
             {
-                return controllerActionDescriptor.MethodInfo.GetCustomAttributes<T>();
+                return controllerActionDescriptor.MethodInfo.ReflectedType.GetCustomAttributes(typeof(T), true).Select(a => (T)a);
             }
 
             return Enumerable.Empty<T>();

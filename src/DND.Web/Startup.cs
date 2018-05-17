@@ -10,8 +10,10 @@ using DND.Common.Filters;
 using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
 using DND.Common.Middleware;
+using DND.Common.Routing;
 using DND.Common.Swagger;
 using DND.Common.Tasks;
+using DND.Domain;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -74,7 +76,7 @@ namespace DND.Web
         {
             //Settings
             bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:Switches:EnableMVCModelValidation");
-            bool useSQLite = bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite"));
+            bool useSQLite = bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite"));
             string cookieAuthName = Configuration.GetValue<string>("Settings:CookieAuthName");
             string cookieTempDataName = Configuration.GetValue<string>("Settings:CookieTempDataName");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
@@ -87,8 +89,8 @@ namespace DND.Web
             string bearerTokenAudience = Configuration["Tokens:Audience"];
             string bearerTokenKey = Configuration["Tokens:Key"];
 
-            string SQLiteConnectionString = ConnectionStrings.GetConnectionString("SQLite");
-            string SQLServerConnectionString = ConnectionStrings.GetConnectionString("DefaultConnectionString");
+            string SQLiteConnectionString = DNDConnectionStrings.GetConnectionString("SQLite");
+            string SQLServerConnectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
 
             //password
             bool requireDigit = Configuration.GetValue<bool>("Settings:Password:RequireDigit");
@@ -541,7 +543,7 @@ namespace DND.Web
                 app.UseRewriter(options);
             }
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.EnvironmentName == "Integration")
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
@@ -564,6 +566,7 @@ namespace DND.Web
                         {
                             appBuilder.Run(async context =>
                             {
+                                //Whenever exceptions are thrown from api services.
                                 context.Response.StatusCode = 500;
                                 await context.Response.WriteAsync(Messages.UnknownError);
                             });
@@ -705,6 +708,8 @@ namespace DND.Web
 
             app.UseMvc(routes =>
             {
+                routes.AllRoutes("/all-routes");
+
                 //Angular templates
                 //First matches url pattern and then substitutes in missing values. Always need Controller and Action
                 routes.MapRoute(

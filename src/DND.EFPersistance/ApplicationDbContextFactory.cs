@@ -9,17 +9,17 @@ namespace DND.EFPersistance
     {
         ApplicationDbContext IDbContextFactory<ApplicationDbContext>.Create()
         {
-            if (bool.Parse(ConnectionStrings.GetConnectionString("UseSQLite")))
+            if (bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite")))
             {
                 var con = new SQLiteConnection()
                 {
-                    ConnectionString = ConnectionStrings.GetConnectionString("SQLite")
+                    ConnectionString = DNDConnectionStrings.GetConnectionString("SQLite")
                 };
                 return new ApplicationDbContext(con);
             }
             else
             {
-                return new ApplicationDbContext(ConnectionStrings.GetConnectionString("DefaultConnectionString"));
+                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"));
             }
         }
     }

@@ -30,11 +30,12 @@ namespace DND.Web.MVCImplementation.FlightSearch.Api
     public class CurrenciesController : BaseWebApiController
     {
         private readonly ICurrencyApplicationService _currencyService;
+        private readonly ICategoryApplicationService _categoryService;
+
 
         public CurrenciesController(ICurrencyApplicationService currencyService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, IConfiguration configuration)
              : base(mapper, emailService, urlHelper, configuration)
         {
-
             _currencyService = currencyService;
         }
 
@@ -63,5 +64,6 @@ namespace DND.Web.MVCImplementation.FlightSearch.Api
 
             return Success(response);
         }
+
     }
 }

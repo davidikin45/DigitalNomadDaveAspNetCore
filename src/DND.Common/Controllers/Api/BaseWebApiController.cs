@@ -60,8 +60,27 @@ namespace DND.Common.Controllers.Api
                     newModelState.AddValidationErrors(failure.ObjectValidationErrors);
                     break;
                 default:
+                    //perhaps should be throwing so Startup returns a 500
+                    //throw ex;
                     newModelState.AddModelError("", Messages.UnknownError);
                     break;
+            }
+            return ValidationErrors(newModelState);
+        }
+
+        protected IActionResult HandleException(Exception ex)
+        {
+            var newModelState = new ModelStateDictionary();
+            if (ex is ValidationErrors)
+            {
+                var propertyErrors = (ValidationErrors)ex;
+                newModelState.AddValidationErrors(propertyErrors);
+            }
+            else
+            {
+                //perhaps should be throwing so Startup returns a 500
+                //throw ex;
+                newModelState.AddModelError("", Messages.UnknownError);
             }
             return ValidationErrors(newModelState);
         }

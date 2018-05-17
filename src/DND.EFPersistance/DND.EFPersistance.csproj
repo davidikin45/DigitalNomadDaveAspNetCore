@@ -71,7 +71,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationDbConfiguration.cs" />
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="ApplicationDbInitializer.cs" />
     <Compile Include="ApplicationDbContextFactory.cs" />

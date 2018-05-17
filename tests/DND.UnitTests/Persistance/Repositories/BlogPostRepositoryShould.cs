@@ -1,17 +1,11 @@
-﻿using DND.Domain.Interfaces.Persistance;
-using DND.Domain.Models;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using DND.Common.Implementation.Repository.EntityFramework;
+﻿using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Testing;
-using System;
+using DND.Domain.Blog.BlogPosts;
+using DND.Domain.Interfaces.Persistance;
+using FluentAssertions;
+using Moq;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DND.Domain.Blog.BlogPosts;
 using Xunit;
 
 namespace DND.UnitTests.Persistance.Repositories
@@ -29,6 +23,7 @@ namespace DND.UnitTests.Persistance.Repositories
             var mockContext = new Mock<IApplicationDbContext>();
             mockContext.SetupGet(c => c.BlogPosts).Returns(_dbSet);
             mockContext.Setup(c => c.BlogPosts).Returns(_dbSet);
+            mockContext.Setup(c => c.Queryable<BlogPost>()).Returns(_dbSet);
             _repository = new BaseEFRepository<IApplicationDbContext, BlogPost>(mockContext.Object, true);
         }
 

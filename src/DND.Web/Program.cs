@@ -32,9 +32,9 @@ namespace DND.Web
 
         public static IConfiguration Configuration;
 
-        public static IConfiguration BuildWebHostConfiguration(string contentRoot)
+        public static IConfiguration BuildWebHostConfiguration(string environment, string contentRoot)
         {
-            return BuildWebHostConfiguration(null, contentRoot);
+            return BuildWebHostConfiguration(new string[] {"environment="+ environment }, contentRoot);
         }
 
         public static IConfiguration BuildWebHostConfiguration(string[] args, string contentRoot)
