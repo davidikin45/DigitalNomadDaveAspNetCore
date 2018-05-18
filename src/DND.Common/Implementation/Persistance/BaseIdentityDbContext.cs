@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Data.Entity.Infrastructure;
+using DND.Common.Implementation.Validation;
 
 namespace DND.Common.Implementation.Persistance
 {
@@ -76,22 +77,23 @@ namespace DND.Common.Implementation.Persistance
         }
 
         //Validate on Save
-        public IEnumerable<System.Data.Entity.Validation.DbEntityValidationResult> GetValidationErrors()
+        IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
         {
-            var list = new List<System.Data.Entity.Validation.DbEntityValidationResult>();
+            var list = new List<DbEntityValidationResultBetter>();
 
-            var serviceProvider = this.GetService<IServiceProvider>();
-            var items = new Dictionary<object, object>();
+            //var serviceProvider = this.GetService<IServiceProvider>();
+            //var items = new Dictionary<object, object>();
 
             foreach (var entry in this.ChangeTracker.Entries().Where(e => (e.State == EntityState.Added) || (e.State == EntityState.Modified)))
             {
                 var entity = entry.Entity;
-                var context = new ValidationContext(entity, serviceProvider, items);
-                var results = new List<ValidationResult>();
+                //var context = new ValidationContext(entity, serviceProvider, items);
+                //var results = new List<ValidationResult>();
 
-                if (Validator.TryValidateObject(entity, context, results, true) == false)
+                var results = ValidationHelper.ValidateObject(entity);
+
+                if (results.Count() > 0)
                 {
-
                     var errors = results.Where(r => r != ValidationResult.Success);
 
                     if(errors.Count() > 0)
@@ -112,7 +114,7 @@ namespace DND.Common.Implementation.Persistance
                             }
                         }
 
-                        var validationResult = new DbEntityValidationResult((DbEntityEntry)new object(), dbValidationErrors);
+                        var validationResult = new DbEntityValidationResultBetter(dbValidationErrors);
 
                         list.Add(validationResult);
                     }
@@ -151,19 +153,60 @@ namespace DND.Common.Implementation.Persistance
         {
             AddTimestamps();
 
-            return base.SaveChanges();
+            var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
+            //maintain order for event firing
+            var allEntities = all.Select(x => x.Entity);
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity);
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
+
+            BaseDbContext.RaiseDomainEventsPreCommit(allEntities, inserted, updated, deleted);
+
+            var objectCount = base.SaveChanges();
+
+            BaseDbContext.RaiseDomainEventsPostCommit(allEntities, inserted, updated, deleted);
+
+            return objectCount;
         }
 
         public async Task<int> SaveChangesAsync()
         {
             AddTimestamps();
-            return await base.SaveChangesAsync();
+
+            var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
+            //maintain order for event firing
+            var allEntities = all.Select(x => x.Entity);
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity);
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
+
+            BaseDbContext.RaiseDomainEventsPreCommit(allEntities, inserted, updated, deleted);
+
+            var objectCount = await base.SaveChangesAsync();
+
+            BaseDbContext.RaiseDomainEventsPostCommit(allEntities, inserted, updated, deleted);
+
+            return objectCount;
         }
 
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             AddTimestamps();
-            return await base.SaveChangesAsync(cancellationToken);
+
+            var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
+            //maintain order for event firing
+            var allEntities = all.Select(x => x.Entity);
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity);
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
+
+            BaseDbContext.RaiseDomainEventsPreCommit(allEntities, inserted, updated, deleted);
+
+            var objectCount = await base.SaveChangesAsync(cancellationToken);
+
+            BaseDbContext.RaiseDomainEventsPostCommit(allEntities, inserted, updated, deleted);
+
+            return objectCount;
         }
 
         public void SetEntityStateAdded(object entity)

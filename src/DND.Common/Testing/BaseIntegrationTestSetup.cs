@@ -41,12 +41,10 @@ namespace DND.Common.Testing
                 ON (NAME = '{DBName}',
                 FILENAME = '{MdfFilename}')");
 
-            MigrateDatabase();
-            Seed();
+            MigrateDatabaseAndSeed();
         }
 
-        public abstract void MigrateDatabase();
-        public abstract void Seed();
+        public abstract void MigrateDatabaseAndSeed();
 
         public void DestroyDatabase()
         {

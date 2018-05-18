@@ -730,7 +730,8 @@ namespace DND.Web
             NavigationMenuHelper.MVCImplementationFolder = mvcImplementationFolder;
 
             Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains(commonAssembly));
-            DomainEvents.Init(filterFunc);
+            DomainEventsFilter.AssemblyFilter = filterFunc;
+            DomainEvents.Init();
 
             taskRunner.RunTasksAtStartup();
         }

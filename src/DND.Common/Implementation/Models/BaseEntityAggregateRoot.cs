@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Models
 {
-    public abstract class BaseEntityAggregateRoot<T> : BaseEntity<T>, IBaseEntityAggregateRoot, IBaseEntityConcurrencyAware
+    public abstract class BaseEntityAggregateRoot<T> : BaseEntity<T>, IBaseEntityAggregateRoot, IBaseEntityConcurrencyAware where T : IEquatable<T>
     {
         private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
         public virtual IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;

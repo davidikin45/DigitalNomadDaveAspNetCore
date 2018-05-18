@@ -16,12 +16,16 @@ namespace DND.Common.Testing
 
         public void BeforeTest(ITest test)
         {
-            _transactionScope = new TransactionScope();
+            _transactionScope = new TransactionScope(TransactionScopeOption.RequiresNew);
         }
 
         public void AfterTest(ITest test)
         {
-            _transactionScope.Dispose();
+            if(_transactionScope != null)
+            {
+                _transactionScope.Dispose();
+            }
+            _transactionScope = null;
         }
 
         public ActionTargets Targets

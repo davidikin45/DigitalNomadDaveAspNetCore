@@ -691,6 +691,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
     <Compile Include="Extensions\TempDataExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\AjaxRequestAttribute.cs" />
     <Compile Include="Filters\ExceptionHandlingFilter.cs" />
@@ -750,6 +751,19 @@
     <Compile Include="Implementation\Persistance\BaseIdentityDbContext.cs" />
     <Compile Include="Implementation\Persistance\ConnectionStrings.cs" />
     <Compile Include="Implementation\Persistance\DbConfigurationSwitcher.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\InMemoryDbContext.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\Accessor.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\AfterSave.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\BeforeSave.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\ConcurrentList.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\GuidIdentityStrategy.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\IdentityStrategy.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\IntegerIdentityStrategy.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\IIdentityStrategy.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\LongIdentityStrategy.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\ObjectRepresentation.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\ObjectRepresentationRepository.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\ShortIdentityStrategy.cs" />
     <Compile Include="Implementation\Repository\BaseRepositoryFactory.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\BaseEFReadOnlyRepository.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\BaseEFRepository.cs" />
@@ -772,6 +786,7 @@
     <Compile Include="Implementation\UnitOfWork\Scopes\BaseUnitOfWorkScope.cs" />
     <Compile Include="Implementation\UnitOfWork\Scopes\BaseUnitOfWorkTransactionalScope.cs" />
     <Compile Include="Implementation\Validation\DatabaseValidationErrors.cs" />
+    <Compile Include="Implementation\Validation\DbEntityValidationResultBetter.cs" />
     <Compile Include="Implementation\Validation\EntityValidationErrors.cs" />
     <Compile Include="Implementation\Validation\GeneralError.cs" />
     <Compile Include="Implementation\Validation\PropertyError.cs" />
@@ -779,6 +794,7 @@
     <Compile Include="Implementation\Validation\ResultExtensions.cs" />
     <Compile Include="Implementation\Validation\ServiceValidationErrors.cs" />
     <Compile Include="Implementation\Validation\ValidationErrors.cs" />
+    <Compile Include="Implementation\Validation\ValidationHelper.cs" />
     <Compile Include="Infrastructure\Activators.cs" />
     <Compile Include="Infrastructure\ArrayModelBinder.cs" />
     <Compile Include="Infrastructure\AspNetCoreExtensions.cs" />

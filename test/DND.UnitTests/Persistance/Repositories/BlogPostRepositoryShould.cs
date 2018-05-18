@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Repository.EntityFramework;
+﻿using DND.Common.Implementation.Persistance.InMemory;
+using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Testing;
 using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Interfaces.Persistance;
@@ -12,27 +13,24 @@ namespace DND.UnitTests.Persistance.Repositories
 {
     public class BlogPostRepositoryShould
     {
-        private BaseEFRepository<IApplicationDbContext, BlogPost> _repository;
-        private DbSet<BlogPost> _dbSet;
-        private List<BlogPost> _list;
+        private InMemoryDataContext _context;
+        private BaseEFRepository<BlogPost> _repository;
        
         public BlogPostRepositoryShould()
         {
-            _list = new List<BlogPost>();
-            _dbSet = TestHelpers.MockDbSet<BlogPost>(_list);
-            var mockContext = new Mock<IApplicationDbContext>();
-            mockContext.SetupGet(c => c.BlogPosts).Returns(_dbSet);
-            mockContext.Setup(c => c.BlogPosts).Returns(_dbSet);
-            mockContext.Setup(c => c.Queryable<BlogPost>()).Returns(_dbSet);
-            _repository = new BaseEFRepository<IApplicationDbContext, BlogPost>(mockContext.Object, true);
+            _context = new InMemoryDataContext();
+            _repository = new BaseEFRepository<BlogPost>(_context, false);
         }
 
         [Fact]
-        public void ReturnAllRisksForGetCount()
+        public void ReturnAllPostsForGetCount()
         {
             var post = new BlogPost();
-            _list.Add(post);
-            _list.Add(post);
+            var post2 = new BlogPost();
+            _repository.Create(post);
+            _repository.Create(post2);
+
+            _context.SaveChanges();
 
             var result = _repository.GetCount();
 

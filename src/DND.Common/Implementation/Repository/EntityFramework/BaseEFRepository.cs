@@ -17,11 +17,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
 // Setting state manually is important in case of detached entities (entities loaded without change tracking or created outside of the current context).
 {
-    public class BaseEFRepository<TContext, TEntity> : BaseEFReadOnlyRepository<TContext, TEntity>, IBaseRepository<TEntity>
-     where TContext : IBaseDbContext
+    public class BaseEFRepository<TEntity> : BaseEFReadOnlyRepository<TEntity>, IBaseRepository<TEntity>
      where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
     {
-        public BaseEFRepository(TContext context, Boolean tracking, CancellationToken cancellationToken = default(CancellationToken))
+        public BaseEFRepository(IBaseDbContext context, Boolean tracking, CancellationToken cancellationToken = default(CancellationToken))
             : base(context, tracking, cancellationToken)
         {
         }

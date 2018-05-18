@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DND.Common.Interfaces.Models;
-using System.ComponentModel.DataAnnotations;
-using DND.Common.Interfaces.Models;
+﻿using DND.Common.Interfaces.Models;
+using System;
 
 namespace DND.Common.Implementation.Models
 {
-    public abstract class BaseEntityAggregateRootAuditable<T> : BaseEntityAggregateRoot<T>, IBaseEntityAuditable
+    public abstract class BaseEntityAggregateRootAuditable<T> : BaseEntityAggregateRoot<T>, IBaseEntityAuditable where T : IEquatable<T>
     {
         private DateTime? _dateCreated;
         public virtual DateTime DateCreated

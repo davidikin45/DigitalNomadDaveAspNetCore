@@ -11,7 +11,7 @@ namespace DND.Common.Implementation.Validation
     public class DatabaseValidationErrors : ValidationErrors
     {
 
-        public DatabaseValidationErrors(IEnumerable<DbEntityValidationResult> errors) : base()
+        public DatabaseValidationErrors(IEnumerable<DbEntityValidationResultBetter> errors) : base()
         {
             foreach (var err in errors.SelectMany(dbEntityValidationResult => dbEntityValidationResult.ValidationErrors))
             {

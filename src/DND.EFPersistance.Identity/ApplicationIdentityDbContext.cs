@@ -28,5 +28,13 @@ namespace DND.EFPersistance.Identity
             builder.Entity<User>().ToTable("User");
         }
 
+        public void Seed()
+        {
+            if (Users.Any())
+                return;
+
+            Users.Add(new User { UserName = "user1", Name = "user1", Email = "-", PasswordHash = "-", EmailConfirmed = true });
+            Users.Add(new User { UserName = "user2", Name = "user2", Email = "-", PasswordHash = "-", EmailConfirmed = true });
+        }
     }
 }

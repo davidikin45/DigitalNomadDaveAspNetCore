@@ -13,6 +13,7 @@ using RefactorThis.GraphDiff;
 using Microsoft.AspNet.Identity.EntityFramework;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Models;
+using DND.Common.Implementation.Validation;
 
 namespace DND.Common.Interfaces.Persistance
 {
@@ -49,7 +50,7 @@ namespace DND.Common.Interfaces.Persistance
         void SetEntityStateDetached(object entity);
         Boolean IsEntityStateUnchanged(object entity);
         void SetEntityStateUnchanged(object entity);
-        IEnumerable<DbEntityValidationResult> GetValidationErrors();
+        IEnumerable<DbEntityValidationResultBetter> GetValidationErrors();
 
         IEnumerable<TResultType> SQLQueryNoTracking<TResultType>(string query, params object[] paramaters) where TResultType : class;
         IEnumerable<TResultType> SQLQueryTracking<TResultType>(string query, params object[] paramaters) where TResultType : class;

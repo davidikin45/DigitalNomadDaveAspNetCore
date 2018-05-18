@@ -20,23 +20,26 @@ namespace DND.IntegrationTestsXUnit
             OneTimeSetup();
         }
 
-        public override void MigrateDatabase()
+        public override void MigrateDatabaseAndSeed()
         {
             DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactory(), new ApplicationDbInitializerMigrate(), true, true);
-            var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
-            context.Database.Migrate();
+
+            using (var context = GivenIdentityContext(false))
+            {
+                context.Database.Migrate();
+                context.Seed();
+                context.SaveChanges();
+            }
         }
 
-        public override void Seed()
+        public static ApplicationIdentityDbContext GivenIdentityContext(bool beginTransaction = true)
         {
-            var context = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
-
-            if (context.Users.Any())
-                return;
-
-            context.Users.Add(new User { UserName = "user1", Name = "user1", Email = "-", PasswordHash = "-", EmailConfirmed = true });
-            context.Users.Add(new User { UserName = "user2", Name = "user2", Email = "-", PasswordHash = "-", EmailConfirmed = true });
-            context.SaveChanges();
+            var db = new ApplicationIdentityDbContextFactory().CreateDbContext(null);
+            if (beginTransaction)
+            {
+                db.Database.BeginTransaction(); //For EF Core need to use this instead of Isolated attribute.
+            }
+            return db;
         }
     }
 }

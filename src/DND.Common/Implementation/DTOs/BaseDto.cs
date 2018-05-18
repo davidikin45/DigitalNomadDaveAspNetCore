@@ -105,7 +105,7 @@ namespace DND.Common.Implementation.Dtos
     }
 
     public abstract class BaseDto<T> : BaseDto, IBaseDto<T>
-    {
+    { 
         [ReadOnlyHiddenInput(ShowForCreate = true, ShowForEdit = true), Display(Order = 0)]
         public virtual T Id { get; set; }
 
@@ -118,7 +118,7 @@ namespace DND.Common.Implementation.Dtos
 
         public override bool Equals(object obj)
         {
-            var other = obj as BaseEntity<T>;
+            var other = obj as BaseDto<T>;
 
             if (ReferenceEquals(other, null))
                 return false;

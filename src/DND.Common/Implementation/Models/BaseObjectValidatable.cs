@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using DND.Common.Interfaces.Models;
 
 using System.Linq.Expressions;
+using DND.Common.Implementation.Validation;
 
 namespace DND.Common.Implementation.Models
 {
@@ -20,17 +21,7 @@ namespace DND.Common.Implementation.Models
 
         public IEnumerable<ValidationResult> Validate()
         {
-            var context = new ValidationContext(this);
-
-            var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(
-                this, 
-                context,
-               validationResults,
-               true);
-
-            return validationResults;
-
+            return ValidationHelper.ValidateObject(this);
         }
 
         public abstract IEnumerable<ValidationResult> Validate(ValidationContext validationContext);

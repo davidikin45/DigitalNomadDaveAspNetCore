@@ -16,17 +16,16 @@ using System.Diagnostics;
 
 namespace DND.Common.Implementation.Repository.EntityFramework
 {
-    public class BaseEFReadOnlyRepository<TContext, TEntity> : IBaseReadOnlyRepository<TEntity>
-    where TContext : IBaseDbContext
+    public class BaseEFReadOnlyRepository<TEntity> : IBaseReadOnlyRepository<TEntity>
     where TEntity : class, IBaseEntity
     {
-        protected readonly TContext _context;
+        protected readonly IBaseDbContext _context;
         protected readonly Boolean _tracking;
         protected readonly CancellationToken _cancellationToken;
 
         //AsNoTracking() causes EF to bypass cache for reads and writes - Ideal for Web Applications and short lived contexts
 
-        public BaseEFReadOnlyRepository(TContext context, Boolean tracking, CancellationToken cancellationToken = default(CancellationToken))
+        public BaseEFReadOnlyRepository(IBaseDbContext context, Boolean tracking, CancellationToken cancellationToken = default(CancellationToken))
         {
             this._context = context;
             this._tracking = tracking;

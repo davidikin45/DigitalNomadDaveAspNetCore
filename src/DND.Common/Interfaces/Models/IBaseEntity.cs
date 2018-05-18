@@ -13,7 +13,7 @@ namespace DND.Common.Interfaces.Models
 
     }
 
-    public interface IBaseEntity<T> : IBaseEntity
+    public interface IBaseEntity<T> : IBaseEntity where T : IEquatable<T>
     {
        new T Id { get; set; }
     }

@@ -1,11 +1,12 @@
 ﻿using DND.Common.Interfaces.Models;
 using DND.Common.ModelMetadataCustom;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Common.Implementation.Models
 {
-    public abstract class BaseEntity<T> : BaseObjectValidatable, IBaseEntity<T>
+    public abstract class BaseEntity<T> : BaseObjectValidatable, IBaseEntity<T> where T : IEquatable<T>
     {
         [ReadOnlyHiddenInput(ShowForCreate = true, ShowForEdit = true), Display(Order = 0)]
         public virtual T Id { get; set; }

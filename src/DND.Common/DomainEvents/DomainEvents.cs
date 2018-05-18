@@ -9,11 +9,32 @@ using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
+    public static class DomainEventsFilter
+    {
+        public static Func<Assembly, Boolean> AssemblyFilter;
+    }
+
     public static class DomainEvents
     {
         public static List<Type> _handlers;
 
-        public static void Init(Func<Assembly, Boolean> filterFunc)
+        static DomainEvents()
+        {
+            Init();
+        }
+
+        public static void Init()
+        {
+            if (_handlers == null)
+            {
+                if (!(DomainEventsFilter.AssemblyFilter is null))
+                {
+                    Init(DomainEventsFilter.AssemblyFilter);
+                }
+            }
+        }
+
+        private static void Init(Func<Assembly, Boolean> filterFunc)
         {
             var type = typeof(IDomainEventHandler<>);
             _handlers = AppDomain.CurrentDomain.GetAssemblies()
