@@ -43,7 +43,7 @@ This project is licensed under the MIT License
 * [Mehdi El Gueddari](http://mehdi.me/ambient-dbcontext-in-ef6/)
 * [Favicon.io](https://favicon.io/)
 * [Favic-o-matic](http://www.favicomatic.com/)
-* [Highway.Data](https://github.com/HighwayFramework/Highway.Data)
+* [Highway.Data EF6 InMemory DbContext](https://github.com/HighwayFramework/Highway.Data)
 
 ## Pluralsight Courses for Builing a Web App with MVC and Angular
 * [Building a Web App with ASP.NET Core, MVC, Entity Framework Core, Bootstrap, and Angular](https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents)
