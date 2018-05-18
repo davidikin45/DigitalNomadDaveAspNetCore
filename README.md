@@ -6,6 +6,79 @@ A custom built Content Management System using Bootstrap 4, Angular and C# MVC C
 * [Website](http://www.digitalnomaddave.com)
 * [Swagger UI](http://www.digitalnomaddave.com/swagger)
 
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+```
+.NET Framework 4.7.2
+```
+
+### Installing
+
+```
+Build DND.Solution
+```
+
+```
+Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to Launch Website using Kestral
+```
+
+## Running the tests
+
+### DND.UnitTests (In Memory DbContext)
+
+No database required
+
+```
+Build DND.Solution
+```
+```
+Execute BatchFiles\Test\UnitTests.bat
+```
+
+### DND.IntegrationTestsXUnit (Mocking)
+
+Automatically creates an Integration database on Local\MSSQLLOCALDB and runs an in process TestServer. On completion database is deleted.
+
+```
+Build DND.Solution
+```
+```
+Execute BatchFiles\Test\IntegrationTestsXUnit.bat
+```
+### DND.IntegrationTestsXUnit (TestServer)
+
+Automatically creates a Integration database on Local\MSSQLLOCALDB. On completion database is deleted.
+
+```
+Build DND.Solution
+```
+```
+Execute BatchFiles\Test\IntegrationTestsNUnit.bat
+```
+### DND.UITests (SpecFlow & Selenium)
+
+Automatically creates a Integration database on Local\MSSQLLOCALDB and launches a Kestral Web Host using dotnet run. On completion database is deleted.
+
+```
+Set SeleniumUrl in test\DND.UITests\app.config
+```
+```
+Build DND.Solution
+```
+```
+Execute BatchFiles\Test\UITests.bat
+```
+
+## Deployment
+
+```
+Publish DND.Web
+```
+
 ## Built With
 
 * [MVC Core](https://www.asp.net/mvc) - Microsoft .NET framework
