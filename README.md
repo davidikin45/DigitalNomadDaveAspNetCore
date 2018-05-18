@@ -1,4 +1,4 @@
-# Digital Nomad Dave AspNetCore
+# Digital Nomad Dave ASP.NET Core
 
 A custom built Content Management System using Bootstrap 4, Angular and C# MVC Core, xUnit, SpecFlow, Selenium
 
