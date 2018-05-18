@@ -286,7 +286,7 @@
       <Project>{239d9dcc-dfd7-40c9-9e0e-55f2331109ad}</Project>
       <Name>DND.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\tests\DND.TestSetup\DND.TestSetup.csproj">
+    <ProjectReference Include="..\DND.TestSetup\DND.TestSetup.csproj">
       <Project>{bcdbc81c-7633-436e-af11-0714c854079d}</Project>
       <Name>DND.TestSetup</Name>
     </ProjectReference>

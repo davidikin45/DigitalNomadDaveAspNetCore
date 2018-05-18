@@ -61,7 +61,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.UITests", "test\DND.UIT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.UnitTests", "test\DND.UnitTests\DND.UnitTests.csproj", "{BAE90B29-D386-4B77-B161-FE50827480CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.TestSetup", "tests\DND.TestSetup\DND.TestSetup.csproj", "{BCDBC81C-7633-436E-AF11-0714C854079D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.TestSetup", "test\DND.TestSetup\DND.TestSetup.csproj", "{BCDBC81C-7633-436E-AF11-0714C854079D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
