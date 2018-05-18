@@ -23,14 +23,14 @@ Build DND.Solution
 ```
 
 ```
-Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to Launch Website using Kestral
+Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to launch Kestral Web Host using dotnet run.
 ```
 
 ## Running the tests
 
 ### DND.UnitTests (In Memory DbContext)
 
-No database required
+No database required.
 
 ```
 Build DND.Solution
@@ -41,7 +41,7 @@ Execute BatchFiles\Test\UnitTests.bat
 
 ### DND.IntegrationTestsXUnit (Mocking)
 
-Automatically creates an Integration database on Local\MSSQLLOCALDB and runs an in process TestServer. On completion database is deleted.
+Automatically creates an Integration database on Local\MSSQLLOCALDB, seeds and runs an in process TestServer. On completion database is deleted.
 
 ```
 Build DND.Solution
@@ -51,7 +51,7 @@ Execute BatchFiles\Test\IntegrationTestsXUnit.bat
 ```
 ### DND.IntegrationTestsXUnit (TestServer)
 
-Automatically creates a Integration database on Local\MSSQLLOCALDB. On completion database is deleted.
+Automatically creates a Integration database on Local\MSSQLLOCALDB and seeds. On completion database is deleted.
 
 ```
 Build DND.Solution
@@ -61,7 +61,7 @@ Execute BatchFiles\Test\IntegrationTestsNUnit.bat
 ```
 ### DND.UITests (SpecFlow & Selenium)
 
-Automatically creates a Integration database on Local\MSSQLLOCALDB and launches a Kestral Web Host using dotnet run. On completion database is deleted.
+Automatically creates a Integration database on Local\MSSQLLOCALDB, seeds and launches a Kestral Web Host using dotnet run. On completion database is deleted.
 
 ```
 Set SeleniumUrl in test\DND.UITests\app.config
