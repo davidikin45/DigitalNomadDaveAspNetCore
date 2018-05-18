@@ -27,9 +27,6 @@ namespace DND.Common.Implementation.Persistance
 {
     public class BaseIdentityDbContext<TUser> : IdentityDbContext<TUser>, IBaseDbContext where TUser : BaseApplicationUser
     {
-
-
-
         public BaseIdentityDbContext(DbContextOptions options)
             :base(options)
         {

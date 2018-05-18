@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
 using System.Net;
+using DND.TestSetup;
 
 namespace DND.IntegrationTestsXUnit
 {
-    public class DNDWebApplicationShould : IAssemblyFixture<GlobalSetup>, IAssemblyFixture<TestServerFixture>
+    public class DNDWebApplicationShould : IAssemblyFixture<DbSetupAndTestServerXUnitFixture>
     {
-        private readonly TestServerFixture _fixture;
+        private readonly DbSetupAndTestServerXUnitFixture _fixture;
      
-        public DNDWebApplicationShould(TestServerFixture fixture, GlobalSetup globalSetup)
+        public DNDWebApplicationShould(DbSetupAndTestServerXUnitFixture fixture)
         {
             this._fixture = fixture;
         }
@@ -32,7 +33,7 @@ namespace DND.IntegrationTestsXUnit
         [InlineData("/contact")]
         public async Task RenderPageSuccessfully(string path)
         {
-            var response = await _fixture.Client.GetAsync(path);
+            var response = await _fixture.TestServer.Client.GetAsync(path);
 
             response.EnsureSuccessStatusCode();
 
@@ -44,7 +45,7 @@ namespace DND.IntegrationTestsXUnit
         [Fact]
         public async Task GetAllPublicRoutesAndRenderPagesSuccessfully()
         {
-            var response = await _fixture.Client.GetAsync("/all-routes");
+            var response = await _fixture.TestServer.Client.GetAsync("/all-routes");
 
             response.EnsureSuccessStatusCode();
 
@@ -69,7 +70,7 @@ namespace DND.IntegrationTestsXUnit
             {
                 if(!route.Contains("{") && !route.Contains("api"))
                 {
-                    response = await _fixture.Client.GetAsync(route);
+                    response = await _fixture.TestServer.Client.GetAsync(route);
                     Assert.NotEqual(HttpStatusCode.InternalServerError, response.StatusCode);
                 }
             }
@@ -81,8 +82,8 @@ namespace DND.IntegrationTestsXUnit
         public async Task AcceptContactFormPost()
         {
             // Get initial response that contains anti forgery tokens
-            HttpResponseMessage initialResponse = await _fixture.Client.GetAsync("/contact");
-            var antiForgeryValues = await _fixture.ExtractAntiForgeryValues(initialResponse);
+            HttpResponseMessage initialResponse = await _fixture.TestServer.Client.GetAsync("/contact");
+            var antiForgeryValues = await _fixture.TestServer.ExtractAntiForgeryValues(initialResponse);
 
             // Create POST request, adding anti forgery cookie and form field
             HttpRequestMessage postRequest = new HttpRequestMessage(HttpMethod.Post, "/contact");
@@ -103,7 +104,7 @@ namespace DND.IntegrationTestsXUnit
 
             postRequest.Content = new FormUrlEncodedContent(formData);
 
-            HttpResponseMessage postResponse = await _fixture.Client.SendAsync(postRequest);
+            HttpResponseMessage postResponse = await _fixture.TestServer.Client.SendAsync(postRequest);
 
             postResponse.EnsureSuccessStatusCode();
 

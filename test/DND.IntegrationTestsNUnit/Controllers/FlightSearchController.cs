@@ -44,7 +44,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
             var mockDbContextFactory = new Mock<IDbContextFactory>();
             mockDbContextFactory.Setup(c => c.CreateDefault()).Returns(_context);
 
-            _identityContext = GlobalSetup.CreateIdentityContext();
+            _identityContext = GlobalDbSetupFixture.CreateIdentityContext();
 
             _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new BaseUnitOfWorkScopeFactory(mockDbContextFactory.Object, new BaseAmbientDbContextLocator(), new BaseRepositoryFactory())), _mapper), _mapper, null, null, null);
         }

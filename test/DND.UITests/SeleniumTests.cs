@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Threading;
 using DND.Common.Alerts;
 using DND.Common.Testing.Selenium;
+using DND.TestSetup;
 using DND.Web.MVCImplementation.Contact.Models;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -11,12 +12,12 @@ using Xunit;
 
 namespace DND.UITests
 {
-    public class SeleniumTests : IClassFixture<SeleniumChromeBrowserFixture>
+    public class SeleniumTests : IAssemblyFixture<DbSetupAndDotNetRunXUnitFixture>, IClassFixture<SeleniumChromeBrowserFixture>
     {
         private readonly SeleniumChromeBrowserFixture _fixture;
         private readonly SeleniumPage _contactPage;
 
-        public SeleniumTests(SeleniumChromeBrowserFixture fixture)
+        public SeleniumTests(DbSetupAndDotNetRunXUnitFixture dbSetupAndDotNetRun, SeleniumChromeBrowserFixture fixture)
         {
             this._fixture = fixture;
             _contactPage = new SeleniumPage(fixture.Driver, "contact");

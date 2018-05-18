@@ -281,7 +281,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\FlightSearchController.cs" />
-    <Compile Include="GlobalSetup.cs" />
+    <Compile Include="GlobalDbSetupFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -316,6 +316,10 @@
     <ProjectReference Include="..\..\src\DND.Web\DND.Web.csproj">
       <Project>{16EDDC5F-CA90-492A-8C53-5777B0C206EE}</Project>
       <Name>DND.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\tests\DND.TestSetup\DND.TestSetup.csproj">
+      <Project>{bcdbc81c-7633-436e-af11-0714c854079d}</Project>
+      <Name>DND.TestSetup</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

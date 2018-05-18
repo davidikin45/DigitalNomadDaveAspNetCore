@@ -1,5 +1,6 @@
 ﻿using DND.Common.Alerts;
 using DND.Common.Testing.Selenium;
+using DND.TestSetup;
 using DND.Web.MVCImplementation.Contact.Models;
 using OpenQA.Selenium;
 using System;

@@ -20,9 +20,13 @@ namespace DND.Common.Testing.TestServer
 {
     public abstract class BaseTestServerFixture<T> : IDisposable where T: class
     {
-        private readonly Microsoft.AspNetCore.TestHost.TestServer _testServer;
+        private Microsoft.AspNetCore.TestHost.TestServer _testServer;
         private string _webAppRelativePath;
-        public HttpClient Client { get; }
+        private string _environment;
+        private string _netVersion;
+        private Func<string, string, IConfiguration> _configBuilder;
+
+        public HttpClient Client { get; private set; }
 
         public static readonly string AntiForgeryFieldName = "__AFTField";
         public static readonly string AntiForgeryCookieName = "AFTCookie";
@@ -30,18 +34,24 @@ namespace DND.Common.Testing.TestServer
         public BaseTestServerFixture(string webAppRelativePath, string environment, string netVersion, Func<string, string, IConfiguration> configBuilder)
         {
             _webAppRelativePath = webAppRelativePath;
+            _environment = environment;
+            _netVersion = netVersion;
+            _configBuilder = configBuilder;
             // Do "global" initialization here; Only called once.
+        }
 
+        public void Launch()
+        {
             var builder = new WebHostBuilder();
 
             builder.UseContentRoot(GetContentRootPath())
-           .UseEnvironment(environment)
+           .UseEnvironment(_environment)
            .ConfigureLogging(factory =>
            {
                factory.AddConsole();
            })
            .UseAutofac()
-           .UseConfiguration(configBuilder.Invoke(environment, builder.GetSetting(WebHostDefaults.ContentRootKey)))
+           .UseConfiguration(_configBuilder.Invoke(_environment, builder.GetSetting(WebHostDefaults.ContentRootKey)))
            .UseStartup<T>()
            .ConfigureServices(services =>
            {
@@ -55,7 +65,7 @@ namespace DND.Common.Testing.TestServer
                //https://github.com/aspnet/Hosting/issues/954
                //https://github.com/Microsoft/vstest/issues/428
                var assembly = typeof(T).GetTypeInfo().Assembly;
-               services.ConfigureRazorViewEngineForTestServer(assembly, netVersion);
+               services.ConfigureRazorViewEngineForTestServer(assembly, _netVersion);
            });
 
             _testServer = new Microsoft.AspNetCore.TestHost.TestServer(builder);

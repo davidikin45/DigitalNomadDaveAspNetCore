@@ -1,13 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using DND.TestSetup;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace DND.IntegrationTestsXUnit
 {
-    public class FlightSearchApiShould : IAssemblyFixture<GlobalSetup>, IAssemblyFixture<TestServerFixture>
+    public class FlightSearchApiShould : IAssemblyFixture<DbSetupAndTestServerXUnitFixture>
     {    
-        private readonly TestServerFixture _fixture;
+        private readonly DbSetupAndTestServerXUnitFixture _fixture;
 
-        public FlightSearchApiShould(TestServerFixture fixture, GlobalSetup globalSetup)
+        public FlightSearchApiShould(DbSetupAndTestServerXUnitFixture fixture)
         {
             this._fixture = fixture;
         }
@@ -15,7 +16,7 @@ namespace DND.IntegrationTestsXUnit
         [Fact]
         public async Task SuccessfullyGetCurrencies()
         {
-            var response = await _fixture.Client.GetAsync("/api/currencies");
+            var response = await _fixture.TestServer.Client.GetAsync("/api/currencies");
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -34,7 +35,7 @@ namespace DND.IntegrationTestsXUnit
         [Fact]
         public async Task SuccessfullyGetLocales()
         {
-            var response = await _fixture.Client.GetAsync("/api/locales");
+            var response = await _fixture.TestServer.Client.GetAsync("/api/locales");
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -53,7 +54,7 @@ namespace DND.IntegrationTestsXUnit
         [Fact]
         public async Task SuccessfullyGetMarkets()
         {
-            var response = await _fixture.Client.GetAsync("/api/markets/by-locale/en-GB");
+            var response = await _fixture.TestServer.Client.GetAsync("/api/markets/by-locale/en-GB");
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
