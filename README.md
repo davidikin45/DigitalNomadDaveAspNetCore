@@ -39,7 +39,7 @@ Build DND.Solution
 Execute BatchFiles\Test\UnitTests.bat
 ```
 
-### DND.IntegrationTestsXUnit (Mocking)
+### DND.IntegrationTestsXUnit (TestServer)
 
 Automatically creates an Integration database on Local\MSSQLLOCALDB, seeds and runs an in process TestServer. On completion database is deleted.
 
@@ -49,7 +49,7 @@ Build DND.Solution
 ```
 Execute BatchFiles\Test\IntegrationTestsXUnit.bat
 ```
-### DND.IntegrationTestsXUnit (TestServer)
+### DND.IntegrationTestsNUnit (Mocking)
 
 Automatically creates a Integration database on Local\MSSQLLOCALDB and seeds. On completion database is deleted.
 
