@@ -151,17 +151,20 @@ namespace DND.Common.Implementation.Persistance
             AddTimestamps();
 
             var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
-            //maintain order for event firing
-            var allEntities = all.Select(x => x.Entity);
-            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity);
-            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
-            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
 
-            BaseDbContext.RaiseDomainEventsPreCommit(allEntities, inserted, updated, deleted);
+            //When commands are added Insert, Delete, Update. 
+            //Changetracker order is Insert, Update, Delete 
+            //Db commit order is Update, Delete, Insert
+
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
+
+            BaseDbContext.RaiseDomainEventsPreCommit(updated, deleted, inserted);
 
             var objectCount = base.SaveChanges();
 
-            BaseDbContext.RaiseDomainEventsPostCommit(allEntities, inserted, updated, deleted);
+            BaseDbContext.RaiseDomainEventsPostCommit(updated, deleted, inserted);
 
             return objectCount;
         }
@@ -171,17 +174,20 @@ namespace DND.Common.Implementation.Persistance
             AddTimestamps();
 
             var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
-            //maintain order for event firing
-            var allEntities = all.Select(x => x.Entity);
-            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity);
-            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
-            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
 
-            BaseDbContext.RaiseDomainEventsPreCommit(allEntities, inserted, updated, deleted);
+            //When commands are added Insert, Delete, Update. 
+            //Changetracker order is Insert, Update, Delete 
+            //Db commit order is Update, Delete, Insert
+
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
+
+            BaseDbContext.RaiseDomainEventsPreCommit(updated, deleted, inserted);
 
             var objectCount = await base.SaveChangesAsync();
 
-            BaseDbContext.RaiseDomainEventsPostCommit(allEntities, inserted, updated, deleted);
+            BaseDbContext.RaiseDomainEventsPostCommit(updated, deleted, inserted);
 
             return objectCount;
         }
@@ -191,17 +197,20 @@ namespace DND.Common.Implementation.Persistance
             AddTimestamps();
 
             var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
-            //maintain order for event firing
-            var allEntities = all.Select(x => x.Entity);
-            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity);
-            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
-            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
 
-            BaseDbContext.RaiseDomainEventsPreCommit(allEntities, inserted, updated, deleted);
+            //When commands are added Insert, Delete, Update. 
+            //Changetracker order is Insert, Update, Delete 
+            //Db commit order is Update, Delete, Insert
+
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
+
+            BaseDbContext.RaiseDomainEventsPreCommit(updated, deleted, inserted);
 
             var objectCount = await base.SaveChangesAsync(cancellationToken);
 
-            BaseDbContext.RaiseDomainEventsPostCommit(allEntities, inserted, updated, deleted);
+            BaseDbContext.RaiseDomainEventsPostCommit(updated, deleted, inserted);
 
             return objectCount;
         }

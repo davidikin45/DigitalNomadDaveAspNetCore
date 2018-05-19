@@ -40,7 +40,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
 
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
 
-            _context = new ApplicationDbContext(connectionString);
+            _context = new ApplicationDbContext(connectionString, true);
             var mockDbContextFactory = new Mock<IDbContextFactory>();
             mockDbContextFactory.Setup(c => c.CreateDefault()).Returns(_context);
 

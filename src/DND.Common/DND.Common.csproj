@@ -766,6 +766,7 @@
     <Compile Include="Implementation\Persistance\InMemory\ObjectRepresentation.cs" />
     <Compile Include="Implementation\Persistance\InMemory\ObjectRepresentationRepository.cs" />
     <Compile Include="Implementation\Persistance\InMemory\ShortIdentityStrategy.cs" />
+    <Compile Include="Implementation\Persistance\InMemory\TestDbAsyncQueryProvider.cs" />
     <Compile Include="Implementation\Repository\BaseRepositoryFactory.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\BaseEFReadOnlyRepository.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\BaseEFRepository.cs" />

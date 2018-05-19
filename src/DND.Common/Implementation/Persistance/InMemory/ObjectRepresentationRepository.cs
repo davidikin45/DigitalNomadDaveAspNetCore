@@ -22,12 +22,16 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         internal IQueryable<TEntity> Data<TEntity>()
         {
-            return _data.Where(x => x.Entity is TEntity).Select(x => x.Entity).Cast<TEntity>().AsQueryable();
+            var query = _data.Where(x => x.Entity is TEntity).Select(x => x.Entity).Cast<TEntity>().AsQueryable();
+            var provider = new TestDbAsyncQueryProvider<TEntity>(query.Provider);
+            return provider.CreateQuery<TEntity>(query.Expression);
         }
 
         internal IQueryable<Object> Data(Type type)
-        {
-            return _data.Where(x => x.Entity.GetType() == type).Select(x => x.Entity).AsQueryable();
+        {      
+            var query = _data.Where(x => x.Entity.GetType() == type).Select(x => x.Entity).AsQueryable();
+            var provider = new TestDbAsyncQueryProvider<Object>(query.Provider);
+            return provider.CreateQuery<Object>(query.Expression);
         }
 
         internal void Add<TEntity>(TEntity item) where TEntity : class

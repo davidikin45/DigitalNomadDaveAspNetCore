@@ -24,18 +24,22 @@ using System.Data.Entity.SqlServer;
 using DND.Common.DomainEvents;
 using System.Data.Common;
 using DND.Common.Implementation.Validation;
+using System.Diagnostics;
 
 namespace DND.Common.Implementation.Persistance
 {
 
     public abstract class BaseDbContext : DbContext, IBaseDbContext
     {
-        public BaseDbContext(string nameOrConnectionString)
+        public BaseDbContext(string nameOrConnectionString, bool logSql)
         : base(nameOrConnectionString)
         {
-            init();
+            if (logSql)
+            {
+                Database.Log = s => Debug.WriteLine(s);
+            }
 
-            //Database.Log = Console.WriteLine;
+            init();
 
             //Once a migration is created DB is never created
             //Database.SetInitializer<BaseIdentityDbContext<T>>(new MigrateDatabaseToLatestVersion<BaseIdentityDbContext, T>());
@@ -194,16 +198,21 @@ namespace DND.Common.Implementation.Persistance
         {
             AddTimestamps();
 
-            var all = ChangeTracker.Entries<IBaseEntity>().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToArray();
-            var inserted = all.Where(x => x.State == EntityState.Added).ToArray();
-            var updated = all.Where(x => x.State == EntityState.Modified).ToArray();
-            var deleted = all.Where(x => x.State == EntityState.Deleted).ToArray();
+            var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
 
-            RaiseDomainEventsPreCommit(all, inserted, updated, deleted);
+            //When commands are added Insert, Delete, Update. 
+            //Changetracker order is Insert, Update, Delete 
+            //Db commit order is Update, Delete, Insert
+
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
+
+            RaiseDomainEventsPreCommit(updated, deleted, inserted);
 
             var objectCount = base.SaveChanges();
 
-            RaiseDomainEventsPostCommit(all, inserted, updated, deleted);
+            RaiseDomainEventsPostCommit(updated, deleted, inserted);
 
             return objectCount;
         }
@@ -212,16 +221,22 @@ namespace DND.Common.Implementation.Persistance
         {
             AddTimestamps();
 
-            var all = ChangeTracker.Entries<IBaseEntity>().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToArray();
-            var inserted = all.Where(x => x.State == EntityState.Added).ToArray();
-            var updated = all.Where(x => x.State == EntityState.Modified).ToArray();
-            var deleted = all.Where(x => x.State == EntityState.Deleted).ToArray();
 
-            RaiseDomainEventsPreCommit(all, inserted, updated, deleted);
+            var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
+
+            //When commands are added Insert, Delete, Update. 
+            //Changetracker order is Insert, Update, Delete 
+            //Db commit order is Update, Delete, Insert
+           
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
+
+            RaiseDomainEventsPreCommit(updated, deleted, inserted);
 
             var objectCount = await base.SaveChangesAsync();
 
-            RaiseDomainEventsPostCommit(all, inserted, updated, deleted);
+            RaiseDomainEventsPostCommit(updated, deleted, inserted);
 
             return objectCount;
         }
@@ -232,17 +247,15 @@ namespace DND.Common.Implementation.Persistance
 
             var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
 
-            //maintain order for event firing
-            var allEntities = all.Select(x => x.Entity);
-            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity);
-            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
-            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
+            var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
+            var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            RaiseDomainEventsPreCommit(allEntities, inserted, updated, deleted);
+            RaiseDomainEventsPreCommit(updated, deleted, inserted);
 
             var objectCount = await base.SaveChangesAsync(cancellationtoken);
 
-            RaiseDomainEventsPostCommit(allEntities, inserted, updated, deleted);
+            RaiseDomainEventsPostCommit(updated, deleted, inserted);
 
             return objectCount;
         }
@@ -253,24 +266,13 @@ namespace DND.Common.Implementation.Persistance
         }
 
         public static void RaiseDomainEventsPreCommit(
-            IEnumerable<object> allInsertUpdateDeleteObjects,
-            IEnumerable<object> insertedObjects,
             IEnumerable<object> updatedObjects,
-            IEnumerable<object> deletedObjects)
+            IEnumerable<object> deletedObjects,
+            IEnumerable<object> insertedObjects)
         {
-            var all = allInsertUpdateDeleteObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
             var updated = updatedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
             var deleted = deletedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-
-            foreach (var entity in inserted)
-            {
-                Type genericType = typeof(EntityInsertedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
-            }
+            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
 
             foreach (var entity in updated)
             {
@@ -284,6 +286,15 @@ namespace DND.Common.Implementation.Persistance
             foreach (var entity in deleted)
             {
                 Type genericType = typeof(EntityDeletedEvent<>);
+                Type[] typeArgs = { entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entity);
+                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
+            }
+
+            foreach (var entity in inserted)
+            {
+                Type genericType = typeof(EntityInsertedEvent<>);
                 Type[] typeArgs = { entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
                 object domainEvent = Activator.CreateInstance(constructed, entity);
@@ -292,24 +303,13 @@ namespace DND.Common.Implementation.Persistance
         }
 
         public static void RaiseDomainEventsPostCommit(
-         IEnumerable<object> allInsertUpdateDeleteObjects,
-         IEnumerable<object> insertedObjects,
-         IEnumerable<object> updatedObjects,
-         IEnumerable<object> deletedObjects)
+            IEnumerable<object> updatedObjects,
+            IEnumerable<object> deletedObjects,
+            IEnumerable<object> insertedObjects)
         {
-            var all = allInsertUpdateDeleteObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
             var updated = updatedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
             var deleted = deletedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-
-            foreach (var entity in inserted)
-            {
-                Type genericType = typeof(EntityInsertedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
-            }
+            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
 
             foreach (var entity in updated)
             {
@@ -328,6 +328,17 @@ namespace DND.Common.Implementation.Persistance
                 object domainEvent = Activator.CreateInstance(constructed, entity);
                 DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
             }
+
+            foreach (var entity in inserted)
+            {
+                Type genericType = typeof(EntityInsertedEvent<>);
+                Type[] typeArgs = { entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                object domainEvent = Activator.CreateInstance(constructed, entity);
+                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
+            }
+
+            var all = updated.Concat(deleted).Concat(inserted);
 
             foreach (var entity in all)
             {

@@ -19,7 +19,7 @@ namespace DND.EFPersistance
             }
             else
             {
-                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"));
+                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"), false);
             }
         }
     }

@@ -82,9 +82,10 @@ namespace DND.Common.Implementation.Persistance.InMemory
         /// </summary>
         protected void ProcessCommitQueues()
         {
+            //Update, Delete, Insert which is consistent with EF
             ClearUpdateQueue();
-            AddAllFromQueueIntoRepository();
             RemoveAllFromQueueFromRepository();
+            AddAllFromQueueIntoRepository();
         }
 
         private void AddAllFromQueueIntoRepository()
@@ -117,17 +118,17 @@ namespace DND.Common.Implementation.Persistance.InMemory
             BaseDbContext.AddTimestamps(addQueue.Select(x=>x.Entity), updateQueue.Select(x => x.Entity));
             BeforeSave?.Invoke(this, new BeforeSave());
 
-            var all = addQueue.Select(x => x.Entity).Concat(updateQueue.Select(x => x.Entity)).Concat(removeQueue.Select(x => x.Entity));
+            var all = updateQueue.Select(x => x.Entity).Concat(addQueue.Select(x => x.Entity)).Concat(removeQueue.Select(x => x.Entity));
             var update = updateQueue.Select(x => x.Entity);
             var insert = addQueue.Select(x => x.Entity);
             var delete = removeQueue.Select(x => x.Entity);
 
-            BaseDbContext.RaiseDomainEventsPreCommit(all, insert, update, delete);
+            BaseDbContext.RaiseDomainEventsPreCommit(update, delete, insert);
 
             ProcessCommitQueues();
             repo.Commit();
 
-            BaseDbContext.RaiseDomainEventsPostCommit(all, insert, update, delete);
+            BaseDbContext.RaiseDomainEventsPostCommit(update, delete, insert);
 
             AfterSave?.Invoke(this, new AfterSave());
             return 0;
@@ -164,7 +165,14 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public void RemoveEntity<TEntity>(TEntity entity) where TEntity : class
         {
-            removeQueue.Add(new QueueItem(entity));
+            if(IsEntityStateAdded(entity))
+            {
+                SetEntityStateDetached(entity);
+            }
+            else
+            {
+                removeQueue.Add(new QueueItem(entity));
+            }
         }
 
         public TEntity FindEntity<TEntity>(object id) where TEntity : class
