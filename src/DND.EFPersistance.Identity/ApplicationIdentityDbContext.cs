@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using DND.Domain;
+using DND.EFPersistance.Identity.Configurations;
 
 namespace DND.EFPersistance.Identity
 {
@@ -27,6 +28,7 @@ namespace DND.EFPersistance.Identity
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new UserConfiguration());
             builder.Entity<User>().ToTable("User");
         }
 

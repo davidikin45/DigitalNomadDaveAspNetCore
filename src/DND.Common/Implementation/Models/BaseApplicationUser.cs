@@ -28,9 +28,9 @@ namespace DND.Common.Implementation.Models
         public DateTime? DateModified { get; set; }
         public string UserModified { get; set; }
 
-        [NotMapped]
+        //[NotMapped]
         public DateTime? DateDeleted { get; set; }
-        [NotMapped]
+        //[NotMapped]
         public string UserDeleted { get; set; }
 
         public BaseApplicationUser()

@@ -239,6 +239,7 @@
   <ItemGroup>
     <Compile Include="ApplicationIdentityDbContext.cs" />
     <Compile Include="ApplicationIdentityDbContextFactory.cs" />
+    <Compile Include="Configurations\UserConfiguration.cs" />
     <Compile Include="Initializers\ApplicationIdentityDbContextInitializer.cs" />
     <Compile Include="Migrations\20171228025302_InitialMigration.cs" />
     <Compile Include="Migrations\20171228025302_InitialMigration.designer.cs">
