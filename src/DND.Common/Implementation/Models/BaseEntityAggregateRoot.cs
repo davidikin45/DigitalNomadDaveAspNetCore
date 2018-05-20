@@ -13,6 +13,8 @@ namespace DND.Common.Implementation.Models
         private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
         public virtual IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents;
 
+        //Deferred domain events
+        //https://blogs.msdn.microsoft.com/cesardelatorre/2017/03/23/using-domain-events-within-a-net-core-microservice/
         protected virtual void AddDomainEvent(IDomainEvent newEvent)
         {
             _domainEvents.Add(newEvent);

@@ -44,7 +44,7 @@ namespace DND.Common.DomainEvents
                 .ToList();
         }
 
-        public static void DispatchPreCommit(IDomainEvent domainEvent)
+        public async static Task DispatchPreCommitAsync(IDomainEvent domainEvent)
         {
             if(_handlers != null)
             {
@@ -58,13 +58,13 @@ namespace DND.Common.DomainEvents
                     if (canHandleEvent)
                     {
                         dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
-                        handler.HandlePreCommit((dynamic)domainEvent);
+                        await handler.HandlePreCommit((dynamic)domainEvent);
                     }
                 }
             }
         }
 
-        public static void DispatchPostCommit(IDomainEvent domainEvent)
+        public async static Task DispatchPostCommitAsync(IDomainEvent domainEvent)
         {
             if (_handlers != null)
             {
@@ -78,7 +78,7 @@ namespace DND.Common.DomainEvents
                     if (canHandleEvent)
                     {
                         dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
-                        handler.HandlePostCommit((dynamic)domainEvent);
+                        await handler.HandlePostCommit((dynamic)domainEvent);
                     }
                 }
             }

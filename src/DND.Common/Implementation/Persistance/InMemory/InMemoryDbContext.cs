@@ -135,14 +135,14 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
             //For domain events to get fired Dependency Injections needs to be wired up.
             //No property update events are fired from InMemoryDBContext
-            _dbContextDomainEvents.DispatchDomainEventsPreCommit(update, null, delete, insert);
+            _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(update, null, delete, insert).Wait();
 
             ProcessCommitQueues();
             repo.Commit();
 
             //For domain events to get fired Dependency Injections needs to be wired up.
             //No property update events are fired from InMemoryDBContext
-            _dbContextDomainEvents.DispatchDomainEventsPostCommit(update, null, delete, insert);
+            _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(update, null, delete, insert).Wait();
 
             AfterSave?.Invoke(this, new AfterSave());
             return 0;

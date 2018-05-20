@@ -11,12 +11,12 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
 {
     public class BlogPostInsertEventHandler : IDomainEventHandler<EntityInsertedEvent<BlogPost>>
     {
-        public void HandlePostCommit(EntityInsertedEvent<BlogPost> domainEvent)
+        public async Task HandlePostCommitAsync(EntityInsertedEvent<BlogPost> domainEvent)
         {
             var after = domainEvent.Entity;
         }
 
-        public void HandlePreCommit(EntityInsertedEvent<BlogPost> domainEvent)
+        public async Task HandlePreCommitAsync(EntityInsertedEvent<BlogPost> domainEvent)
         {
             var before = domainEvent.Entity;
         }

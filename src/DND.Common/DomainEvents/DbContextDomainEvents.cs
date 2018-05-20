@@ -113,7 +113,9 @@ namespace DND.Common.DomainEvents
             return dict;
         }
 
-        public void DispatchDomainEventsPreCommit(
+
+        //If you are handling the domain events right before committing the original transaction is because you want the side effects of those events to be included in the same transaction
+        public async Task DispatchDomainEventsPreCommitAsync(
        IEnumerable<object> updatedObjects,
        Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
        IEnumerable<object> deletedObjects,
@@ -134,14 +136,14 @@ namespace DND.Common.DomainEvents
                     updatedBy = ((IBaseEntityAuditable)entity).UserModified;
                 }
                 object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
-                DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
+                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent);
 
                 //Property Update Events
                 if (propertyUpdatedEvents != null && propertyUpdatedEvents.ContainsKey(entity))
                 {
                     foreach (var propertyUpdateEvent in propertyUpdatedEvents[entity])
                     {
-                        DomainEvents.DispatchPreCommit(propertyUpdateEvent);
+                        await DomainEvents.DispatchPreCommitAsync(propertyUpdateEvent);
                     }
                 }
             }
@@ -157,7 +159,7 @@ namespace DND.Common.DomainEvents
                     deletedBy = ((IBaseEntityAuditable)entity).UserDeleted;
                 }
                 object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
-                DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
+                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent);
             }
 
             foreach (var entity in inserted)
@@ -171,7 +173,7 @@ namespace DND.Common.DomainEvents
                     createdBy = ((IBaseEntityAuditable)entity).UserCreated;
                 }
                 object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
-                DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
+                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent);
             }
 
             var all = updated.Concat(deleted).Concat(inserted);
@@ -184,13 +186,14 @@ namespace DND.Common.DomainEvents
                     var events = aggRootEntity.DomainEvents.ToArray();
                     foreach (var domainEvent in events)
                     {
-                        DomainEvents.DispatchPreCommit(domainEvent);
+                        await DomainEvents.DispatchPreCommitAsync(domainEvent);
                     }
                 }
             }
         }
 
-        public void DispatchDomainEventsPostCommit(
+        //If you are handling the domain events after committing the original transaction is because you do not want the side effects of those events to be included in the same transaction. e.g sending an email
+        public async Task DispatchDomainEventsPostCommitAsync(
             IEnumerable<object> updatedObjects,
             Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
             IEnumerable<object> deletedObjects,
@@ -213,7 +216,7 @@ namespace DND.Common.DomainEvents
                 object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
                 try
                 {
-                    DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
+                    await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent);
                 }
                 catch
                 {
@@ -228,7 +231,7 @@ namespace DND.Common.DomainEvents
                     {
                         try
                         {
-                            DomainEvents.DispatchPostCommit(propertyUpdateEvent);
+                           await DomainEvents.DispatchPostCommitAsync(propertyUpdateEvent);
                         }
                         catch
                         {
@@ -252,7 +255,7 @@ namespace DND.Common.DomainEvents
                 object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
                 try
                 {
-                   DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
+                  await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent);
                 }
                 catch
                 {
@@ -274,7 +277,7 @@ namespace DND.Common.DomainEvents
                 object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
                 try
                 {
-                   DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
+                  await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent);
                 }
                 catch
                 {
@@ -296,7 +299,7 @@ namespace DND.Common.DomainEvents
                     {
                         try
                         {
-                           DomainEvents.DispatchPostCommit(domainEvent);
+                          await DomainEvents.DispatchPostCommitAsync(domainEvent);
                         }
                         catch
                         {
