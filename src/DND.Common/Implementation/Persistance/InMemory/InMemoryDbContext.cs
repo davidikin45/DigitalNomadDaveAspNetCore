@@ -31,6 +31,7 @@ namespace DND.Common.Implementation.Persistance.InMemory
         private readonly List<QueueItem> updateQueue = new List<QueueItem>();
         private readonly List<QueueItem> addQueue = new List<QueueItem>();
         private readonly List<QueueItem> removeQueue = new List<QueueItem>();
+        private readonly DbContextDomainEvents _dbContextDomainEvents;
 
         public bool AutoDetectChanges { get; set; }
 
@@ -39,12 +40,14 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public InMemoryDataContext()
         {
+            _dbContextDomainEvents = new DbContextDomainEvents();
             repo = new ObjectRepresentationRepository();
             RegisterIIdentifiables();
         }
 
         internal InMemoryDataContext(ObjectRepresentationRepository repo)
         {
+            _dbContextDomainEvents = new DbContextDomainEvents();
             this.repo = repo;
             RegisterIIdentifiables();
         }
@@ -126,14 +129,14 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
             //For domain events to get fired Dependency Injections needs to be wired up.
             //No property update events are fired from InMemoryDBContext
-            DbContextDomainEvents.DispatchDomainEventsPreCommit(update, null, delete, insert);
+            _dbContextDomainEvents.DispatchDomainEventsPreCommit(update, null, delete, insert);
 
             ProcessCommitQueues();
             repo.Commit();
 
             //For domain events to get fired Dependency Injections needs to be wired up.
             //No property update events are fired from InMemoryDBContext
-            DbContextDomainEvents.DispatchDomainEventsPostCommit(update, null, delete, insert);
+            _dbContextDomainEvents.DispatchDomainEventsPostCommit(update, null, delete, insert);
 
             AfterSave?.Invoke(this, new AfterSave());
             return 0;

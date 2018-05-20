@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
-    public static class DbContextDomainEvents
+    public class DbContextDomainEvents
     {
-        public static Dictionary<object, List<IDomainEvent>> CreatePropertyUpdateEventsEF6(IEnumerable<DbEntityEntry> updatedEntries)
+        public Dictionary<object, List<IDomainEvent>> CreatePropertyUpdateEventsEF6(IEnumerable<DbEntityEntry> updatedEntries)
         {
             var dict = new Dictionary<object, List<IDomainEvent>>();
             foreach (var updatedEntry in updatedEntries.Where(e => e.Entity is IFirePropertyUpdatedEvents))
@@ -56,7 +56,7 @@ namespace DND.Common.DomainEvents
             return dict;
         }
 
-        public static Dictionary<object, List<IDomainEvent>> CreatePropertyUpdateEventsEFCore(IEnumerable<EntityEntry> updatedEntries)
+        public Dictionary<object, List<IDomainEvent>> CreatePropertyUpdateEventsEFCore(IEnumerable<EntityEntry> updatedEntries)
         {
             var dict = new Dictionary<object, List<IDomainEvent>>();
             foreach (var updatedEntry in updatedEntries.Where(e => e.Entity is IFirePropertyUpdatedEvents))
@@ -101,7 +101,7 @@ namespace DND.Common.DomainEvents
             return dict;
         }
 
-        public static void DispatchDomainEventsPreCommit(
+        public void DispatchDomainEventsPreCommit(
        IEnumerable<object> updatedObjects,
        Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
        IEnumerable<object> deletedObjects,
@@ -163,7 +163,7 @@ namespace DND.Common.DomainEvents
             }
         }
 
-        public static void DispatchDomainEventsPostCommit(
+        public void DispatchDomainEventsPostCommit(
             IEnumerable<object> updatedObjects,
             Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
             IEnumerable<object> deletedObjects,

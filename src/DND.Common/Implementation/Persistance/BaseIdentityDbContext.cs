@@ -29,9 +29,12 @@ namespace DND.Common.Implementation.Persistance
 {
     public class BaseIdentityDbContext<TUser> : IdentityDbContext<TUser>, IBaseDbContext where TUser : BaseApplicationUser
     {
+        private DbContextDomainEvents _dbContextDomainEvents;
+
         public BaseIdentityDbContext(DbContextOptions options)
             :base(options)
         {
+            _dbContextDomainEvents = new DbContextDomainEvents();
             ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
@@ -159,15 +162,15 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = DbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            DbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
+            _dbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             var objectCount = base.SaveChanges();
 
-            DbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
+            _dbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             return objectCount;
         }
@@ -183,15 +186,15 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = DbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            DbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
+            _dbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             var objectCount = await base.SaveChangesAsync();
 
-            DbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
+            _dbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             return objectCount;
         }
@@ -207,15 +210,15 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = DbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            DbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
+            _dbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             var objectCount = await base.SaveChangesAsync(cancellationToken);
 
-            DbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
+            _dbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             return objectCount;
         }
