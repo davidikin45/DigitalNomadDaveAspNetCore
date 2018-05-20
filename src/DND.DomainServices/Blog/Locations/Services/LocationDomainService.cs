@@ -21,14 +21,14 @@ namespace DND.DomainServices.Blog.Locations.Services
 
         }
 
-        public override async Task<Result<Location>> CreateAsync(Location entity, CancellationToken cancellationToken)
+        public override async Task<Result<Location>> CreateAsync(Location entity, string createdBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<Location> GetLocationAsync(string urlSlug, CancellationToken cancellationToken)
@@ -39,14 +39,14 @@ namespace DND.DomainServices.Blog.Locations.Services
             }
         }
 
-        public override async Task<Result> UpdateAsync(DND.Domain.Blog.Locations.Location entity, CancellationToken cancellationToken)
+        public override async Task<Result> UpdateAsync(DND.Domain.Blog.Locations.Location entity, string updatedBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-           return await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
+           return await base.UpdateAsync(entity, updatedBy, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Location entity, ValidationMode mode)

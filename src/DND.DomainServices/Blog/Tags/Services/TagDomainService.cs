@@ -42,24 +42,24 @@ namespace DND.DomainServices.Tags.Services
             }
         }
 
-        public async override Task<Result> UpdateAsync(Tag entity, CancellationToken cancellationToken)
+        public async override Task<Result> UpdateAsync(Tag entity, string updatedBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.UpdateAsync(entity, updatedBy, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task<Result<Tag>> CreateAsync(Tag entity, CancellationToken cancellationToken)
+        public async override Task<Result<Tag>> CreateAsync(Tag entity, string createdBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Tag entity, ValidationMode mode)

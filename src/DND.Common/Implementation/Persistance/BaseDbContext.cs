@@ -56,10 +56,12 @@ namespace DND.Common.Implementation.Persistance
         }
 
         private DbContextDomainEvents _dbContextDomainEvents;
+        private DbContextTimestamps _dbContextTimestamps;
 
         private void init()
         {
             _dbContextDomainEvents = new DbContextDomainEvents();
+            _dbContextTimestamps = new DbContextTimestamps();
 
             SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
 
@@ -312,36 +314,8 @@ namespace DND.Common.Implementation.Persistance
             var added = ChangeTracker.Entries().Where(x => x.State == EntityState.Added).Select(x => x.Entity);
             var modified = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
 
-            AddTimestamps(added, modified);
+            _dbContextTimestamps.AddTimestamps(added, modified);
         }
-
-        public static void AddTimestamps(IEnumerable<object> addedObjects, IEnumerable<object> modifiedObjects)
-        {
-            var added = addedObjects.Where(x => x is IBaseEntityAuditable);
-            var modified = modifiedObjects.Where(x => x is IBaseEntityAuditable);
-
-            var currentUsername = !string.IsNullOrEmpty(Thread.CurrentPrincipal?.Identity?.Name)
-              ? Thread.CurrentPrincipal.Identity.Name
-                : "Anonymous";
-
-            foreach (var entity in added)
-            {
-
-                ((IBaseEntityAuditable)entity).DateCreated = DateTime.UtcNow;
-                ((IBaseEntityAuditable)entity).UserCreated = currentUsername;
-
-                ((IBaseEntityAuditable)entity).DateModified = DateTime.UtcNow;
-                ((IBaseEntityAuditable)entity).UserModified = currentUsername;
-            }
-
-            foreach (var entity in modified)
-            {
-
-                ((IBaseEntityAuditable)entity).DateModified = DateTime.UtcNow;
-                ((IBaseEntityAuditable)entity).UserModified = currentUsername;
-            }
-        }
-
 
         #region "UTC"
         private static void ReadAllDateTimeValuesAsUtc(object sender, ObjectMaterializedEventArgs evArg)

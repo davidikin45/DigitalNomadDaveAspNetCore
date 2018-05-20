@@ -25,7 +25,7 @@ namespace DND.Common.Implementation.DomainServices
 
         }
 
-        public virtual Result<TEntity> Create(TEntity entity)
+        public virtual Result<TEntity> Create(TEntity entity, string createdBy)
         {
             var validationResult = Validate(entity, ValidationMode.Create);
 
@@ -36,14 +36,14 @@ namespace DND.Common.Implementation.DomainServices
 
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
-                unitOfWork.Repository<TContext, TEntity>().Create(entity, "");
+                unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
                 unitOfWork.Complete();
 
                 return Result.Ok(entity);
             }
         }
 
-        public virtual async Task<Result<TEntity>> CreateAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<Result<TEntity>> CreateAsync(TEntity entity, string createdBy, CancellationToken cancellationToken)
         {
             var validationResult = await ValidateAsync(entity, ValidationMode.Create);
 
@@ -54,14 +54,14 @@ namespace DND.Common.Implementation.DomainServices
 
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                unitOfWork.Repository<TContext, TEntity>().Create(entity, "");
+                unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
                 await unitOfWork.CompleteAsync(cancellationToken);
 
                 return Result.Ok(entity);
             }
         }
 
-        public virtual Result Update(TEntity entity)
+        public virtual Result Update(TEntity entity, string updatedBy)
         {
             var validationResult = Validate(entity, ValidationMode.Update);
 
@@ -79,7 +79,7 @@ namespace DND.Common.Implementation.DomainServices
 
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Update(entity, "");
+                    unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
                     unitOfWork.Complete();
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -93,7 +93,7 @@ namespace DND.Common.Implementation.DomainServices
             return Result.Ok();
         }
 
-        public virtual async Task<Result> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<Result> UpdateAsync(TEntity entity, string updatedBy, CancellationToken cancellationToken)
         {
             var validationResult = await ValidateAsync(entity, ValidationMode.Update);
 
@@ -111,7 +111,7 @@ namespace DND.Common.Implementation.DomainServices
 
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Update(entity, "");
+                    unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
                     await unitOfWork.CompleteAsync(cancellationToken);
                 }
                 catch (DbUpdateConcurrencyException ex)

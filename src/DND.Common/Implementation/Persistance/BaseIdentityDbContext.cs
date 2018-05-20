@@ -30,11 +30,14 @@ namespace DND.Common.Implementation.Persistance
     public class BaseIdentityDbContext<TUser> : IdentityDbContext<TUser>, IBaseDbContext where TUser : BaseApplicationUser
     {
         private DbContextDomainEvents _dbContextDomainEvents;
+        private DbContextTimestamps _dbContextTimestamps;
 
         public BaseIdentityDbContext(DbContextOptions options)
             :base(options)
         {
             _dbContextDomainEvents = new DbContextDomainEvents();
+            _dbContextTimestamps = new DbContextTimestamps();
+
             ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
@@ -315,23 +318,10 @@ namespace DND.Common.Implementation.Persistance
 
         private void AddTimestamps()
         {
-            var entities = ChangeTracker.Entries().Where(x => x.Entity is IBaseEntityAuditable && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var added = ChangeTracker.Entries().Where(x => x.State == EntityState.Added).Select(x => x.Entity);
+            var modified = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
 
-            var currentUsername = !string.IsNullOrEmpty(Thread.CurrentPrincipal?.Identity?.Name)
-              ? Thread.CurrentPrincipal.Identity.Name
-                : "Anonymous";
-
-            foreach (var entity in entities)
-            {
-                if (entity.State == EntityState.Added)
-                {
-                    ((IBaseEntityAuditable)entity.Entity).DateCreated = DateTime.UtcNow;
-                    ((IBaseEntityAuditable)entity.Entity).UserCreated = currentUsername;
-                }
-
-                ((IBaseEntityAuditable)entity.Entity).DateModified = DateTime.UtcNow;
-                ((IBaseEntityAuditable)entity.Entity).UserModified = currentUsername;
-            }
+            _dbContextTimestamps.AddTimestamps(added, modified);
         }
     }
 }

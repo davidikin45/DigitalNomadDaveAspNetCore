@@ -62,7 +62,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var result = await Service.CreateAsync(dto, cts.Token);
+            var result = await Service.CreateAsync(dto, User.Identity.Name, cts.Token);
             if(result.IsFailure)
             {
                 return ValidationErrors(result);
@@ -112,7 +112,7 @@ namespace DND.Common.Controllers.Api
             //    return ApiNotFoundErrorMessage(Messages.NotFound);
             //}
 
-            var result = await Service.UpdateAsync(id, dto, cts.Token);
+            var result = await Service.UpdateAsync(id, dto, Username, cts.Token);
             if (result.IsFailure)
             {
                 return ValidationErrors(result);
@@ -164,7 +164,7 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-            var result = await Service.UpdateAsync(id, dto, cts.Token);
+            var result = await Service.UpdateAsync(id, dto, Username, cts.Token);
             if (result.IsFailure)
             {
                 return ValidationErrors(result);

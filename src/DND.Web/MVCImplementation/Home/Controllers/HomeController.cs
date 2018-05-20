@@ -79,7 +79,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             {
                 try
                 {
-                    _mailingListService.Create(dto);
+                    _mailingListService.Create(dto, Username);
                     return View("Index").WithSuccess(this, "Thankyou, your subscription was successful.");
                 }
                 catch (Exception ex)
@@ -103,6 +103,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
         public ActionResult WorkWithMe()
         {
             ViewBag.Message = "Your application description page.";
+            var u = Username;
 
             return View();
         }

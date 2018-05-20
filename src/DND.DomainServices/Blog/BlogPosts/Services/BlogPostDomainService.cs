@@ -184,17 +184,17 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
             }
         }
 
-        public async override Task<Result<BlogPost>> CreateAsync(BlogPost entity, CancellationToken cancellationToken)
+        public async override Task<Result<BlogPost>> CreateAsync(BlogPost entity, string createdBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Title);
             }
 
-            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<Result> UpdateAsync(BlogPost entity, IEnumerable<BlogPostTag> insertTags, IEnumerable<BlogPostTag> deleteTags, IEnumerable<BlogPostLocation> insertLocations, IEnumerable<BlogPostLocation> deleteLocations, CancellationToken cancellationToken)
+        public async Task<Result> UpdateAsync(BlogPost entity, IEnumerable<BlogPostTag> insertTags, IEnumerable<BlogPostTag> deleteTags, IEnumerable<BlogPostLocation> insertLocations, IEnumerable<BlogPostLocation> deleteLocations, string updatedBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {

@@ -9,13 +9,13 @@ namespace DND.Common.Interfaces.DomainServices
     public interface IBaseEntityDomainService<TEntity> : IBaseEntityReadOnlyDomainService<TEntity>
           where TEntity : class, IBaseEntity
     {
-        Result<TEntity> Create(TEntity entity);
+        Result<TEntity> Create(TEntity entity, string createdBy);
 
-        Task<Result<TEntity>> CreateAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result<TEntity>> CreateAsync(TEntity entity, string createdBy,  CancellationToken cancellationToken = default(CancellationToken));
 
-        Result Update(TEntity entity);
+        Result Update(TEntity entity, string updatedBy);
 
-        Task<Result> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> UpdateAsync(TEntity entity, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
         Result Delete(object id);
 

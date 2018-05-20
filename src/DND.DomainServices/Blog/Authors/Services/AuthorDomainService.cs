@@ -34,24 +34,24 @@ namespace DND.DomainServices.Authors.Services
             }
         }
 
-        public async override Task<Result> UpdateAsync(Author entity, CancellationToken cancellationToken)
+        public async override Task<Result> UpdateAsync(Author entity, string updatedBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.UpdateAsync(entity, updatedBy, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task<Result<Author>> CreateAsync(Author entity, CancellationToken cancellationToken)
+        public async override Task<Result<Author>> CreateAsync(Author entity, string createdBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Author entity, ValidationMode mode)

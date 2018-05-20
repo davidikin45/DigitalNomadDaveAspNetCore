@@ -57,7 +57,7 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    var result = await Service.CreateAsync(dto, cts.Token);
+                    var result = await Service.CreateAsync(dto, Username, cts.Token);
                     if (result.IsFailure)
                     {
                         HandleUpdateException(result, null, true);
@@ -109,7 +109,7 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    var result = await Service.UpdateAsync(id, dto, cts.Token);
+                    var result = await Service.UpdateAsync(id, dto, Username, cts.Token);
                     if (result.IsFailure)
                     {
                         HandleUpdateException(result, dto, true);

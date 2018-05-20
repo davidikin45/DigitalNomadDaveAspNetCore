@@ -39,6 +39,22 @@ namespace DND.Common.Controllers
             Configuration = configuration;
         }
 
+        //https://docs.microsoft.com/en-us/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-2.0
+        public string Username
+        {
+            get
+            {
+                if (User != null && User.Identity != null && !string.IsNullOrEmpty(User.Identity.Name))
+                {
+                    return User.Identity.Name;
+                }
+                else
+                {
+                    return "Anonymous";
+                }
+            }
+        }
+
         protected virtual BetterJsonResult BetterJsonError(string message, ModelStateDictionary modelState)
         {
             var errors = modelState.Values.SelectMany(v => v.Errors);
@@ -134,7 +150,7 @@ namespace DND.Common.Controllers
         {
             //TODO: Need to research how to turn off automatic model validation if doing it in application service layer
             //Clears all Post Data
-            if(clearPostData)
+            if (clearPostData)
             {
                 ModelState.Clear();
             }

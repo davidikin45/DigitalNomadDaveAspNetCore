@@ -42,14 +42,14 @@ namespace DND.DomainServices.Categories.Services
             }
         }
 
-        public async override Task<Result<Category>> CreateAsync(Category entity, CancellationToken cancellationToken)
+        public async override Task<Result<Category>> CreateAsync(Category entity, string createdBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+            return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
         }
 
         public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Category entity, ValidationMode mode)

@@ -13,13 +13,13 @@ namespace DND.Common.Interfaces.ApplicationServices
           where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
           where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
     {
-        Result<TReadDto> Create(TCreateDto dto);
+        Result<TReadDto> Create(TCreateDto dto, string createdBy);
 
-        Task<Result<TReadDto>> CreateAsync(TCreateDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result<TReadDto>> CreateAsync(TCreateDto dto, string createdBy, CancellationToken cancellationToken = default(CancellationToken));
 
-        Result Update(object id, TUpdateDto dto);
+        Result Update(object id, TUpdateDto dto, string updatedBy);
 
-        Task<Result> UpdateAsync(object id, TUpdateDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> UpdateAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
         Result Delete(object id);
 

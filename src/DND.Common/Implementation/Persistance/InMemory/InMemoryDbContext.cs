@@ -31,7 +31,9 @@ namespace DND.Common.Implementation.Persistance.InMemory
         private readonly List<QueueItem> updateQueue = new List<QueueItem>();
         private readonly List<QueueItem> addQueue = new List<QueueItem>();
         private readonly List<QueueItem> removeQueue = new List<QueueItem>();
+
         private readonly DbContextDomainEvents _dbContextDomainEvents;
+        private readonly DbContextTimestamps _dbContextTimestamps;
 
         public bool AutoDetectChanges { get; set; }
 
@@ -41,6 +43,8 @@ namespace DND.Common.Implementation.Persistance.InMemory
         public InMemoryDataContext()
         {
             _dbContextDomainEvents = new DbContextDomainEvents();
+            _dbContextTimestamps = new DbContextTimestamps();
+
             repo = new ObjectRepresentationRepository();
             RegisterIIdentifiables();
         }
@@ -48,6 +52,8 @@ namespace DND.Common.Implementation.Persistance.InMemory
         internal InMemoryDataContext(ObjectRepresentationRepository repo)
         {
             _dbContextDomainEvents = new DbContextDomainEvents();
+            _dbContextTimestamps = new DbContextTimestamps();
+
             this.repo = repo;
             RegisterIIdentifiables();
         }
@@ -119,7 +125,7 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public int SaveChanges()
         {
-            BaseDbContext.AddTimestamps(addQueue.Select(x=>x.Entity), updateQueue.Select(x => x.Entity));
+            _dbContextTimestamps.AddTimestamps(addQueue.Select(x=>x.Entity), updateQueue.Select(x => x.Entity));
             BeforeSave?.Invoke(this, new BeforeSave());
 
             var all = updateQueue.Select(x => x.Entity).Concat(addQueue.Select(x => x.Entity)).Concat(removeQueue.Select(x => x.Entity));

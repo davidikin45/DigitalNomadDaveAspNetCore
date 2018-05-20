@@ -39,6 +39,6 @@ namespace DND.Domain.Interfaces.DomainServices
         //Admin
         Task<IEnumerable<BlogPost>> GetPostsAsync(int pageNo, int pageSize, Func<IQueryable<BlogPost>, IOrderedQueryable<BlogPost>> orderBy, CancellationToken cancellationToken);
         Task<BlogPost> GetPostAsync(int id, CancellationToken cancellationToken);
-        Task<Result> UpdateAsync(BlogPost entity, IEnumerable<BlogPostTag> insertTags, IEnumerable<BlogPostTag> deleteTags, IEnumerable<BlogPostLocation> insertLocations, IEnumerable<BlogPostLocation> deleteLocations, CancellationToken cancellationToken);
+        Task<Result> UpdateAsync(BlogPost entity, IEnumerable<BlogPostTag> insertTags, IEnumerable<BlogPostTag> deleteTags, IEnumerable<BlogPostLocation> insertLocations, IEnumerable<BlogPostLocation> deleteLocations, string updatedBy, CancellationToken cancellationToken);
     }
 }

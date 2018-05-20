@@ -36,7 +36,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
         }
 
-        public virtual Result<TReadDto> Create(TCreateDto dto)
+        public virtual Result<TReadDto> Create(TCreateDto dto, string createdBy)
         {
             var objectValidationErrors = dto.Validate().ToList();
             if (objectValidationErrors.Any())
@@ -46,7 +46,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var bo = Mapper.Map<TEntity>(dto);
 
-            var result = DomainService.Create(bo);
+            var result = DomainService.Create(bo, createdBy);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)
@@ -61,7 +61,7 @@ namespace DND.Common.Implementation.ApplicationServices
             return Result.Ok(Mapper.Map<TReadDto>(bo));
         }
 
-        public virtual async Task<Result<TReadDto>> CreateAsync(TCreateDto dto, CancellationToken cancellationToken)
+        public virtual async Task<Result<TReadDto>> CreateAsync(TCreateDto dto, string createdBy, CancellationToken cancellationToken)
         {
             var objectValidationErrors = dto.Validate().ToList();
             if (objectValidationErrors.Any())
@@ -71,7 +71,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var bo = Mapper.Map<TEntity>(dto);
 
-            var result = await DomainService.CreateAsync(bo);
+            var result = await DomainService.CreateAsync(bo, createdBy);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)
@@ -101,7 +101,7 @@ namespace DND.Common.Implementation.ApplicationServices
             return Mapper.Map<TUpdateDto>(bo);
         }
 
-        public virtual Result Update(object id, TUpdateDto dto)
+        public virtual Result Update(object id, TUpdateDto dto, string updatedBy)
         {
             var objectValidationErrors = dto.Validate().ToList();
             if (objectValidationErrors.Any())
@@ -113,7 +113,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
             Mapper.Map(dto, persistedBO);
 
-            var result = DomainService.Update(persistedBO);
+            var result = DomainService.Update(persistedBO, updatedBy);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)
@@ -132,7 +132,7 @@ namespace DND.Common.Implementation.ApplicationServices
             return Result.Ok();
         }
 
-        public virtual async Task<Result> UpdateAsync(object id, TUpdateDto dto, CancellationToken cancellationToken)
+        public virtual async Task<Result> UpdateAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken)
         {
             var objectValidationErrors = dto.Validate().ToList();
             if (objectValidationErrors.Any())
@@ -144,7 +144,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
             Mapper.Map(dto, persistedBO);
 
-            var result = await DomainService.UpdateAsync(persistedBO, cancellationToken);
+            var result = await DomainService.UpdateAsync(persistedBO, updatedBy, cancellationToken);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)

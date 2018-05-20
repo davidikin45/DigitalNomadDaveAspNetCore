@@ -46,6 +46,22 @@ namespace DND.Common.Controllers.Api
             Configuration = configuration;
         }
 
+        //https://docs.microsoft.com/en-us/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-2.0
+        public string Username
+        {
+            get
+            {
+                if (User != null && User.Identity != null && !string.IsNullOrEmpty(User.Identity.Name))
+                {
+                    return User.Identity.Name;
+                }
+                else
+                {
+                    return "Anonymous";
+                }
+            }
+        }
+
         protected IActionResult ValidationErrors(Result failure)
         {
             var newModelState = new ModelStateDictionary();

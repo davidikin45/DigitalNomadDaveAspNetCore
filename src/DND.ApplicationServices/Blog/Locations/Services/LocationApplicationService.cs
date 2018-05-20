@@ -20,14 +20,14 @@ namespace DND.ApplicationServices.Blog.Locations.Services
 
         }
 
-        public override Task<Result<LocationDto>> CreateAsync(LocationDto dto, CancellationToken cancellationToken)
+        public override Task<Result<LocationDto>> CreateAsync(LocationDto dto, string createdBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(dto.UrlSlug))
             {
                 dto.UrlSlug = UrlSlugger.ToUrlSlug(dto.Name);
             }
 
-            return base.CreateAsync(dto, cancellationToken);
+            return base.CreateAsync(dto, createdBy, cancellationToken);
         }
 
         public async Task<LocationDto> GetLocationAsync(string urlSlug, CancellationToken cancellationToken)
@@ -36,14 +36,14 @@ namespace DND.ApplicationServices.Blog.Locations.Services
             return Mapper.Map<LocationDto>(bo);
         }
 
-        public override Task<Result> UpdateAsync(object id, LocationDto dto, CancellationToken cancellationToken)
+        public override Task<Result> UpdateAsync(object id,  LocationDto dto, string updatedBy, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(dto.UrlSlug))
             {
                 dto.UrlSlug = UrlSlugger.ToUrlSlug(dto.Name);
             }
 
-            return base.UpdateAsync(id, dto, cancellationToken);
+            return base.UpdateAsync(id, dto, updatedBy, cancellationToken);
         }
 
 
