@@ -28,6 +28,8 @@ Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to launch Kestral Web Host using
 
 ## Running the tests
 
+All web host processes and database creation/teardown have been automated using xUnit/NUnit test fixtures.
+
 ### DND.UnitTests (In Memory DbContext)
 
 No database required.
