@@ -162,19 +162,19 @@ namespace DND.Common.Implementation.DomainServices
             return Result.ConcurrencyConflict(errors, databaseValues.RowVersion);
         }
 
-        public virtual Result Delete(object id)
+        public virtual Result Delete(object id, string deletedBy)
         {
             TEntity entity = GetById(id);
-            return Delete(entity);
+            return Delete(entity, deletedBy);
         }
 
-        public virtual async Task<Result> DeleteAsync(object id, CancellationToken cancellationToken)
+        public virtual async Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken)
         {
             TEntity entity = await GetByIdAsync(id, cancellationToken);
-            return await DeleteAsync(entity, cancellationToken);
+            return await DeleteAsync(entity, deletedBy, cancellationToken);
         }
 
-        public virtual Result Delete(TEntity entity)
+        public virtual Result Delete(TEntity entity, string deletedBy)
         {
             var validationResult = Validate(entity, ValidationMode.Delete);
 
@@ -192,7 +192,7 @@ namespace DND.Common.Implementation.DomainServices
 
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Delete(entity);
+                    unitOfWork.Repository<TContext, TEntity>().Delete(entity, deletedBy);
                     unitOfWork.Complete();
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -205,7 +205,7 @@ namespace DND.Common.Implementation.DomainServices
             return Result.Ok();
         }
 
-        public virtual async Task<Result> DeleteAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<Result> DeleteAsync(TEntity entity, string deletedBy, CancellationToken cancellationToken)
         {
             var validationResult = await ValidateAsync(entity, ValidationMode.Delete);
 
@@ -223,7 +223,7 @@ namespace DND.Common.Implementation.DomainServices
 
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Delete(entity);
+                    unitOfWork.Repository<TContext, TEntity>().Delete(entity, deletedBy);
                     await unitOfWork.CompleteAsync(cancellationToken);
                 }
                 catch (DbUpdateConcurrencyException ex)

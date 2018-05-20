@@ -11,6 +11,9 @@ namespace DND.EFPersistance.Configurations.Blog.BlogPosts
         {
             HasKey(p => p.Id);
 
+            Ignore(p => p.DateDeleted);
+            Ignore(p => p.UserDeleted);
+
             HasRequired(p => p.BlogPost)
                 .WithMany()
                 .HasForeignKey(p => p.BlogPostId);

@@ -176,22 +176,22 @@ namespace DND.Common.Implementation.ApplicationServices
             return Mapper.Map<TDeleteDto>(bo);
         }
 
-        public virtual Result Delete(object id)
+        public virtual Result Delete(object id, string deletedBy)
         {
             TDeleteDto deleteDto = GetDeleteDtoById(id);
-            return Delete(deleteDto);
+            return Delete(deleteDto, deletedBy);
         }
 
-        public virtual async Task<Result> DeleteAsync(object id, CancellationToken cancellationToken)
+        public virtual async Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken)
         {
             TDeleteDto deleteDto = await GetDeleteDtoByIdAsync(id, cancellationToken);
-            return await DeleteAsync(deleteDto, cancellationToken);
+            return await DeleteAsync(deleteDto, deletedBy, cancellationToken);
         }
 
-        public virtual Result Delete(TDeleteDto dto)
+        public virtual Result Delete(TDeleteDto dto, string deletedBy)
         {
             var bo = Mapper.Map<TEntity>(dto);
-            var result = DomainService.Delete(bo);
+            var result = DomainService.Delete(bo, deletedBy);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)
@@ -210,10 +210,10 @@ namespace DND.Common.Implementation.ApplicationServices
             return Result.Ok();
         }
 
-        public virtual async Task<Result> DeleteAsync(TDeleteDto dto, CancellationToken cancellationToken)
+        public virtual async Task<Result> DeleteAsync(TDeleteDto dto, string deletedBy, CancellationToken cancellationToken)
         {
             var bo = Mapper.Map<TEntity>(dto);
-            var result = await DomainService.DeleteAsync(bo, cancellationToken);
+            var result = await DomainService.DeleteAsync(bo, deletedBy, cancellationToken);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)

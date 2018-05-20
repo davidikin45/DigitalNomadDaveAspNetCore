@@ -72,7 +72,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return _context.UpdateGraph(entity, mapping);
         }
 
-        public virtual void Delete(object id)
+        public virtual void Delete(object id, string deletedBy = null)
         {
             //TEntity entity = _context.FindEntityLocal<TEntity>(id);
             //if(entity == null)
@@ -81,15 +81,17 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //}
             TEntity entity = _context.FindEntity<TEntity>(id); // For concurrency purposes need to get latest version
 
-            Delete(entity);
+            Delete(entity, deletedBy);
         }
 
-        public virtual void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity, string deletedBy = null)
         {
             if (_context.IsEntityStateDetached(entity))
             {
                 _context.AttachEntity(entity);
             }
+            entity.DateDeleted = DateTime.UtcNow;
+            entity.UserDeleted = deletedBy;
             _context.RemoveEntity(entity);
         }
 

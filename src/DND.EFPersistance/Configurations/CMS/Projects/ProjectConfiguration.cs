@@ -11,6 +11,9 @@ namespace DND.EFPersistance.Configurations.CMS.Projects
         {
             HasKey(p => p.Id);
 
+            Ignore(p => p.DateDeleted);
+            Ignore(p => p.UserDeleted);
+
             Property(p => p.RowVersion).IsRowVersion();
 
             Property(p => p.Name)

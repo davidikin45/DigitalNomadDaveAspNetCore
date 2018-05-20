@@ -28,7 +28,7 @@ namespace DND.Common.DomainEvents
                         var original = dbValues[propertyName];
                         var current = updatedEntry.CurrentValues[propertyName];
 
-                        properties.Add(propertyName, new OldAndNewValue(original, current));
+                        properties.Add(propertyName, new OldAndNewValue(propertyName, original, current));
 
                         if (!Equals(original, current))
                         {
@@ -43,7 +43,12 @@ namespace DND.Common.DomainEvents
                     Type genericType = typeof(EntityPropertyUpdatedEvent<>);
                     Type[] typeArgs = { updatedEntry.Entity.GetType() };
                     Type constructed = genericType.MakeGenericType(typeArgs);
-                    object domainEvent = Activator.CreateInstance(constructed, updatedEntry.Entity, properties, propertyName, properties[propertyName]);
+                    string updatedBy = "Anonymous";
+                    if (updatedEntry.Entity is IBaseEntityAuditable)
+                    {
+                        updatedBy = ((IBaseEntityAuditable)updatedEntry.Entity).UserModified;
+                    }
+                    object domainEvent = Activator.CreateInstance(constructed, updatedEntry.Entity, updatedBy, properties, propertyName, properties[propertyName]);
                     propertyUpdatedEvents.Add((IDomainEvent)domainEvent);
                 }
 
@@ -73,7 +78,7 @@ namespace DND.Common.DomainEvents
                         var original = dbValues[property.Name];
                         var current = updatedEntry.CurrentValues[property.Name];
 
-                        properties.Add(property.Name, new OldAndNewValue(original, current));
+                        properties.Add(property.Name, new OldAndNewValue(property.Name, original, current));
 
                         if (!Equals(original, current))
                         {
@@ -88,7 +93,14 @@ namespace DND.Common.DomainEvents
                     Type genericType = typeof(EntityPropertyUpdatedEvent<>);
                     Type[] typeArgs = { updatedEntry.Entity.GetType() };
                     Type constructed = genericType.MakeGenericType(typeArgs);
-                    object domainEvent = Activator.CreateInstance(constructed, updatedEntry.Entity, properties, propertyName, properties[propertyName]);
+
+                    string updatedBy = "";
+                    if(updatedEntry.Entity is IBaseEntityAuditable)
+                    {
+                        updatedBy = ((IBaseEntityAuditable)updatedEntry.Entity).UserModified;
+                    }
+
+                    object domainEvent = Activator.CreateInstance(constructed, updatedEntry.Entity, updatedBy, properties, propertyName, properties[propertyName]);
                     propertyUpdatedEvents.Add((IDomainEvent)domainEvent);
                 }
 
@@ -116,7 +128,12 @@ namespace DND.Common.DomainEvents
                 Type genericType = typeof(EntityUpdatedEvent<>);
                 Type[] typeArgs = { entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
+                string updatedBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    updatedBy = ((IBaseEntityAuditable)entity).UserModified;
+                }
+                object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
                 DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
 
                 //Property Update Events
@@ -134,7 +151,12 @@ namespace DND.Common.DomainEvents
                 Type genericType = typeof(EntityDeletedEvent<>);
                 Type[] typeArgs = { entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
+                string deletedBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    deletedBy = ((IBaseEntityAuditable)entity).UserDeleted;
+                }
+                object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
                 DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
             }
 
@@ -143,7 +165,12 @@ namespace DND.Common.DomainEvents
                 Type genericType = typeof(EntityInsertedEvent<>);
                 Type[] typeArgs = { entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
+                string createdBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    createdBy = ((IBaseEntityAuditable)entity).UserCreated;
+                }
+                object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
                 DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
             }
 
@@ -178,7 +205,12 @@ namespace DND.Common.DomainEvents
                 Type genericType = typeof(EntityUpdatedEvent<>);
                 Type[] typeArgs = { entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
+                string updatedBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    updatedBy = ((IBaseEntityAuditable)entity).UserModified;
+                }
+                object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
                 try
                 {
                     DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
@@ -212,7 +244,12 @@ namespace DND.Common.DomainEvents
                 Type genericType = typeof(EntityDeletedEvent<>);
                 Type[] typeArgs = { entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
+                string deletedBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    deletedBy = ((IBaseEntityAuditable)entity).UserDeleted;
+                }
+                object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
                 try
                 {
                    DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
@@ -229,7 +266,12 @@ namespace DND.Common.DomainEvents
                 Type genericType = typeof(EntityInsertedEvent<>);
                 Type[] typeArgs = { entity.GetType() };
                 Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
+                string createdBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    createdBy = ((IBaseEntityAuditable)entity).UserCreated;
+                }
+                object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
                 try
                 {
                    DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);

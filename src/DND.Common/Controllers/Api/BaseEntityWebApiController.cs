@@ -225,7 +225,7 @@ namespace DND.Common.Controllers.Api
                 return ApiErrorMessage(Messages.RequestInvalid);
             }
 
-            var result = await Service.DeleteAsync(dto, cts.Token); // // This should give concurrency checking
+            var result = await Service.DeleteAsync(dto, Username, cts.Token); // // This should give concurrency checking
             if (result.IsFailure)
             {
                 return ValidationErrors(result);

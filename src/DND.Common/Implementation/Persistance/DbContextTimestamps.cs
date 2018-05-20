@@ -9,10 +9,11 @@ namespace DND.Common.Implementation.Persistance
 {
     public class DbContextTimestamps
     {
-        public void AddTimestamps(IEnumerable<object> addedObjects, IEnumerable<object> modifiedObjects)
+        public void AddTimestamps(IEnumerable<object> addedObjects, IEnumerable<object> modifiedObjects, IEnumerable<object> deletedObjects)
         {
             var added = addedObjects.Where(x => x is IBaseEntityAuditable);
             var modified = modifiedObjects.Where(x => x is IBaseEntityAuditable);
+            var deleted = modifiedObjects.Where(x => x is IBaseEntityAuditable);
 
             //This doesn't work for .NET Core
             //var currentUsername = !string.IsNullOrEmpty(Thread.CurrentPrincipal?.Identity?.Name)
@@ -44,6 +45,17 @@ namespace DND.Common.Implementation.Persistance
                 if (String.IsNullOrEmpty(((IBaseEntityAuditable)entity).UserModified))
                 {
                     ((IBaseEntityAuditable)entity).UserModified = "Anonymous";
+                }
+                //((IBaseEntityAuditable)entity).UserModified = currentUsername;
+            }
+
+            foreach (var entity in deleted)
+            {
+
+                ((IBaseEntityAuditable)entity).DateDeleted = DateTime.UtcNow;
+                if (String.IsNullOrEmpty(((IBaseEntityAuditable)entity).UserDeleted))
+                {
+                    ((IBaseEntityAuditable)entity).UserDeleted = "Anonymous";
                 }
                 //((IBaseEntityAuditable)entity).UserModified = currentUsername;
             }

@@ -320,8 +320,9 @@ namespace DND.Common.Implementation.Persistance
         {
             var added = ChangeTracker.Entries().Where(x => x.State == EntityState.Added).Select(x => x.Entity);
             var modified = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified).Select(x => x.Entity);
+            var deleted = ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted).Select(x => x.Entity);
 
-            _dbContextTimestamps.AddTimestamps(added, modified);
+            _dbContextTimestamps.AddTimestamps(added, modified, deleted);
         }
     }
 }

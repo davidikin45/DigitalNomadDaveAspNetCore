@@ -160,7 +160,7 @@ namespace DND.Common.Controllers
                 try
                 {
                     //var result = await Service.DeleteAsync(id, cts.Token);
-                    var result = await Service.DeleteAsync(dto, cts.Token); // This should give concurrency checking
+                    var result = await Service.DeleteAsync(dto, Username, cts.Token); // This should give concurrency checking
                     if (result.IsFailure)
                     {
                         HandleUpdateException(result, dto, true);

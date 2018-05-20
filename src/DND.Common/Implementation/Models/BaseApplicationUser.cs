@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DND.Common.Implementation.Models
 {
@@ -26,6 +27,11 @@ namespace DND.Common.Implementation.Models
         public string UserCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public string UserModified { get; set; }
+
+        [NotMapped]
+        public DateTime? DateDeleted { get; set; }
+        [NotMapped]
+        public string UserDeleted { get; set; }
 
         public BaseApplicationUser()
         {

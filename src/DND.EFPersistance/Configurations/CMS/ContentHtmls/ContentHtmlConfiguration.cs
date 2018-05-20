@@ -10,6 +10,9 @@ namespace DND.EFPersistance.Configurations.CMS.ContentHtmls
         {
             HasKey(p => p.Id);
 
+            Ignore(p => p.DateDeleted);
+            Ignore(p => p.UserDeleted);
+
             Property(p => p.RowVersion).IsRowVersion();
 
         }

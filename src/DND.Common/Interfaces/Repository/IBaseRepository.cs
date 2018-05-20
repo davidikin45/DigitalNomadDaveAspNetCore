@@ -17,9 +17,9 @@ namespace DND.Common.Interfaces.Repository
 
         void Update(TEntity entity, string modifiedBy = null);
 
-        void Delete(object id);
+        void Delete(object id, string deletedBy = null);
 
-        void Delete(TEntity entity);
+        void Delete(TEntity entity, string deletedBy = null);
     }
 
 }

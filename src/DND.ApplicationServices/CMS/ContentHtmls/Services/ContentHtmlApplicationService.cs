@@ -19,9 +19,9 @@ namespace DND.ApplicationServices.CMS.ContentHtmls.Services
            
         }
 
-        public override Task<Result> DeleteAsync(ContentHtmlDeleteDto dto, CancellationToken cancellationToken)
+        public override Task<Result> DeleteAsync(ContentHtmlDeleteDto dto, string deletedBy, CancellationToken cancellationToken)
         {
-            return base.DeleteAsync(dto, cancellationToken);
+            return base.DeleteAsync(dto, deletedBy, cancellationToken);
         }
     }
 }

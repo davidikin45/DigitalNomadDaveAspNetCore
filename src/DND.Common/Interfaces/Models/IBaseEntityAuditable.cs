@@ -13,5 +13,7 @@ namespace DND.Common.Interfaces.Models
         string UserCreated { get; set; }
         DateTime? DateModified { get; set; }
         string UserModified { get; set; }
+        DateTime? DateDeleted { get; set; }
+        string UserDeleted { get; set; }
     }
 }

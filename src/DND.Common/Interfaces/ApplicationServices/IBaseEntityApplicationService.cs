@@ -21,13 +21,13 @@ namespace DND.Common.Interfaces.ApplicationServices
 
         Task<Result> UpdateAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
-        Result Delete(object id);
+        Result Delete(object id, string deletedBy);
 
-        Task<Result> DeleteAsync(object id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
 
-        Result Delete(TDeleteDto dto);
+        Result Delete(TDeleteDto dto, string deletedBy);
 
-        Task<Result> DeleteAsync(TDeleteDto dto, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> DeleteAsync(TDeleteDto dto, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
 
         TUpdateDto GetUpdateDtoById(object id)
            ;

@@ -11,9 +11,12 @@ namespace DND.Common.DomainEvents
         where T : IBaseEntity
     {
         public T Entity { get; }
-        public EntityInsertedEvent(T entity)
+        public string CreatedBy { get; }
+
+        public EntityInsertedEvent(T entity, string createdBy)
         {
             Entity = entity;
+            CreatedBy = createdBy;
         }
     }
 
@@ -21,9 +24,12 @@ namespace DND.Common.DomainEvents
         where T : IBaseEntity
     {
         public T Entity { get; }
-        public EntityUpdatedEvent(T entity)
+        public string UpdatedBy { get; }
+
+        public EntityUpdatedEvent(T entity, string updatedBy)
         {
             Entity = entity;
+            UpdatedBy = updatedBy;
         }
     }
 
@@ -31,9 +37,12 @@ namespace DND.Common.DomainEvents
         where T : IBaseEntity
     {
         public T Entity { get; }
-        public EntityDeletedEvent(T entity)
+        public string DeletedBy { get; }
+
+        public EntityDeletedEvent(T entity, string deletedBy)
         {
             Entity = entity;
+            DeletedBy = deletedBy;
         }
     }
 
@@ -44,9 +53,11 @@ namespace DND.Common.DomainEvents
         public Dictionary<string, OldAndNewValue> OldAndNewValues { get; }
         public string PropertyName { get; }
         public OldAndNewValue PropertyOldAndNewValue { get; }
+        public string UpdatedBy { get; }
 
-        public EntityPropertyUpdatedEvent(T entity, Dictionary<string, OldAndNewValue> oldAndNewValues, string propertyName, OldAndNewValue propertyOldAndNewValue)
+        public EntityPropertyUpdatedEvent(T entity, string updatedBy, Dictionary<string, OldAndNewValue> oldAndNewValues, string propertyName, OldAndNewValue propertyOldAndNewValue)
         {
+            UpdatedBy = updatedBy;
             Entity = entity;
             OldAndNewValues = oldAndNewValues;
             PropertyName = propertyName;
@@ -56,12 +67,13 @@ namespace DND.Common.DomainEvents
 
     public class OldAndNewValue
     {
+        public string PropertyName { get; }
         public object OldValue { get; }
         public object NewValue { get; }
 
-        public OldAndNewValue(object oldValue, object newValue)
+        public OldAndNewValue(string propertyName, object oldValue, object newValue)
         {
-
+            PropertyName = propertyName;
             OldValue = oldValue;
             NewValue = newValue;
         }

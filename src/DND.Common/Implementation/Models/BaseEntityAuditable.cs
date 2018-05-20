@@ -1,5 +1,6 @@
 ﻿using DND.Common.Interfaces.Models;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DND.Common.Implementation.Models
 {
@@ -15,5 +16,10 @@ namespace DND.Common.Implementation.Models
         public string UserCreated { get; set; }
         public DateTime? DateModified { get; set; }
         public string UserModified { get; set; }
+
+        [NotMapped]
+        public DateTime? DateDeleted { get; set; }
+        [NotMapped]
+        public string UserDeleted { get; set; }
     }
 }

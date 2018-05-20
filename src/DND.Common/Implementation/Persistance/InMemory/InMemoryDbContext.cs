@@ -125,7 +125,7 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public int SaveChanges()
         {
-            _dbContextTimestamps.AddTimestamps(addQueue.Select(x=>x.Entity), updateQueue.Select(x => x.Entity));
+            _dbContextTimestamps.AddTimestamps(addQueue.Select(x=>x.Entity), updateQueue.Select(x => x.Entity), removeQueue.Select(x => x.Entity));
             BeforeSave?.Invoke(this, new BeforeSave());
 
             var all = updateQueue.Select(x => x.Entity).Concat(addQueue.Select(x => x.Entity)).Concat(removeQueue.Select(x => x.Entity));

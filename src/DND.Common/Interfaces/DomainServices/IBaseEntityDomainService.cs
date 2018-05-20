@@ -17,13 +17,13 @@ namespace DND.Common.Interfaces.DomainServices
 
         Task<Result> UpdateAsync(TEntity entity, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
-        Result Delete(object id);
+        Result Delete(object id, string deletedBy);
 
-        Task<Result> DeleteAsync(object id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
 
-        Result Delete(TEntity entity);
+        Result Delete(TEntity entity, string deletedBy);
 
-        Task<Result> DeleteAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> DeleteAsync(TEntity entity, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
 
         Result Validate(TEntity entity, ValidationMode mode);
 
