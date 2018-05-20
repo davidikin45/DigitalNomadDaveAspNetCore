@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DND.Domain.Blog.Tags;
 using DND.Common.Implementation.Validation;
+using System.ComponentModel.DataAnnotations;
+using DND.Common.Enums;
 
 namespace DND.DomainServices.Tags.Services
 {
@@ -58,6 +60,13 @@ namespace DND.DomainServices.Tags.Services
             }
 
             return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Tag entity, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+
+            return errors;
         }
     }
 }

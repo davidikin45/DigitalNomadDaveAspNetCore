@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DND.Domain.Blog.BlogPosts;
 using DND.Common.Implementation.Validation;
+using System.ComponentModel.DataAnnotations;
+using DND.Common.Enums;
 
 namespace DND.DomainServices.Blog.BlogPosts.Services
 {
@@ -230,5 +232,12 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
             return Result.Ok();
         }
         #endregion
+
+        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(BlogPost entity, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+
+            return errors;
+        }
     }
 }

@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DND.Domain.Blog.Categories;
 using DND.Common.Implementation.Validation;
+using DND.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace DND.DomainServices.Categories.Services
 {
@@ -48,6 +50,13 @@ namespace DND.DomainServices.Categories.Services
             }
 
             return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Category entity, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+
+            return errors;
         }
     }
 }

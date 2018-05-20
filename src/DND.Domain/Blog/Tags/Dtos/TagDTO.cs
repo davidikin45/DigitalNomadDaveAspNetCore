@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DND.Common.Implementation.Dtos;
+using AutoMapper;
 
 namespace DND.Domain.Blog.Tags.Dtos
 {
-    public class TagDto : BaseDtoAggregateRoot<int>, IMapFrom<Tag>, IMapTo<Tag>
+    public class TagDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
 
         [Required, StringLength(50)]
@@ -28,9 +29,18 @@ namespace DND.Domain.Blog.Tags.Dtos
         [Render(ShowForCreate = false,ShowForEdit = false, ShowForGrid = false, ShowForDisplay = false)]
         public int Count { get; set; }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             yield break;
+        }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<TagDto, Tag>()
+             .ForMember(bo => bo.DateModified, dto => dto.Ignore())
+            .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+
+            configuration.CreateMap<Tag, TagDto>();
         }
     }
 }

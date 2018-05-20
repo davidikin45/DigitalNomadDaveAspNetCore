@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using DND.Domain;
 
 namespace DND.EFPersistance.Identity
 {
@@ -33,8 +35,21 @@ namespace DND.EFPersistance.Identity
             if (Users.Any())
                 return;
 
-            Users.Add(new User { UserName = "user1", Name = "user1", Email = "-", PasswordHash = "-", EmailConfirmed = true });
-            Users.Add(new User { UserName = "user2", Name = "user2", Email = "-", PasswordHash = "-", EmailConfirmed = true });
+            var adminRole = new IdentityRole() { Id = Guid.NewGuid().ToString(), Name = DNDSeedData.AdminRoleName };
+            adminRole.NormalizedName = adminRole.Name.ToUpper();
+            Roles.Add(adminRole);
+
+            var password = DNDSeedData.AdminPassword;
+
+            var passwordHasher = new PasswordHasher<User>();
+            var adminUser = new User { Id = Guid.NewGuid().ToString(), UserName = DNDSeedData.AdminUsername, Name = DNDSeedData.AdminName, Email = DNDSeedData.AdminEmail, EmailConfirmed = true, LockoutEnabled = true };
+            adminUser.NormalizedUserName = adminUser.UserName.ToUpper();
+            adminUser.NormalizedEmail = adminUser.Email.ToUpper();
+            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, password);
+
+            Users.Add(adminUser);
+
+            UserRoles.Add(new IdentityUserRole<string>() { UserId = adminUser.Id, RoleId = adminRole.Id });
         }
     }
 }

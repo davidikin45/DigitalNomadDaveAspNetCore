@@ -4,6 +4,10 @@ using DND.Domain.Models;
 using DND.Common.Implementation.DomainServices;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Domain.CMS.Testimonials;
+using System.Threading.Tasks;
+using DND.Common.Enums;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DND.DomainServices.CMS.Testimonials.Services
 {
@@ -14,6 +18,13 @@ namespace DND.DomainServices.CMS.Testimonials.Services
         {
 
         }
-     
+
+        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Testimonial entity, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+
+            return errors;
+        }
+
     }
 }

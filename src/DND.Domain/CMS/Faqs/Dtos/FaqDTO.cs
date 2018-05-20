@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DND.Common.Implementation.Dtos;
+using AutoMapper;
 
 namespace DND.Domain.CMS.Faqs.Dtos
 {
-    public class FaqDto : BaseDtoAggregateRoot<int>, IMapTo<Faq>, IMapFrom<Faq>
+    public class FaqDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
         [Required]
         public string Question { get; set; }
@@ -23,9 +24,18 @@ namespace DND.Domain.CMS.Faqs.Dtos
         [Render(ShowForEdit = true, ShowForCreate = false, ShowForGrid = true)]
         public DateTime DateCreated { get; set; }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             yield break;
+        }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<FaqDto, Faq>()
+             .ForMember(bo => bo.DateModified, dto => dto.Ignore())
+            .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+
+            configuration.CreateMap<Faq, FaqDto>();
         }
     }
 }

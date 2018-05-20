@@ -24,12 +24,14 @@ namespace DND.Domain.CMS.MailingLists.Dtos
             configuration.CreateMap<MailingList, MailingListDto>();
 
             configuration.CreateMap<MailingListDto, MailingList>()
-           .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+           .ForMember(bo => bo.DateCreated, dto => dto.Ignore())
+           .ForMember(bo => bo.DateModified, dto => dto.Ignore());
         }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             yield break;
         }
+
     }
 }

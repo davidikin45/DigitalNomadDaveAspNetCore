@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DND.Common.Extensions;
+using DND.Common.Enums;
 
 namespace DND.Common.Implementation.DomainServices
 {
@@ -26,10 +27,11 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual Result<TEntity> Create(TEntity entity)
         {
-            var objectValidationErrors = entity.Validate().ToList();
-            if (objectValidationErrors.Any())
+            var validationResult = Validate(entity, ValidationMode.Create);
+
+            if (validationResult.IsFailure)
             {
-                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
+                return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
             }
 
             using (var unitOfWork = UnitOfWorkFactory.Create())
@@ -43,10 +45,11 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual async Task<Result<TEntity>> CreateAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            var objectValidationErrors = entity.Validate().ToList();
-            if (objectValidationErrors.Any())
+            var validationResult = await ValidateAsync(entity, ValidationMode.Create);
+
+            if (validationResult.IsFailure)
             {
-                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
+                return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
             }
 
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
@@ -60,12 +63,12 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual Result Update(TEntity entity)
         {
-            var objectValidationErrors = entity.Validate().ToList();
-            if (objectValidationErrors.Any())
-            {
-                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
-            }
+            var validationResult = Validate(entity, ValidationMode.Update);
 
+            if (validationResult.IsFailure)
+            {
+                return validationResult;
+            }
 
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
@@ -92,12 +95,12 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual async Task<Result> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            var objectValidationErrors = entity.Validate().ToList();
-            if (objectValidationErrors.Any())
-            {
-                return Result.ObjectValidationFail<TEntity>(objectValidationErrors);
-            }
+            var validationResult = await ValidateAsync(entity, ValidationMode.Update);
 
+            if (validationResult.IsFailure)
+            {
+                return validationResult;
+            }
 
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
@@ -139,7 +142,7 @@ namespace DND.Common.Implementation.DomainServices
                 var v1 = clientValues.GetPropValue(prop.Name);
                 var v2 = databaseValues.GetPropValue(prop.Name);
 
-                if(!(v1 == null && v2 == null))
+                if (!(v1 == null && v2 == null))
                 {
                     if (((v1 == null && v2 != null) || (v2 == null && v1 != null) || !v1.Equals(v2)))
                     {
@@ -173,6 +176,12 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual Result Delete(TEntity entity)
         {
+            var validationResult = Validate(entity, ValidationMode.Delete);
+
+            if (validationResult.IsFailure)
+            {
+                return validationResult;
+            }
 
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
@@ -198,6 +207,12 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual async Task<Result> DeleteAsync(TEntity entity, CancellationToken cancellationToken)
         {
+            var validationResult = await ValidateAsync(entity, ValidationMode.Delete);
+
+            if (validationResult.IsFailure)
+            {
+                return validationResult;
+            }
 
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
@@ -244,5 +259,36 @@ namespace DND.Common.Implementation.DomainServices
             return Result.ConcurrencyConflict(errors, databaseValues.RowVersion);
         }
 
+        public Result Validate(TEntity entity, ValidationMode mode)
+        {
+            var task = ValidateAsync(entity, mode);
+            task.Wait();
+            return task.Result;
+        }
+
+        public async Task<Result> ValidateAsync(TEntity entity, ValidationMode mode)
+        {
+            if (mode != ValidationMode.Delete)
+            {
+                var objectValidationErrors = entity.Validate().ToList();
+                if (objectValidationErrors.Any())
+                {
+                    return Result.ObjectValidationFail(objectValidationErrors);
+                }
+            }
+
+            if (mode == ValidationMode.Create || mode == ValidationMode.Update || mode == ValidationMode.Delete)
+            {
+                var dbDependantValidationErrors = await DbDependantValidateAsync(entity, mode).ConfigureAwait(false);
+                if (dbDependantValidationErrors.Any())
+                {
+                    return Result.ObjectValidationFail(dbDependantValidationErrors);
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public abstract Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(TEntity entity, ValidationMode mode);
     }
 }

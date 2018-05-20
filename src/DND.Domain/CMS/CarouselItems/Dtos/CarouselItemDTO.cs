@@ -8,10 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DND.Common.Implementation.Dtos;
+using AutoMapper;
 
 namespace DND.Domain.CMS.CarouselItems.Dtos
 {
-    public class CarouselItemDto : BaseDtoAggregateRoot<int>, IMapFrom<CarouselItem>, IMapTo<CarouselItem>
+    public class CarouselItemDto : BaseDtoAggregateRoot<int>,IHaveCustomMappings
     {
         [Render(AllowSortForGrid = false)]
         [FolderDropdown(Folders.Gallery, true)]
@@ -45,7 +46,7 @@ namespace DND.Domain.CMS.CarouselItems.Dtos
 
         }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             var errors = new List<ValidationResult>();
 
@@ -61,6 +62,15 @@ namespace DND.Domain.CMS.CarouselItems.Dtos
             }
 
             return errors;
+        }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<CarouselItemDto, CarouselItem>()
+             .ForMember(bo => bo.DateModified, dto => dto.Ignore())
+            .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+
+            configuration.CreateMap<CarouselItem, CarouselItemDto>();
         }
     }
 }

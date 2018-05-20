@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Validation;
+﻿using DND.Common.DomainEvents;
+using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Persistance;
 using RefactorThis.GraphDiff;
@@ -123,12 +124,16 @@ namespace DND.Common.Implementation.Persistance.InMemory
             var insert = addQueue.Select(x => x.Entity);
             var delete = removeQueue.Select(x => x.Entity);
 
-            BaseDbContext.RaiseDomainEventsPreCommit(update, delete, insert);
+            //For domain events to get fired Dependency Injections needs to be wired up.
+            //No property update events are fired from InMemoryDBContext
+            DbContextDomainEvents.DispatchDomainEventsPreCommit(update, null, delete, insert);
 
             ProcessCommitQueues();
             repo.Commit();
 
-            BaseDbContext.RaiseDomainEventsPostCommit(update, delete, insert);
+            //For domain events to get fired Dependency Injections needs to be wired up.
+            //No property update events are fired from InMemoryDBContext
+            DbContextDomainEvents.DispatchDomainEventsPostCommit(update, null, delete, insert);
 
             AfterSave?.Invoke(this, new AfterSave());
             return 0;

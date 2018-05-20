@@ -1,10 +1,13 @@
-﻿using DND.Common.Implementation.DomainServices;
+﻿using DND.Common.Enums;
+using DND.Common.Implementation.DomainServices;
 using DND.Common.Implementation.Validation;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Domain.Blog.Locations;
 using DND.Domain.Interfaces.DomainServices;
 using DND.Domain.Interfaces.Persistance;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,6 +47,13 @@ namespace DND.DomainServices.Blog.Locations.Services
             }
 
            return await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Location entity, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+
+            return errors;
         }
 
 

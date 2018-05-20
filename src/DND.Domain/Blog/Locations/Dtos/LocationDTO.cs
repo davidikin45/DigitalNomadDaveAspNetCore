@@ -1,3 +1,4 @@
+using AutoMapper;
 using DND.Common.Implementation.Dtos;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
@@ -11,10 +12,10 @@ using System.Data.Entity.Spatial;
 
 namespace DND.Domain.Blog.Locations.Dtos
 {
-    public class LocationDto : BaseDtoAggregateRoot<int> , IMapFrom<Location>, IMapTo<Location>
+    public class LocationDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
         [Required]
-		public string Name { get; set; }
+        public string Name { get; set; }
         public LocationType LocationType { get; set; }
         [Render(ShowForGrid = false)]
         public string DescriptionBody { get; set; }
@@ -44,7 +45,7 @@ namespace DND.Domain.Blog.Locations.Dtos
         public DateTime DateCreated { get; set; }
 
         public LocationDto()
-		{
+        {
             LocationType = LocationType.City;
             DateCreated = DateTime.Now;
         }
@@ -54,10 +55,19 @@ namespace DND.Domain.Blog.Locations.Dtos
             return GPSLocation != null && GPSLocation.Latitude.HasValue && GPSLocation.Longitude.HasValue;
         }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             var errors = new List<ValidationResult>();
             return errors;
+        }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<LocationDto, Location>()
+             .ForMember(bo => bo.DateModified, dto => dto.Ignore())
+            .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+
+            configuration.CreateMap<Location, LocationDto>();
         }
     }
 }

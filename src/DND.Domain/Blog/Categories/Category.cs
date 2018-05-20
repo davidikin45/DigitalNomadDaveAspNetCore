@@ -1,10 +1,11 @@
-﻿using DND.Common.Implementation.Models;
+﻿using DND.Common.DomainEvents;
+using DND.Common.Implementation.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.Categories
 {
-    public class Category : BaseEntityAggregateRootAuditable<int>
+    public class Category : BaseEntityAggregateRootAuditable<int>, IFirePropertyUpdatedEvents
     {
         //[Required, StringLength(50)]
         public string Name

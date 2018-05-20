@@ -112,8 +112,6 @@ namespace DND.IntegrationTestsXUnit
 
             Assert.Contains(Messages.MessageSentSuccessfully, responseString);
         }
-
-
     }
 
 }

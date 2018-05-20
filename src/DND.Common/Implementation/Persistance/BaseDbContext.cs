@@ -205,14 +205,15 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var propertiesUpdatedEvents = DbContextDomainEvents.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            RaiseDomainEventsPreCommit(updated, deleted, inserted);
+            DbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             var objectCount = base.SaveChanges();
 
-            RaiseDomainEventsPostCommit(updated, deleted, inserted);
+            DbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             return objectCount;
         }
@@ -229,14 +230,15 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
            
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var propertiesUpdatedEvents = DbContextDomainEvents.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            RaiseDomainEventsPreCommit(updated, deleted, inserted);
+            DbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
-            var objectCount = await base.SaveChangesAsync();
+            var objectCount = await base.SaveChangesAsync().ConfigureAwait(false);
 
-            RaiseDomainEventsPostCommit(updated, deleted, inserted);
+            DbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             return objectCount;
         }
@@ -248,14 +250,15 @@ namespace DND.Common.Implementation.Persistance
             var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
+            var propertiesUpdatedEvents = DbContextDomainEvents.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            RaiseDomainEventsPreCommit(updated, deleted, inserted);
+            DbContextDomainEvents.DispatchDomainEventsPreCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
-            var objectCount = await base.SaveChangesAsync(cancellationtoken);
+            var objectCount = await base.SaveChangesAsync(cancellationtoken).ConfigureAwait(false);
 
-            RaiseDomainEventsPostCommit(updated, deleted, inserted);
+            DbContextDomainEvents.DispatchDomainEventsPostCommit(updated, propertiesUpdatedEvents, deleted, inserted);
 
             return objectCount;
         }
@@ -263,96 +266,6 @@ namespace DND.Common.Implementation.Persistance
         IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
         {
             return base.GetValidationErrors().Select(x => new DbEntityValidationResultBetter(x.ValidationErrors));
-        }
-
-        public static void RaiseDomainEventsPreCommit(
-            IEnumerable<object> updatedObjects,
-            IEnumerable<object> deletedObjects,
-            IEnumerable<object> insertedObjects)
-        {
-            var updated = updatedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var deleted = deletedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-
-            foreach (var entity in updated)
-            {
-                Type genericType = typeof(EntityUpdatedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
-            }
-
-            foreach (var entity in deleted)
-            {
-                Type genericType = typeof(EntityDeletedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
-            }
-
-            foreach (var entity in inserted)
-            {
-                Type genericType = typeof(EntityInsertedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPreCommit((IDomainEvent)domainEvent);
-            }
-        }
-
-        public static void RaiseDomainEventsPostCommit(
-            IEnumerable<object> updatedObjects,
-            IEnumerable<object> deletedObjects,
-            IEnumerable<object> insertedObjects)
-        {
-            var updated = updatedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var deleted = deletedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-
-            foreach (var entity in updated)
-            {
-                Type genericType = typeof(EntityUpdatedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
-            }
-
-            foreach (var entity in deleted)
-            {
-                Type genericType = typeof(EntityDeletedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
-            }
-
-            foreach (var entity in inserted)
-            {
-                Type genericType = typeof(EntityInsertedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                object domainEvent = Activator.CreateInstance(constructed, entity);
-                DomainEvents.DomainEvents.DispatchPostCommit((IDomainEvent)domainEvent);
-            }
-
-            var all = updated.Concat(deleted).Concat(inserted);
-
-            foreach (var entity in all)
-            {
-                if (entity is IBaseEntityAggregateRoot)
-                {
-                    var aggRootEntity = ((IBaseEntityAggregateRoot)entity);
-                    var events = aggRootEntity.DomainEvents.ToArray();
-                    aggRootEntity.ClearEvents();
-                    foreach (var domainEvent in events)
-                    {
-                        DomainEvents.DomainEvents.DispatchPostCommit(domainEvent);
-                    }
-                }
-            }
         }
 
         public void AddEntity<TEntity>(TEntity entity) where TEntity : class

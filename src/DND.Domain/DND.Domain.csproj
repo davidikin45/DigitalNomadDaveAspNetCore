@@ -199,6 +199,7 @@
     <Compile Include="Blog\Categories\Dtos\CategoryDTO.cs" />
     <Compile Include="CMS\ContentHtmls\Dtos\ContentHtmlDTO.cs" />
     <Compile Include="CMS\ContentTexts\Dtos\ContentTextDTO.cs" />
+    <Compile Include="DNDSeedData.cs" />
     <Compile Include="FlightSearch\Currencies\Dtos\CurrencyDTO.cs" />
     <Compile Include="CMS\Faqs\Dtos\FaqDTO.cs" />
     <Compile Include="FlightSearch\Search\Dtos\FlightSearchRequestDTO.cs" />

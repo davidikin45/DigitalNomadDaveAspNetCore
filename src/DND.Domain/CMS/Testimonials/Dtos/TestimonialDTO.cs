@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Dtos;
+﻿using AutoMapper;
+using DND.Common.Implementation.Dtos;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
@@ -9,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.Testimonials.Dtos
 {
-    public class TestimonialDto : BaseDtoAggregateRoot<int>, IMapFrom<Testimonial>, IMapTo<Testimonial>
+    public class TestimonialDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
         [Required, StringLength(100)]
         public string Source { get; set; }
@@ -24,9 +25,18 @@ namespace DND.Domain.CMS.Testimonials.Dtos
         [Render(ShowForEdit = true, ShowForCreate = false, ShowForGrid = true)]
         public DateTime DateCreated { get; set; }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             yield break;
+        }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<TestimonialDto, Testimonial>()
+             .ForMember(bo => bo.DateModified, dto => dto.Ignore())
+            .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+
+            configuration.CreateMap<Testimonial, TestimonialDto>();
         }
     }
 }

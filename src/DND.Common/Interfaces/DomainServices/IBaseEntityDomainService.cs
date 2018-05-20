@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Validation;
+﻿using DND.Common.Enums;
+using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.Models;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,5 +24,9 @@ namespace DND.Common.Interfaces.DomainServices
         Result Delete(TEntity entity);
 
         Task<Result> DeleteAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken));
+
+        Result Validate(TEntity entity, ValidationMode mode);
+
+        Task<Result> ValidateAsync(TEntity entity, ValidationMode mode);
     }
 }

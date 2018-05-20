@@ -6,10 +6,11 @@ using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DND.Common.Implementation.Dtos;
+using AutoMapper;
 
 namespace DND.Domain.CMS.ContentHtmls.Dtos
 {
-    public class ContentHtmlDto : BaseDtoAggregateRoot<string>, IMapTo<ContentHtml>, IMapFrom<ContentHtml>
+    public class ContentHtmlDto : BaseDtoAggregateRoot<string>, IHaveCustomMappings
     {
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = true)]
         public override string Id { get => base.Id; set => base.Id = value; }
@@ -25,9 +26,18 @@ namespace DND.Domain.CMS.ContentHtmls.Dtos
         [HiddenInput]
         public bool PreventDelete { get; set; }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             yield break;
+        }
+
+        public void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            configuration.CreateMap<ContentHtmlDto, ContentHtml>()
+             .ForMember(bo => bo.DateModified, dto => dto.Ignore())
+            .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+
+            configuration.CreateMap<ContentHtml, ContentHtmlDto>();
         }
     }
 }

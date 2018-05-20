@@ -659,8 +659,10 @@
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacTasksModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacAutomapperModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsDependencyInjectionModule.cs" />
+    <Compile Include="DomainEvents\DbContextDomainEvents.cs" />
     <Compile Include="DomainEvents\EntityEvents.cs" />
     <Compile Include="DomainEvents\EventListener.cs" />
+    <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
     <Compile Include="DomainEvents\IDomainEventHandler.cs" />
     <Compile Include="DomainEvents\IDomainEvent.cs" />
     <Compile Include="Email\EmailMessage.cs" />
@@ -668,6 +670,7 @@
     <Compile Include="Email\EmailServiceOptions.cs" />
     <Compile Include="Email\EmailServiceSmtp.cs" />
     <Compile Include="Email\IEmailService.cs" />
+    <Compile Include="Enums\ValidationMode.cs" />
     <Compile Include="Enums\ResourceUriType.cs" />
     <Compile Include="Enums\CropType.cs" />
     <Compile Include="Extensions\AutomapperExtensions.cs" />
@@ -724,6 +727,13 @@
     <Compile Include="Helpers\WebHelper.cs" />
     <Compile Include="Helpers\WebRequestHelper.cs" />
     <Compile Include="Helpers\YouTubeHelper.cs" />
+    <Compile Include="HttpClientREST\FileContent.cs" />
+    <Compile Include="HttpClientREST\HttpClientExtensions.cs" />
+    <Compile Include="HttpClientREST\HttpRequestBuilder.cs" />
+    <Compile Include="HttpClientREST\HttpRequestFactory.cs" />
+    <Compile Include="HttpClientREST\HttpResponseExtensions.cs" />
+    <Compile Include="HttpClientREST\JsonContent.cs" />
+    <Compile Include="HttpClientREST\PatchContent.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseApplicationService.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseEntityApplicationService.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseEntityReadOnlyApplicationService.cs" />

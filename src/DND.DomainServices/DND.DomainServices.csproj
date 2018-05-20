@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blog\Authors\Services\AuthorDomainService.cs" />
+    <Compile Include="Blog\Categories\DomainEventHandlers\CategoryPropertyUpdatedEventHandler.cs" />
     <Compile Include="Blog\BlogPosts\Services\BlogPostDomainService.cs" />
     <Compile Include="Blog\Categories\Services\CategoryDomainService.cs" />
     <Compile Include="Blog\Services\BlogDomainService.cs" />
@@ -102,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blog\Authors\DomainEventHandlers\" />
-    <Folder Include="Blog\Categories\DomainEventHandlers\" />
     <Folder Include="Blog\Locations\DomainEventHandlers\" />
     <Folder Include="Blog\Tags\DomainEventHandlers\" />
     <Folder Include="CMS\CarouselItems\DomainEventHandlers\" />

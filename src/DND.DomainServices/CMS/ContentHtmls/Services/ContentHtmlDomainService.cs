@@ -1,9 +1,12 @@
-﻿using DND.Common.Implementation.DomainServices;
+﻿using DND.Common.Enums;
+using DND.Common.Implementation.DomainServices;
 using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.Persistance;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Domain.CMS.ContentHtmls;
 using DND.Domain.Interfaces.DomainServices;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +29,13 @@ namespace DND.DomainServices.CMS.ContentHtmls.Services
             }
 
             return await base.DeleteAsync(entity, cancellationToken);
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(ContentHtml entity, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+
+            return errors;
         }
     }
 }

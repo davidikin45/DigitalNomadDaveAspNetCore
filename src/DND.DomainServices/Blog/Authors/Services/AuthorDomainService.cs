@@ -13,6 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DND.Domain.Blog.Authors;
 using DND.Common.Implementation.Validation;
+using DND.Common.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace DND.DomainServices.Authors.Services
 {
@@ -50,6 +52,13 @@ namespace DND.DomainServices.Authors.Services
             }
 
             return await base.CreateAsync(entity, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Author entity, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+
+            return errors;
         }
     }
 }

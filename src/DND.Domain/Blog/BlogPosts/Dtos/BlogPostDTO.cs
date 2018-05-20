@@ -133,7 +133,6 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
                .ForMember(dto => dto.LocationIds, bo => bo.MapFrom(s => s.Locations.Select(y => y.Location.Id).ToList()));
 
             configuration.CreateMap<BlogPostDto, BlogPost>()
-                //.ForMember(bo => bo.DateCreated, dto => dto.Ignore())
                 .ForMember(bo => bo.DateModified, dto => dto.Ignore())
                  .ForMember(bo => bo.DateCreated, dto => dto.Ignore())
                  .ForMember(bo => bo.Tags, dto => dto.ResolveUsing(new BlogPostTagResolver()))
