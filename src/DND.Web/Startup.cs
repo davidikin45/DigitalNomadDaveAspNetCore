@@ -7,6 +7,7 @@ using DND.Common.DomainEvents;
 using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
+using DND.Common.Hangfire;
 using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
 using DND.Common.Middleware;
@@ -16,6 +17,7 @@ using DND.Common.Tasks;
 using DND.Domain;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -703,6 +705,8 @@ namespace DND.Web
 
             if (enableHangfire)
             {
+                // Configure hangfire to use the new JobActivator.
+                GlobalConfiguration.Configuration.UseActivator(new HangfireDependencyInjectionActivator(serviceProvider));
                 app.UseHangfire();
             }
 

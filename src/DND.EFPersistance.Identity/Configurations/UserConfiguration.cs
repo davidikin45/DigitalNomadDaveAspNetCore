@@ -13,7 +13,7 @@ namespace DND.EFPersistance.Identity.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.Ignore(p => p.DateCreated);
+            builder.Ignore(p => p.UserDeleted);
             builder.Ignore(p => p.DateDeleted);
         }
     }

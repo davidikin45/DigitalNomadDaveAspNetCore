@@ -703,6 +703,7 @@
     <Compile Include="Filters\OperationCancelledExceptionFilter.cs" />
     <Compile Include="Filters\RequestHeaderMatchesMediaTypeAttribute.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationfilter.cs" />
+    <Compile Include="Hangfire\HangfireDependencyInjection.cs" />
     <Compile Include="Helpers\AsymmetricEncryptionHelper.cs" />
     <Compile Include="Helpers\AsyncHelper.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />
