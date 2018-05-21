@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
@@ -136,14 +135,14 @@ namespace DND.Common.DomainEvents
                     updatedBy = ((IBaseEntityAuditable)entity).UserModified;
                 }
                 object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
-                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent);
+                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
 
                 //Property Update Events
                 if (propertyUpdatedEvents != null && propertyUpdatedEvents.ContainsKey(entity))
                 {
                     foreach (var propertyUpdateEvent in propertyUpdatedEvents[entity])
                     {
-                        await DomainEvents.DispatchPreCommitAsync(propertyUpdateEvent);
+                        await DomainEvents.DispatchPreCommitAsync(propertyUpdateEvent).ConfigureAwait(false);
                     }
                 }
             }
@@ -159,7 +158,7 @@ namespace DND.Common.DomainEvents
                     deletedBy = ((IBaseEntityAuditable)entity).UserDeleted;
                 }
                 object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
-                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent);
+                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
             }
 
             foreach (var entity in inserted)
@@ -173,7 +172,7 @@ namespace DND.Common.DomainEvents
                     createdBy = ((IBaseEntityAuditable)entity).UserCreated;
                 }
                 object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
-                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent);
+                await DomainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
             }
 
             var all = updated.Concat(deleted).Concat(inserted);
@@ -186,7 +185,7 @@ namespace DND.Common.DomainEvents
                     var events = aggRootEntity.DomainEvents.ToArray();
                     foreach (var domainEvent in events)
                     {
-                        await DomainEvents.DispatchPreCommitAsync(domainEvent);
+                        await DomainEvents.DispatchPreCommitAsync(domainEvent).ConfigureAwait(false);
                     }
                 }
             }
@@ -216,7 +215,7 @@ namespace DND.Common.DomainEvents
                 object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
                 try
                 {
-                    await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent);
+                    await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -231,7 +230,7 @@ namespace DND.Common.DomainEvents
                     {
                         try
                         {
-                           await DomainEvents.DispatchPostCommitAsync(propertyUpdateEvent);
+                           await DomainEvents.DispatchPostCommitAsync(propertyUpdateEvent).ConfigureAwait(false);
                         }
                         catch
                         {
@@ -255,7 +254,7 @@ namespace DND.Common.DomainEvents
                 object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
                 try
                 {
-                  await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent);
+                  await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -277,7 +276,7 @@ namespace DND.Common.DomainEvents
                 object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
                 try
                 {
-                  await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent);
+                  await DomainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -299,7 +298,7 @@ namespace DND.Common.DomainEvents
                     {
                         try
                         {
-                          await DomainEvents.DispatchPostCommitAsync(domainEvent);
+                          await DomainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                         }
                         catch
                         {

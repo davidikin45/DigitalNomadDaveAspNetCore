@@ -170,7 +170,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<IEnumerable<TEntity>> SQLQueryAsync(string query, params object[] paramaters)
         {
-            return await _context.SQLQueryNoTrackingAsync<TEntity>(query, paramaters);
+            return await _context.SQLQueryNoTrackingAsync<TEntity>(query, paramaters).ConfigureAwait(false);
         }
 
         public virtual IEnumerable<TEntity> Get(

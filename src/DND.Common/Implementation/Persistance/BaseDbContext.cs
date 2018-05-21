@@ -1,30 +1,24 @@
-﻿using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DND.Common.Interfaces.Models;
-
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using DND.Common.Implementation.Models;
-using System.Threading;
-using DND.Common.Interfaces.Persistance;
-using System.Data.Entity.Infrastructure;
-using RefactorThis.GraphDiff;
-using System.Linq.Expressions;
-using DND.Common.Infrastructure;
-using System.Reflection;
-using System.Collections;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.SqlServer;
-using DND.Common.DomainEvents;
-using System.Data.Common;
+﻿using DND.Common.DomainEvents;
 using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.Models;
+using DND.Common.Interfaces.Persistance;
+using RefactorThis.GraphDiff;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.Entity.SqlServer;
 using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Persistance
 {

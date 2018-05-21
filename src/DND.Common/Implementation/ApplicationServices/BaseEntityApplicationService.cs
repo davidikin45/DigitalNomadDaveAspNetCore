@@ -71,7 +71,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var bo = Mapper.Map<TEntity>(dto);
 
-            var result = await DomainService.CreateAsync(bo, createdBy);
+            var result = await DomainService.CreateAsync(bo, createdBy).ConfigureAwait(false);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)
@@ -144,7 +144,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
             Mapper.Map(dto, persistedBO);
 
-            var result = await DomainService.UpdateAsync(persistedBO, updatedBy, cancellationToken);
+            var result = await DomainService.UpdateAsync(persistedBO, updatedBy, cancellationToken).ConfigureAwait(false);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)
@@ -185,7 +185,7 @@ namespace DND.Common.Implementation.ApplicationServices
         public virtual async Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken)
         {
             TDeleteDto deleteDto = await GetDeleteDtoByIdAsync(id, cancellationToken);
-            return await DeleteAsync(deleteDto, deletedBy, cancellationToken);
+            return await DeleteAsync(deleteDto, deletedBy, cancellationToken).ConfigureAwait(false);
         }
 
         public virtual Result Delete(TDeleteDto dto, string deletedBy)
@@ -213,7 +213,7 @@ namespace DND.Common.Implementation.ApplicationServices
         public virtual async Task<Result> DeleteAsync(TDeleteDto dto, string deletedBy, CancellationToken cancellationToken)
         {
             var bo = Mapper.Map<TEntity>(dto);
-            var result = await DomainService.DeleteAsync(bo, deletedBy, cancellationToken);
+            var result = await DomainService.DeleteAsync(bo, deletedBy, cancellationToken).ConfigureAwait(false);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)

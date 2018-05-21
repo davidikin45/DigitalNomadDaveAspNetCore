@@ -45,7 +45,7 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual async Task<Result<TEntity>> CreateAsync(TEntity entity, string createdBy, CancellationToken cancellationToken)
         {
-            var validationResult = await ValidateAsync(entity, ValidationMode.Create);
+            var validationResult = await ValidateAsync(entity, ValidationMode.Create).ConfigureAwait(false);
 
             if (validationResult.IsFailure)
             {
@@ -55,7 +55,7 @@ namespace DND.Common.Implementation.DomainServices
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
-                await unitOfWork.CompleteAsync(cancellationToken);
+                await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
 
                 return Result.Ok(entity);
             }
@@ -112,7 +112,7 @@ namespace DND.Common.Implementation.DomainServices
                 try
                 {
                     unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
-                    await unitOfWork.CompleteAsync(cancellationToken);
+                    await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
@@ -224,7 +224,7 @@ namespace DND.Common.Implementation.DomainServices
                 try
                 {
                     unitOfWork.Repository<TContext, TEntity>().Delete(entity, deletedBy);
-                    await unitOfWork.CompleteAsync(cancellationToken);
+                    await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {

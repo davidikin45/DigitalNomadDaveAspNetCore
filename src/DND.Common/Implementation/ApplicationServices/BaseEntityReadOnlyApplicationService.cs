@@ -61,7 +61,7 @@ namespace DND.Common.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = await DomainService.GetAllAsync(cancellationToken, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = await DomainService.GetAllAsync(cancellationToken, orderByConverted, pageNo, pageSize, includesConverted).ConfigureAwait(false);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -100,7 +100,7 @@ namespace DND.Common.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = await DomainService.SearchAsync(cancellationToken, search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = await DomainService.SearchAsync(cancellationToken, search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted).ConfigureAwait(false);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -137,7 +137,7 @@ namespace DND.Common.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var entityList = await DomainService.GetAsync(cancellationToken, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
+            var entityList = await DomainService.GetAsync(cancellationToken, filterConverted, orderByConverted, pageNo, pageSize, includesConverted).ConfigureAwait(false);
 
             IEnumerable<TDto> dtoList = entityList.ToList().Select(Mapper.Map<TEntity, TDto>);
 
@@ -164,7 +164,7 @@ namespace DND.Common.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var bo = await DomainService.GetOneAsync(cancellationToken, filterConverted, includesConverted);
+            var bo = await DomainService.GetOneAsync(cancellationToken, filterConverted, includesConverted).ConfigureAwait(false);
 
             return Mapper.Map<TDto>(bo);
         }
@@ -193,7 +193,7 @@ namespace DND.Common.Implementation.ApplicationServices
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
 
-            var bo = await DomainService.GetFirstAsync(cancellationToken, filterConverted, orderByConverted, includesConverted);
+            var bo = await DomainService.GetFirstAsync(cancellationToken, filterConverted, orderByConverted, includesConverted).ConfigureAwait(false);
 
             return Mapper.Map<TDto>(bo);
         }
@@ -207,7 +207,7 @@ namespace DND.Common.Implementation.ApplicationServices
         public virtual async Task<TDto> GetByIdAsync(object id,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var bo = await DomainService.GetByIdAsync(id, cancellationToken);
+            var bo = await DomainService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
             return Mapper.Map<TDto>(bo);
         }
 
@@ -220,7 +220,7 @@ namespace DND.Common.Implementation.ApplicationServices
         public virtual async Task<IEnumerable<TDto>> GetByIdAsync(IEnumerable<object> ids,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var result = await DomainService.GetByIdAsync(ids, cancellationToken);
+            var result = await DomainService.GetByIdAsync(ids, cancellationToken).ConfigureAwait(false);
             return Mapper.Map<IEnumerable<TDto>>(result);
         }
 
@@ -238,7 +238,7 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return await DomainService.GetCountAsync(cancellationToken, filterConverted);
+            return await DomainService.GetCountAsync(cancellationToken, filterConverted).ConfigureAwait(false);
         }
 
         public virtual int GetSearchCount(
@@ -257,7 +257,7 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return await DomainService.GetSearchCountAsync(cancellationToken, search, filterConverted);
+            return await DomainService.GetSearchCountAsync(cancellationToken, search, filterConverted).ConfigureAwait(false);
         }
 
         public virtual bool Exists(Expression<Func<TDto, bool>> filter = null)
@@ -274,7 +274,7 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
 
-            return await DomainService.ExistsAsync(cancellationToken, filterConverted);
+            return await DomainService.ExistsAsync(cancellationToken, filterConverted).ConfigureAwait(false);
         }
 
         public virtual bool Exists(object id)
@@ -287,7 +287,7 @@ namespace DND.Common.Implementation.ApplicationServices
             object id
             )
         {
-            return await DomainService.ExistsAsync(cancellationToken, id);
+            return await DomainService.ExistsAsync(cancellationToken, id).ConfigureAwait(false);
         }
 
     }

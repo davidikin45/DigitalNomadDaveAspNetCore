@@ -1,29 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using DND.Common.DomainEvents;
+using DND.Common.Extensions;
 using DND.Common.Implementation.Models;
+using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Persistance;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
+using RefactorThis.GraphDiff;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RefactorThis.GraphDiff;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Threading;
-using DND.Common.Extensions;
-using Microsoft.AspNetCore.Identity;
-using DND.Common.Interfaces.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
-using System.Data.Entity.Infrastructure;
-using DND.Common.Implementation.Validation;
-using DND.Common.DomainEvents;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Persistance
 {
@@ -193,11 +187,11 @@ namespace DND.Common.Implementation.Persistance
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
 
             var objectCount = await base.SaveChangesAsync();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
 
             return objectCount;
         }
@@ -217,11 +211,11 @@ namespace DND.Common.Implementation.Persistance
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
 
             var objectCount = await base.SaveChangesAsync(cancellationToken);
 
-            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
 
             return objectCount;
         }

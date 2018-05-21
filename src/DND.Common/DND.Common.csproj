@@ -704,6 +704,7 @@
     <Compile Include="Filters\RequestHeaderMatchesMediaTypeAttribute.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationfilter.cs" />
     <Compile Include="Helpers\AsymmetricEncryptionHelper.cs" />
+    <Compile Include="Helpers\AsyncHelper.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />
     <Compile Include="Helpers\DigitalSignature.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
