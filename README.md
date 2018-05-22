@@ -25,6 +25,9 @@ Build DND.Solution
 ```
 Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to launch Kestral Web Host using dotnet run.
 ```
+```
+Login to /admin with username: admin password: password
+```
 ## Domain Events
 
 From my personal experience alot of things (emails, correspondence) in business applications get triggered when an entity is inserted/updated/deleted or a property is changed.\
