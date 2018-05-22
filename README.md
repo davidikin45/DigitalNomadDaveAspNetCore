@@ -42,7 +42,7 @@ public class TagInsertedEventHandler : IDomainEventHandler<EntityInsertedEvent<T
     {
         public async Task<Result> HandlePostCommitAsync(EntityInsertedEvent<Tag> domainEvent)
         {
-			var after = domainEvent.Entity;
+            var after = domainEvent.Entity;
 
              //Send Email
 
@@ -51,7 +51,7 @@ public class TagInsertedEventHandler : IDomainEventHandler<EntityInsertedEvent<T
 
         public async Task<Result> HandlePreCommitAsync(EntityInsertedEvent<Tag> domainEvent)
         {
-            var after = domainEvent.Entity;
+            var before = domainEvent.Entity;
 
             return Result.Ok();
         }
