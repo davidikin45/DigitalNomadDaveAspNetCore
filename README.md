@@ -1,7 +1,6 @@
 # Digital Nomad Dave ASP.NET Core
 
-A custom built Content Management System using Bootstrap 4, Angular and C# MVC Core, xUnit, SpecFlow, Selenium.
-
+A custom built Content Management System using Bootstrap 4, Angular, C# MVC Core, xUnit, SpecFlow, Selenium.
 
 ## URLs
 * [Website](http://www.digitalnomaddave.com)
@@ -97,7 +96,7 @@ All web host processes and database creation/teardown have been automated using 
 
 ### DND.UnitTests (In Memory DbContext)
 
-No database required.
+No database required. No Domain Events fired.
 
 ```
 Build DND.Solution
@@ -108,7 +107,7 @@ Execute BatchFiles\Test\UnitTests.bat
 
 ### DND.IntegrationTestsXUnit (TestServer)
 
-Automatically creates an Integration database on Local\MSSQLLOCALDB, seeds and runs an in process TestServer. On completion database is deleted.
+Automatically creates an Integration database on Local\MSSQLLOCALDB, seeds and runs an in process TestServer. On completion database is deleted. Domain Events fired.
 
 ```
 Build DND.Solution
@@ -118,7 +117,7 @@ Execute BatchFiles\Test\IntegrationTestsXUnit.bat
 ```
 ### DND.IntegrationTestsNUnit (Mocking)
 
-Automatically creates a Integration database on Local\MSSQLLOCALDB and seeds. On completion database is deleted.
+Automatically creates a Integration database on Local\MSSQLLOCALDB and seeds. On completion database is deleted. No Domain Events fired.
 
 ```
 Build DND.Solution
@@ -128,7 +127,7 @@ Execute BatchFiles\Test\IntegrationTestsNUnit.bat
 ```
 ### DND.UITests (SpecFlow & Selenium)
 
-Automatically creates a Integration database on Local\MSSQLLOCALDB, seeds and launches a Kestral Web Host using dotnet run. On completion database is deleted.
+Automatically creates a Integration database on Local\MSSQLLOCALDB, seeds and launches a Kestral Web Host using dotnet run. On completion database is deleted. Domain Events fired.
 
 ```
 Set SeleniumUrl in test\DND.UITests\app.config
