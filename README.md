@@ -34,7 +34,29 @@ Although this is useful in some scenarios, I wanted a more generic approach. I d
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
 The PostCommit events are isolated and by default are handed off to Hangfire for processing out of process. This would be useful for sending emails and correspondence.\
-Below is an example of an IDomainEventHandler.
+Below is two examples of IDomainEventHandlers.
+
+
+```C#
+public class TagInsertedEventHandler : IDomainEventHandler<EntityInsertedEvent<Tag>>
+    {
+        public async Task<Result> HandlePostCommitAsync(EntityInsertedEvent<Tag> domainEvent)
+        {
+			var after = domainEvent.Entity;
+
+             //Send Email
+
+            return Result.Ok();
+        }
+
+        public async Task<Result> HandlePreCommitAsync(EntityInsertedEvent<Tag> domainEvent)
+        {
+            var after = domainEvent.Entity;
+
+            return Result.Ok();
+        }
+    }
+```
 
 ```C#
 public class CategoryPropertyUpdatedEventHandler : IDomainEventHandler<EntityPropertyUpdatedEvent<Category>>
