@@ -1,4 +1,5 @@
 ﻿using DND.Common.DomainEvents;
+using DND.Common.Implementation.Validation;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.UnitOfWork;
 using Hangfire;
@@ -64,8 +65,12 @@ namespace DND.Common.DomainEvents
 
                     if (canHandleEvent)
                     {
-                        dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
-                        await handler.HandlePreCommitAsync((dynamic)domainEvent);
+                        dynamic handler = _serviceProvider.GetService(handlerType);
+                        Result result = await handler.HandlePreCommitAsync((dynamic)domainEvent);
+                        if (result.IsFailure)
+                        {
+                            throw new Exception("Pre Commit Event Failed");
+                        }
                     }
                 }
             }
@@ -145,7 +150,11 @@ namespace DND.Common.DomainEvents
         public async Task HandlePostCommitAsync(Type handlerType, IDomainEvent domainEvent)
         {
             dynamic handler = _serviceProvider.GetService(handlerType);
-            await handler.HandlePostCommitAsync((dynamic)domainEvent);
+            Result result = await handler.HandlePostCommitAsync((dynamic)domainEvent);
+            if(result.IsFailure)
+            {
+                throw new Exception("Post Commit Event Failed");
+            }
         }
     }
 }

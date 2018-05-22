@@ -9,6 +9,7 @@ namespace DND.Common.DomainEvents
     public interface IDomainEvents
     {
         Task DispatchPreCommitAsync(IDomainEvent domainEvent);
+        Task DispatchPostCommitAsync(IDomainEvent domainEvent);
         Task HandlePostCommitAsync<T>(string handlerType, T domainEvent) where T : IDomainEvent;
     }
 }

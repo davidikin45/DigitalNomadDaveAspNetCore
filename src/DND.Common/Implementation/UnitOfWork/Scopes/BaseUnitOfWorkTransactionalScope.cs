@@ -94,6 +94,10 @@ namespace DND.Common.Implementation.UnitOfWork
             {
                 c = CommitInternal();
             }
+            else
+            {
+                c = PreCommitInternal();
+            }
 
             _completed = true;
 
@@ -121,9 +125,23 @@ namespace DND.Common.Implementation.UnitOfWork
             {
                 c = await CommitInternalAsync(cancelToken).ConfigureAwait(false);
             }
+            else
+            {
+                c = await PreCommitInternalAsync(cancelToken).ConfigureAwait(false);
+            }
 
             _completed = true;
             return c;
+        }
+
+        private int PreCommitInternal()
+        {
+            return _dbContexts.PreCommit();
+        }
+
+        private Task<int> PreCommitInternalAsync(CancellationToken cancelToken)
+        {
+            return _dbContexts.PreCommitAsync(cancelToken);
         }
 
         private int CommitInternal()

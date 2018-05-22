@@ -19,7 +19,9 @@ namespace DND.Common.Interfaces.Persistance
 {
     public interface IBaseDbContext : IDisposable
     {
-
+        int FireEvents();
+        Task<int> FireEventsAsync();
+        Task<int> FireEventsAsync(CancellationToken cancellationToken);
 
         int SaveChanges();
         Task<int> SaveChangesAsync();

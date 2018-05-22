@@ -124,26 +124,164 @@ namespace DND.Common.Implementation.Persistance.InMemory
             }
         }
 
+        #region Events
+        private Dictionary<object, List<IDomainEvent>> precommitedUpdatedEvents = new Dictionary<object, List<IDomainEvent>>();
+        private List<object> precommitedUpdatedEntities = new List<object>();
+        private Dictionary<object, List<IDomainEvent>> precommitedPropertyUpdateEvents = new Dictionary<object, List<IDomainEvent>>();
+        private Dictionary<object, List<IDomainEvent>> precommitedDeletedEvents = new Dictionary<object, List<IDomainEvent>>();
+        private List<object> precommitedDeletedEntities = new List<object>();
+        private Dictionary<object, List<IDomainEvent>> precommitedInsertedEvents = new Dictionary<object, List<IDomainEvent>>();
+        private List<object> precommitedInsertedEntities = new List<object>();
+        private Dictionary<object, List<IDomainEvent>> precommitedDomainEvents = new Dictionary<object, List<IDomainEvent>>();
+
+        private async Task FirePreCommitEventsAsync()
+        {
+            var updatedEvents = GetNewUpdatedEvents();
+            precommitedUpdatedEntities.AddRange(updatedEvents.Keys);
+            precommitedUpdatedEvents = precommitedUpdatedEvents.Concat(updatedEvents).ToDictionary(x => x.Key, x => x.Value);
+
+            var deletedEvents = GetNewDeletedEvents();
+            precommitedDeletedEntities.AddRange(deletedEvents.Keys);
+            precommitedDeletedEvents = precommitedDeletedEvents.Concat(deletedEvents).ToDictionary(x => x.Key, x => x.Value);
+
+            var insertedEvents = GetNewInsertedEvents();
+            precommitedInsertedEntities.AddRange(insertedEvents.Keys);
+            precommitedInsertedEvents = precommitedInsertedEvents.Concat(insertedEvents).ToDictionary(x => x.Key, x => x.Value);
+
+            var domainEvents = GetNewDomainEvents();
+            foreach (var entity in domainEvents)
+            {
+                if (!precommitedDomainEvents.ContainsKey(entity.Key))
+                {
+                    precommitedDomainEvents.Add(entity.Key, new List<IDomainEvent>());
+                }
+
+                foreach (var ev in entity.Value)
+                {
+                    precommitedDomainEvents[entity.Key].Add(ev);
+                }
+            }
+
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updatedEvents, null, deletedEvents, insertedEvents, domainEvents).ConfigureAwait(false);
+            }
+        }
+
+        private async Task FirePostCommitEventsAsync()
+        {
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(precommitedUpdatedEvents, precommitedPropertyUpdateEvents, precommitedDeletedEvents, precommitedInsertedEvents, precommitedDomainEvents).ConfigureAwait(false);
+            }
+        }
+
+        public Dictionary<object, List<IDomainEvent>> GetNewDeletedEvents()
+        {
+            var entries = removeQueue.Where(x => !precommitedDeletedEntities.Contains(x.Entity));
+            var events = _dbContextDomainEvents?.CreateEntityDeletedEvents(entries.Select(x => x.Entity));
+
+            if (events == null)
+            {
+                events = new Dictionary<object, List<IDomainEvent>>();
+            }
+
+            return events;
+        }
+
+        public IEnumerable<object> GetNewDeletedEntities()
+        {
+            var entities = removeQueue.Where(x => !precommitedDeletedEntities.Contains(x.Entity)).Select(x => x.Entity);
+            return entities;
+        }
+
+        public Dictionary<object, List<IDomainEvent>> GetNewInsertedEvents()
+        {
+            var entries = addQueue.Where(x => !precommitedInsertedEntities.Contains(x.Entity));
+            var events = _dbContextDomainEvents?.CreateEntityInsertedEvents(entries.Select(x => x.Entity));
+
+            if (events == null)
+            {
+                events = new Dictionary<object, List<IDomainEvent>>();
+            }
+
+            return events;
+        }
+
+        public IEnumerable<object> GetNewInsertedEntities()
+        {
+            var entities = addQueue.Where(x => !precommitedInsertedEntities.Contains(x.Entity)).Select(x => x.Entity);
+            return entities;
+        }
+
+        public Dictionary<object, List<IDomainEvent>> GetNewUpdatedEvents()
+        {
+            var entries = updateQueue.Where(x => !precommitedUpdatedEntities.Contains(x.Entity));
+            var events = _dbContextDomainEvents?.CreateEntityUpdatedEvents(entries.Select(x => x.Entity));
+
+            if (events == null)
+            {
+                events = new Dictionary<object, List<IDomainEvent>>();
+            }
+
+            return events;
+        }
+
+        public IEnumerable<object> GetNewUpdatedEntities()
+        {
+            var entities = updateQueue.Where(x => !precommitedUpdatedEntities.Contains(x.Entity));
+            return entities;
+        }
+
+        public Dictionary<object, List<IDomainEvent>> GetNewDomainEvents()
+        {
+            var entries = updateQueue.Concat(addQueue).Concat(removeQueue);
+
+            var events = _dbContextDomainEvents?.CreateEntityDomainEvents(entries.Select(x => x.Entity));
+
+            if (events == null)
+            {
+                events = new Dictionary<object, List<IDomainEvent>>();
+            }
+
+            return events;
+        }
+
+        private void AddTimestamps()
+        {
+            var added = GetNewInsertedEntities();
+            var modified = GetNewUpdatedEntities();
+            var deleted = GetNewDeletedEntities();
+
+            _dbContextTimestamps.AddTimestamps(added, modified, deleted);
+        }
+        #endregion
+
         public int SaveChanges()
         {
-            _dbContextTimestamps.AddTimestamps(addQueue.Select(x=>x.Entity), updateQueue.Select(x => x.Entity), removeQueue.Select(x => x.Entity));
+            return SaveChanges(false);
+        }
+
+        public int FireEvents()
+        {
+            return SaveChanges(true);
+        }
+
+        public int SaveChanges(bool preCommitOnly = false)
+        {
             BeforeSave?.Invoke(this, new BeforeSave());
 
-            var all = updateQueue.Select(x => x.Entity).Concat(addQueue.Select(x => x.Entity)).Concat(removeQueue.Select(x => x.Entity));
-            var update = updateQueue.Select(x => x.Entity);
-            var insert = addQueue.Select(x => x.Entity);
-            var delete = removeQueue.Select(x => x.Entity);
+            AddTimestamps();
 
-            //For domain events to get fired Dependency Injections needs to be wired up.
-            //No property update events are fired from InMemoryDBContext
-            _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(update, null, delete, insert).Wait();
+            FirePreCommitEventsAsync().Wait();
 
-            ProcessCommitQueues();
-            repo.Commit();
+            if(!preCommitOnly)
+            {
+                ProcessCommitQueues();
+                repo.Commit();
 
-            //For domain events to get fired Dependency Injections needs to be wired up.
-            //No property update events are fired from InMemoryDBContext
-            _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(update, null, delete, insert).Wait();
+                FirePostCommitEventsAsync().Wait();
+            }
 
             AfterSave?.Invoke(this, new AfterSave());
             return 0;
@@ -151,12 +289,32 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public Task<int> SaveChangesAsync()
         {
+            return SaveChangesAsync(false);
+        }
+
+        public Task<int> FireEventsAsync()
+        {
+            return SaveChangesAsync(true);
+        }
+
+        public Task<int> SaveChangesAsync(bool preCommitOnly = false)
+        {
             var task = new Task<int>(SaveChanges);
             task.Start();
             return task;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return SaveChangesAsync(cancellationToken, false);
+        }
+
+        public Task<int> FireEventsAsync(CancellationToken cancellationToken)
+        {
+            return SaveChangesAsync(cancellationToken, true);
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken, bool preCommitOnly = false)
         {
             var task = new Task<int>(SaveChanges);
             task.Start();

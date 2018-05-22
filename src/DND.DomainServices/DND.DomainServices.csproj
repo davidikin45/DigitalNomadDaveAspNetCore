@@ -66,6 +66,7 @@
     <Compile Include="Blog\BlogPosts\Services\BlogPostDomainService.cs" />
     <Compile Include="Blog\Categories\Services\CategoryDomainService.cs" />
     <Compile Include="Blog\Services\BlogDomainService.cs" />
+    <Compile Include="Blog\Tags\DomainEventHandlers\TagInsertedEventHandler.cs" />
     <Compile Include="Blog\Tags\Services\TagDomainService.cs" />
     <Compile Include="Skyscanner\BusinessObjects\ClientSearchSession.cs" />
     <Compile Include="Skyscanner\BusinessObjects\ServerSearchSession.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="CMS\ContentHtmls\Services\ContentHtmlDomainService.cs" />
     <Compile Include="CMS\ContentTexts\Services\ContentTextDomainService.cs" />
     <Compile Include="FlightSearch\Currencies\Services\CurrencyDomainService.cs" />
-    <Compile Include="Blog\BlogPosts\DomainEventHandlers\BlogPostInsertEventHandler.cs" />
     <Compile Include="FlightSearch\Search\Services\FlightSearchEngineFactory.cs" />
     <Compile Include="CMS\Faqs\Services\FaqDomainService.cs" />
     <Compile Include="FlightSearch\Search\Services\FlightSearchDomainService.cs" />
@@ -103,8 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blog\Authors\DomainEventHandlers\" />
+    <Folder Include="Blog\BlogPosts\DomainEventHandlers\" />
     <Folder Include="Blog\Locations\DomainEventHandlers\" />
-    <Folder Include="Blog\Tags\DomainEventHandlers\" />
     <Folder Include="CMS\CarouselItems\DomainEventHandlers\" />
     <Folder Include="CMS\ContentHtmls\DomainEventHandlers\" />
     <Folder Include="CMS\ContentTexts\DomainEventHandlers\" />

@@ -18,6 +18,22 @@ namespace DND.Common.DomainEvents
             Entity = entity;
             CreatedBy = createdBy;
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as EntityInsertedEvent<T>;
+
+            if (ReferenceEquals(other, null))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            if (GetType() != obj.GetType())
+                return false;
+
+            return other.Entity.Equals(Entity);
+        }
     }
 
     public class EntityUpdatedEvent<T> : IDomainEvent
@@ -31,6 +47,22 @@ namespace DND.Common.DomainEvents
             Entity = entity;
             UpdatedBy = updatedBy;
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as EntityUpdatedEvent<T>;
+
+            if (ReferenceEquals(other, null))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            if (GetType() != obj.GetType())
+                return false;
+
+            return other.Entity.Equals(Entity);
+        }
     }
 
     public class EntityDeletedEvent<T> : IDomainEvent
@@ -43,6 +75,22 @@ namespace DND.Common.DomainEvents
         {
             Entity = entity;
             DeletedBy = deletedBy;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as EntityDeletedEvent<T>;
+
+            if (ReferenceEquals(other, null))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            if (GetType() != obj.GetType())
+                return false;
+
+            return other.Entity.Equals(Entity);
         }
     }
 
@@ -62,6 +110,25 @@ namespace DND.Common.DomainEvents
             OldAndNewValues = oldAndNewValues;
             PropertyName = propertyName;
             PropertyOldAndNewValue = propertyOldAndNewValue;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as EntityPropertyUpdatedEvent<T>;
+
+            if (ReferenceEquals(other, null))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            if (GetType() != obj.GetType())
+                return false;
+
+            return other.Entity.Equals(Entity) 
+                && other.PropertyName.Equals(PropertyName)
+                && other.PropertyOldAndNewValue.OldValue.Equals(PropertyOldAndNewValue.OldValue)
+                 && other.PropertyOldAndNewValue.NewValue.Equals(PropertyOldAndNewValue.NewValue);
         }
     }
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -15,6 +16,31 @@ namespace DND.Common.DomainEvents
         public DbContextDomainEvents(IDomainEvents domainEvents)
         {
             _domainEvents = domainEvents;
+        }
+
+
+        public Dictionary<object, List<IDomainEvent>> CreateEntityUpdatedEvents(IEnumerable<object> updatedObjects)
+        {
+            var dict = new Dictionary<object, List<IDomainEvent>>();
+            var updated = updatedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
+
+            foreach (var entity in updated)
+            {
+                var events = new List<IDomainEvent>();
+                Type genericType = typeof(EntityUpdatedEvent<>);
+                Type[] typeArgs = { entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                string updatedBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    updatedBy = ((IBaseEntityAuditable)entity).UserModified;
+                }
+                IDomainEvent domainEvent = (IDomainEvent)Activator.CreateInstance(constructed, entity, updatedBy);
+                events.Add(domainEvent);
+                dict.Add(entity, events);
+            }
+
+            return dict;
         }
 
         public Dictionary<object, List<IDomainEvent>> CreatePropertyUpdateEventsEF6(IEnumerable<DbEntityEntry> updatedEntries)
@@ -35,7 +61,7 @@ namespace DND.Common.DomainEvents
 
                         properties.Add(propertyName, new OldAndNewValue(propertyName, original, current));
 
-                        if (!Equals(original, current))
+                        if (!Equals(original, current) && (!(original is byte[]) || ((original is byte[]) && !ByteArrayCompare((byte[])original, (byte[])current))))
                         {
                             updatedProperties.Add(propertyName);
                         }
@@ -64,6 +90,25 @@ namespace DND.Common.DomainEvents
             }
 
             return dict;
+        }
+
+        private bool ByteArrayCompare(byte[] a1, byte[] a2)
+        {
+            if(a1 == null && a2 ==null)
+            {
+                return true;
+            }
+            if (a1 == null)
+            {
+                return false;
+
+            }
+            if (a2 == null)
+            {
+                return false;
+
+            }
+            return StructuralComparisons.StructuralEqualityComparer.Equals(a1, a2);
         }
 
         public Dictionary<object, List<IDomainEvent>> CreatePropertyUpdateEventsEFCore(IEnumerable<EntityEntry> updatedEntries)
@@ -118,199 +163,210 @@ namespace DND.Common.DomainEvents
             return dict;
         }
 
+        public Dictionary<object, List<IDomainEvent>> CreateEntityDeletedEvents(IEnumerable<object> deletedObjects)
+        {
+            var dict = new Dictionary<object, List<IDomainEvent>>();
+            var deleted = deletedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
+
+            foreach (var entity in deleted)
+            {
+                var events = new List<IDomainEvent>();
+                Type genericType = typeof(EntityDeletedEvent<>);
+                Type[] typeArgs = { entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                string deletedBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    deletedBy = ((IBaseEntityAuditable)entity).UserDeleted;
+                }
+                IDomainEvent domainEvent = (IDomainEvent)Activator.CreateInstance(constructed, entity, deletedBy);
+                events.Add(domainEvent);
+                dict.Add(entity, events);
+            }
+
+            return dict;
+        }
+
+        public Dictionary<object, List<IDomainEvent>> CreateEntityInsertedEvents(IEnumerable<object> insertedObjects)
+        {
+            var dict = new Dictionary<object, List<IDomainEvent>>();
+            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
+
+            foreach (var entity in inserted)
+            {
+                var events = new List<IDomainEvent>();
+                Type genericType = typeof(EntityInsertedEvent<>);
+                Type[] typeArgs = { entity.GetType() };
+                Type constructed = genericType.MakeGenericType(typeArgs);
+                string createdBy = "Anonymous";
+                if (entity is IBaseEntityAuditable)
+                {
+                    createdBy = ((IBaseEntityAuditable)entity).UserCreated;
+                }
+                IDomainEvent domainEvent = (IDomainEvent)Activator.CreateInstance(constructed, entity, createdBy);
+                events.Add(domainEvent);
+                dict.Add(entity, events);
+            }
+
+            return dict;
+        }
+
+        public Dictionary<object, List<IDomainEvent>> CreateEntityDomainEvents(IEnumerable<object> updatedDeletedInsertedObjects)
+        {
+            var dict = new Dictionary<object, List<IDomainEvent>>();
+            var updatedDeletedInserted = updatedDeletedInsertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
+
+            foreach (var entity in updatedDeletedInserted)
+            {
+                var events = new List<IDomainEvent>();
+                if (entity is IBaseEntityAggregateRoot)
+                {
+                    var aggRootEntity = ((IBaseEntityAggregateRoot)entity);
+                    var entityEvents = aggRootEntity.DomainEvents.ToArray();
+                    foreach (var domainEvent in events)
+                    {
+                        events.Add(domainEvent);
+                    }
+                    aggRootEntity.ClearEvents();
+                }
+                dict.Add(entity, events);
+            }
+
+            return dict;
+        }
 
         //If you are handling the domain events right before committing the original transaction is because you want the side effects of those events to be included in the same transaction
         public async Task DispatchDomainEventsPreCommitAsync(
-       IEnumerable<object> updatedObjects,
+       Dictionary<object, List<IDomainEvent>> entityUpdatedEvents,
        Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
-       IEnumerable<object> deletedObjects,
-       IEnumerable<object> insertedObjects)
+       Dictionary<object, List<IDomainEvent>> entityDeletedEvents,
+       Dictionary<object, List<IDomainEvent>> entityInsertedEvents,
+       Dictionary<object, List<IDomainEvent>> entityDomainEvents
+       )
         {
-            var updated = updatedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var deleted = deletedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-
-            foreach (var entity in updated)
+            foreach (var kvp in entityUpdatedEvents)
             {
-                Type genericType = typeof(EntityUpdatedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                string updatedBy = "Anonymous";
-                if (entity is IBaseEntityAuditable)
+                foreach (var domainEvent in kvp.Value)
                 {
-                    updatedBy = ((IBaseEntityAuditable)entity).UserModified;
+                    await _domainEvents.DispatchPreCommitAsync(domainEvent).ConfigureAwait(false);
                 }
-                object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
-                await _domainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
 
                 //Property Update Events
-                if (propertyUpdatedEvents != null && propertyUpdatedEvents.ContainsKey(entity))
+                if (propertyUpdatedEvents != null && propertyUpdatedEvents.ContainsKey(kvp.Key))
                 {
-                    foreach (var propertyUpdateEvent in propertyUpdatedEvents[entity])
+                    foreach (var propertyUpdateEvent in propertyUpdatedEvents[kvp.Key])
                     {
                         await _domainEvents.DispatchPreCommitAsync(propertyUpdateEvent).ConfigureAwait(false);
                     }
                 }
             }
 
-            foreach (var entity in deleted)
+            foreach (var kvp in entityDeletedEvents)
             {
-                Type genericType = typeof(EntityDeletedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                string deletedBy = "Anonymous";
-                if (entity is IBaseEntityAuditable)
+                foreach (var domainEvent in kvp.Value)
                 {
-                    deletedBy = ((IBaseEntityAuditable)entity).UserDeleted;
+                    await _domainEvents.DispatchPreCommitAsync(domainEvent).ConfigureAwait(false);
                 }
-                object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
-                await _domainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
             }
 
-            foreach (var entity in inserted)
+            foreach (var kvp in entityInsertedEvents)
             {
-                Type genericType = typeof(EntityInsertedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                string createdBy = "Anonymous";
-                if (entity is IBaseEntityAuditable)
+                foreach (var domainEvent in kvp.Value)
                 {
-                    createdBy = ((IBaseEntityAuditable)entity).UserCreated;
+                    await _domainEvents.DispatchPreCommitAsync(domainEvent).ConfigureAwait(false);
                 }
-                object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
-                await _domainEvents.DispatchPreCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
             }
 
-            var all = updated.Concat(deleted).Concat(inserted);
-
-            foreach (var entity in all)
+            foreach (var kvp in entityDomainEvents)
             {
-                if (entity is IBaseEntityAggregateRoot)
+                foreach (var domainEvent in kvp.Value)
                 {
-                    var aggRootEntity = ((IBaseEntityAggregateRoot)entity);
-                    var events = aggRootEntity.DomainEvents.ToArray();
-                    foreach (var domainEvent in events)
-                    {
-                        await _domainEvents.DispatchPreCommitAsync(domainEvent).ConfigureAwait(false);
-                    }
+                    await _domainEvents.DispatchPreCommitAsync(domainEvent).ConfigureAwait(false);
                 }
             }
         }
 
         //If you are handling the domain events after committing the original transaction is because you do not want the side effects of those events to be included in the same transaction. e.g sending an email
         public async Task DispatchDomainEventsPostCommitAsync(
-            IEnumerable<object> updatedObjects,
-            Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
-            IEnumerable<object> deletedObjects,
-            IEnumerable<object> insertedObjects)
+       Dictionary<object, List<IDomainEvent>> entityUpdatedEvents,
+       Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
+       Dictionary<object, List<IDomainEvent>> entityDeletedEvents,
+       Dictionary<object, List<IDomainEvent>> entityInsertedEvents,
+       Dictionary<object, List<IDomainEvent>> entityDomainEvents)
         {
-            var updated = updatedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var deleted = deletedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
-            var inserted = insertedObjects.Where(x => x is IBaseEntity).Cast<IBaseEntity>();
 
-            foreach (var entity in updated)
+            foreach (var kvp in entityUpdatedEvents)
             {
-                Type genericType = typeof(EntityUpdatedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                string updatedBy = "Anonymous";
-                if (entity is IBaseEntityAuditable)
+                foreach (var domainEvent in kvp.Value)
                 {
-                    updatedBy = ((IBaseEntityAuditable)entity).UserModified;
-                }
-                object domainEvent = Activator.CreateInstance(constructed, entity, updatedBy);
-                try
-                {
-                    await _domainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
-                }
-                catch
-                {
-                    //Post Commit Events are best effort
-                    //Log exception
+                    try
+                    {
+                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+
+                    }
                 }
 
                 //Property Update Events
-                if (propertyUpdatedEvents != null && propertyUpdatedEvents.ContainsKey(entity))
+                if (propertyUpdatedEvents != null && propertyUpdatedEvents.ContainsKey(kvp.Key))
                 {
-                    foreach (var propertyUpdateEvent in propertyUpdatedEvents[entity])
+                    foreach (var propertyUpdateEvent in propertyUpdatedEvents[kvp.Key])
                     {
                         try
                         {
-                           await _domainEvents.DispatchPostCommitAsync(propertyUpdateEvent).ConfigureAwait(false);
+                            await _domainEvents.DispatchPostCommitAsync(propertyUpdateEvent).ConfigureAwait(false);
                         }
                         catch
                         {
-                            //Post Commit Events are best effort
-                            //Log exception
+
                         }
                     }
                 }
             }
 
-            foreach (var entity in deleted)
+            foreach (var kvp in entityDeletedEvents)
             {
-                Type genericType = typeof(EntityDeletedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                string deletedBy = "Anonymous";
-                if (entity is IBaseEntityAuditable)
+                foreach (var domainEvent in kvp.Value)
                 {
-                    deletedBy = ((IBaseEntityAuditable)entity).UserDeleted;
-                }
-                object domainEvent = Activator.CreateInstance(constructed, entity, deletedBy);
-                try
-                {
-                  await _domainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
-                }
-                catch
-                {
-                    //Post Commit Events are best effort
-                    //Log exception
-                }
-            }
-
-            foreach (var entity in inserted)
-            {
-                Type genericType = typeof(EntityInsertedEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                string createdBy = "Anonymous";
-                if (entity is IBaseEntityAuditable)
-                {
-                    createdBy = ((IBaseEntityAuditable)entity).UserCreated;
-                }
-                object domainEvent = Activator.CreateInstance(constructed, entity, createdBy);
-                try
-                {
-                  await _domainEvents.DispatchPostCommitAsync((IDomainEvent)domainEvent).ConfigureAwait(false);
-                }
-                catch
-                {
-                    //Post Commit Events are best effort
-                    //Log exception
-                }
-            }
-
-            var all = updated.Concat(deleted).Concat(inserted);
-
-            foreach (var entity in all)
-            {
-                if (entity is IBaseEntityAggregateRoot)
-                {
-                    var aggRootEntity = ((IBaseEntityAggregateRoot)entity);
-                    var events = aggRootEntity.DomainEvents.ToArray();
-                    aggRootEntity.ClearEvents();
-                    foreach (var domainEvent in events)
+                    try
                     {
-                        try
-                        {
-                          await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
-                        }
-                        catch
-                        {
-                            //Post Commit Events are best effort and should not throw exception.
-                            //Log exception
-                        }
+                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+
+            foreach (var kvp in entityInsertedEvents)
+            {
+                foreach (var domainEvent in kvp.Value)
+                {
+                    try
+                    {
+                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+
+            foreach (var kvp in entityDomainEvents)
+            {
+                foreach (var domainEvent in kvp.Value)
+                {
+                    try
+                    {
+                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+
                     }
                 }
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DND.Common.Implementation.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace DND.Common.DomainEvents
     public interface IDomainEventHandler<T>
         where T : IDomainEvent
     {
-        Task HandlePreCommitAsync(T domainEvent);
-        Task HandlePostCommitAsync(T domainEvent);
+        Task<Result> HandlePreCommitAsync(T domainEvent);
+        Task<Result> HandlePostCommitAsync(T domainEvent);
     }
 }

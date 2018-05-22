@@ -181,7 +181,7 @@ namespace Marvin.Cache.Headers
 
                         // reset the buffer, read out the contents & copy it to the original stream.  This
                         // will ensure our changes to the buffer are applied to the original stream.   
-                        if (httpContext.Response.StatusCode != 304)
+                        if (httpContext.Response.StatusCode != 304 && httpContext.Response.StatusCode != 204)
                         {
                             buffer.Seek(0, SeekOrigin.Begin);
                             var reader = new StreamReader(buffer);

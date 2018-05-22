@@ -39,6 +39,8 @@ namespace DND.IntegrationTestsNUnit.Persistance.UnitOfWork
             _context.AddEntity(new Category() { Name="Category 1", Description = "Category 1", UrlSlug = "category-1" });
             await _context.SaveChangesAsync();
 
+            var count = _context.Categories.Count();
+
             var category = _context.FindEntity<Category>(1);
             //var category = _context.FindEntityLocal<Category>(1);
             //In Debug Object seems to stay in cache after savechanges is called
