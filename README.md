@@ -1,6 +1,7 @@
 # Digital Nomad Dave ASP.NET Core
 
-A custom built Content Management System using Bootstrap 4, Angular and C# MVC Core, xUnit, SpecFlow, Selenium
+A custom built Content Management System using Bootstrap 4, Angular and C# MVC Core, xUnit, SpecFlow, Selenium.
+
 
 ## URLs
 * [Website](http://www.digitalnomaddave.com)
@@ -24,6 +25,13 @@ Build DND.Solution
 
 ```
 Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to launch Kestral Web Host using dotnet run.
+```
+## Domain Events
+
+From my personal experience alot of things (emails, correspondence) in business applications get triggered when an entity is inserted/updated/deleted or a property is changed. I 
+
+```C#
+Console.WriteLine("");
 ```
 
 ## Running the tests
