@@ -29,7 +29,7 @@ Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to launch Kestral Web Host using
 ## Domain Events
 
 From my personal experience alot of things (emails, correspondence) in business applications get triggered when an entity is inserted/updated/deleted or a property is changed.\
-I read alot of .NET Core articles related to deferred domain events which require the programmer to add domain events to an Aggregate Root which are then executed either before or after DbContext SaveChanges() is called.\ 
+I read alot of .NET Core articles related to deferred domain events which require the programmer to add domain events to an Aggregate Root which are then executed either before or after DbContext SaveChanges() is called.\
 Although this is useful in some scenarios, I wanted a more generic approach. I develped an approach where events are fired each time an entity is inserted/updated/deleted & property change.\
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
