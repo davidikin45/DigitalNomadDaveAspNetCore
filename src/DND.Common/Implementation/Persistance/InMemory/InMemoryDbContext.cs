@@ -43,7 +43,7 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public InMemoryDataContext()
         {
-            _dbContextDomainEvents = new DbContextDomainEvents();
+            _dbContextDomainEvents = new DbContextDomainEvents(new DND.Common.DomainEvents.DomainEvents());
             _dbContextTimestamps = new DbContextTimestamps();
 
             repo = new ObjectRepresentationRepository();
@@ -52,7 +52,7 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         internal InMemoryDataContext(ObjectRepresentationRepository repo)
         {
-            _dbContextDomainEvents = new DbContextDomainEvents();
+            _dbContextDomainEvents = new DbContextDomainEvents(new DND.Common.DomainEvents.DomainEvents());
             _dbContextTimestamps = new DbContextTimestamps();
 
             this.repo = repo;

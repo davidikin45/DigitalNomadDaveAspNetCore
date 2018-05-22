@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using DND.Domain;
 using DND.EFPersistance.Identity.Configurations;
+using DND.Common.DomainEvents;
 
 namespace DND.EFPersistance.Identity
 {
@@ -19,8 +20,8 @@ namespace DND.EFPersistance.Identity
     //Remove-Migration
     public class ApplicationIdentityDbContext : BaseIdentityDbContext<User>
     { 
-        public ApplicationIdentityDbContext(DbContextOptions options)
-            :base(options)
+        public ApplicationIdentityDbContext(DbContextOptions options, IDbContextDomainEvents dbContextDomainEvents = null)
+            :base(options, dbContextDomainEvents)
         {
             Database.SetCommandTimeout(180);
         }

@@ -2,6 +2,7 @@
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.UnitOfWork;
 using Hangfire;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,15 @@ namespace DND.Common.DomainEvents
         public static Func<Assembly, Boolean> AssemblyFilter;
     }
 
-    public static class DomainEvents
+    public class DomainEvents : IDomainEvents
     {
         public static List<Type> _handlers;
+        public static bool HandlePostCommitEventsInProcess = false;
 
-        static DomainEvents()
+        IServiceProvider _serviceProvider;
+        public DomainEvents(IServiceProvider serviceProvider = null)
         {
-            Init();
+            _serviceProvider = serviceProvider;
         }
 
         public static void Init()
@@ -48,7 +51,7 @@ namespace DND.Common.DomainEvents
         }
 
         //InProcess
-        public async static Task DispatchPreCommitAsync(IDomainEvent domainEvent)
+        public async Task DispatchPreCommitAsync(IDomainEvent domainEvent)
         {
             if(_handlers != null)
             {
@@ -68,8 +71,8 @@ namespace DND.Common.DomainEvents
             }
         }
 
-        //InProcess at the moment but hopefully can make it out of process
-        public async static Task DispatchPostCommitAsync(IDomainEvent domainEvent)
+        //HandlePostCommitEventsInProcess determines whether PostCommit Events are handled InProcess or by Hangfire
+        public async Task DispatchPostCommitAsync(IDomainEvent domainEvent)
         {
             if (_handlers != null)
             {
@@ -82,30 +85,67 @@ namespace DND.Common.DomainEvents
 
                     if (canHandleEvent)
                     {
-                        dynamic handler = StaticProperties.HttpContextAccessor.HttpContext.RequestServices.GetService(handlerType);
+                        if(HandlePostCommitEventsInProcess)
+                        {
+                            await HandlePostCommitAsync(handlerType.FullName, domainEvent).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            //BackgroundJob.Enqueue(() => HandlePostCommitAsync(handlerType.FullName, (object)domainEvent));
 
-                        //Would be good to send this off to hangfire as a background job.
-                        //Hangfire unfortunately uses System.Type.GetType to get job type. This only looks at the referenced assemblies of the web project and not the dynamic loaded plugins :(
-                        //var exp = GetExpression(handlerType, domainEvent);
+                            //Hangfire unfortunately uses System.Type.GetType to get job type. This only looks at the referenced assemblies of the web project and not the dynamic loaded plugins so need to
+                            //proxy back through this common assembly.
+                            var exp = GetExpression(typeof(IDomainEvents), handlerType.FullName, domainEvent);
 
-                        //MethodInfo method = typeof(BackgroundJob).GetMethods().Where(m => m.Name == "Enqueue").Last();
-                        //MethodInfo generic = method.MakeGenericMethod(handlerType);
-                        //generic.Invoke(null, new object[] { exp });
-
-                        await handler.HandlePostCommitAsync((dynamic)domainEvent);
+                            MethodInfo method = typeof(BackgroundJob).GetMethods().Where(m => m.Name == "Enqueue").Last();
+                            MethodInfo generic = method.MakeGenericMethod(typeof(IDomainEvents));
+                            generic.Invoke(null, new object[] { exp });
+                        }             
                     }
                 }
             }
         }
 
-        private static LambdaExpression GetExpression(Type handlerType, object domainEvent)
+        private LambdaExpression GetExpression(Type jobType, string handlerName, object domainEvent)
         {
-            var parameterExp = Expression.Parameter(handlerType, "type");
-            MethodInfo method = handlerType.GetMethod("HandlePostCommitAsync", BindingFlags.Instance | BindingFlags.Public);
-            var someValue = Expression.Constant(domainEvent, domainEvent.GetType());
-            var handlePostCommitAsyncExp = Expression.Call(parameterExp, method, someValue);
+            var parameterExp = Expression.Parameter(jobType, "type");
+            MethodInfo method = jobType.GetMethod(nameof(HandlePostCommitAsync), BindingFlags.Instance | BindingFlags.Public);
+            MethodInfo genericMethod = method.MakeGenericMethod(domainEvent.GetType());
+            var handlerValue = Expression.Constant(handlerName, typeof(string));
+            var domainEventValue = Expression.Constant(domainEvent, domainEvent.GetType());
+            var handlePostCommitAsyncExp = Expression.Call(parameterExp, genericMethod, handlerValue, domainEventValue);
 
             return Expression.Lambda(handlePostCommitAsyncExp, parameterExp);
+        }
+
+        //Called from Hangfire
+        public async Task HandlePostCommitAsync<T>(string type, T domainEvent) where T : IDomainEvent
+        {
+            Type handlerType = System.Type.GetType(type);
+            if (handlerType == null)
+            {
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    handlerType = assembly.GetType(type);
+                    if (handlerType != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if (handlerType == null)
+            {
+                throw new Exception("Invalid handler type");
+            }
+
+            await HandlePostCommitAsync(handlerType, domainEvent).ConfigureAwait(false);
+        }
+
+        public async Task HandlePostCommitAsync(Type handlerType, IDomainEvent domainEvent)
+        {
+            dynamic handler = _serviceProvider.GetService(handlerType);
+            await handler.HandlePostCommitAsync((dynamic)domainEvent);
         }
     }
 }

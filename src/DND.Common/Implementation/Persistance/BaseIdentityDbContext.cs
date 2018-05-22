@@ -23,13 +23,13 @@ namespace DND.Common.Implementation.Persistance
 {
     public class BaseIdentityDbContext<TUser> : IdentityDbContext<TUser>, IBaseDbContext where TUser : BaseApplicationUser
     {
-        private DbContextDomainEvents _dbContextDomainEvents;
+        private IDbContextDomainEvents _dbContextDomainEvents;
         private DbContextTimestamps _dbContextTimestamps;
 
-        public BaseIdentityDbContext(DbContextOptions options)
-            :base(options)
+        public BaseIdentityDbContext(DbContextOptions options, IDbContextDomainEvents dbContextDomainEvents = null)
+            : base(options)
         {
-            _dbContextDomainEvents = new DbContextDomainEvents();
+            _dbContextDomainEvents = dbContextDomainEvents;
             _dbContextTimestamps = new DbContextTimestamps();
 
             ChangeTracker.AutoDetectChangesEnabled = false;
@@ -65,7 +65,8 @@ namespace DND.Common.Implementation.Persistance
             builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
         }
 
-        public bool AutoDetectChanges{
+        public bool AutoDetectChanges
+        {
             get { return this.ChangeTracker.AutoDetectChangesEnabled; }
             set { this.ChangeTracker.AutoDetectChangesEnabled = value; }
         }
@@ -95,15 +96,15 @@ namespace DND.Common.Implementation.Persistance
                 {
                     var errors = results.Where(r => r != ValidationResult.Success);
 
-                    if(errors.Count() > 0)
+                    if (errors.Count() > 0)
                     {
                         var dbValidationErrors = new List<DbValidationError>();
-                        foreach(ValidationResult error in errors)
+                        foreach (ValidationResult error in errors)
                         {
                             if (error.MemberNames.Count() > 0)
                             {
                                 foreach (var prop in error.MemberNames)
-                                { 
+                                {
                                     dbValidationErrors.Add(new DbValidationError(prop, error.ErrorMessage));
                                 }
                             }
@@ -140,7 +141,7 @@ namespace DND.Common.Implementation.Persistance
 
         public bool IsEntityStateModified(object entity)
         {
-           return Entry(entity).State == EntityState.Modified;
+            return Entry(entity).State == EntityState.Modified;
         }
 
         public bool IsEntityStateUnchanged(object entity)
@@ -159,15 +160,21 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents?.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            if (_dbContextDomainEvents != null)
+            {
+                _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            }
 
             var objectCount = base.SaveChanges();
 
-            _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            if (_dbContextDomainEvents != null)
+            {
+                _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            }
 
             return objectCount;
         }
@@ -183,15 +190,21 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents?.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            }
 
             var objectCount = await base.SaveChangesAsync();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            }
 
             return objectCount;
         }
@@ -207,15 +220,21 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents?.CreatePropertyUpdateEventsEFCore(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            }
 
             var objectCount = await base.SaveChangesAsync(cancellationToken);
 
-            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).ConfigureAwait(false);
+            }
 
             return objectCount;
         }

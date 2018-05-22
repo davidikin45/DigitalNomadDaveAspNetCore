@@ -25,9 +25,13 @@ namespace DND.Common.Implementation.Persistance
 
     public abstract class BaseDbContext : DbContext, IBaseDbContext
     {
-        public BaseDbContext(string nameOrConnectionString, bool logSql)
+        private IDbContextDomainEvents _dbContextDomainEvents;
+
+        public BaseDbContext(string nameOrConnectionString, bool logSql, IDbContextDomainEvents dbContextDomainEvents = null)
         : base(nameOrConnectionString)
         {
+            _dbContextDomainEvents = dbContextDomainEvents;
+
             if (logSql)
             {
                 Database.Log = s => Debug.WriteLine(s);
@@ -49,12 +53,10 @@ namespace DND.Common.Implementation.Persistance
             init();
         }
 
-        private DbContextDomainEvents _dbContextDomainEvents;
         private DbContextTimestamps _dbContextTimestamps;
 
         private void init()
         {
-            _dbContextDomainEvents = new DbContextDomainEvents();
             _dbContextTimestamps = new DbContextTimestamps();
 
             SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
@@ -205,15 +207,20 @@ namespace DND.Common.Implementation.Persistance
             //Db commit order is Update, Delete, Insert
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents?.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            if (_dbContextDomainEvents != null)
+            {
+                _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            }
 
             var objectCount = base.SaveChanges();
-
-            _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            if (_dbContextDomainEvents != null)
+            {
+                _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted).Wait();
+            }
 
             return objectCount;
         }
@@ -228,17 +235,23 @@ namespace DND.Common.Implementation.Persistance
             //When commands are added Insert, Delete, Update. 
             //Changetracker order is Insert, Update, Delete 
             //Db commit order is Update, Delete, Insert
-           
+
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents?.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            }
 
             var objectCount = await base.SaveChangesAsync().ConfigureAwait(false);
 
-            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            }
 
             return objectCount;
         }
@@ -250,15 +263,21 @@ namespace DND.Common.Implementation.Persistance
             var all = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
 
             var updated = all.Where(x => x.State == EntityState.Modified).Select(x => x.Entity).ToList();
-            var propertiesUpdatedEvents = _dbContextDomainEvents.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
+            var propertiesUpdatedEvents = _dbContextDomainEvents?.CreatePropertyUpdateEventsEF6(all.Where(x => x.State == EntityState.Modified));
             var deleted = all.Where(x => x.State == EntityState.Deleted).Select(x => x.Entity).ToList();
             var inserted = all.Where(x => x.State == EntityState.Added).Select(x => x.Entity).ToList();
 
-            await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            }
 
             var objectCount = await base.SaveChangesAsync(cancellationtoken).ConfigureAwait(false);
 
-            await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            if (_dbContextDomainEvents != null)
+            {
+                await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(updated, propertiesUpdatedEvents, deleted, inserted);
+            }
 
             return objectCount;
         }

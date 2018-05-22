@@ -4,13 +4,18 @@ using DND.Common.Interfaces.Persistance;
 using System;
 using System.Data.SQLite;
 using DND.Domain;
+using Microsoft.Extensions.DependencyInjection;
+using DND.Common.DomainEvents;
 
 namespace DND.EFPersistance
 {
     public class DbContextFactory : IDbContextFactory
     {
-        public DbContextFactory()
+        private IDbContextDomainEvents _dbContextDomainEvents;
+
+        public DbContextFactory(IDbContextDomainEvents dbContextDomainEvents = null)
         {
+            _dbContextDomainEvents = dbContextDomainEvents;
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
         }
 
@@ -26,7 +31,7 @@ namespace DND.EFPersistance
             }
             else
             {
-                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"), false);
+                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"), false, _dbContextDomainEvents);
             }
         }
 
