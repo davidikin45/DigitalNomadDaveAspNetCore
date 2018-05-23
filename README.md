@@ -37,7 +37,7 @@ I read alot of .NET Core articles related to deferred domain events which requir
 Although this is useful for complex triggers, I wanted a more generic approach for simple triggers. I develped an approach where events are fired each time an entity is inserted/updated/deleted & property change.\
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
-The PostCommit events are independent and by default are handed off to Hangfire(https://www.hangfire.io/) for processing out of process. This would be useful for sending emails and correspondence.\
+The PostCommit events are independent and by default are handed off to [Hangfire](https://www.hangfire.io/) for processing out of process. This would be useful for sending emails and correspondence.\
 Because determining if a property has changed relies on fetching the original values from the DB for each entity instance, Interface IFirePropertyUpdatedEvents needs to be applied to the entity to opt-in to property update events.\
 Below is an example of setup + two examples of IDomainEventHandlers.
 
