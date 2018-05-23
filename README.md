@@ -29,6 +29,7 @@ Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to launch Kestral Web Host using
 Login to /admin with username: admin password: password
 ```
 ## Domain Events
+* [Domain events: design and implementation](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/domain-events-design-implementation)
 
 From my personal experience alot of things (emails, correspondence) in business applications get triggered when an entity is inserted/updated/deleted or a property is changed.\
 I read alot of .NET Core articles related to deferred domain events which require the programmer to add domain events to an Aggregate Root which are then executed either before or after DbContext SaveChanges() is called.\
