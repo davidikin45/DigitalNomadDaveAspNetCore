@@ -36,8 +36,28 @@ Although this is useful in some scenarios, I wanted a more generic approach. I d
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
 The PostCommit events are isolated and by default are handed off to Hangfire for processing out of process. This would be useful for sending emails and correspondence.\
-Below is two examples of IDomainEventHandlers.
+Below is an example of setup + two examples of IDomainEventHandlers.
 
+```C#
+ public BaseDbContext(string nameOrConnectionString, IDomainEvents domainEvents = null)
+        : base(nameOrConnectionString)
+        {
+            _dbContextDomainEvents = new DbContextDomainEventsEF6(this, domainEvents);
+        }
+
+public new int SaveChanges()
+        {
+            int objectCount = 0;
+
+            _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
+
+            objectCount = base.SaveChanges();
+
+            _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
+
+            return objectCount;
+        }
+```
 
 ```C#
 public class TagInsertedEventHandler : IDomainEventHandler<EntityInsertedEvent<Tag>>
