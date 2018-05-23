@@ -29,7 +29,7 @@ namespace DND.Common.Implementation.Persistance
         public BaseIdentityDbContext(DbContextOptions options, IDomainEvents domainEvents = null)
             : base(options)
         {
-            _dbContextDomainEvents = new DbContextDomainEventsEFCore(this, domainEvents);
+            _dbContextDomainEvents = new DbContextDomainEventsEFCoreAdapter(this, domainEvents);
             _dbContextTimestamps = new DbContextTimestamps();
 
             ChangeTracker.AutoDetectChangesEnabled = false;

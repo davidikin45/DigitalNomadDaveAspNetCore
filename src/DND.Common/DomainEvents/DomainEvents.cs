@@ -3,6 +3,8 @@ using DND.Common.Implementation.Validation;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.UnitOfWork;
 using Hangfire;
+using Hangfire.Common;
+using Hangfire.States;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ namespace DND.Common.DomainEvents
     public class DomainEvents : IDomainEvents
     {
         public static bool HandlePostCommitEventsInProcess = false;
+        public static bool DispatchPostCommitEventsInParellel = true;
 
         IServiceProvider _serviceProvider;
         public DomainEvents(IServiceProvider serviceProvider = null)
@@ -30,7 +33,7 @@ namespace DND.Common.DomainEvents
         {
             List<dynamic> instances = new List<dynamic>();
 
-            if(_serviceProvider != null)
+            if (_serviceProvider != null)
             {
                 var eventHandlerInterfaceType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
                 var types = typeof(IEnumerable<>).MakeGenericType(eventHandlerInterfaceType);
@@ -81,43 +84,96 @@ namespace DND.Common.DomainEvents
             }
         }
 
-        //HandlePostCommitEventsInProcess determines whether PostCommit Events are handled InProcess or by Hangfire
+        public async Task DispatchPostCommitBatchAsync(IEnumerable<IDomainEvent> domainEvents)
+        {
+            if (DispatchPostCommitEventsInParellel)
+            {
+                await Task.Run(() => Parallel.ForEach(domainEvents, async domainEvent =>
+                {
+                    await DispatchPostCommitAsync(domainEvent);
+                }));
+            }
+            else
+            {
+                foreach (var domainEvent in domainEvents)
+                {
+                    await DispatchPostCommitAsync(domainEvent);
+                }
+            }
+        }
+
         public async Task DispatchPostCommitAsync(IDomainEvent domainEvent)
         {
             var eventHandlerTypes = GetEventHandlerTypes(domainEvent);
 
-            //Each Post Commit Domain Event Handling is completely independent. By registering the event AND handler (rather than just the event) in hangfire we get the granularity of retrying at a event/handler level.
-            foreach (Type handlerType in eventHandlerTypes)
+            if (DispatchPostCommitEventsInParellel)
             {
-                if (HandlePostCommitEventsInProcess)
+                await Task.Run(() => Parallel.ForEach(eventHandlerTypes, async handlerType =>
                 {
-                    try
-                    {
-                        await HandlePostCommitAsync(handlerType, domainEvent).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-                        //Log InProcess Post commit event failed
-                    }
-                }
-                else
+                    await DispatchPostCommitAsync(handlerType, domainEvent).ConfigureAwait(false);
+                }));
+            }
+            else
+            {
+                foreach (Type handlerType in eventHandlerTypes)
                 {
-                    try
-                    {
-                        //Hangfire unfortunately uses System.Type.GetType to get job type. This only looks at the referenced assemblies of the web project and not the dynamic loaded plugins so need to
-                        //proxy back through this common assembly.
-                        var exp = GetExpression(typeof(IDomainEvents), handlerType.FullName, domainEvent);
-
-                        MethodInfo method = typeof(BackgroundJob).GetMethods().Where(m => m.Name == "Enqueue").Last();
-                        MethodInfo generic = method.MakeGenericMethod(typeof(IDomainEvents));
-                        generic.Invoke(null, new object[] { exp });
-                    }
-                    catch
-                    {
-                        //Log Hangfire Post commit event Background enqueue failed
-                    }
+                    await DispatchPostCommitAsync(handlerType, domainEvent).ConfigureAwait(false);
                 }
             }
+        }
+
+        private async Task DispatchPostCommitAsync(Type handlerType, IDomainEvent domainEvent)
+        {
+            if (HandlePostCommitEventsInProcess)
+            {
+                try
+                {
+                    await HandlePostCommitAsync(handlerType, domainEvent).ConfigureAwait(false);
+                }
+                catch
+                {
+                    //Log InProcess Post commit event failed
+                }
+            }
+            else
+            {
+                try
+                {
+                    //Each Post Commit Domain Event Handling is completely independent. By registering the event AND handler (rather than just the event) in hangfire we get the granularity of retrying at a event/handler level.
+                    //Hangfire unfortunately uses System.Type.GetType to get job type. This only looks at the referenced assemblies of the web project and not the dynamic loaded plugins so need to
+                    //proxy back through this common assembly.
+                    var exp = GetExpression(typeof(IDomainEvents), handlerType.FullName, domainEvent);
+                    QueueJobInHangire(exp, typeof(IDomainEvents));
+                }
+                catch
+                {
+                    //Log Hangfire Post commit event Background enqueue failed
+                }
+            }
+        }
+
+        private void QueueJobInHangire(LambdaExpression exp, Type jobType)
+        {
+            MethodInfo method = typeof(BackgroundJob).GetMethods().Where(m => m.Name == "Enqueue").Last();
+            MethodInfo generic = method.MakeGenericMethod(jobType);
+            generic.Invoke(null, new object[] { exp });
+        }
+
+        private void BackgroundEnqeue(LambdaExpression exp, Type jobType)
+        {
+            var clientFactoryProperty = typeof(BackgroundJob).GetProperties(BindingFlags.Instance |
+                   BindingFlags.NonPublic |
+                   BindingFlags.Public).Where(p => p.Name == "ClientFactory").First();
+
+            Func<IBackgroundJobClient> clientFactoryFunc = (Func<IBackgroundJobClient>)clientFactoryProperty.GetValue(null, null);
+            var clientFactory = clientFactoryFunc();
+
+            MethodInfo method = typeof(Job).GetMethods().Where(m => m.Name == "FromExpression").Last();
+            MethodInfo generic = method.MakeGenericMethod(jobType);
+            var job = (Job)generic.Invoke(null, new object[] { exp });
+
+            //backgroudjobclient
+            clientFactory.Create(job, new EnqueuedState());
         }
 
         private LambdaExpression GetExpression(Type jobType, string handlerName, object domainEvent)

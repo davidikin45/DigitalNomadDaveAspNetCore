@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
-    public class DbContextDomainEventsInMemory : BaseDbContextDomainEvents
+    public class DbContextDomainEventsInMemoryAdapter : BaseDbContextDomainEvents
     {
         private InMemoryDataContext _dbContext;
-        public DbContextDomainEventsInMemory(InMemoryDataContext dbContext, IDomainEvents domainEvents)
+        public DbContextDomainEventsInMemoryAdapter(InMemoryDataContext dbContext, IDomainEvents domainEvents)
             : base(domainEvents)
         {
             _dbContext = dbContext;

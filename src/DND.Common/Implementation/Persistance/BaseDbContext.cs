@@ -31,7 +31,7 @@ namespace DND.Common.Implementation.Persistance
         public BaseDbContext(string nameOrConnectionString, bool logSql, IDomainEvents domainEvents = null)
         : base(nameOrConnectionString)
         {
-            _dbContextDomainEvents = new DbContextDomainEventsEF6(this, domainEvents);
+            _dbContextDomainEvents = new DbContextDomainEventsEF6Adapter(this, domainEvents);
 
             if (logSql)
             {
@@ -62,16 +62,16 @@ namespace DND.Common.Implementation.Persistance
 
             SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
 
-            //UTC Date Time
-            //https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/json-and-xml-serialization
-            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ReadAllDateTimeValuesAsUtc;
-
             //Change Tracking
             Configuration.AutoDetectChangesEnabled = false;
 
             Configuration.ValidateOnSaveEnabled = true;
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
+
+            //UTC Date Time
+            //https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/json-and-xml-serialization
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ReadAllDateTimeValuesAsUtc;
         }
 
         public bool AutoDetectChanges

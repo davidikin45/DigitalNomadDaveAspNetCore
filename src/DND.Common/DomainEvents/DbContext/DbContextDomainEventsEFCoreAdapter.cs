@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
-    public class DbContextDomainEventsEFCore : BaseDbContextDomainEvents
+    public class DbContextDomainEventsEFCoreAdapter : BaseDbContextDomainEvents
     {
         private DbContext _dbContext;
-        public DbContextDomainEventsEFCore(DbContext dbContext, IDomainEvents domainEvents)
+        public DbContextDomainEventsEFCoreAdapter(DbContext dbContext, IDomainEvents domainEvents)
             : base(domainEvents)
         {
             _dbContext = dbContext;

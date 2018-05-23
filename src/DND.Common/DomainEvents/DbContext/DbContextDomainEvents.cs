@@ -319,7 +319,7 @@ namespace DND.Common.DomainEvents
         }
 
         //If you are handling the domain events right before committing the original transaction is because you want the side effects of those events to be included in the same transaction
-        public async Task DispatchDomainEventsPreCommitAsync(
+        private async Task DispatchDomainEventsPreCommitAsync(
        Dictionary<object, List<IDomainEvent>> entityUpdatedEvents,
        Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
        Dictionary<object, List<IDomainEvent>> entityDeletedEvents,
@@ -327,6 +327,9 @@ namespace DND.Common.DomainEvents
        Dictionary<object, List<IDomainEvent>> entityDomainEvents
        )
         {
+            if (_domainEvents == null)
+                return;
+
             foreach (var kvp in entityUpdatedEvents)
             {
                 foreach (var domainEvent in kvp.Value)
@@ -370,13 +373,17 @@ namespace DND.Common.DomainEvents
         }
 
         //If you are handling the domain events after committing the original transaction is because you do not want the side effects of those events to be included in the same transaction. e.g sending an email
-        public async Task DispatchDomainEventsPostCommitAsync(
+        private async Task DispatchDomainEventsPostCommitAsync(
        Dictionary<object, List<IDomainEvent>> entityUpdatedEvents,
        Dictionary<object, List<IDomainEvent>> propertyUpdatedEvents,
        Dictionary<object, List<IDomainEvent>> entityDeletedEvents,
        Dictionary<object, List<IDomainEvent>> entityInsertedEvents,
        Dictionary<object, List<IDomainEvent>> entityDomainEvents)
         {
+            if (_domainEvents == null)
+                return;
+
+            var domainEvents = new List<IDomainEvent>();
 
             foreach (var kvp in entityUpdatedEvents)
             {
@@ -384,7 +391,8 @@ namespace DND.Common.DomainEvents
                 {
                     try
                     {
-                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                        domainEvents.Add(domainEvent);
+                        //await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                     }
                     catch
                     {
@@ -399,7 +407,8 @@ namespace DND.Common.DomainEvents
                     {
                         try
                         {
-                            await _domainEvents.DispatchPostCommitAsync(propertyUpdateEvent).ConfigureAwait(false);
+                            domainEvents.Add(propertyUpdateEvent);
+                            //await _domainEvents.DispatchPostCommitAsync(propertyUpdateEvent).ConfigureAwait(false);
                         }
                         catch
                         {
@@ -415,7 +424,8 @@ namespace DND.Common.DomainEvents
                 {
                     try
                     {
-                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                        domainEvents.Add(domainEvent);
+                        //await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                     }
                     catch
                     {
@@ -431,7 +441,8 @@ namespace DND.Common.DomainEvents
                 {
                     try
                     {
-                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                        domainEvents.Add(domainEvent);
+                        //await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                     }
                     catch
                     {
@@ -447,7 +458,8 @@ namespace DND.Common.DomainEvents
                 {
                     try
                     {
-                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
+                        domainEvents.Add(domainEvent);
+                        //await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                     }
                     catch
                     {
@@ -456,6 +468,8 @@ namespace DND.Common.DomainEvents
 
                 }
             }
+
+            await _domainEvents.DispatchPostCommitBatchAsync(domainEvents).ConfigureAwait(false);
         }
     }
 }
