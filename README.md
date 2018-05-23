@@ -31,12 +31,13 @@ Login to /admin with username: admin password: password
 ## Domain Events
 * [Domain events: design and implementation](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/domain-events-design-implementation)
 
-From my personal experience alot of things (emails, correspondence) in business applications get triggered when an entity is inserted/updated/deleted or a property is changed.\
-I read alot of .NET Core articles related to deferred domain events which require the programmer to add domain events to an Aggregate Root which are then executed either before or after DbContext SaveChanges() is called.\
-Although this is useful in some scenarios, I wanted a more generic approach. I develped an approach where events are fired each time an entity is inserted/updated/deleted & property change.\
+From my personal experience alot of things (emails, correspondence) in business applications need to get triggered when an entity is inserted/updated/deleted or a property is changed.\
+This functionality is often built into service methods or achieved using Domain Events.\
+I read alot of .NET Core articles related to deferred domain events which require the programmer to add domain events to an Aggregate Root collection property which are then dispatched either before or after DbContext SaveChanges() is called.\
+Although this is useful for complex triggers, I wanted a more generic approach for simple triggers. I develped an approach where events are fired each time an entity is inserted/updated/deleted & property change.\
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
-The PostCommit events are isolated and by default are handed off to Hangfire for processing out of process. This would be useful for sending emails and correspondence.\
+The PostCommit events are independent and by default are handed off to Hangfire(https://www.hangfire.io/) for processing out of process. This would be useful for sending emails and correspondence.\
 Below is an example of setup + two examples of IDomainEventHandlers.
 
 ```C#
