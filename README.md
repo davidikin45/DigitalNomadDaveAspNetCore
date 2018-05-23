@@ -42,77 +42,77 @@ Below is an example of setup + two examples of IDomainEventHandlers.
 
 ```C#
  public BaseDbContext(string nameOrConnectionString, IDomainEvents domainEvents = null)
-        : base(nameOrConnectionString)
-        {
-            _dbContextDomainEvents = new DbContextDomainEventsEF6(this, domainEvents);
-        }
+: base(nameOrConnectionString)
+{
+    _dbContextDomainEvents = new DbContextDomainEventsEF6(this, domainEvents);
+}
 
 public new int SaveChanges()
-        {
-            int objectCount = 0;
+{
+    int objectCount = 0;
 
-            _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
+    _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
 
-            objectCount = base.SaveChanges();
+    objectCount = base.SaveChanges();
 
-            _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
+    _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
 
-            return objectCount;
-        }
+    return objectCount;
+}
 ```
 
 ```C#
 public class TagInsertedEventHandler : IDomainEventHandler<EntityInsertedEvent<Tag>>
+{
+    public async Task<Result> HandlePostCommitAsync(EntityInsertedEvent<Tag> domainEvent)
     {
-        public async Task<Result> HandlePostCommitAsync(EntityInsertedEvent<Tag> domainEvent)
-        {
-            var after = domainEvent.Entity;
+        var after = domainEvent.Entity;
 
-             //Send Email
+            //Send Email
 
-            return Result.Ok();
-        }
-
-        public async Task<Result> HandlePreCommitAsync(EntityInsertedEvent<Tag> domainEvent)
-        {
-            var before = domainEvent.Entity;
-
-            return Result.Ok();
-        }
+        return Result.Ok();
     }
+
+    public async Task<Result> HandlePreCommitAsync(EntityInsertedEvent<Tag> domainEvent)
+    {
+        var before = domainEvent.Entity;
+
+        return Result.Ok();
+    }
+}
 ```
 
 ```C#
 public class CategoryPropertyUpdatedEventHandler : IDomainEventHandler<EntityPropertyUpdatedEvent<Category>>
+{
+    private ITagDomainService _tagService;
+    public CategoryPropertyUpdatedEventHandler(ITagDomainService tagService)
     {
-        private ITagDomainService _tagService;
-        public CategoryPropertyUpdatedEventHandler(ITagDomainService tagService)
-        {
-            _tagService = tagService;
-        }
-
-        public async Task<Result> HandlePostCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
-        {
-            var after = domainEvent.Entity;
-            if (domainEvent.PropertyName == "Name")
-            {
-                //Send Email
-            }
-
-            return Result.Ok();
-        }
-
-        public async Task<Result> HandlePreCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
-        {
-            var before = domainEvent.Entity;
-            if(domainEvent.PropertyName == "Name")
-            {
-                //Trigger creating/updating another db record
-            }
-
-            return Result.Ok();
-        }
+        _tagService = tagService;
     }
+
+    public async Task<Result> HandlePostCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+    {
+        var after = domainEvent.Entity;
+        if (domainEvent.PropertyName == "Name")
+        {
+            //Send Email
+        }
+
+        return Result.Ok();
+    }
+
+    public async Task<Result> HandlePreCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+    {
+        var before = domainEvent.Entity;
+        if(domainEvent.PropertyName == "Name")
+        {
+            //Trigger creating/updating another db record
+        }
+
+        return Result.Ok();
+    }
+}
 ```
 
 ## Running the tests
