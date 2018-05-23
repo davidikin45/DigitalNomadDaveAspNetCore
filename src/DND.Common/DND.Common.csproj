@@ -659,10 +659,13 @@
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacTasksModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacAutomapperModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsDependencyInjectionModule.cs" />
-    <Compile Include="DomainEvents\DbContextDomainEvents.cs" />
+    <Compile Include="DomainEvents\DbContext\DbContextDomainEvents.cs" />
+    <Compile Include="DomainEvents\DbContext\DbContextDomainEventsInMemory.cs" />
+    <Compile Include="DomainEvents\DbContext\DbContextDomainEventsEFCore.cs" />
+    <Compile Include="DomainEvents\DbContext\DbContextDomainEventsEF6.cs" />
     <Compile Include="DomainEvents\EntityEvents.cs" />
     <Compile Include="DomainEvents\EventListener.cs" />
-    <Compile Include="DomainEvents\IDbContextDomainEvents.cs" />
+    <Compile Include="DomainEvents\DbContext\IDbContextDomainEvents.cs" />
     <Compile Include="DomainEvents\IDomainEvents.cs" />
     <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
     <Compile Include="DomainEvents\IDomainEventHandler.cs" />

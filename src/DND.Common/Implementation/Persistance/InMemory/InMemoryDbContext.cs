@@ -29,11 +29,11 @@ namespace DND.Common.Implementation.Persistance.InMemory
         }
 
         internal readonly ObjectRepresentationRepository repo;
-        private readonly List<QueueItem> updateQueue = new List<QueueItem>();
-        private readonly List<QueueItem> addQueue = new List<QueueItem>();
-        private readonly List<QueueItem> removeQueue = new List<QueueItem>();
+        public readonly List<QueueItem> updateQueue = new List<QueueItem>();
+        public readonly List<QueueItem> addQueue = new List<QueueItem>();
+        public readonly List<QueueItem> removeQueue = new List<QueueItem>();
 
-        private readonly DbContextDomainEvents _dbContextDomainEvents;
+        private readonly IDbContextDomainEvents _dbContextDomainEvents;
         private readonly DbContextTimestamps _dbContextTimestamps;
 
         public bool AutoDetectChanges { get; set; }
@@ -43,7 +43,7 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public InMemoryDataContext()
         {
-            _dbContextDomainEvents = new DbContextDomainEvents(new DND.Common.DomainEvents.DomainEvents());
+            _dbContextDomainEvents = new DbContextDomainEventsInMemory(this, new DND.Common.DomainEvents.DomainEvents(null));
             _dbContextTimestamps = new DbContextTimestamps();
 
             repo = new ObjectRepresentationRepository();
@@ -52,7 +52,7 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         internal InMemoryDataContext(ObjectRepresentationRepository repo)
         {
-            _dbContextDomainEvents = new DbContextDomainEvents(new DND.Common.DomainEvents.DomainEvents());
+            _dbContextDomainEvents = new DbContextDomainEventsInMemory(this, new DND.Common.DomainEvents.DomainEvents(null));
             _dbContextTimestamps = new DbContextTimestamps();
 
             this.repo = repo;
@@ -124,138 +124,14 @@ namespace DND.Common.Implementation.Persistance.InMemory
             }
         }
 
-        #region Events
-        private Dictionary<object, List<IDomainEvent>> precommitedUpdatedEvents = new Dictionary<object, List<IDomainEvent>>();
-        private List<object> precommitedUpdatedEntities = new List<object>();
-        private Dictionary<object, List<IDomainEvent>> precommitedPropertyUpdateEvents = new Dictionary<object, List<IDomainEvent>>();
-        private Dictionary<object, List<IDomainEvent>> precommitedDeletedEvents = new Dictionary<object, List<IDomainEvent>>();
-        private List<object> precommitedDeletedEntities = new List<object>();
-        private Dictionary<object, List<IDomainEvent>> precommitedInsertedEvents = new Dictionary<object, List<IDomainEvent>>();
-        private List<object> precommitedInsertedEntities = new List<object>();
-        private Dictionary<object, List<IDomainEvent>> precommitedDomainEvents = new Dictionary<object, List<IDomainEvent>>();
-
-        private async Task FirePreCommitEventsAsync()
-        {
-            var updatedEvents = GetNewUpdatedEvents();
-            precommitedUpdatedEntities.AddRange(updatedEvents.Keys);
-            precommitedUpdatedEvents = precommitedUpdatedEvents.Concat(updatedEvents).ToDictionary(x => x.Key, x => x.Value);
-
-            var deletedEvents = GetNewDeletedEvents();
-            precommitedDeletedEntities.AddRange(deletedEvents.Keys);
-            precommitedDeletedEvents = precommitedDeletedEvents.Concat(deletedEvents).ToDictionary(x => x.Key, x => x.Value);
-
-            var insertedEvents = GetNewInsertedEvents();
-            precommitedInsertedEntities.AddRange(insertedEvents.Keys);
-            precommitedInsertedEvents = precommitedInsertedEvents.Concat(insertedEvents).ToDictionary(x => x.Key, x => x.Value);
-
-            var domainEvents = GetNewDomainEvents();
-            foreach (var entity in domainEvents)
-            {
-                if (!precommitedDomainEvents.ContainsKey(entity.Key))
-                {
-                    precommitedDomainEvents.Add(entity.Key, new List<IDomainEvent>());
-                }
-
-                foreach (var ev in entity.Value)
-                {
-                    precommitedDomainEvents[entity.Key].Add(ev);
-                }
-            }
-
-            if (_dbContextDomainEvents != null)
-            {
-                await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updatedEvents, null, deletedEvents, insertedEvents, domainEvents).ConfigureAwait(false);
-            }
-        }
-
-        private async Task FirePostCommitEventsAsync()
-        {
-            if (_dbContextDomainEvents != null)
-            {
-                await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(precommitedUpdatedEvents, precommitedPropertyUpdateEvents, precommitedDeletedEvents, precommitedInsertedEvents, precommitedDomainEvents).ConfigureAwait(false);
-            }
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewDeletedEvents()
-        {
-            var entries = removeQueue.Where(x => !precommitedDeletedEntities.Contains(x.Entity));
-            var events = _dbContextDomainEvents?.CreateEntityDeletedEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
-        public IEnumerable<object> GetNewDeletedEntities()
-        {
-            var entities = removeQueue.Where(x => !precommitedDeletedEntities.Contains(x.Entity)).Select(x => x.Entity);
-            return entities;
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewInsertedEvents()
-        {
-            var entries = addQueue.Where(x => !precommitedInsertedEntities.Contains(x.Entity));
-            var events = _dbContextDomainEvents?.CreateEntityInsertedEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
-        public IEnumerable<object> GetNewInsertedEntities()
-        {
-            var entities = addQueue.Where(x => !precommitedInsertedEntities.Contains(x.Entity)).Select(x => x.Entity);
-            return entities;
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewUpdatedEvents()
-        {
-            var entries = updateQueue.Where(x => !precommitedUpdatedEntities.Contains(x.Entity));
-            var events = _dbContextDomainEvents?.CreateEntityUpdatedEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
-        public IEnumerable<object> GetNewUpdatedEntities()
-        {
-            var entities = updateQueue.Where(x => !precommitedUpdatedEntities.Contains(x.Entity));
-            return entities;
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewDomainEvents()
-        {
-            var entries = updateQueue.Concat(addQueue).Concat(removeQueue);
-
-            var events = _dbContextDomainEvents?.CreateEntityDomainEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
         private void AddTimestamps()
         {
-            var added = GetNewInsertedEntities();
-            var modified = GetNewUpdatedEntities();
-            var deleted = GetNewDeletedEntities();
+            var added = _dbContextDomainEvents.GetNewInsertedEntities();
+            var modified = _dbContextDomainEvents.GetNewUpdatedEntities();
+            var deleted = _dbContextDomainEvents.GetNewDeletedEntities();
 
             _dbContextTimestamps.AddTimestamps(added, modified, deleted);
         }
-        #endregion
 
         public int SaveChanges()
         {
@@ -273,14 +149,14 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
             AddTimestamps();
 
-            FirePreCommitEventsAsync().Wait();
+            _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
 
             if(!preCommitOnly)
             {
                 ProcessCommitQueues();
                 repo.Commit();
 
-                FirePostCommitEventsAsync().Wait();
+                _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
             }
 
             AfterSave?.Invoke(this, new AfterSave());

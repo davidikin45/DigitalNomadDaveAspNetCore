@@ -776,10 +776,6 @@ namespace DND.Web
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
             NavigationMenuHelper.MVCImplementationFolder = mvcImplementationFolder;
 
-            Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains(commonAssembly));
-            DomainEventsFilter.AssemblyFilter = filterFunc;
-            DomainEvents.Init();
-
             taskRunner.RunTasksAtStartup();
         }
     }

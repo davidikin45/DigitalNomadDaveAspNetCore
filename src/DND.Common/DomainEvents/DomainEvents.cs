@@ -14,14 +14,8 @@ using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
-    public static class DomainEventsFilter
-    {
-        public static Func<Assembly, Boolean> AssemblyFilter;
-    }
-
     public class DomainEvents : IDomainEvents
     {
-        public static List<Type> _handlers;
         public static bool HandlePostCommitEventsInProcess = false;
 
         IServiceProvider _serviceProvider;
@@ -29,28 +23,6 @@ namespace DND.Common.DomainEvents
         {
             _serviceProvider = serviceProvider;
         }
-
-        public static void Init()
-        {
-            if (_handlers == null)
-            {
-                if (!(DomainEventsFilter.AssemblyFilter is null))
-                {
-                    Init(DomainEventsFilter.AssemblyFilter);
-                }
-            }
-        }
-
-        private static void Init(Func<Assembly, Boolean> filterFunc)
-        {
-            var type = typeof(IDomainEventHandler<>);
-            _handlers = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(filterFunc)
-                .SelectMany(s => s.GetTypes())
-                .Where(x => x.GetInterfaces().Any(y => y.IsGenericType && y.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)))
-                .ToList();
-        }
-
 
         private Dictionary<Type, List<Type>> eventHandlerTypes = new Dictionary<Type, List<Type>>();
 

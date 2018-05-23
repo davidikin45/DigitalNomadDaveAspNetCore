@@ -11,11 +11,11 @@ namespace DND.EFPersistance
 {
     public class DbContextFactory : IDbContextFactory
     {
-        private IDbContextDomainEvents _dbContextDomainEvents;
+        private IDomainEvents _domainEvents;
 
-        public DbContextFactory(IDbContextDomainEvents dbContextDomainEvents = null)
+        public DbContextFactory(IDomainEvents domainEvents = null)
         {
-            _dbContextDomainEvents = dbContextDomainEvents;
+            _domainEvents = domainEvents;
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
         }
 
@@ -31,7 +31,7 @@ namespace DND.EFPersistance
             }
             else
             {
-                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"), false, _dbContextDomainEvents);
+                return new ApplicationDbContext(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"), false, _domainEvents);
             }
         }
 

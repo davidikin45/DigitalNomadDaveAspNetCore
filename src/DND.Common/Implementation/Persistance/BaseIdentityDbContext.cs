@@ -26,10 +26,10 @@ namespace DND.Common.Implementation.Persistance
         private IDbContextDomainEvents _dbContextDomainEvents;
         private DbContextTimestamps _dbContextTimestamps;
 
-        public BaseIdentityDbContext(DbContextOptions options, IDbContextDomainEvents dbContextDomainEvents = null)
+        public BaseIdentityDbContext(DbContextOptions options, IDomainEvents domainEvents = null)
             : base(options)
         {
-            _dbContextDomainEvents = dbContextDomainEvents;
+            _dbContextDomainEvents = new DbContextDomainEventsEFCore(this, domainEvents);
             _dbContextTimestamps = new DbContextTimestamps();
 
             ChangeTracker.AutoDetectChangesEnabled = false;
@@ -149,172 +149,14 @@ namespace DND.Common.Implementation.Persistance
             return Entry(entity).State == EntityState.Unchanged;
         }
 
-        #region Events
-        private Dictionary<object, List<IDomainEvent>> precommitedUpdatedEvents = new Dictionary<object, List<IDomainEvent>>();
-        private List<object> precommitedUpdatedEntities = new List<object>();
-        private Dictionary<object, List<IDomainEvent>> precommitedPropertyUpdateEvents = new Dictionary<object, List<IDomainEvent>>();
-        private Dictionary<object, List<IDomainEvent>> precommitedDeletedEvents = new Dictionary<object, List<IDomainEvent>>();
-        private List<object> precommitedDeletedEntities = new List<object>();
-        private Dictionary<object, List<IDomainEvent>> precommitedInsertedEvents = new Dictionary<object, List<IDomainEvent>>();
-        private List<object> precommitedInsertedEntities = new List<object>();
-        private Dictionary<object, List<IDomainEvent>> precommitedDomainEvents = new Dictionary<object, List<IDomainEvent>>();
-
-        private async Task FirePreCommitEventsAsync()
-        {
-            var updatedEvents = GetNewUpdatedEvents();
-            precommitedUpdatedEntities.AddRange(updatedEvents.Keys);
-            precommitedUpdatedEvents = precommitedUpdatedEvents.Concat(updatedEvents).ToDictionary(x => x.Key, x => x.Value);
-
-            var propertiesUpdatedEvents = GetNewPropertyUpdatedEvents();
-            foreach (var entity in propertiesUpdatedEvents)
-            {
-                if (!precommitedPropertyUpdateEvents.ContainsKey(entity.Key))
-                {
-                    precommitedPropertyUpdateEvents.Add(entity.Key, new List<IDomainEvent>());
-                }
-
-                foreach (var ev in entity.Value)
-                {
-                    precommitedPropertyUpdateEvents[entity.Key].Add(ev);
-                }
-            }
-
-            var deletedEvents = GetNewDeletedEvents();
-            precommitedDeletedEntities.AddRange(deletedEvents.Keys);
-            precommitedDeletedEvents = precommitedDeletedEvents.Concat(deletedEvents).ToDictionary(x => x.Key, x => x.Value);
-
-            var insertedEvents = GetNewInsertedEvents();
-            precommitedInsertedEntities.AddRange(insertedEvents.Keys);
-            precommitedInsertedEvents = precommitedInsertedEvents.Concat(insertedEvents).ToDictionary(x => x.Key, x => x.Value);
-
-            var domainEvents = GetNewDomainEvents();
-            foreach (var entity in domainEvents)
-            {
-                if (!precommitedDomainEvents.ContainsKey(entity.Key))
-                {
-                    precommitedDomainEvents.Add(entity.Key, new List<IDomainEvent>());
-                }
-
-                foreach (var ev in entity.Value)
-                {
-                    precommitedDomainEvents[entity.Key].Add(ev);
-                }
-            }
-
-            if (_dbContextDomainEvents != null)
-            {
-                await _dbContextDomainEvents.DispatchDomainEventsPreCommitAsync(updatedEvents, propertiesUpdatedEvents, deletedEvents, insertedEvents, domainEvents).ConfigureAwait(false);
-            }
-        }
-
-        private async Task FirePostCommitEventsAsync()
-        {
-            if (_dbContextDomainEvents != null)
-            {
-                await _dbContextDomainEvents.DispatchDomainEventsPostCommitAsync(precommitedUpdatedEvents, precommitedPropertyUpdateEvents, precommitedDeletedEvents, precommitedInsertedEvents, precommitedDomainEvents).ConfigureAwait(false);
-            }
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewDeletedEvents()
-        {
-            var entries = ChangeTracker.Entries().Where(x => (x.State == EntityState.Deleted && !precommitedDeletedEntities.Contains(x.Entity)));
-            var events = _dbContextDomainEvents?.CreateEntityDeletedEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
-        public IEnumerable<object> GetNewDeletedEntities()
-        {
-            var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Deleted && !precommitedDeletedEntities.Contains(x.Entity)).Select(x => x.Entity);
-            return entities;
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewInsertedEvents()
-        {
-            var entries = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added && !precommitedInsertedEntities.Contains(x.Entity)));
-            var events = _dbContextDomainEvents?.CreateEntityInsertedEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
-        public IEnumerable<object> GetNewInsertedEntities()
-        {
-            var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Added && !precommitedInsertedEntities.Contains(x.Entity)).Select(x => x.Entity);
-            return entities;
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewUpdatedEvents()
-        {
-            var entries = ChangeTracker.Entries().Where(x => (x.State == EntityState.Modified && !precommitedUpdatedEntities.Contains(x.Entity)));
-            var events = _dbContextDomainEvents?.CreateEntityUpdatedEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
-        public IEnumerable<object> GetNewUpdatedEntities()
-        {
-            var entities = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified && !precommitedUpdatedEntities.Contains(x.Entity)).Select(x => x.Entity);
-            return entities;
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewPropertyUpdatedEvents()
-        {
-            var entries = ChangeTracker.Entries().Where(x => (x.State == EntityState.Modified));
-            var events = _dbContextDomainEvents?.CreatePropertyUpdateEventsEFCore(entries);
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            var allDomainEvents = precommitedPropertyUpdateEvents.Values.MergeLists();
-
-            foreach (var entity in events)
-            {
-                entity.Value.RemoveAll(e => allDomainEvents.Contains(e));
-            }
-
-            return events;
-        }
-
-        public Dictionary<object, List<IDomainEvent>> GetNewDomainEvents()
-        {
-            var entries = ChangeTracker.Entries().Where(x => (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted));
-
-            var events = _dbContextDomainEvents?.CreateEntityDomainEvents(entries.Select(x => x.Entity));
-
-            if (events == null)
-            {
-                events = new Dictionary<object, List<IDomainEvent>>();
-            }
-
-            return events;
-        }
-
         private void AddTimestamps()
         {
-            var added = GetNewInsertedEntities();
-            var modified = GetNewUpdatedEntities();
-            var deleted = GetNewDeletedEntities();
+            var added = _dbContextDomainEvents.GetNewInsertedEntities();
+            var modified = _dbContextDomainEvents.GetNewUpdatedEntities();
+            var deleted = _dbContextDomainEvents.GetNewDeletedEntities();
 
             _dbContextTimestamps.AddTimestamps(added, modified, deleted);
         }
-        #endregion
 
         public new int SaveChanges()
         {
@@ -332,12 +174,12 @@ namespace DND.Common.Implementation.Persistance
 
             AddTimestamps();
 
-            FirePreCommitEventsAsync().Wait();
+            _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
 
             if (!preCommitOnly)
             {
                 objectCount = base.SaveChanges();
-                FirePostCommitEventsAsync().Wait();
+                _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
             }
 
             return objectCount;
@@ -374,13 +216,13 @@ namespace DND.Common.Implementation.Persistance
 
             AddTimestamps();
 
-            await FirePreCommitEventsAsync().ConfigureAwait(false);
+            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
 
             if (!preCommitOnly)
             {
                 objectCount = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-                await FirePostCommitEventsAsync().ConfigureAwait(false);
+                await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
             }
 
             return objectCount;

@@ -84,8 +84,8 @@ namespace DND.EFPersistance
         //In the above code snippet you are calling the Initialize() method immediately after creating a context instance.In this case, the database will be created immediately after calling the Initialize() method instead of waiting until the context is used for the first time. The Initialize() method takes a boolean parameter that controls whether the initialization process should re-run if it has already run for the application. Specifying false will skip the initialization process if it has already executed. A value of true will initialize the database again even if it was already initialized.
 
         //At times you may want to use an existing database with Code First. In such cases you may not want to execute any initialization logic at all. You can suppress the database initialization process altogether by passing null to SetInitializer() method.
-        public ApplicationDbContext(string connectionString, bool logSql, IDbContextDomainEvents dbContextDomainEvents = null)
-            : base(connectionString, logSql, dbContextDomainEvents)
+        public ApplicationDbContext(string connectionString, bool logSql, IDomainEvents domainEvents = null)
+            : base(connectionString, logSql, domainEvents)
         {
             
             this.Database.CommandTimeout = 180;

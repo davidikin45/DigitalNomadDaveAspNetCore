@@ -20,8 +20,8 @@ namespace DND.EFPersistance.Identity
     //Remove-Migration
     public class ApplicationIdentityDbContext : BaseIdentityDbContext<User>
     { 
-        public ApplicationIdentityDbContext(DbContextOptions options, IDbContextDomainEvents dbContextDomainEvents = null)
-            :base(options, dbContextDomainEvents)
+        public ApplicationIdentityDbContext(DbContextOptions options, IDomainEvents domainEvents = null)
+            :base(options, domainEvents)
         {
             Database.SetCommandTimeout(180);
         }
