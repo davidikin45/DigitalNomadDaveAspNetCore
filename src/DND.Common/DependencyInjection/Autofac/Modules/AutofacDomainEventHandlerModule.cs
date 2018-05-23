@@ -44,6 +44,11 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
                             if (!type.IsGenericType)
                             {
                                 builder.RegisterType(type).As(type);
+                                var eventHandlerInterfaces = type.GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>));
+                                foreach (var eventHandlerInterface in eventHandlerInterfaces)
+                                {
+                                    builder.RegisterType(type).As(eventHandlerInterface);
+                                }
                             }
                         }
                     }

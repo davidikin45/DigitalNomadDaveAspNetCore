@@ -330,14 +330,7 @@ namespace DND.Common.DomainEvents
             {
                 foreach (var domainEvent in kvp.Value)
                 {
-                    try
-                    {
-                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-
-                    }
+                    await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                 }
             }
 
@@ -345,14 +338,7 @@ namespace DND.Common.DomainEvents
             {
                 foreach (var domainEvent in kvp.Value)
                 {
-                    try
-                    {
-                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-
-                    }
+                    await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                 }
             }
 
@@ -360,14 +346,7 @@ namespace DND.Common.DomainEvents
             {
                 foreach (var domainEvent in kvp.Value)
                 {
-                    try
-                    {
-                        await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-
-                    }
+                    await _domainEvents.DispatchPostCommitAsync(domainEvent).ConfigureAwait(false);
                 }
             }
         }

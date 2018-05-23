@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -42,6 +43,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -123,7 +125,7 @@ namespace DND.Web
             var fromDisplayName = Configuration.GetValue<string>("Settings:Email:FromDisplayName");
             var fromEmail = Configuration.GetValue<string>("Settings:Email:FromEmail");
 
-            var toEmail = Configuration.GetValue<string>("Settings:Email:ToEmail"); 
+            var toEmail = Configuration.GetValue<string>("Settings:Email:ToEmail");
             var toDisplayName = Configuration.GetValue<string>("Settings:Email:ToDisplayName");
 
             //Smtp
@@ -132,14 +134,14 @@ namespace DND.Web
             var password = Configuration.GetValue<string>("Settings:Email:Password");
             var host = Configuration.GetValue<string>("Settings:Email:Host");
             int port = Configuration.GetValue<int>("Settings:Email:Port");
-            bool ssl = Configuration.GetValue<bool>("Settings:Email:Ssl"); 
+            bool ssl = Configuration.GetValue<bool>("Settings:Email:Ssl");
 
             //Write to disk
             bool writeEmailsToFileSystem = Configuration.GetValue<bool>("Settings:Email:WriteEmailsToFileSystem");
             string fileSystemFolder = Configuration.GetValue<string>("Settings:Email:FileSystemFolder");
 
             var emailsFileSystemPath = fileSystemFolder;
-            if(!emailsFileSystemPath.Contains(@":\"))
+            if (!emailsFileSystemPath.Contains(@":\"))
             {
                 emailsFileSystemPath = Path.Combine(bin, fileSystemFolder);
             }
@@ -528,6 +530,7 @@ namespace DND.Web
             string publicUploadFoldersString = Configuration.GetValue<string>("Settings:PublicUploadFolders");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
+            string defaultCulture = Configuration.GetValue<string>("Settings:DefaultCulture");
 
             string uploadsFolder = "/uploads";
             string commonAssembly = "DND.Common";
@@ -692,6 +695,46 @@ namespace DND.Web
                    List<string> publicUploadFolders = publicUploadFoldersString.Split(seperator).ToList();
                    appBranch.UseContentHandler(Configuration, publicUploadFolders, uploadFilesDays);
                });
+
+            //Default culture should be set to where the majority of traffic comes from.
+            //If the client sends through "en" and the default culture is "en-AU". Instead of falling back to "en" it will fall back to "en-AU".
+            var defaultLanguage = defaultCulture.Split('-')[0];
+
+            //Support all formats for numbers, dates, etc.
+            var formatCulturesList = new List<string>();
+
+            //Countries
+            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                if (!formatCulturesList.Contains(ci.Name))
+                {
+                    formatCulturesList.Add(ci.Name);
+                }
+            }
+
+            //Languages
+            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+            {
+                if (!formatCulturesList.Contains(ci.TwoLetterISOLanguageName) && ci.TwoLetterISOLanguageName != defaultLanguage)
+                {
+                    formatCulturesList.Add(ci.TwoLetterISOLanguageName);
+                }
+            }
+
+            var supportedFormatCultures = formatCulturesList.Select(x => new CultureInfo(x)).ToArray();
+
+            var supportedUICultures = new CultureInfo[] {
+                new CultureInfo(defaultCulture)
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(culture: defaultCulture, uiCulture: defaultCulture),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedFormatCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedUICultures
+            });
 
             app.UseDefaultFiles();
 

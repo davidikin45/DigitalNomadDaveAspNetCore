@@ -51,27 +51,60 @@ namespace DND.Common.DomainEvents
                 .ToList();
         }
 
+
+        private Dictionary<Type, List<Type>> eventHandlerTypes = new Dictionary<Type, List<Type>>();
+
+        private List<dynamic> GetEventHandlerInstances(IDomainEvent domainEvent)
+        {
+            List<dynamic> instances = new List<dynamic>();
+
+            if(_serviceProvider != null)
+            {
+                var eventHandlerInterfaceType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
+                var types = typeof(IEnumerable<>).MakeGenericType(eventHandlerInterfaceType);
+                dynamic handlers = _serviceProvider.GetService(types);
+
+                foreach (var handler in handlers)
+                {
+                    instances.Add(handler);
+                }
+            }
+
+            //Keep track of the types for the post event
+            if (!eventHandlerTypes.ContainsKey(domainEvent.GetType()))
+            {
+                eventHandlerTypes.Add(domainEvent.GetType(), new List<Type>());
+
+                foreach (var handler in instances)
+                {
+                    eventHandlerTypes[domainEvent.GetType()].Add(handler.GetType());
+                }
+            }
+
+            return instances;
+        }
+
+        private List<Type> GetEventHandlerTypes(IDomainEvent domainEvent)
+        {
+            if (!eventHandlerTypes.ContainsKey(domainEvent.GetType()))
+            {
+                GetEventHandlerInstances(domainEvent);
+            }
+            return eventHandlerTypes[domainEvent.GetType()];
+        }
+
         //InProcess
         public async Task DispatchPreCommitAsync(IDomainEvent domainEvent)
         {
-            if(_handlers != null)
-            {
-                foreach (Type handlerType in _handlers)
-                {
-                    bool canHandleEvent = handlerType.GetInterfaces()
-                        .Any(x => x.IsGenericType
-                        && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
-                        && x.GenericTypeArguments[0] == domainEvent.GetType());
+            List<dynamic> handlers = GetEventHandlerInstances(domainEvent);
 
-                    if (canHandleEvent)
-                    {
-                        dynamic handler = _serviceProvider.GetService(handlerType);
-                        Result result = await handler.HandlePreCommitAsync((dynamic)domainEvent);
-                        if (result.IsFailure)
-                        {
-                            throw new Exception("Pre Commit Event Failed");
-                        }
-                    }
+            //pre commit events are atomic
+            foreach (var handler in handlers)
+            {
+                Result result = await handler.HandlePreCommitAsync((dynamic)domainEvent);
+                if (result.IsFailure)
+                {
+                    throw new Exception("Pre Commit Event Failed");
                 }
             }
         }
@@ -79,33 +112,37 @@ namespace DND.Common.DomainEvents
         //HandlePostCommitEventsInProcess determines whether PostCommit Events are handled InProcess or by Hangfire
         public async Task DispatchPostCommitAsync(IDomainEvent domainEvent)
         {
-            if (_handlers != null)
+            var eventHandlerTypes = GetEventHandlerTypes(domainEvent);
+
+            //Each Post Commit Domain Event Handling is completely independent. By registering the event AND handler (rather than just the event) in hangfire we get the granularity of retrying at a event/handler level.
+            foreach (Type handlerType in eventHandlerTypes)
             {
-                foreach (Type handlerType in _handlers)
+                if (HandlePostCommitEventsInProcess)
                 {
-                    bool canHandleEvent = handlerType.GetInterfaces()
-                        .Any(x => x.IsGenericType
-                        && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)
-                        && x.GenericTypeArguments[0] == domainEvent.GetType());
-
-                    if (canHandleEvent)
+                    try
                     {
-                        if(HandlePostCommitEventsInProcess)
-                        {
-                            await HandlePostCommitAsync(handlerType.FullName, domainEvent).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            //BackgroundJob.Enqueue(() => HandlePostCommitAsync(handlerType.FullName, (object)domainEvent));
+                        await HandlePostCommitAsync(handlerType, domainEvent).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                        //Log InProcess Post commit event failed
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        //Hangfire unfortunately uses System.Type.GetType to get job type. This only looks at the referenced assemblies of the web project and not the dynamic loaded plugins so need to
+                        //proxy back through this common assembly.
+                        var exp = GetExpression(typeof(IDomainEvents), handlerType.FullName, domainEvent);
 
-                            //Hangfire unfortunately uses System.Type.GetType to get job type. This only looks at the referenced assemblies of the web project and not the dynamic loaded plugins so need to
-                            //proxy back through this common assembly.
-                            var exp = GetExpression(typeof(IDomainEvents), handlerType.FullName, domainEvent);
-
-                            MethodInfo method = typeof(BackgroundJob).GetMethods().Where(m => m.Name == "Enqueue").Last();
-                            MethodInfo generic = method.MakeGenericMethod(typeof(IDomainEvents));
-                            generic.Invoke(null, new object[] { exp });
-                        }             
+                        MethodInfo method = typeof(BackgroundJob).GetMethods().Where(m => m.Name == "Enqueue").Last();
+                        MethodInfo generic = method.MakeGenericMethod(typeof(IDomainEvents));
+                        generic.Invoke(null, new object[] { exp });
+                    }
+                    catch
+                    {
+                        //Log Hangfire Post commit event Background enqueue failed
                     }
                 }
             }
@@ -151,7 +188,7 @@ namespace DND.Common.DomainEvents
         {
             dynamic handler = _serviceProvider.GetService(handlerType);
             Result result = await handler.HandlePostCommitAsync((dynamic)domainEvent);
-            if(result.IsFailure)
+            if (result.IsFailure)
             {
                 throw new Exception("Post Commit Event Failed");
             }

@@ -5,7 +5,7 @@
     ViewBag.Blog = true;
 }
 
-@await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = DND.Common.Constants.CMS.ContentHtml.Contact })
+@await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent", ""), new { id = DND.Common.Constants.CMS.ContentHtml.Contact })
 <br />
 
 @using (Html.BeginForm())
@@ -20,3 +20,7 @@
         </div>
     </div>
 }
+
+Culture: @Thread.CurrentThread.CurrentCulture.Name;
+UICulture: @Thread.CurrentThread.CurrentUICulture.Name;
+@DateTime.Now.ToString()
