@@ -41,9 +41,12 @@ namespace DND.Common.Implementation.Persistance.InMemory
         public event EventHandler<BeforeSave> BeforeSave;
         public event EventHandler<AfterSave> AfterSave;
 
+        //For domain events to fire, this needs to be set
+        public IServiceProvider ServiceProvider { get; set; }
+
         public InMemoryDataContext()
         {
-            _dbContextDomainEvents = new DbContextDomainEventsInMemory(this, new DND.Common.DomainEvents.DomainEvents(null));
+            _dbContextDomainEvents = new DbContextDomainEventsInMemory(this, new DND.Common.DomainEvents.DomainEvents(ServiceProvider));
             _dbContextTimestamps = new DbContextTimestamps();
 
             repo = new ObjectRepresentationRepository();
