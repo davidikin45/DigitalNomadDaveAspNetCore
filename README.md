@@ -42,7 +42,7 @@ Because determining if a property has changed relies on fetching the original va
 Below is an example of setup + two examples of IDomainEventHandlers.
 
 ```C#
- public BaseDbContext(string nameOrConnectionString, IDomainEvents domainEvents = null)
+ public ApplicationDbContext(string nameOrConnectionString, IDomainEvents domainEvents = null)
 : base(nameOrConnectionString)
 {
     _dbContextDomainEvents = new DbContextDomainEventsEF6(this, domainEvents);
