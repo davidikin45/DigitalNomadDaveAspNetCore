@@ -34,11 +34,12 @@ Login to /admin with username: admin password: password
 From my personal experience alot of things (emails, correspondence) in business applications need to get triggered when an entity is inserted/updated/deleted or a property is changed.\
 This functionality is often built into service methods or achieved using Domain Events.\
 I read alot of .NET Core articles related to deferred domain events which require the programmer to add domain events to an Aggregate Root collection property which are then dispatched either before or after DbContext SaveChanges() is called.\
-Although this is useful for complex triggers, I wanted a more generic approach for simple triggers. I develped an approach where events are fired each time an entity is inserted/updated/deleted & property change.\
+Although the Aggregate Root collection is needed for complex business logic triggers, I wanted a more generic approach for simple triggers and the ability to fire Before AND after SaveChanges(). I develped an approach where events are fired each time an entity is inserted/updated/deleted & property change.\
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
 The PostCommit events are independent and by default are handed off to [Hangfire](https://www.hangfire.io/) for processing out of process. This would be useful for sending emails and correspondence.\
 Because determining if a property has changed relies on fetching the original values from the DB for each entity instance, Interface IFirePropertyUpdatedEvents needs to be applied to the entity to opt-in to property update events.\
+For performance reaons an event is only ever fired if there is at least one Handler for that event type.\
 Below is the intended design pattern and an example of two IDomainEventHandlers. Note: This is still a work in progress.
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/Domain%20Events%20Diagram.png "Domain Events Diagram")
