@@ -20,13 +20,13 @@ namespace DND.Web.MVCImplementation.Videos.Controllers
     [Route("videos")]
     public class VideosController : BaseController
 	{
-        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
 
-        public VideosController(IMapper mapper, IEmailService emailService, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IConfiguration configuration)
+        public VideosController(IMapper mapper, IEmailService emailService, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IConfiguration configuration)
              : base(mapper, emailService, configuration)
         {
-            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }
 
         [NoAjaxRequest]
@@ -86,7 +86,7 @@ namespace DND.Web.MVCImplementation.Videos.Controllers
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var repository = _fileSystemRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".mp4", ".txt");
+            var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".mp4", ".txt");
             var dataTask = repository.GetAllAsync(LamdaHelper.GetOrderByFunc<FileInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
             var totalTask = repository.GetCountAsync(null);
 

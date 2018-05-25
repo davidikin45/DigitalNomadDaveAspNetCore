@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace DND.Common.Interfaces.Repository
 {
-    public interface IFileSystemRepositoryFactory : IBaseDomainService
+    public interface IFileSystemGenericRepositoryFactory : IBaseDomainService
     {      
         IBaseFileRepository CreateFileRepository(CancellationToken cancellationToken, string physicalPath, Boolean includeSubDirectories = false, string searchPattern = "*.*", params string[] extensions);
         IBaseFileReadOnlyRepository CreateFileRepositoryReadOnly(CancellationToken cancellationToken, string physicalPath, Boolean includeSubDirectories = false, string searchPattern = "*.*", params string[] extensions);

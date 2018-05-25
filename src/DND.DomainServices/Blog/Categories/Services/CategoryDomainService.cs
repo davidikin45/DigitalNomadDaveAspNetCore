@@ -20,7 +20,7 @@ namespace DND.DomainServices.Categories.Services
 {
     public class CategoryDomainService : BaseEntityDomainService<IApplicationDbContext, Category>, ICategoryDomainService
     {
-        public CategoryDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public CategoryDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
@@ -52,11 +52,5 @@ namespace DND.DomainServices.Categories.Services
             return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Category entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
-        }
     }
 }

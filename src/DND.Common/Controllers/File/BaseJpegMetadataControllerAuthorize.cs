@@ -26,8 +26,8 @@ namespace DND.Common.Controllers
     [Authorize(Roles = "admin")]
     public abstract class BaseJpegMetadataControllerAuthorize : BaseJpegMetadataReadOnlyControllerAuthorize
     {
-        public BaseJpegMetadataControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper = null, IEmailService emailService = null)
-        : base(physicalPath, includeSubDirectories, admin, fileSystemRepositoryFactory, mapper, emailService)
+        public BaseJpegMetadataControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper = null, IEmailService emailService = null)
+        : base(physicalPath, includeSubDirectories, admin, fileSystemGenericRepositoryFactory, mapper, emailService)
         {
         }
 
@@ -39,7 +39,7 @@ namespace DND.Common.Controllers
             JpegMetadata data = null;
             try
             {
-                var repository = FileSystemRepositoryFactory.CreateJpegMetadataRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateJpegMetadataRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.MetadataGetByPathAsync(id.Replace("/", "\\"));
 
                 var dto = Mapper.Map<JpegMetadataDto>(data);
@@ -95,7 +95,7 @@ namespace DND.Common.Controllers
             try
             {
 
-                var repository = FileSystemRepositoryFactory.CreateJpegMetadataRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateJpegMetadataRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.MetadataGetByPathAsync(id.Replace("/", "\\"));
 
                 var dto = Mapper.Map<JpegMetadataDto>(data);
@@ -120,7 +120,7 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    var repository = FileSystemRepositoryFactory.CreateJpegMetadataRepository(cts.Token, PhysicalPath, IncludeSubDirectories);
+                    var repository = FileSystemGenericRepositoryFactory.CreateJpegMetadataRepository(cts.Token, PhysicalPath, IncludeSubDirectories);
                     repository.Delete(id.Replace("/", "\\"));
 
                     return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);

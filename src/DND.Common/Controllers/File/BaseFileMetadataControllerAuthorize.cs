@@ -26,8 +26,8 @@ namespace DND.Common.Controllers
     [Authorize(Roles = "admin")]
     public abstract class BaseFileMetadataControllerAuthorize : BaseFileMetadataReadOnlyControllerAuthorize
     {
-        public BaseFileMetadataControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper = null, IEmailService emailService = null)
-        : base(physicalPath, includeSubDirectories, admin, fileSystemRepositoryFactory, mapper, emailService)
+        public BaseFileMetadataControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper = null, IEmailService emailService = null)
+        : base(physicalPath, includeSubDirectories, admin, fileSystemGenericRepositoryFactory, mapper, emailService)
         {
         }
 
@@ -39,7 +39,7 @@ namespace DND.Common.Controllers
             FileInfo data = null;
             try
             {
-                var repository = FileSystemRepositoryFactory.CreateFileRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateFileRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.GetByPathAsync(id.Replace("/", "\\"));
 
                 var dto = Mapper.Map<FileMetadataDto>(data);
@@ -103,7 +103,7 @@ namespace DND.Common.Controllers
             try
             {
 
-                var repository = FileSystemRepositoryFactory.CreateFileRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateFileRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.GetByPathAsync(id.Replace("/", "\\"));
 
                 var dto = Mapper.Map<FileMetadataDto>(data);
@@ -129,7 +129,7 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    var repository = FileSystemRepositoryFactory.CreateFileRepository(cts.Token, PhysicalPath, IncludeSubDirectories);
+                    var repository = FileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, PhysicalPath, IncludeSubDirectories);
                     repository.Delete(id.Replace("/", "\\"));
 
                     return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);

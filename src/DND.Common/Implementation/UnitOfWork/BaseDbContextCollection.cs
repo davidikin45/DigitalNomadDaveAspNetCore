@@ -29,7 +29,7 @@ namespace DND.Common.Implementation.UnitOfWork
     /// instances it created when its Commit() or Rollback() method is called.
     /// 
     /// </summary>
-    public class BaseDbContextCollection : IBaseDbContextCollection
+    public class DbContextCollection : IDbContextCollection
     {
         private Dictionary<Type, IBaseDbContext> _initializedDbContexts;
         private Dictionary<IBaseDbContext, IBaseDbContextTransaction> _transactions;
@@ -41,7 +41,7 @@ namespace DND.Common.Implementation.UnitOfWork
 
         internal Dictionary<Type, IBaseDbContext> InitializedDbContexts { get { return _initializedDbContexts; } }
 
-        public BaseDbContextCollection(bool readOnly = false, IsolationLevel? isolationLevel = null, IDbContextFactory dbContextFactory = null)
+        public DbContextCollection(bool readOnly = false, IsolationLevel? isolationLevel = null, IDbContextFactory dbContextFactory = null)
         {
             _disposed = false;
             _completed = false;
@@ -87,7 +87,7 @@ namespace DND.Common.Implementation.UnitOfWork
             return (TIBaseDbContext)_initializedDbContexts[requestedType];
         }
 
-        public int PreCommit()
+        public void PreCommit()
         {
             if (_disposed)
                 throw new ObjectDisposedException("DbContextCollection");
@@ -116,7 +116,7 @@ namespace DND.Common.Implementation.UnitOfWork
             {
                 if (!_readOnly)
                 {
-                    var errors = dbContext.GetValidationErrors();
+                    var errors = dbContext.GetValidationErrorsForNewChanges();
                     if (errors.Count() > 0)
                     {
                         throw new DatabaseValidationErrors(errors);
@@ -125,15 +125,13 @@ namespace DND.Common.Implementation.UnitOfWork
                 }
             }
 
-            var c = 0;
-
             foreach (var dbContext in _initializedDbContexts.Values)
             {
                 try
                 {
                     if (!_readOnly)
                     {
-                        c += dbContext.FireEvents();
+                        dbContext.FirePreCommitEvents();
                     }
 
                 }
@@ -145,8 +143,6 @@ namespace DND.Common.Implementation.UnitOfWork
 
             if (lastError != null)
                 lastError.Throw(); // Re-throw while maintaining the exception's original stack track
-
-            return c;
         }
 
         public int Commit()
@@ -189,26 +185,48 @@ namespace DND.Common.Implementation.UnitOfWork
 
             var c = 0;
 
+            //Fire PreCommit Events to Chain Transactions. If any errors are thrown Save won't occur.
             foreach (var dbContext in _initializedDbContexts.Values)
             {
                 try
                 {
                     if (!_readOnly)
                     {
-                        c += dbContext.SaveChanges();
-                    }
-
-                    // If we've started an explicit database transaction, time to commit it now.
-                    var tran = GetValueOrDefault(_transactions, dbContext);
-                    if (tran != null)
-                    {
-                        tran.Commit();
-                        tran.Dispose();
+                        dbContext.FirePreCommitEvents();
+                        //Post commit events will fire automatically on transaction commit.
                     }
                 }
                 catch (Exception e)
                 {
                     lastError = ExceptionDispatchInfo.Capture(e);
+                }
+            }
+
+            if(lastError == null)
+            {
+                foreach (var dbContext in _initializedDbContexts.Values)
+                {
+                    try
+                    {
+                        if (!_readOnly)
+                        {
+                            dbContext.FirePreCommitEvents();
+                            c += dbContext.SaveChanges();
+                            //Post commit events will fire automatically on transaction commit.
+                        }
+
+                        // If we've started an explicit database transaction, time to commit it now.
+                        var tran = GetValueOrDefault(_transactions, dbContext);
+                        if (tran != null)
+                        {
+                            tran.Commit();
+                            tran.Dispose();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        lastError = ExceptionDispatchInfo.Capture(e);
+                    }
                 }
             }
 
@@ -221,12 +239,12 @@ namespace DND.Common.Implementation.UnitOfWork
             return c;
         }
 
-        public Task<int> PreCommitAsync()
+        public Task PreCommitAsync()
         {
             return PreCommitAsync(CancellationToken.None);
         }
 
-        public async Task<int> PreCommitAsync(CancellationToken cancelToken)
+        public async Task PreCommitAsync(CancellationToken cancelToken)
         {
             if (cancelToken == null)
                 throw new ArgumentNullException("cancelToken");
@@ -243,7 +261,7 @@ namespace DND.Common.Implementation.UnitOfWork
             {
                 if (!_readOnly)
                 {
-                    var errors = dbContext.GetValidationErrors();
+                    var errors = dbContext.GetValidationErrorsForNewChanges();
                     if (errors.Count() > 0)
                     {
                         throw new DatabaseValidationErrors(errors);
@@ -252,8 +270,6 @@ namespace DND.Common.Implementation.UnitOfWork
                 }
             }
 
-            var c = 0;
-
             foreach (var dbContext in _initializedDbContexts.Values)
             {
                 try
@@ -261,7 +277,7 @@ namespace DND.Common.Implementation.UnitOfWork
                     if (!_readOnly)
                     {
 
-                        c += await dbContext.FireEventsAsync(cancelToken).ConfigureAwait(false);
+                        await dbContext.FirePostCommitEventsAsync().ConfigureAwait(false);
 
                     }
                 }
@@ -274,7 +290,6 @@ namespace DND.Common.Implementation.UnitOfWork
             if (lastError != null)
                 lastError.Throw(); // Re-throw while maintaining the exception's original stack track
 
-            return c;
         }
 
         public Task<int> CommitAsync()
@@ -310,28 +325,48 @@ namespace DND.Common.Implementation.UnitOfWork
 
             var c = 0;
 
+            //Fire PreCommit Events to Chain Transactions. If any errors are thrown Save won't occur.
             foreach (var dbContext in _initializedDbContexts.Values)
             {
                 try
                 {
                     if (!_readOnly)
                     {
-
-                        c += await dbContext.SaveChangesAsync(cancelToken).ConfigureAwait(false);
-
-                    }
-
-                    // If we've started an explicit database transaction, time to commit it now.
-                    var tran = GetValueOrDefault(_transactions, dbContext);
-                    if (tran != null)
-                    {
-                        tran.Commit();
-                        tran.Dispose();
+                        await dbContext.FirePreCommitEventsAsync().ConfigureAwait(false);
                     }
                 }
                 catch (Exception e)
                 {
                     lastError = ExceptionDispatchInfo.Capture(e);
+                }
+            }
+
+            if(lastError == null)
+            {
+                foreach (var dbContext in _initializedDbContexts.Values)
+                {
+                    try
+                    {
+                        if (!_readOnly)
+                        {
+                            await dbContext.FirePreCommitEventsAsync().ConfigureAwait(false);
+                            c += await dbContext.SaveChangesAsync(cancelToken).ConfigureAwait(false);
+                            //Post commit events will fire automatically on transaction commit.
+
+                        }
+
+                        // If we've started an explicit database transaction, time to commit it now.
+                        var tran = GetValueOrDefault(_transactions, dbContext);
+                        if (tran != null)
+                        {
+                            tran.Commit();
+                            tran.Dispose();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        lastError = ExceptionDispatchInfo.Capture(e);
+                    }
                 }
             }
 

@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DND.Common.Interfaces.Models;
 using System.Data.Entity.Core.Objects;
+using DND.Common.Implementation.Validation;
+using DND.Common.Enums;
+using System.Threading;
 
 namespace DND.Common.Interfaces.Repository
 {
@@ -115,6 +118,10 @@ namespace DND.Common.Interfaces.Repository
 
         Task<bool> GetExistsAsync(Expression<Func<TEntity, bool>> filter = null)
             ;
+
+        Result Validate(TEntity entity, ValidationMode mode);
+
+        Task<Result> ValidateAsync(TEntity entity, ValidationMode mode);
     }
 
 }

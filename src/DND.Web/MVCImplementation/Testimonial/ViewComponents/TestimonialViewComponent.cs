@@ -15,9 +15,9 @@ namespace DND.Web.MVCImplementation.Testimonial.ViewComponents
     public class TestimonialViewComponent : BaseViewComponent
     {
         private readonly ITestimonialApplicationService _testimonialService;
-        private readonly IFileSystemRepositoryFactory _fileSystemRepository;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemRepository;
 
-        public TestimonialViewComponent(ITestimonialApplicationService testimonialService, IFileSystemRepositoryFactory fileSystemRepository)
+        public TestimonialViewComponent(ITestimonialApplicationService testimonialService, IFileSystemGenericRepositoryFactory fileSystemRepository)
         {
             _fileSystemRepository = fileSystemRepository;
             _testimonialService = testimonialService;

@@ -20,12 +20,12 @@ namespace DND.IntegrationTestsNUnit.Persistance.UnitOfWork
     public class UnitOfWorkShould
     {
 
-        private BaseUnitOfWorkScopeFactory _unitOfWorkFactory;
+        private UnitOfWorkScopeFactory _unitOfWorkFactory;
 
         [SetUp]
         public void SetUp()
         {
-            _unitOfWorkFactory = new BaseUnitOfWorkScopeFactory(new DbContextFactory(), new BaseAmbientDbContextLocator(), new BaseRepositoryFactory());
+            _unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextFactory(), new AmbientDbContextLocator(), new GenericRepositoryFactory());
         }
 
         [TearDown]
@@ -39,7 +39,8 @@ namespace DND.IntegrationTestsNUnit.Persistance.UnitOfWork
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             using (var con = new ApplicationDbContext(connectionString, true))
             {
-                var repo = new BaseEFRepository<Category>(con, false);
+                var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var repo = new GenericEFRepository<Category>(con, uowFactory.CreateReadOnly(), false);
 
                 var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
                 var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };

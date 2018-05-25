@@ -1,9 +1,12 @@
+using DND.Common.Enums;
 using DND.Common.Implementation.Models;
+using DND.Common.Interfaces.UnitOfWork;
 using DND.Domain.Blog.Authors;
 using DND.Domain.Blog.Categories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace DND.Domain.Blog.BlogPosts
 {
@@ -89,6 +92,12 @@ namespace DND.Domain.Blog.BlogPosts
         }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var errors = new List<ValidationResult>();
+            return errors;
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
             return errors;

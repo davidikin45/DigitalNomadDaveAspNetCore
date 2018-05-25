@@ -12,6 +12,7 @@ using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity.SqlServer;
 using System.Diagnostics;
@@ -23,6 +24,64 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Persistance
 {
+    public class EFTransactionInterceptor : IDbTransactionInterceptor
+    {
+        public void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+            foreach (var dbContext in interceptionContext.DbContexts)
+            {
+                if(dbContext is IBaseDbContext)
+                {
+                    ((IBaseDbContext)dbContext).FirePostCommitEvents();
+                }
+            }
+        }
+
+        public void Committing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void ConnectionGetting(DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext)
+        {
+
+        }
+
+        public void ConnectionGot(DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext)
+        {
+
+        }
+
+        public void Disposed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void Disposing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void IsolationLevelGetting(DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext)
+        {
+
+        }
+
+        public void IsolationLevelGot(DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext)
+        {
+
+        }
+
+        public void RolledBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void RollingBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+    }
 
     public abstract class BaseDbContext : DbContext, IBaseDbContext
     {
@@ -58,6 +117,8 @@ namespace DND.Common.Implementation.Persistance
 
         private void init()
         {
+            DbInterception.Add(new EFTransactionInterceptor());
+
             _dbContextTimestamps = new DbContextTimestamps();
 
             SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
@@ -206,72 +267,51 @@ namespace DND.Common.Implementation.Persistance
             _dbContextTimestamps.AddTimestamps(added, modified, deleted);
         }
 
+        public void FirePreCommitEvents()
+        {
+            FirePreCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePreCommitEventsAsync()
+        {
+            AddTimestamps();
+
+            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
+        }
+
+        public  void FirePostCommitEvents()
+        {
+            FirePostCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePostCommitEventsAsync()
+        {
+            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
+        }
+
         public new int SaveChanges()
-        {
-            return SaveChanges(false);
-        }
-
-        public int FireEvents()
-        {
-            return SaveChanges(true);
-        }
-
-        public int SaveChanges(bool preCommitOnly = false)
         {
             int objectCount = 0;
 
             AddTimestamps();
 
-            _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
-
-            if (!preCommitOnly)
-            {
-                objectCount = base.SaveChanges();
-                _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
-            }
+            objectCount = base.SaveChanges();
 
             return objectCount;
         }
 
         public new async Task<int> SaveChangesAsync()
         {
-            return await SaveChangesAsync(false).ConfigureAwait(false);
+            return await SaveChangesAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
-        public async Task<int> FireEventsAsync()
-        {
-            return await SaveChangesAsync(true).ConfigureAwait(false);
-        }
-
-        public async Task<int> SaveChangesAsync(bool preCommitOnly = false)
-        {
-            return await SaveChangesAsync(CancellationToken.None, preCommitOnly).ConfigureAwait(false);
-        }
-
-        public new async Task<int> SaveChangesAsync(CancellationToken cancellationtoken)
-        {
-            return await SaveChangesAsync(cancellationtoken, false);
-        }
-
-        public  async Task<int> FireEventsAsync(CancellationToken cancellationtoken)
-        {
-            return await SaveChangesAsync(cancellationtoken, true);
-        }
-
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken, bool preCommitOnly = false)
+        public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             int objectCount = 0;
 
             AddTimestamps();
 
-            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
-
-            if (!preCommitOnly)
-            {
-                objectCount = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-                await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
-            }
+            objectCount = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return objectCount;
         }
@@ -279,6 +319,11 @@ namespace DND.Common.Implementation.Persistance
         IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
         {
             return base.GetValidationErrors().Select(x => new DbEntityValidationResultBetter(x.ValidationErrors));
+        }
+
+        IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrorsForNewChanges()
+        {
+            return base.GetValidationErrors().Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x)).Select(x => new DbEntityValidationResultBetter(x.ValidationErrors));
         }
 
         public void AddEntity<TEntity>(TEntity entity) where TEntity : class

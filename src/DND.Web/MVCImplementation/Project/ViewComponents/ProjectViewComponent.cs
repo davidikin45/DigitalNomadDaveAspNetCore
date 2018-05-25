@@ -15,9 +15,9 @@ namespace DND.Web.MVCImplementation.Project.ViewComponents
     public class ProjectViewComponent : BaseViewComponent
     {
         private readonly IProjectApplicationService _projectService;
-        private readonly IFileSystemRepositoryFactory _fileSystemRepository;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemRepository;
 
-        public ProjectViewComponent(IProjectApplicationService projectService, IFileSystemRepositoryFactory fileSystemRepository)
+        public ProjectViewComponent(IProjectApplicationService projectService, IFileSystemGenericRepositoryFactory fileSystemRepository)
         {
             _fileSystemRepository = fileSystemRepository;
             _projectService = projectService;

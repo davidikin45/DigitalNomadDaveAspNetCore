@@ -79,7 +79,7 @@
 </div>
 
 @{
-    var repository = Html.FileSystemRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Parellax), true, "*.*", ".jpg");
+    var repository = Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Parellax), true, "*.*", ".jpg");
     var data = repository.GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(nameof(FileInfo.LastWriteTime), OrderByType.Descending), 0, 2).ToList();
 }
 

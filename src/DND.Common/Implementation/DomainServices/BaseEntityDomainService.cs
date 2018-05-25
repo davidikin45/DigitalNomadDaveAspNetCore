@@ -14,12 +14,13 @@ using DND.Common.Enums;
 
 namespace DND.Common.Implementation.DomainServices
 {
+    //Todo - Move validation down a level into repository
     public abstract class BaseEntityDomainService<TContext, TEntity> : BaseEntityReadOnlyDomainService<TContext, TEntity>, IBaseEntityDomainService<TEntity>
           where TContext : IBaseDbContext
           where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, IBaseEntityConcurrencyAware, new()
     {
 
-        public BaseEntityDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public BaseEntityDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
            : base(baseUnitOfWorkScopeFactory)
         {
 
@@ -27,16 +28,14 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual Result<TEntity> Create(TEntity entity, string createdBy)
         {
-            var validationResult = Validate(entity, ValidationMode.Create);
-
-            if (validationResult.IsFailure)
-            {
-                return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
-            }
-
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
-                unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
+                var validationResult = unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
+                if (validationResult.IsFailure)
+                {
+                    return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                }
+
                 unitOfWork.Complete();
 
                 return Result.Ok(entity);
@@ -45,16 +44,14 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual async Task<Result<TEntity>> CreateAsync(TEntity entity, string createdBy, CancellationToken cancellationToken)
         {
-            var validationResult = await ValidateAsync(entity, ValidationMode.Create).ConfigureAwait(false);
-
-            if (validationResult.IsFailure)
-            {
-                return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
-            }
-
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
+                var validationResult = unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
+                if (validationResult.IsFailure)
+                {
+                    return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                }
+
                 await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
 
                 return Result.Ok(entity);
@@ -63,23 +60,16 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual Result Update(TEntity entity, string updatedBy)
         {
-            var validationResult = Validate(entity, ValidationMode.Update);
-
-            if (validationResult.IsFailure)
-            {
-                return validationResult;
-            }
-
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
-                if (!(Exists(entity.Id)))
-                {
-                    return Result.ObjectDoesNotExist();
-                }
-
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
+                    var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
+                    if (validationResult.IsFailure)
+                    {
+                        return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                    }
+
                     unitOfWork.Complete();
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -88,30 +78,21 @@ namespace DND.Common.Implementation.DomainServices
                 }
             }
 
-
-
             return Result.Ok();
         }
 
         public virtual async Task<Result> UpdateAsync(TEntity entity, string updatedBy, CancellationToken cancellationToken)
         {
-            var validationResult = await ValidateAsync(entity, ValidationMode.Update);
-
-            if (validationResult.IsFailure)
-            {
-                return validationResult;
-            }
-
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                if (!(await ExistsAsync(cancellationToken, entity.Id)))
-                {
-                    return Result.ObjectDoesNotExist();
-                }
-
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
+                    var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
+                    if (validationResult.IsFailure)
+                    {
+                        return validationResult;
+                    }
+
                     await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -176,23 +157,16 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual Result Delete(TEntity entity, string deletedBy)
         {
-            var validationResult = Validate(entity, ValidationMode.Delete);
-
-            if (validationResult.IsFailure)
-            {
-                return validationResult;
-            }
-
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
-                if (!(Exists(entity.Id)))
-                {
-                    return Result.ObjectDoesNotExist();
-                }
-
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Delete(entity, deletedBy);
+                    var validationResult = unitOfWork.Repository<TContext, TEntity>().Delete(entity, deletedBy);
+                    if (validationResult.IsFailure)
+                    {
+                        return validationResult;
+                    }
+
                     unitOfWork.Complete();
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -207,23 +181,16 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual async Task<Result> DeleteAsync(TEntity entity, string deletedBy, CancellationToken cancellationToken)
         {
-            var validationResult = await ValidateAsync(entity, ValidationMode.Delete);
-
-            if (validationResult.IsFailure)
-            {
-                return validationResult;
-            }
-
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                if (!(await ExistsAsync(cancellationToken, entity.Id)))
-                {
-                    return Result.ObjectDoesNotExist();
-                }
-
                 try
                 {
-                    unitOfWork.Repository<TContext, TEntity>().Delete(entity, deletedBy);
+                    var validationResult = unitOfWork.Repository<TContext, TEntity>().Delete(entity, deletedBy);
+                    if (validationResult.IsFailure)
+                    {
+                        return validationResult;
+                    }
+
                     await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -261,34 +228,18 @@ namespace DND.Common.Implementation.DomainServices
 
         public Result Validate(TEntity entity, ValidationMode mode)
         {
-            var task = ValidateAsync(entity, mode);
-            task.Wait();
-            return task.Result;
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting))
+            {
+                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().Validate(entity, mode);
+            }
         }
 
-        public async Task<Result> ValidateAsync(TEntity entity, ValidationMode mode)
+        public async Task<Result> ValidateAsync(TEntity entity, ValidationMode mode, CancellationToken cancellationToken)
         {
-            if (mode != ValidationMode.Delete)
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var objectValidationErrors = entity.Validate().ToList();
-                if (objectValidationErrors.Any())
-                {
-                    return Result.ObjectValidationFail(objectValidationErrors);
-                }
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().ValidateAsync(entity, mode);
             }
-
-            if (mode == ValidationMode.Create || mode == ValidationMode.Update || mode == ValidationMode.Delete)
-            {
-                var dbDependantValidationErrors = await DbDependantValidateAsync(entity, mode).ConfigureAwait(false);
-                if (dbDependantValidationErrors.Any())
-                {
-                    return Result.ObjectValidationFail(dbDependantValidationErrors);
-                }
-            }
-
-            return Result.Ok();
         }
-
-        public abstract Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(TEntity entity, ValidationMode mode);
     }
 }

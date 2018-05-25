@@ -20,7 +20,7 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
 {
     public class BlogPostDomainService : BaseEntityDomainService<IApplicationDbContext, BlogPost>, IBlogPostDomainService
     {
-        public BlogPostDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public BlogPostDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
@@ -232,12 +232,5 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
             return Result.Ok();
         }
         #endregion
-
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(BlogPost entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
-        }
     }
 }

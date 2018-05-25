@@ -11,8 +11,8 @@ namespace DND.Web.MVCImplementation.Admin.Controllers
     [Route("admin/metadata")]
     public class AdminMetadataController : BaseJpegMetadataControllerAuthorize
     {
-        public AdminMetadataController(IFileSystemRepositoryFactory fileSytemRepositoryFactory, IMapper mapper, IEmailService emailService)
-             : base(Server.GetWwwFolderPhysicalPathById(Folders.Uploads), true, true, fileSytemRepositoryFactory, mapper, emailService)
+        public AdminMetadataController(IFileSystemGenericRepositoryFactory fileSytemGenericRepositoryFactory, IMapper mapper, IEmailService emailService)
+             : base(Server.GetWwwFolderPhysicalPathById(Folders.Uploads), true, true, fileSytemGenericRepositoryFactory, mapper, emailService)
         {
 
         }

@@ -15,7 +15,7 @@ namespace DND.Common.Interfaces.UnitOfWork
     /// Convenience methods to create a new ambient UnitOfWorkScope. This is the prefered method
     /// to create a UnitOfWorkScope.
     /// </summary>
-    public interface IBaseUnitOfWorkScopeFactory
+    public interface IUnitOfWorkScopeFactory
     {
         /// <summary>
         /// Creates a new UnitOfWorkScope.
@@ -29,7 +29,7 @@ namespace DND.Common.Interfaces.UnitOfWork
         /// is an advanced feature that should be used with great care and only if you fully understand the
         /// implications of doing this.
         /// </summary>
-        IBaseUnitOfWorkTransactionScope Create(BaseUnitOfWorkScopeOption joiningOption = BaseUnitOfWorkScopeOption.JoinExisting, CancellationToken cancellationToken = default(CancellationToken) );
+        IUnitOfWorkTransactionScope Create(BaseUnitOfWorkScopeOption joiningOption = BaseUnitOfWorkScopeOption.JoinExisting, CancellationToken cancellationToken = default(CancellationToken) );
 
         /// <summary>
         /// Creates a new UnitOfWorkScope for read-only queries.
@@ -43,7 +43,7 @@ namespace DND.Common.Interfaces.UnitOfWork
         /// is an advanced feature that should be used with great care and only if you fully understand the
         /// implications of doing this.
         /// </summary>
-        IBaseUnitOfWorkReadOnlyScope CreateReadOnly(BaseUnitOfWorkScopeOption joiningOption = BaseUnitOfWorkScopeOption.JoinExisting, CancellationToken cancellationToken = default(CancellationToken));
+        IUnitOfWorkReadOnlyScope CreateReadOnly(BaseUnitOfWorkScopeOption joiningOption = BaseUnitOfWorkScopeOption.JoinExisting, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Forces the creation of a new ambient UnitOfWorkScope (i.e. does not
@@ -59,7 +59,7 @@ namespace DND.Common.Interfaces.UnitOfWork
         /// This is an advanced feature that you should use very carefully
         /// and only if you fully understand the implications of doing this.
         /// </summary>
-        IBaseUnitOfWorkTransactionScope CreateWithTransaction(IsolationLevel isolationLevel, CancellationToken cancellationToken = default(CancellationToken));
+        IUnitOfWorkTransactionScope CreateWithTransaction(IsolationLevel isolationLevel, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Forces the creation of a new ambient read-only UnitOfWorkScope (i.e. does not
@@ -75,7 +75,7 @@ namespace DND.Common.Interfaces.UnitOfWork
         /// This is an advanced feature that you should use very carefully
         /// and only if you fully understand the implications of doing this.
         /// </summary>
-        IBaseUnitOfWorkReadOnlyScope CreateReadOnlyWithTransaction(IsolationLevel isolationLevel, CancellationToken cancellationToken = default(CancellationToken));
+        IUnitOfWorkReadOnlyScope CreateReadOnlyWithTransaction(IsolationLevel isolationLevel, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Temporarily suppresses the ambient UnitOfWorkScope. 

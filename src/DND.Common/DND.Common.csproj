@@ -292,6 +292,9 @@
     <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.DiagnosticAdapter, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.DiagnosticAdapter.2.0.1\lib\net461\Microsoft.Extensions.DiagnosticAdapter.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=2.0.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.FileProviders.Abstractions.2.0.1\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
     </Reference>
@@ -785,9 +788,9 @@
     <Compile Include="Implementation\Persistance\InMemory\ObjectRepresentationRepository.cs" />
     <Compile Include="Implementation\Persistance\InMemory\ShortIdentityStrategy.cs" />
     <Compile Include="Implementation\Persistance\InMemory\TestDbAsyncQueryProvider.cs" />
-    <Compile Include="Implementation\Repository\BaseRepositoryFactory.cs" />
-    <Compile Include="Implementation\Repository\EntityFramework\BaseEFReadOnlyRepository.cs" />
-    <Compile Include="Implementation\Repository\EntityFramework\BaseEFRepository.cs" />
+    <Compile Include="Implementation\Repository\GenericRepositoryFactory.cs" />
+    <Compile Include="Implementation\Repository\EntityFramework\GenericEFReadOnlyRepository.cs" />
+    <Compile Include="Implementation\Repository\EntityFramework\GenericEFRepository.cs" />
     <Compile Include="Implementation\Repository\FileSystemRepositoryFactory.cs" />
     <Compile Include="Implementation\Repository\File\BaseFileReadOnlyRepository.cs" />
     <Compile Include="Implementation\Repository\File\BaseFileRepository.cs" />
@@ -799,13 +802,13 @@
     <Compile Include="Implementation\DomainServices\BaseEntityDomainService.cs" />
     <Compile Include="Implementation\DomainServices\BaseEntityReadOnlyDomainService.cs" />
     <Compile Include="Implementation\Services\TypeHelperService.cs" />
-    <Compile Include="Implementation\UnitOfWork\BaseAmbientDbContextLocator.cs" />
-    <Compile Include="Implementation\UnitOfWork\BaseAmbientUnitOfWorkSuppressor.cs" />
+    <Compile Include="Implementation\UnitOfWork\AmbientDbContextLocator.cs" />
+    <Compile Include="Implementation\UnitOfWork\AmbientUnitOfWorkSuppressor.cs" />
     <Compile Include="Implementation\UnitOfWork\BaseDbContextCollection.cs" />
-    <Compile Include="Implementation\UnitOfWork\BaseUnitOfWorkScopeFactory.cs" />
-    <Compile Include="Implementation\UnitOfWork\Scopes\BaseUnitOfWorkReadOnlyScope.cs" />
+    <Compile Include="Implementation\UnitOfWork\UnitOfWorkScopeFactory.cs" />
+    <Compile Include="Implementation\UnitOfWork\Scopes\UnitOfWorkReadOnlyScope.cs" />
     <Compile Include="Implementation\UnitOfWork\Scopes\BaseUnitOfWorkScope.cs" />
-    <Compile Include="Implementation\UnitOfWork\Scopes\BaseUnitOfWorkTransactionalScope.cs" />
+    <Compile Include="Implementation\UnitOfWork\Scopes\UnitOfWorkTransactionalScope.cs" />
     <Compile Include="Implementation\Validation\DatabaseValidationErrors.cs" />
     <Compile Include="Implementation\Validation\DbEntityValidationResultBetter.cs" />
     <Compile Include="Implementation\Validation\EntityValidationErrors.cs" />
@@ -914,6 +917,7 @@
     <Compile Include="Tasks\TaskRunner.cs" />
     <Compile Include="Testing\BaseIntegrationTestDbSetup.cs" />
     <Compile Include="Testing\DotNetRun\BaseDotNetRunFixture.cs" />
+    <Compile Include="Testing\Fakes\FakeDbContextFactory.cs" />
     <Compile Include="Testing\Isolated.cs" />
     <Compile Include="Testing\Selenium\BaseSeleniumChromeBrowserFixture.cs" />
     <Compile Include="Testing\Selenium\SeleniumPage.cs" />

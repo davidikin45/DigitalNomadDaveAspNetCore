@@ -60,7 +60,7 @@ namespace DND.Common.Extensions
 
             if (!string.IsNullOrEmpty(physicalFolderPath))
             {
-                var repository = htmlHelper.FileSystemRepositoryFactory().CreateFolderRepositoryReadOnly(default(CancellationToken), physicalFolderPath, true);
+                var repository = htmlHelper.FileSystemGenericRepositoryFactory().CreateFolderRepositoryReadOnly(default(CancellationToken), physicalFolderPath, true);
                 var data = repository.GetAll(LamdaHelper.GetOrderByFunc<DirectoryInfo>(orderByProperty, orderByType), null, null);
                 keyProperty = nameof(DirectoryInfo.FullName);
 
@@ -75,7 +75,7 @@ namespace DND.Common.Extensions
             }
             else if (!string.IsNullOrEmpty(physicalFilePath))
             {
-                var repository = htmlHelper.FileSystemRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), physicalFilePath, true);
+                var repository = htmlHelper.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), physicalFilePath, true);
                 var data = repository.GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(orderByProperty, orderByType), null, null);
                 keyProperty = nameof(FileInfo.FullName);
 

@@ -14,7 +14,7 @@ namespace DND.DomainServices.CMS.ContentHtmls.Services
 {
     public class ContentHtmlDomainService : BaseEntityDomainService<IBaseDbContext, ContentHtml>, IContentHtmlDomainService
     {
-        public ContentHtmlDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public ContentHtmlDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
@@ -29,13 +29,6 @@ namespace DND.DomainServices.CMS.ContentHtmls.Services
             }
 
             return await base.DeleteAsync(entity, deletedBy, cancellationToken);
-        }
-
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(ContentHtml entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
         }
     }
 }

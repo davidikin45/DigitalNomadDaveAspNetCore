@@ -21,7 +21,7 @@ namespace DND.Web.MVCImplementation.Countries.Controllers
     {
         private readonly ILocationApplicationService _locationService;
 
-        public CountriesController(ILocationApplicationService locationService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
+        public CountriesController(ILocationApplicationService locationService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, IConfiguration configuration)
              : base(mapper, emailService, configuration)
         {
             _locationService = locationService;

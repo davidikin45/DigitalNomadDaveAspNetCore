@@ -42,7 +42,7 @@ namespace DND.Common.Interfaces.UnitOfWork
     /// UnitOfWorkScope).
     /// 
     /// </summary>
-    public interface IBaseUnitOfWorkTransactionScope : IDisposable, IBaseUnitOfWorkScope
+    public interface IUnitOfWorkTransactionScope : IDisposable, IUnitOfWorkReadOnlyScope
     {
         IBaseRepository<TEntity> Repository<TContext, TEntity>()
        where TContext : IBaseDbContext
@@ -100,11 +100,5 @@ namespace DND.Common.Interfaces.UnitOfWork
 		/// with parsimony). 
 		/// </summary>
         Task RefreshEntitiesInParentScopeAsync(IEnumerable entities);
-
-        /// <summary>
-        /// The DbContext instances that this UnitOfWorkScope manages. Don't call SaveChanges() on the DbContext themselves!
-        /// Save the scope instead.
-        /// </summary>
-        IBaseDbContextCollection DbContexts { get; }
     }
 }

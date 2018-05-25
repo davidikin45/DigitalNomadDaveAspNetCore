@@ -20,7 +20,7 @@ namespace DND.DomainServices.Authors.Services
 {
     public class AuthorDomainService : BaseEntityDomainService<IApplicationDbContext, Author>, IAuthorDomainService
     {
-        public AuthorDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public AuthorDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
@@ -52,13 +52,6 @@ namespace DND.DomainServices.Authors.Services
             }
 
             return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Author entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
         }
     }
 }

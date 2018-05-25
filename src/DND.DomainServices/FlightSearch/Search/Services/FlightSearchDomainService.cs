@@ -16,7 +16,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
 {
     public class FlightSearchDomainService : BaseDomainService, IFlightSearchDomainService
     {
-        public FlightSearchDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public FlightSearchDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
             : base(baseUnitOfWorkScopeFactory)
         {
 

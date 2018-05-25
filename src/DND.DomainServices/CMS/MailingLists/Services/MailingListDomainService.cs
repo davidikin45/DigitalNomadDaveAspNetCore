@@ -13,17 +13,11 @@ namespace DND.DomainServices.CMS.MailingLists.Services
 {
     public class MailingListDomainService : BaseEntityDomainService<IBaseDbContext, MailingList>, IMailingListDomainService
     {
-        public MailingListDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public MailingListDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
         }
 
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(MailingList entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
-        }
     }
 }

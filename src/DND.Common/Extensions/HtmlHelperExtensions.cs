@@ -34,9 +34,9 @@ namespace DND.Common.Extensions
             return (T)html.ViewContext.HttpContext.RequestServices.GetService(typeof(T));
         }
 
-        public static IFileSystemRepositoryFactory FileSystemRepositoryFactory(this IHtmlHelper html)
+        public static IFileSystemGenericRepositoryFactory FileSystemGenericRepositoryFactory(this IHtmlHelper html)
         {
-            var repos = html.GetInstance<IFileSystemRepositoryFactory>();
+            var repos = html.GetInstance<IFileSystemGenericRepositoryFactory>();
             return repos;
         }
 

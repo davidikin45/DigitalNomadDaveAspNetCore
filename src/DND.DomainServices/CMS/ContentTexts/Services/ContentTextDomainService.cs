@@ -13,17 +13,11 @@ namespace DND.DomainServices.CMS.ContentTexts.Services
 {
     public class ContentTextDomainService : BaseEntityDomainService<IBaseDbContext, ContentText>, IContentTextDomainService
     {
-        public ContentTextDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public ContentTextDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
         }
 
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(ContentText entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
-        }
     }
 }

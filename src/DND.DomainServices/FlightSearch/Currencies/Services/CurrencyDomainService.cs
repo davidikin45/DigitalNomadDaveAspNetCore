@@ -11,7 +11,7 @@ namespace DND.DomainServices.FlightSearch.Currencies.Services
 {
     public class CurrencyDomainService : BaseDomainService, ICurrencyDomainService
     {
-        public CurrencyDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public CurrencyDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 

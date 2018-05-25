@@ -1,5 +1,7 @@
 ﻿using DND.Common.Implementation.Persistance.InMemory;
+using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
+using DND.Common.Implementation.UnitOfWork;
 using DND.Common.Testing;
 using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Interfaces.Persistance;
@@ -15,12 +17,13 @@ namespace DND.UnitTests.Persistance.Repositories
     public class BlogPostRepositoryShould
     {
         private InMemoryDataContext _context;
-        private BaseEFRepository<BlogPost> _repository;
+        private GenericEFRepository<BlogPost> _repository;
        
         public BlogPostRepositoryShould()
         {
             _context = new InMemoryDataContext();
-            _repository = new BaseEFRepository<BlogPost>(_context, false);
+            var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            _repository = new GenericEFRepository<BlogPost>(_context, uowFactory.CreateReadOnly(), false);
         }
 
         [Fact]

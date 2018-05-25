@@ -27,6 +27,6 @@ namespace DND.Common.Interfaces.DomainServices
 
         Result Validate(TEntity entity, ValidationMode mode);
 
-        Task<Result> ValidateAsync(TEntity entity, ValidationMode mode);
+        Task<Result> ValidateAsync(TEntity entity, ValidationMode mode, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

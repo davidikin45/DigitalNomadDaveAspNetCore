@@ -20,7 +20,7 @@ namespace DND.DomainServices.Tags.Services
 {
     public class TagDomainService : BaseEntityDomainService<IApplicationDbContext, Tag>, ITagDomainService
     {
-        public TagDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public TagDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
@@ -60,13 +60,6 @@ namespace DND.DomainServices.Tags.Services
             }
 
             return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Tag entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
         }
     }
 }

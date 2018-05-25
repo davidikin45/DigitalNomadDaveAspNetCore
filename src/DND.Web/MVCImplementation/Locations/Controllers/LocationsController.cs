@@ -22,13 +22,13 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
     public class LocationsController : BaseController
     {
         private readonly ILocationApplicationService _locationService;
-        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
-        public LocationsController(ILocationApplicationService locationService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
+        public LocationsController(ILocationApplicationService locationService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, IConfiguration configuration)
              : base(mapper, emailService, configuration)
         {
             _locationService = locationService;
-            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }
 
         [ResponseCache(CacheProfileName = "Cache24HourParams")]
@@ -108,7 +108,7 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var repository = _fileSystemRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".jpg", ".jpeg", ".mp4", ".txt");
+            var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".jpg", ".jpeg", ".mp4", ".txt");
             var dataTask = repository.GetAllAsync(LamdaHelper.GetOrderByFunc<FileInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
             var totalTask = repository.GetCountAsync(null);
 

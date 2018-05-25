@@ -27,7 +27,7 @@
 {
     HashSet<string> files = new HashSet<string>();
     <div class="card-columns-md-2">
-    @foreach (FileInfo file in Html.FileSystemRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4",".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(nameof(FileInfo.LastWriteTime), OrderByType.Descending), null, null))
+    @foreach (FileInfo file in Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4",".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(nameof(FileInfo.LastWriteTime), OrderByType.Descending), null, null))
     {
         if (!files.Contains(file.Name))
         {

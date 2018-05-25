@@ -38,16 +38,16 @@ namespace DND.Web.MVCImplementation.Home.Controllers
     {
         private IBlogApplicationService _blogService;
         private ILocationApplicationService _locationService;
-        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
         private readonly IMailingListApplicationService _mailingListService;
 
-        public HomeController(IBlogApplicationService blogService, ILocationApplicationService locationService, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper, IEmailService emailService, IMailingListApplicationService mailingListService, IConfiguration configuration)
+        public HomeController(IBlogApplicationService blogService, ILocationApplicationService locationService, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper, IEmailService emailService, IMailingListApplicationService mailingListService, IConfiguration configuration)
             : base(mapper, emailService, configuration)
         {
             if (blogService == null) throw new ArgumentNullException("blogService");
             _blogService = blogService;
             _locationService = locationService;
-            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
             _mailingListService = mailingListService;
 
         }
@@ -243,7 +243,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
                    });
             }
 
-            var repository = _fileSystemRepositoryFactory.CreateFolderRepository(cancellationToken, Server.GetWwwFolderPhysicalPathById(Folders.Gallery));
+            var repository = _fileSystemGenericRepositoryFactory.CreateFolderRepository(cancellationToken, Server.GetWwwFolderPhysicalPathById(Folders.Gallery));
             foreach (DirectoryInfo f in (await repository.GetAllAsync(LamdaHelper.GetOrderByFunc<DirectoryInfo>(nameof(DirectoryInfo.LastWriteTime), OrderByType.Descending), null, null)))
             {
                 nodes.Add(

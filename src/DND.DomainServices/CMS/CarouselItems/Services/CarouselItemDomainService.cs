@@ -13,17 +13,11 @@ namespace DND.DomainServices.CMS.CarouselItems.Services
 {
     public class CarouselItemDomainService : BaseEntityDomainService<IApplicationDbContext, CarouselItem>, ICarouselItemDomainService
     {
-        public CarouselItemDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public CarouselItemDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
         }
 
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(CarouselItem entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
-        }
     }
 }

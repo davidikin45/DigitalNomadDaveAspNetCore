@@ -19,9 +19,11 @@ namespace DND.Common.Interfaces.Persistance
 {
     public interface IBaseDbContext : IDisposable
     {
-        int FireEvents();
-        Task<int> FireEventsAsync();
-        Task<int> FireEventsAsync(CancellationToken cancellationToken);
+        void FirePreCommitEvents();
+        Task FirePreCommitEventsAsync();
+
+        void FirePostCommitEvents();
+        Task FirePostCommitEventsAsync();
 
         int SaveChanges();
         Task<int> SaveChangesAsync();
@@ -53,6 +55,7 @@ namespace DND.Common.Interfaces.Persistance
         Boolean IsEntityStateUnchanged(object entity);
         void SetEntityStateUnchanged(object entity);
         IEnumerable<DbEntityValidationResultBetter> GetValidationErrors();
+        IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges();
 
         IEnumerable<TResultType> SQLQueryNoTracking<TResultType>(string query, params object[] paramaters) where TResultType : class;
         IEnumerable<TResultType> SQLQueryTracking<TResultType>(string query, params object[] paramaters) where TResultType : class;

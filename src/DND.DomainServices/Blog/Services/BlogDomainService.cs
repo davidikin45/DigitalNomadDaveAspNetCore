@@ -22,7 +22,7 @@ namespace DND.DomainServices.Blog.Services
         public IAuthorDomainService AuthorDomainService { get; private set; }
 
         public BlogDomainService(
-            IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory,
+            IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory,
             IBlogPostDomainService blogPostDomainService,
             ICategoryDomainService categoryDomainService,
             ITagDomainService tagDomainService,

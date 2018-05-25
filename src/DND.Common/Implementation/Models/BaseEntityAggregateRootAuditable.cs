@@ -1,5 +1,8 @@
 ﻿using DND.Common.Interfaces.Models;
+using DND.Common.Interfaces.UnitOfWork;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DND.Common.Implementation.Models
 {
@@ -18,5 +21,6 @@ namespace DND.Common.Implementation.Models
 
         public DateTime? DateDeleted { get; set; }
         public string UserDeleted { get; set; }
+
     }
 }

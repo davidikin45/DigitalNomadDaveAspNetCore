@@ -1,4 +1,6 @@
-﻿using DND.Common.Implementation.Repository.EntityFramework;
+﻿using DND.Common.Implementation.Repository;
+using DND.Common.Implementation.Repository.EntityFramework;
+using DND.Common.Implementation.UnitOfWork;
 using DND.Common.Testing;
 using DND.Domain;
 using DND.Domain.Blog.BlogPosts;
@@ -18,14 +20,16 @@ namespace DND.IntegrationTestsNUnit.Persistance.Repositories
     public class CategoryRepositoryShould
     {
         private ApplicationDbContext _context;
-        private BaseEFRepository<Category> _repository;
+        private GenericEFRepository<Category> _repository;
 
         [SetUp]
         public void SetUp()
         {
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             _context = new ApplicationDbContext(connectionString, true);
-            _repository = new BaseEFRepository<Category>(_context, false);
+
+            var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            _repository = new GenericEFRepository<Category>(_context, uowFactory.CreateReadOnly(), false);
         }
 
         [TearDown]
@@ -39,7 +43,8 @@ namespace DND.IntegrationTestsNUnit.Persistance.Repositories
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             using (var con = new ApplicationDbContext(connectionString, true))
             {
-                var repo = new BaseEFRepository<Category>(con, false);
+                var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var repo = new GenericEFRepository<Category>(con, uowFactory.CreateReadOnly(), false);
 
                 var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
                 var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };

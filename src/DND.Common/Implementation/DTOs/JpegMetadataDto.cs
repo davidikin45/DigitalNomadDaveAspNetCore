@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DND.Common.Enums;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Automapper;
+using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
@@ -54,6 +56,12 @@ namespace DND.Common.Implementation.Dtos
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             yield break;
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        {
+            var errors = new List<ValidationResult>();
+            return errors;
         }
     }
 }

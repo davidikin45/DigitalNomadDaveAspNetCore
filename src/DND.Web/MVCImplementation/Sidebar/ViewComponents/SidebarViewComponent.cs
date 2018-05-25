@@ -19,9 +19,9 @@ namespace DND.Web.MVCImplementation.Sidebar.ViewComponents
     public class SidebarViewComponent : BaseViewComponent
     {
         private readonly IBlogApplicationService _blogService;
-        private readonly IFileSystemRepositoryFactory FileSystemRepository;
+        private readonly IFileSystemGenericRepositoryFactory FileSystemRepository;
 
-        public SidebarViewComponent(IBlogApplicationService blogService, IFileSystemRepositoryFactory fileSystemRepository)
+        public SidebarViewComponent(IBlogApplicationService blogService, IFileSystemGenericRepositoryFactory fileSystemRepository)
         {
             FileSystemRepository = fileSystemRepository;
             _blogService = blogService;

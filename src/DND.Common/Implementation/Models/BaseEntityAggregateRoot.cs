@@ -1,7 +1,9 @@
 ﻿using DND.Common.DomainEvents;
 using DND.Common.Interfaces.Models;
+using DND.Common.Interfaces.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

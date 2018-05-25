@@ -1,8 +1,12 @@
-﻿using DND.Common.Interfaces.Models;
+﻿using DND.Common.Enums;
+using DND.Common.Interfaces.Models;
+using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.ModelMetadataCustom;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Models
 {
@@ -67,5 +71,7 @@ namespace DND.Common.Implementation.Models
         {
             return (GetType().ToString() + Id.ToString()).GetHashCode();
         }
+
+        public abstract Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode);
     }
 }

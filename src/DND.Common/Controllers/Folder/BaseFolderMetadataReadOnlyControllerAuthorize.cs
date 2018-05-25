@@ -30,18 +30,18 @@ namespace DND.Common.Controllers
     [Authorize(Roles = "admin")]
     public abstract class BaseFolderMetadataReadOnlyControllerAuthorize : BaseController
     {   
-        public IFileSystemRepositoryFactory FileSystemRepositoryFactory { get; private set; }
+        public IFileSystemGenericRepositoryFactory FileSystemGenericRepositoryFactory { get; private set; }
         public Boolean Admin { get; set; }
         public Boolean IncludeSubDirectories { get; set; }
         public String PhysicalPath { get; set; }
 
-        public BaseFolderMetadataReadOnlyControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
+        public BaseFolderMetadataReadOnlyControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
         : base(mapper, emailService, configuration)
         {
             PhysicalPath = physicalPath;
             IncludeSubDirectories = includeSubDirectories;
             Admin = admin;
-            FileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            FileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }
 
         // GET: Default
@@ -53,7 +53,7 @@ namespace DND.Common.Controllers
                   
             try
             {
-                var repository = FileSystemRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 var dataTask = repository.SearchAsync(search, null, LamdaHelper.GetOrderByFunc<DirectoryInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
                 var totalTask = repository.GetSearchCountAsync(search, null);
 
@@ -108,7 +108,7 @@ namespace DND.Common.Controllers
             DirectoryInfo data = null;
             try
             {
-                var repository = FileSystemRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
 
                 data = await repository.GetByPathAsync(id.Replace("/","\\"));
 

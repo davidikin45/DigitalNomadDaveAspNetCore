@@ -17,7 +17,7 @@ namespace DND.Common.Implementation.DomainServices
           where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
     {
 
-        public BaseEntityReadOnlyDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public BaseEntityReadOnlyDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
            : base(baseUnitOfWorkScopeFactory)
         {
 

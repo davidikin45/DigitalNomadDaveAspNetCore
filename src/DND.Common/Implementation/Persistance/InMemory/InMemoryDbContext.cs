@@ -136,31 +136,36 @@ namespace DND.Common.Implementation.Persistance.InMemory
             _dbContextTimestamps.AddTimestamps(added, modified, deleted);
         }
 
+        public void FirePreCommitEvents()
+        {
+            FirePreCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePreCommitEventsAsync()
+        {
+            AddTimestamps();
+
+            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
+        }
+
+        public void FirePostCommitEvents()
+        {
+            FirePostCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePostCommitEventsAsync()
+        {
+            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
+        }
+
         public int SaveChanges()
-        {
-            return SaveChanges(false);
-        }
-
-        public int FireEvents()
-        {
-            return SaveChanges(true);
-        }
-
-        public int SaveChanges(bool preCommitOnly = false)
         {
             BeforeSave?.Invoke(this, new BeforeSave());
 
             AddTimestamps();
 
-            _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
-
-            if(!preCommitOnly)
-            {
-                ProcessCommitQueues();
-                repo.Commit();
-
-                _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
-            }
+            ProcessCommitQueues();
+            repo.Commit();
 
             AfterSave?.Invoke(this, new AfterSave());
             return 0;
@@ -168,32 +173,12 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public Task<int> SaveChangesAsync()
         {
-            return SaveChangesAsync(false);
-        }
-
-        public Task<int> FireEventsAsync()
-        {
-            return SaveChangesAsync(true);
-        }
-
-        public Task<int> SaveChangesAsync(bool preCommitOnly = false)
-        {
             var task = new Task<int>(SaveChanges);
             task.Start();
             return task;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            return SaveChangesAsync(cancellationToken, false);
-        }
-
-        public Task<int> FireEventsAsync(CancellationToken cancellationToken)
-        {
-            return SaveChangesAsync(cancellationToken, true);
-        }
-
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken, bool preCommitOnly = false)
         {
             var task = new Task<int>(SaveChanges);
             task.Start();
@@ -331,11 +316,25 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public IEnumerable<DbEntityValidationResultBetter> GetValidationErrors()
         {
+            return GetValidationErrorsForNewchanges(false);
+        }
+
+        public IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewchanges()
+        {
+            return GetValidationErrorsForNewchanges(true);
+        }
+
+        private IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewchanges(bool onlyNewChanges)
+        {
             var allEntityErrors = new List<DbEntityValidationResultBetter>();
 
-            var addAndUpdate = addQueue.Select(x=> x.Entity).Concat(updateQueue.Select(x => x.Entity));
+            var entities = addQueue.Select(x => x.Entity).Concat(updateQueue.Select(x => x.Entity));
+            if (onlyNewChanges)
+            {
+                entities = entities.Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x));
+            }
 
-            foreach (var entity in addAndUpdate)
+            foreach (var entity in entities)
             {
                 var errors = ValidationHelper.ValidateObject(entity);
                 if (errors.Count() > 0)

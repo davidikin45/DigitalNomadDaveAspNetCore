@@ -1,7 +1,11 @@
 ﻿using DND.Common.DomainEvents;
+using DND.Common.Enums;
 using DND.Common.Implementation.Models;
+using DND.Common.Interfaces.UnitOfWork;
+using DND.Domain.Interfaces.Persistance;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace DND.Domain.Blog.Categories
 {
@@ -26,6 +30,12 @@ namespace DND.Domain.Blog.Categories
         { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var errors = new List<ValidationResult>();
+            return errors;
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
             return errors;

@@ -12,7 +12,7 @@ namespace DND.DomainServices.FlightSearch.Markets.Services
 {
     public class MarketDomainService : BaseDomainService, IMarketDomainService
     {
-        public MarketDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public MarketDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 

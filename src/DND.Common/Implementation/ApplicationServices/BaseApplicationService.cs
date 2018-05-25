@@ -10,7 +10,7 @@ namespace DND.Common.Implementation.ApplicationServices
 {
     public abstract class BaseApplicationService : IBaseApplicationService
     {
-        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
         public IMapper Mapper { get; }
 
         public BaseApplicationService(IMapper mapper)
@@ -18,16 +18,16 @@ namespace DND.Common.Implementation.ApplicationServices
             Mapper = mapper;
         }
 
-        public BaseApplicationService(IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper)
-            : this(fileSystemRepositoryFactory)
+        public BaseApplicationService(IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper)
+            : this(fileSystemGenericRepositoryFactory)
         {
             Mapper = mapper;
         }
 
-        public BaseApplicationService(IFileSystemRepositoryFactory fileSystemRepositoryFactory)
+        public BaseApplicationService(IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory)
         {
-            if (fileSystemRepositoryFactory == null) throw new ArgumentNullException("fileSystemRepositoryFactory");
-            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            if (fileSystemGenericRepositoryFactory == null) throw new ArgumentNullException("fileSystemGenericRepositoryFactory");
+            _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }
 
         public BaseApplicationService()
@@ -35,11 +35,11 @@ namespace DND.Common.Implementation.ApplicationServices
 
         }
 
-        public IFileSystemRepositoryFactory FileSytemRepositoryFactory
+        public IFileSystemGenericRepositoryFactory FileSytemGenericRepositoryFactory
         {
             get
             {
-                return _fileSystemRepositoryFactory;
+                return _fileSystemGenericRepositoryFactory;
             }
         }
 

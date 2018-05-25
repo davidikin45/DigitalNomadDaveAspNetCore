@@ -21,10 +21,10 @@ namespace DND.Web.MVCImplementation.CarouselItem.ViewComponents
     {
         private readonly IBlogApplicationService _blogService;
         private readonly ICarouselItemApplicationService _carouselItemService;
-        private readonly IFileSystemRepositoryFactory _fileSystemRepository;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemRepository;
 
 
-        public CarouselViewComponent(IBlogApplicationService blogService, ICarouselItemApplicationService carouselItemService, IFileSystemRepositoryFactory fileSystemRepository)
+        public CarouselViewComponent(IBlogApplicationService blogService, ICarouselItemApplicationService carouselItemService, IFileSystemGenericRepositoryFactory fileSystemRepository)
         {
             _fileSystemRepository = fileSystemRepository;
             _blogService = blogService;

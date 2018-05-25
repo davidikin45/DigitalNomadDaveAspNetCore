@@ -22,14 +22,14 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
     public class GalleryController : BaseController
 	{
         private readonly IBlogApplicationService _blogService;
-        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
 
-        public GalleryController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
+        public GalleryController(IBlogApplicationService blogService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, IConfiguration configuration)
              : base(mapper, emailService, configuration)
         {
             _blogService = blogService;
-            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }
 
         [ResponseCache(CacheProfileName = "Cache24HourParams")]
@@ -40,7 +40,7 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
 
             try
             {
-                var repository = _fileSystemRepositoryFactory.CreateFolderRepository(cts.Token, Server.GetWwwFolderPhysicalPathById(Folders.Gallery));
+                var repository = _fileSystemGenericRepositoryFactory.CreateFolderRepository(cts.Token, Server.GetWwwFolderPhysicalPathById(Folders.Gallery));
                 var dataTask = repository.SearchAsync(search, null, LamdaHelper.GetOrderByFunc<DirectoryInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
                 var totalTask = repository.GetSearchCountAsync(search, null);
 
@@ -145,7 +145,7 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var repository = _fileSystemRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".jpg", ".jpeg", ".mp4", ".txt");
+            var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".jpg", ".jpeg", ".mp4", ".txt");
             var dataTask = repository.GetAllAsync(LamdaHelper.GetOrderByFunc<FileInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
             var totalTask = repository.GetCountAsync(null);
 

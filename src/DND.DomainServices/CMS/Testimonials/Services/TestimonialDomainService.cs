@@ -13,17 +13,10 @@ namespace DND.DomainServices.CMS.Testimonials.Services
 {
     public class TestimonialDomainService : BaseEntityDomainService<IApplicationDbContext, Testimonial>, ITestimonialDomainService
     {
-        public TestimonialDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public TestimonialDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
-        }
-
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Testimonial entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
         }
 
     }

@@ -13,17 +13,10 @@ namespace DND.DomainServices.CMS.Faqs.Services
 {
     public class FaqDomainService : BaseEntityDomainService<IBaseDbContext, Faq>, IFaqDomainService
     {
-        public FaqDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public FaqDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
-        }
-
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Faq entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
         }
     }
 }

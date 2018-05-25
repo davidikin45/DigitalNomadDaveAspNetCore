@@ -69,12 +69,32 @@ namespace DND.Common.DomainEvents
                 }
             }
 
-            await DispatchDomainEventsPreCommitAsync(updatedEvents, propertiesUpdatedEvents, deletedEvents, insertedEvents, domainEvents).ConfigureAwait(false);
+            if (_domainEvents != null)
+            {
+                await DispatchDomainEventsPreCommitAsync(updatedEvents, propertiesUpdatedEvents, deletedEvents, insertedEvents, domainEvents).ConfigureAwait(false);
+            }
         }
 
         public async Task FirePostCommitEventsAsync()
         {
-            await DispatchDomainEventsPostCommitAsync(precommitedUpdatedEvents, precommitedPropertyUpdateEvents, precommitedDeletedEvents, precommitedInsertedEvents, precommitedDomainEvents).ConfigureAwait(false);
+            try
+            {
+                if (_domainEvents != null)
+                {
+                    await DispatchDomainEventsPostCommitAsync(precommitedUpdatedEvents, precommitedPropertyUpdateEvents, precommitedDeletedEvents, precommitedInsertedEvents, precommitedDomainEvents).ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                precommitedUpdatedEvents.Clear();
+                precommitedUpdatedEntities.Clear();
+                precommitedPropertyUpdateEvents.Clear();
+                precommitedDeletedEvents.Clear();
+                precommitedDeletedEntities.Clear();
+                precommitedInsertedEvents.Clear();
+                precommitedInsertedEntities.Clear();
+                precommitedDomainEvents.Clear();
+            }
         }
 
         public Dictionary<object, List<IDomainEvent>> GetNewDeletedEvents()
@@ -96,6 +116,11 @@ namespace DND.Common.DomainEvents
             return entities;
         }
 
+        public IEnumerable<object> GetPreCommittedDeletedEntities()
+        {
+            return precommitedDeletedEntities;
+        }
+
         public Dictionary<object, List<IDomainEvent>> GetNewInsertedEvents()
         {
             var entities = GetNewInsertedEntities();
@@ -115,6 +140,11 @@ namespace DND.Common.DomainEvents
             return entities;
         }
 
+        public IEnumerable<object> GetPreCommittedInsertedEntities()
+        {
+            return precommitedInsertedEntities;
+        }
+
         public Dictionary<object, List<IDomainEvent>> GetNewUpdatedEvents()
         {
             var entities = GetNewUpdatedEntities();
@@ -132,6 +162,11 @@ namespace DND.Common.DomainEvents
         {
             var entities = GetUpdatedEntities().Where(x => !precommitedUpdatedEntities.Contains(x)).ToList();
             return entities;
+        }
+
+        public IEnumerable<object> GetPreCommittedUpdatedEntities()
+        {
+            return precommitedUpdatedEntities;
         }
 
         public Dictionary<object, List<IDomainEvent>> GetNewDomainEvents()
@@ -327,9 +362,6 @@ namespace DND.Common.DomainEvents
        Dictionary<object, List<IDomainEvent>> entityDomainEvents
        )
         {
-            if (_domainEvents == null)
-                return;
-
             foreach (var kvp in entityUpdatedEvents)
             {
                 foreach (var domainEvent in kvp.Value)
@@ -380,8 +412,7 @@ namespace DND.Common.DomainEvents
        Dictionary<object, List<IDomainEvent>> entityInsertedEvents,
        Dictionary<object, List<IDomainEvent>> entityDomainEvents)
         {
-            if (_domainEvents == null)
-                return;
+
 
             var domainEvents = new List<IDomainEvent>();
 

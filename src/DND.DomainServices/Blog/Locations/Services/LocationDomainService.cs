@@ -15,7 +15,7 @@ namespace DND.DomainServices.Blog.Locations.Services
 {
     public class LocationDomainService : BaseEntityDomainService<IApplicationDbContext, Location>, ILocationDomainService
     {
-        public LocationDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public LocationDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 
@@ -48,14 +48,5 @@ namespace DND.DomainServices.Blog.Locations.Services
 
            return await base.UpdateAsync(entity, updatedBy, cancellationToken).ConfigureAwait(false);
         }
-
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Location entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
-        }
-
-
     }
 }

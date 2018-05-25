@@ -8,12 +8,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DiagnosticAdapter;
 using Microsoft.Extensions.Logging;
 using RefactorThis.GraphDiff;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -21,6 +26,17 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Persistance
 {
+    public class TransactionListener
+    {
+        public event EventHandler TransactionCommitted;
+
+        [DiagnosticName("Microsoft.EntityFrameworkCore.Database.Transaction.TransactionCommitted")]
+        public void OnTransactionCommitted(IRelationalConnection connection, DbTransaction transaction, Guid transactionId, DateTimeOffset startTime, TimeSpan duration)
+        {
+            TransactionCommitted?.Invoke(this, new EventArgs());
+        }
+    }
+
     public class BaseIdentityDbContext<TUser> : IdentityDbContext<TUser>, IBaseDbContext where TUser : BaseApplicationUser
     {
         private IDbContextDomainEvents _dbContextDomainEvents;
@@ -29,10 +45,20 @@ namespace DND.Common.Implementation.Persistance
         public BaseIdentityDbContext(DbContextOptions options, IDomainEvents domainEvents = null)
             : base(options)
         {
+            var listener = this.GetService<DiagnosticSource>();
+            var transactionListener = new TransactionListener();
+            transactionListener.TransactionCommitted += TransactionCommited;
+            (listener as DiagnosticListener).SubscribeWithAdapter(transactionListener);
+
             _dbContextDomainEvents = new DbContextDomainEventsEFCoreAdapter(this, domainEvents);
             _dbContextTimestamps = new DbContextTimestamps();
 
             ChangeTracker.AutoDetectChangesEnabled = false;
+        }
+
+        void TransactionCommited(object sender, EventArgs e)
+        {
+            FirePostCommitEvents();
         }
 
         public static readonly ILoggerFactory MyLoggerFactory
@@ -79,18 +105,35 @@ namespace DND.Common.Implementation.Persistance
         //Validate on Save
         IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
         {
+            return GetValidationErrors(false);
+        }
+
+        IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrorsForNewChanges()
+        {
+            return GetValidationErrors(true);
+        }
+
+        IEnumerable<DbEntityValidationResultBetter> GetValidationErrors(bool onlyNewChanges)
+        {
             var list = new List<DbEntityValidationResultBetter>();
 
             //var serviceProvider = this.GetService<IServiceProvider>();
             //var items = new Dictionary<object, object>();
 
-            foreach (var entry in this.ChangeTracker.Entries().Where(e => (e.State == EntityState.Added) || (e.State == EntityState.Modified)))
+            var entities = this.ChangeTracker.Entries().Where(e => ((e.State == EntityState.Added) || (e.State == EntityState.Modified)));
+            if(onlyNewChanges)
+            {
+                entities = entities.Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x));
+            }
+
+            foreach (var entry in entities)
             {
                 var entity = entry.Entity;
                 //var context = new ValidationContext(entity, serviceProvider, items);
                 //var results = new List<ValidationResult>();
 
                 var results = ValidationHelper.ValidateObject(entity);
+
 
                 if (results.Count() > 0)
                 {
@@ -156,74 +199,53 @@ namespace DND.Common.Implementation.Persistance
             var deleted = _dbContextDomainEvents.GetNewDeletedEntities();
 
             _dbContextTimestamps.AddTimestamps(added, modified, deleted);
+       }
+
+        public void FirePreCommitEvents()
+        {
+            FirePreCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePreCommitEventsAsync()
+        {
+            AddTimestamps();
+
+            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
+        }
+
+        public void FirePostCommitEvents()
+        {
+            FirePostCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePostCommitEventsAsync()
+        {
+            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
         }
 
         public new int SaveChanges()
         {
-            return SaveChanges(false);
-        }
-
-        public int FireEvents()
-        {
-            return SaveChanges(true);
-        }
-
-        public new int SaveChanges(bool preCommitOnly = false)
-        {
             int objectCount = 0;
 
-            AddTimestamps();
+            FirePreCommitEvents();
 
-            _dbContextDomainEvents.FirePreCommitEventsAsync().Wait();
-
-            if (!preCommitOnly)
-            {
-                objectCount = base.SaveChanges();
-                _dbContextDomainEvents.FirePostCommitEventsAsync().Wait();
-            }
+            objectCount = base.SaveChanges();
 
             return objectCount;
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await SaveChangesAsync(false);
-        }
-
-        public async Task<int> FireEventsAsync()
-        {
-            return await SaveChangesAsync(true);
-        }
-
-        public async Task<int> SaveChangesAsync(bool preCommitOnly = false)
-        {
             return await SaveChangesAsync(CancellationToken.None);
         }
 
-        public async new Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await SaveChangesAsync(cancellationToken, false);
-        }
-
-        public async Task<int> FireEventsAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await SaveChangesAsync(cancellationToken, true);
-        }
-
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken), bool preCommitOnly = false)
+        public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             int objectCount = 0;
 
-            AddTimestamps();
+            await FirePreCommitEventsAsync();
 
-            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
-
-            if (!preCommitOnly)
-            {
-                objectCount = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-                await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
-            }
+            objectCount = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return objectCount;
         }

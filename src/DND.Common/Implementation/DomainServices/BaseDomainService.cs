@@ -11,31 +11,31 @@ namespace DND.Common.Implementation.DomainServices
 {
     public abstract class BaseDomainService : IBaseDomainService
     {
-        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
-        private readonly IBaseUnitOfWorkScopeFactory _baseUnitOfWorkScopeFactory;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
+        private readonly IUnitOfWorkScopeFactory _baseUnitOfWorkScopeFactory;
 
 
-        public BaseDomainService(IFileSystemRepositoryFactory fileSystemRepositoryFactory)
+        public BaseDomainService(IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory)
         {
-            if (fileSystemRepositoryFactory == null) throw new ArgumentNullException("fileSystemRepositoryFactory");
-            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            if (fileSystemGenericRepositoryFactory == null) throw new ArgumentNullException("fileSystemGenericRepositoryFactory");
+            _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }
 
-        public BaseDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public BaseDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         {
             if (baseUnitOfWorkScopeFactory == null) throw new ArgumentNullException("baseUnitOfWorkScopeFactory");
             _baseUnitOfWorkScopeFactory = baseUnitOfWorkScopeFactory;
         }
 
-        public IFileSystemRepositoryFactory FileSytemRepositoryFactory
+        public IFileSystemGenericRepositoryFactory FileSytemGenericRepositoryFactory
         {
             get
             {
-                return _fileSystemRepositoryFactory;
+                return _fileSystemGenericRepositoryFactory;
             }
         }
 
-        public IBaseUnitOfWorkScopeFactory UnitOfWorkFactory
+        public IUnitOfWorkScopeFactory UnitOfWorkFactory
         {
             get
             {

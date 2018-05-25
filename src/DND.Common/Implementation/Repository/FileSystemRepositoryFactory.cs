@@ -8,9 +8,9 @@ using System.Threading;
 
 namespace DND.Common.Implementation.Repository
 {
-    public class FileSystemRepositoryFactory : BaseDomainService, IFileSystemRepositoryFactory
+    public class FileSystemGenericRepositoryFactory : BaseDomainService, IFileSystemGenericRepositoryFactory
     {
-        public FileSystemRepositoryFactory(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public FileSystemGenericRepositoryFactory(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
             :base(baseUnitOfWorkScopeFactory)
         {
 

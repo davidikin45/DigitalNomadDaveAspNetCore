@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
+using DND.Common.Interfaces.UnitOfWork;
+using DND.Common.Enums;
+using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Models
 {
@@ -58,5 +61,7 @@ namespace DND.Common.Implementation.Models
         }
 
         public abstract IEnumerable<ValidationResult> Validate(ValidationContext validationContext);
+
+        public abstract Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode);
     }
 }

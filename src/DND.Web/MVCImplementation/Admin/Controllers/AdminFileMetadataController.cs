@@ -11,8 +11,8 @@ namespace DND.Web.MVCImplementation.Admin.Controllers
     [Route("admin/file-metadata")]
     public class AdminFileMetadataController : BaseFileMetadataControllerAuthorize
     {
-        public AdminFileMetadataController(IFileSystemRepositoryFactory fileSytemRepositoryFactory, IMapper mapper, IEmailService emailService)
-             : base(Server.GetWwwFolderPhysicalPathById(Folders.Uploads), true, true, fileSytemRepositoryFactory, mapper, emailService)
+        public AdminFileMetadataController(IFileSystemGenericRepositoryFactory fileSytemGenericRepositoryFactory, IMapper mapper, IEmailService emailService)
+             : base(Server.GetWwwFolderPhysicalPathById(Folders.Uploads), true, true, fileSytemGenericRepositoryFactory, mapper, emailService)
         {
 
         }

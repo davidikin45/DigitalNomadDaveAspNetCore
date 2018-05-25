@@ -14,7 +14,7 @@ namespace DND.Common.Interfaces.UnitOfWork
     /// <summary>
     /// Maintains a list of lazily-created DbContext instances.
     /// </summary>
-    public interface IBaseDbContextCollection : IDisposable
+    public interface IDbContextCollection : IDisposable
     {
         /// <summary>
         /// Get or create a DbContext instance of the specified type. 

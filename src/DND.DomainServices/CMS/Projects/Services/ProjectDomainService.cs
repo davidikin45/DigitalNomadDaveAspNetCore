@@ -13,16 +13,10 @@ namespace DND.DomainServices.CMS.Projects.Services
 {
     public class ProjectDomainService : BaseEntityDomainService<IApplicationDbContext, Project>, IProjectDomainService
     {
-        public ProjectDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public ProjectDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
         }
 
-        public async override Task<IEnumerable<ValidationResult>> DbDependantValidateAsync(Project entity, ValidationMode mode)
-        {
-            var errors = new List<ValidationResult>();
-
-            return errors;
-        }
     }
 }

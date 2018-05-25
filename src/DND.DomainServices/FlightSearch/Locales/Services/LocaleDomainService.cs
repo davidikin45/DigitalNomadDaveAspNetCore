@@ -11,7 +11,7 @@ namespace DND.DomainServices.FlightSearch.Locales.Services
     public class LocaleDomainService : BaseDomainService, ILocaleDomainService
     {
 
-        public LocaleDomainService(IBaseUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public LocaleDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
           

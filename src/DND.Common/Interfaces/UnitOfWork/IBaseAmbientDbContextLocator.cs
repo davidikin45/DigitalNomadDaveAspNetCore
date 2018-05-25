@@ -13,7 +13,7 @@ namespace DND.Common.Interfaces.UnitOfWork
     /// <summary>
     /// Convenience methods to retrieve ambient DbContext instances. 
     /// </summary>
-    public interface IBaseAmbientDbContextLocator
+    public interface IAmbientDbContextLocator
     {
         /// <summary>
         /// If called within the scope of a UnitOfWorkScope, gets or creates 

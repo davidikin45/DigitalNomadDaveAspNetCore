@@ -16,5 +16,9 @@ namespace DND.Common.DomainEvents
         IEnumerable<object> GetNewDeletedEntities();
         IEnumerable<object> GetNewUpdatedEntities();
         IEnumerable<object> GetNewInsertedEntities();
+
+        IEnumerable<object> GetPreCommittedDeletedEntities();
+        IEnumerable<object> GetPreCommittedUpdatedEntities();
+        IEnumerable<object> GetPreCommittedInsertedEntities();
     }
 }

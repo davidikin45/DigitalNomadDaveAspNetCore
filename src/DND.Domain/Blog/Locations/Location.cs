@@ -1,11 +1,14 @@
+using DND.Common.Enums;
 using DND.Common.Extensions;
 using DND.Common.Implementation.Models;
+using DND.Common.Interfaces.UnitOfWork;
 using DND.Domain.FlightSearch.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
+using System.Threading.Tasks;
 
 namespace DND.Domain.Blog.Locations
 {
@@ -46,6 +49,12 @@ namespace DND.Domain.Blog.Locations
 		}
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var errors = new List<ValidationResult>();
+            return errors;
+        }
+
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
             return errors;

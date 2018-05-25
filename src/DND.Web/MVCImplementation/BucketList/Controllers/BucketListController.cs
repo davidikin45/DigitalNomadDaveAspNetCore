@@ -21,14 +21,14 @@ namespace DND.Web.MVCImplementation.BucketList.Controllers
     public class BucketListController : BaseController
 	{
         private readonly IBlogApplicationService _blogService;
-        private readonly IFileSystemRepositoryFactory _fileSystemRepositoryFactory;
+        private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
 
-        public BucketListController(IBlogApplicationService blogService, IMapper mapper, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IEmailService emailService, IConfiguration configuration)
+        public BucketListController(IBlogApplicationService blogService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, IConfiguration configuration)
              : base(mapper, emailService, configuration)
         {
             _blogService = blogService;
-            _fileSystemRepositoryFactory = fileSystemRepositoryFactory;
+            _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }
 
         [ResponseCache(CacheProfileName = "Cache24HourParams")]
@@ -39,7 +39,7 @@ namespace DND.Web.MVCImplementation.BucketList.Controllers
            
             try
             {
-                var repository = _fileSystemRepositoryFactory.CreateFileRepository(cts.Token, Server.GetWwwFolderPhysicalPathById(Folders.BucketList), true,"*.*", ".jpg",".jpeg", ".txt",".mp4");
+                var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, Server.GetWwwFolderPhysicalPathById(Folders.BucketList), true,"*.*", ".jpg",".jpeg", ".txt",".mp4");
                 var dataTask = repository.GetAllAsync(LamdaHelper.GetOrderByFunc<FileInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
                 var totalTask = repository.GetCountAsync(null);
 

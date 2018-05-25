@@ -26,8 +26,8 @@ namespace DND.Common.Controllers
     [Authorize(Roles = "admin")]
     public abstract class BaseFolderMetadataControllerAuthorize : BaseFolderMetadataReadOnlyControllerAuthorize
     {
-        public BaseFolderMetadataControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemRepositoryFactory fileSystemRepositoryFactory, IMapper mapper = null, IEmailService emailService = null)
-        : base(physicalPath, includeSubDirectories, admin, fileSystemRepositoryFactory, mapper, emailService)
+        public BaseFolderMetadataControllerAuthorize(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper = null, IEmailService emailService = null)
+        : base(physicalPath, includeSubDirectories, admin, fileSystemGenericRepositoryFactory, mapper, emailService)
         {
         }
 
@@ -39,7 +39,7 @@ namespace DND.Common.Controllers
             DirectoryInfo data = null;
             try
             {
-                var repository = FileSystemRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.GetByPathAsync(id.Replace("/", "\\"));
 
                 var dto = Mapper.Map<FolderMetadataDto>(data);
@@ -101,7 +101,7 @@ namespace DND.Common.Controllers
             try
             {
 
-                var repository = FileSystemRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
+                var repository = FileSystemGenericRepositoryFactory.CreateFolderRepositoryReadOnly(cts.Token, PhysicalPath, IncludeSubDirectories);
                 data = await repository.GetByPathAsync(id.Replace("/", "\\"));
 
                 var dto = Mapper.Map<FolderMetadataDto>(data);
@@ -127,7 +127,7 @@ namespace DND.Common.Controllers
             {
                 try
                 {
-                    var repository = FileSystemRepositoryFactory.CreateFolderRepository(cts.Token, PhysicalPath, IncludeSubDirectories);
+                    var repository = FileSystemGenericRepositoryFactory.CreateFolderRepository(cts.Token, PhysicalPath, IncludeSubDirectories);
                     repository.Delete(id.Replace("/", "\\"));
 
                     return RedirectToControllerDefault().WithSuccess(this, Messages.DeleteSuccessful);

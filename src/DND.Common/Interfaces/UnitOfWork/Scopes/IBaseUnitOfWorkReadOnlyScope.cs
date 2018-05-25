@@ -13,12 +13,12 @@ namespace DND.Common.Interfaces.UnitOfWork
     /// A read-only UnitOfWorkScope. Refer to the comments for IUnitOfWorkScope
     /// for more details.
     /// </summary>
-    public interface IBaseUnitOfWorkReadOnlyScope : IDisposable, IBaseUnitOfWorkScope
+    public interface IUnitOfWorkReadOnlyScope : IDisposable, IBaseUnitOfWorkScope
     {
         /// <summary>
         /// The DbContext instances that this UnitOfWorkScope manages.
         /// </summary>
-        IBaseDbContextCollection DbContexts { get; }
+        IDbContextCollection DbContexts { get; }
 
     }
 }
