@@ -39,7 +39,7 @@ Once then events are fired the IDomainEventHandler interface allows the programm
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
 The PostCommit events are independent and by default are handed off to [Hangfire](https://www.hangfire.io/) for processing out of process. This would be useful for sending emails and correspondence.\
 Because determining if a property has changed relies on fetching the original values from the DB for each entity instance, Interface IFirePropertyUpdatedEvents needs to be applied to the entity to opt-in to property update events.\
-Below is the intended design pattern and an example of two IDomainEventHandlers.
+Below is the intended design pattern and an example of two IDomainEventHandlers. Note: This is still a work in progress.
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/Domain%20Events%20Diagram.png "Domain Events Diagram")
 
