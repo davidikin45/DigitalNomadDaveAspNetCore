@@ -38,7 +38,7 @@ Although the Aggregate Root collection is needed for complex business logic trig
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
 The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited. \
 The PostCommit events are independent and by default are handed off to [Hangfire](https://www.hangfire.io/) for processing out of process. This would be useful for sending emails and correspondence.\
-The key to the PreCommit functionality is using a Unit of Work pattern which is which is aware of the Ambient DbContext, this ensures a DbContext is only ever created for the first call. Any subsequent inner calls use the same DbContext.\
+The key to the PreCommit functionality is using a Unit of Work pattern which is which is aware of the [Ambient DbContext](http://mehdi.me/ambient-dbcontext-in-ef6/), this ensures a DbContext is only ever created for the first call. Any subsequent inner calls use the same DbContext.\
 Because determining if a property has changed relies on fetching the original values from the DB for each entity instance, Interface IFirePropertyUpdatedEvents needs to be applied to the entity to opt-in to property update events.\
 For performance reaons an event is only ever fired if there is at least one Handler for that event type.\
 The methods IDomainEvent methods HandlePreCommitCondition and HandlePostCommitCondition can be used for scenarios where you only want to handle PreCommit or PostCommit.\
