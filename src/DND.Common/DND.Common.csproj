@@ -917,7 +917,7 @@
     <Compile Include="Tasks\TaskRunner.cs" />
     <Compile Include="Testing\BaseIntegrationTestDbSetup.cs" />
     <Compile Include="Testing\DotNetRun\BaseDotNetRunFixture.cs" />
-    <Compile Include="Testing\Fakes\FakeDbContextFactory.cs" />
+    <Compile Include="Testing\Fakes\FakeSingleDbContextFactory.cs" />
     <Compile Include="Testing\Isolated.cs" />
     <Compile Include="Testing\Selenium\BaseSeleniumChromeBrowserFixture.cs" />
     <Compile Include="Testing\Selenium\SeleniumPage.cs" />

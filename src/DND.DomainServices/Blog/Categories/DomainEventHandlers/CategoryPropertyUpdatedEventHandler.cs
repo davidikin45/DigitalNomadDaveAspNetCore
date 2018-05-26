@@ -16,10 +16,15 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
             _tagService = tagService;
         }
 
-        public async Task<Result> HandlePostCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+        public bool HandlePreCommitCondition(EntityPropertyUpdatedEvent<Category> domainEvent)
         {
-            var after = domainEvent.Entity;
-            if (domainEvent.PropertyName == "Name")
+            return true;
+        }
+
+        public async Task<Result> HandlePreCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+        {
+            var before = domainEvent.Entity;
+            if(domainEvent.PropertyName == "Name")
             {
                 //var tag = new Tag() { Name = "Tag 1", Description = "Tag 2", UrlSlug = "tag-1" };
                 //await _tagService.CreateAsync(tag, domainEvent.UpdatedBy).ConfigureAwait(false);
@@ -28,10 +33,15 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
             return Result.Ok();
         }
 
-        public async Task<Result> HandlePreCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+        public bool HandlePostCommitCondition(EntityPropertyUpdatedEvent<Category> domainEvent)
         {
-            var before = domainEvent.Entity;
-            if(domainEvent.PropertyName == "Name")
+            return true;
+        }
+
+        public async Task<Result> HandlePostCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+        {
+            var after = domainEvent.Entity;
+            if (domainEvent.PropertyName == "Name")
             {
                 //var tag = new Tag() { Name = "Tag 1", Description = "Tag 2", UrlSlug = "tag-1" };
                 //await _tagService.CreateAsync(tag, domainEvent.UpdatedBy).ConfigureAwait(false);

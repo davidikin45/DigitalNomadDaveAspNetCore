@@ -22,7 +22,7 @@ namespace DND.UnitTests.Persistance.Repositories
         public BlogPostRepositoryShould()
         {
             _context = new InMemoryDataContext();
-            var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _repository = new GenericEFRepository<BlogPost>(_context, uowFactory.CreateReadOnly(), false);
         }
 

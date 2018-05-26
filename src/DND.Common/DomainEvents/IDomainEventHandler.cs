@@ -10,7 +10,10 @@ namespace DND.Common.DomainEvents
     public interface IDomainEventHandler<T>
         where T : IDomainEvent
     {
+        bool HandlePreCommitCondition(T domainEvent);
         Task<Result> HandlePreCommitAsync(T domainEvent);
+
+        bool HandlePostCommitCondition(T domainEvent);
         Task<Result> HandlePostCommitAsync(T domainEvent);
     }
 }

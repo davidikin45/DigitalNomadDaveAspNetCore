@@ -316,15 +316,15 @@ namespace DND.Common.Implementation.Persistance.InMemory
 
         public IEnumerable<DbEntityValidationResultBetter> GetValidationErrors()
         {
-            return GetValidationErrorsForNewchanges(false);
+            return GetValidationErrorsForNewChanges(false);
         }
 
-        public IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewchanges()
+        public IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges()
         {
-            return GetValidationErrorsForNewchanges(true);
+            return GetValidationErrorsForNewChanges(true);
         }
 
-        private IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewchanges(bool onlyNewChanges)
+        private IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges(bool onlyNewChanges)
         {
             var allEntityErrors = new List<DbEntityValidationResultBetter>();
 

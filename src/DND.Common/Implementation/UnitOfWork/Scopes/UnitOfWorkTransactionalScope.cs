@@ -111,6 +111,8 @@ namespace DND.Common.Implementation.UnitOfWork
 
         public async Task<int> CompleteAsync(CancellationToken cancelToken)
         {
+
+
             if (cancelToken == null)
                 throw new ArgumentNullException("cancelToken");
             if (_disposed)
@@ -132,6 +134,8 @@ namespace DND.Common.Implementation.UnitOfWork
 
             _completed = true;
             return c;
+
+
         }
 
         private void PreCommitInternal()

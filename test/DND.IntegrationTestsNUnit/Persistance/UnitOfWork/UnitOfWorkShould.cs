@@ -39,7 +39,7 @@ namespace DND.IntegrationTestsNUnit.Persistance.UnitOfWork
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             using (var con = new ApplicationDbContext(connectionString, true))
             {
-                var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
                 var repo = new GenericEFRepository<Category>(con, uowFactory.CreateReadOnly(), false);
 
                 var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };

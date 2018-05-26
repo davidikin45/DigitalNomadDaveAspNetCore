@@ -27,9 +27,8 @@ namespace DND.Common.DomainEvents
             _serviceProvider = serviceProvider;
         }
 
-        private Dictionary<Type, List<Type>> eventHandlerTypes = new Dictionary<Type, List<Type>>();
 
-        private List<dynamic> GetEventHandlerInstances(IDomainEvent domainEvent)
+        private List<dynamic> GetEventHandlerInstancesForPreCommit(IDomainEvent domainEvent)
         {
             List<dynamic> instances = new List<dynamic>();
 
@@ -41,37 +40,49 @@ namespace DND.Common.DomainEvents
 
                 foreach (var handler in handlers)
                 {
-                    instances.Add(handler);
-                }
-            }
-
-            //Keep track of the types for the post event
-            if (!eventHandlerTypes.ContainsKey(domainEvent.GetType()))
-            {
-                eventHandlerTypes.Add(domainEvent.GetType(), new List<Type>());
-
-                foreach (var handler in instances)
-                {
-                    eventHandlerTypes[domainEvent.GetType()].Add(handler.GetType());
+                    if(handler.HandlePreCommitCondition((dynamic)domainEvent))
+                    {
+                        instances.Add(handler);
+                    }
                 }
             }
 
             return instances;
         }
 
-        private List<Type> GetEventHandlerTypes(IDomainEvent domainEvent)
+        private List<dynamic> GetEventHandlerInstancesForPostCommit(IDomainEvent domainEvent)
         {
-            if (!eventHandlerTypes.ContainsKey(domainEvent.GetType()))
+            List<dynamic> instances = new List<dynamic>();
+
+            if (_serviceProvider != null)
             {
-                GetEventHandlerInstances(domainEvent);
+                var eventHandlerInterfaceType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
+                var types = typeof(IEnumerable<>).MakeGenericType(eventHandlerInterfaceType);
+                dynamic handlers = _serviceProvider.GetService(types);
+
+                foreach (var handler in handlers)
+                {
+                    if (handler.HandlePostCommitCondition((dynamic)domainEvent))
+                    {
+                        instances.Add(handler);
+                    }
+                }
             }
-            return eventHandlerTypes[domainEvent.GetType()];
+
+            return instances;
+        }
+
+
+        private List<Type> GetEventHandlerTypesForPostCommit(IDomainEvent domainEvent)
+        {
+            var types = GetEventHandlerInstancesForPostCommit(domainEvent).Select(x => (Type)x.GetType()).ToList();
+            return types;
         }
 
         //InProcess
         public async Task DispatchPreCommitAsync(IDomainEvent domainEvent)
         {
-            List<dynamic> handlers = GetEventHandlerInstances(domainEvent);
+            List<dynamic> handlers = GetEventHandlerInstancesForPreCommit(domainEvent);
 
             //pre commit events are atomic
             foreach (var handler in handlers)
@@ -104,7 +115,7 @@ namespace DND.Common.DomainEvents
 
         public async Task DispatchPostCommitAsync(IDomainEvent domainEvent)
         {
-            var eventHandlerTypes = GetEventHandlerTypes(domainEvent);
+            var eventHandlerTypes = GetEventHandlerTypesForPostCommit(domainEvent);
 
             if (DispatchPostCommitEventsInParellel)
             {

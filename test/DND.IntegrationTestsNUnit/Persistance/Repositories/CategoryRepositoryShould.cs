@@ -28,7 +28,7 @@ namespace DND.IntegrationTestsNUnit.Persistance.Repositories
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             _context = new ApplicationDbContext(connectionString, true);
 
-            var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _repository = new GenericEFRepository<Category>(_context, uowFactory.CreateReadOnly(), false);
         }
 
@@ -43,7 +43,7 @@ namespace DND.IntegrationTestsNUnit.Persistance.Repositories
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             using (var con = new ApplicationDbContext(connectionString, true))
             {
-                var uowFactory = new UnitOfWorkScopeFactory(new FakeDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
                 var repo = new GenericEFRepository<Category>(con, uowFactory.CreateReadOnly(), false);
 
                 var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };

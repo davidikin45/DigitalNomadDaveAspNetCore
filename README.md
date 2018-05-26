@@ -36,10 +36,12 @@ This functionality is often built into service methods or achieved using Domain 
 I read alot of .NET Core articles related to deferred domain events which require the programmer to add domain events to an Aggregate Root collection property which are then dispatched either before or after DbContext SaveChanges() is called.\
 Although the Aggregate Root collection is needed for complex business logic triggers, I wanted a more generic approach for simple triggers and the ability to fire Before AND after SaveChanges(). I develped an approach where events are fired each time an entity is inserted/updated/deleted & property change.\
 Once then events are fired the IDomainEventHandler interface allows the programmer to write PreCommit and PostCommit code.\
-The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited.\
+The PreCommit actions are atomic and can be used for chaining transactions. Once an exception is thrown nothing is commited. \
 The PostCommit events are independent and by default are handed off to [Hangfire](https://www.hangfire.io/) for processing out of process. This would be useful for sending emails and correspondence.\
+The key to the PreCommit functionality is using a Unit of Work pattern which is which is aware of the Ambient DbContext, this ensures a DbContext is only ever created for the first call. Any subsequent inner calls use the same DbContext.\
 Because determining if a property has changed relies on fetching the original values from the DB for each entity instance, Interface IFirePropertyUpdatedEvents needs to be applied to the entity to opt-in to property update events.\
 For performance reaons an event is only ever fired if there is at least one Handler for that event type.\
+The methods IDomainEvent methods HandlePreCommitCondition and HandlePostCommitCondition can be used for scenarios where you only want to handle PreCommit or PostCommit.\
 Below is the intended design pattern and an example of two IDomainEventHandlers. Note: This is still a work in progress.
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/Domain%20Events%20Diagram.png "Domain Events Diagram")
@@ -53,6 +55,23 @@ Below is the intended design pattern and an example of two IDomainEventHandlers.
 
 public class TagInsertedEventHandler : IDomainEventHandler<EntityInsertedEvent<Tag>>
 {
+	public bool HandlePreCommitCondition(EntityInsertedEvent<Tag> domainEvent)
+	{
+		return true;
+	}
+
+    public async Task<Result> HandlePreCommitAsync(EntityInsertedEvent<Tag> domainEvent)
+    {
+        var before = domainEvent.Entity;
+
+        return Result.Ok();
+    }
+
+	public bool HandlePostCommitCondition(EntityInsertedEvent<Tag> domainEvent)
+	{
+		return true;
+	}
+
     public async Task<Result> HandlePostCommitAsync(EntityInsertedEvent<Tag> domainEvent)
     {
         var after = domainEvent.Entity;
@@ -62,12 +81,6 @@ public class TagInsertedEventHandler : IDomainEventHandler<EntityInsertedEvent<T
         return Result.Ok();
     }
 
-    public async Task<Result> HandlePreCommitAsync(EntityInsertedEvent<Tag> domainEvent)
-    {
-        var before = domainEvent.Entity;
-
-        return Result.Ok();
-    }
 }
 ```
 
@@ -86,15 +99,9 @@ public class CategoryPropertyUpdatedEventHandler : IDomainEventHandler<EntityPro
         _tagService = tagService;
     }
 
-    public async Task<Result> HandlePostCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+    public bool HandlePreCommitCondition(EntityPropertyUpdatedEvent<Category> domainEvent)
     {
-        var after = domainEvent.Entity;
-        if (domainEvent.PropertyName == "Name")
-        {
-            //Send Email
-        }
-
-        return Result.Ok();
+        return true;
     }
 
     public async Task<Result> HandlePreCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
@@ -103,6 +110,22 @@ public class CategoryPropertyUpdatedEventHandler : IDomainEventHandler<EntityPro
         if(domainEvent.PropertyName == "Name")
         {
             //Trigger creating/updating another db record
+        }
+
+        return Result.Ok();
+    }
+
+	public bool HandlePostCommitCondition(EntityPropertyUpdatedEvent<Category> domainEvent)
+    {
+        return true;
+    }
+
+    public async Task<Result> HandlePostCommitAsync(EntityPropertyUpdatedEvent<Category> domainEvent)
+    {
+        var after = domainEvent.Entity;
+        if (domainEvent.PropertyName == "Name")
+        {
+            //Send Email
         }
 
         return Result.Ok();
