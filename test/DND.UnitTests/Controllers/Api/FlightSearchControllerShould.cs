@@ -52,7 +52,7 @@ namespace DND.UnitTests.Controllers.Api
             _controller.ViewData.ModelState.AddModelError("Key", "ErrorMessage");
 
             var result = await _controller.Search(model);
-            result.Should().BeOfType<UnprocessableEntityObjectResult>();
+            result.Should().BeOfType<Common.ActionResults.UnprocessableEntityObjectResult>();
         }
     }
 }

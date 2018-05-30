@@ -48,7 +48,7 @@ namespace DND.Common.Extensions
         public static Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata ModelMetadata(this object model)
         {
             var type = ModelType(model);
-            var modelMetaData = ModelMetadataProvider.GetMetadataForType(type);
+            var modelMetaData = Infrastructure.ModelMetadataProvider.GetMetadataForType(type);
             return modelMetaData;
         }
 
@@ -68,7 +68,7 @@ namespace DND.Common.Extensions
         public static HtmlString DisplayName(this object model, string propertyName)
         {
             Type type = ModelType(model);
-            var modelMetadata = ModelMetadataProvider.GetMetadataForProperty(type, propertyName);
+            var modelMetadata = DND.Common.Infrastructure.ModelMetadataProvider.GetMetadataForProperty(type, propertyName);
             var value = modelMetadata.DisplayName ?? modelMetadata.PropertyName;
             return new HtmlString(HtmlEncoder.Default.Encode(value));
         }
@@ -116,7 +116,7 @@ namespace DND.Common.Extensions
         public static HtmlString DisplayFormatString(this object model, string propertyName)
         {
             Type type = ModelType(model);
-            var modelMetadata = ModelMetadataProvider.GetMetadataForType(type);
+            var modelMetadata = DND.Common.Infrastructure.ModelMetadataProvider.GetMetadataForType(type);
 
             var propertyMetadata = (from p in modelMetadata.Properties
                                     where p.PropertyName == propertyName

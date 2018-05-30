@@ -108,7 +108,7 @@ namespace DND.Common.Controllers.Api
 
         protected virtual IActionResult ValidationErrors(string message, ModelStateDictionary modelState)
         {
-            return new UnprocessableEntityObjectResult(message, modelState);
+            return new ActionResults.UnprocessableEntityObjectResult(message, modelState);
         }
 
         //protected virtual IHttpActionResult BetterJsonError(string message, ValidationErrors errors, int errorStatusCode = 400)
