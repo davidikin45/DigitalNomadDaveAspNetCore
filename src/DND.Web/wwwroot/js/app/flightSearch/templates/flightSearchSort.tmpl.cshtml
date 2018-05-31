@@ -1,0 +1,21 @@
+@model DND.Domain.ViewModels.FlightSearchClientRequestForm
+@{
+    var flightSearch = DND.Common.Helpers.AngularHelperExtension.Angular(Html).ModelFor("vm.flightSearch");
+}
+
+<div class="modal-header">
+    <h3 class="modal-title">Sort</h3>
+</div>
+
+<div class="modal-body lg-labels">
+
+    <div class="row">
+        @flightSearch.EnumRadioButtonListFor(x => x.SortType, false, 6, 6, 6, 6, 6)
+        @flightSearch.EnumRadioButtonListFor(x => x.SortOrder, false, 6, 6, 6, 6, 6)
+     </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" ng-click="vm.resetSort()" class="btn btn-primary">Reset</button>
+    <button type="button" ng-click="$dismiss(); vm.closeSortModal();" class="btn btn-primary">Done</button>
+</div>

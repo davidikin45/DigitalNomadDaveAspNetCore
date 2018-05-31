@@ -1,0 +1,12 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    var Settings = Configuration.GetSection("Settings");
+}
+
+@{
+    ViewBag.PageTitle = "Flight Search";
+    ViewBag.CustomPageHeader = true;
+}
+
+@Html.Partial("~/" + (Settings.GetValue<string>("MVCImplementationFolder")) + "FlightSearch/Views/_Search.cshtml")

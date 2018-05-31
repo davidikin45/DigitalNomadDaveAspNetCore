@@ -1,0 +1,31 @@
+@using Microsoft.Extensions.Configuration
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    var Settings = Configuration.GetSection("Settings");
+}
+
+<div class="top-buffer">
+    @*<flight-search></flight-search>*@
+    @Html.Partial("~/" + (Settings.GetValue<string>("MVCImplementationFolder")) + "FlightSearch/Views/_Search.cshtml")
+    <div class="page-header search-header">
+        <h5 ng-show="!vm.isLoading && vm.searchResults.itineraries.length > 0">
+            {{vm.searchResults.filteredCount}} of {{vm.searchResults.totalCount}} results
+
+            @*<div class="pull-right">
+                    <a class="btn btn-primary" href=""
+                       ng-click="vm.map()">
+                        <i class="fa fa-map-marker "></i> Map
+                    </a>
+                </div>*@
+        </h5>
+        <h5 ng-show="vm.isLoading"> Loading...</h5>
+        <h5 ng-show="!vm.isLoading && vm.searchResults.itineraries.length == 0"> There are no search results.</h5>
+
+    </div>
+    <div class="itinerary-list">
+        <flight-search-itinerary ng-repeat="itinerary in vm.searchResults.itineraries" itinerary="itinerary"></flight-search-itinerary>
+    </div>
+    <div class="card-body" ng-show="!vm.isLoading && vm.searchResults.hasMore">
+        <button type="button" ng-click="vm.loadMore()" class="btn btn-secondary btn-lg btn-block">Load More ...</button>
+    </div>
+</div>

@@ -17,6 +17,7 @@ using DND.Common.Tasks;
 using DND.Domain;
 using DND.Domain.Models;
 using DND.EFPersistance.Identity;
+using DND.Web.MVCImplementation.FlightSearch.Hubs;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -385,6 +386,8 @@ namespace DND.Web
                 }
             }
 
+            services.AddSignalR();
+
             services.AddApiVersioning(option =>
             {
                 option.ReportApiVersions = true;
@@ -636,6 +639,11 @@ namespace DND.Web
             {
                 app.UseCors("AllowAnyOrigin");
             }
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<FlightSearchHub>("/api/flight-search-real-time");
+            });
 
             //Cache-Control:max-age=0
             //This is equivalent to clicking Refresh, which means, give me the latest copy unless I already have the latest copy.

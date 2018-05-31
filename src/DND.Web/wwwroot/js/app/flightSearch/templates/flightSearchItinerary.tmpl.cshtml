@@ -1,0 +1,103 @@
+@model DND.Domain.FlightSearch.Search.Dtos.ItineraryDto
+@{
+    var itinerary = DND.Common.Helpers.AngularHelperExtension.Angular(Html).ModelFor("vm.itinerary");
+}
+
+<div class="initerary card">
+    <div class="card-header">
+        <div class="pull-left">
+            <h2>@itinerary.BindingFor(x => x.BestPriceFormatted)</h2>
+        </div>
+
+        <div class="pull-right">
+            @*<a class="btn btn-secondary" href=""
+               ng-class="{active: vm.selectedView == 'details'}"
+               ng-click="vm.setView('details')">
+                <i class="fa fa-plane"></i> Details
+            </a>*@
+
+            <a href="@itinerary.BindingFor(x => x.DeeplinkUrl)" target="_blank" class="btn btn-primary" >
+                <i class="fa fa-usd"></i> Book
+            </a>
+        </div>
+    </div>
+    <div class="itinerary-details card-body" ng-show="vm.selectedView == 'details'">
+        <div class="row hidden-md-down">
+            <div class="col-5">
+
+                @itinerary.BindingFor(x => x.OutboundDepartureTimeFormatted)  @itinerary.BindingFor(x => x.OutboundDepartureDateFormattedLong) <br />
+                @itinerary.BindingFor(x => x.OutboundOriginFormatted)
+            </div>
+
+            <div class="col-5">
+                @itinerary.BindingFor(x => x.OutboundArrivalTimeFormatted) @itinerary.BindingFor(x => x.OutboundArrivalDateFormattedLong) <br />
+                @itinerary.BindingFor(x => x.OutboundDestinationFormatted)
+            </div>
+            <div class="col-2">
+                @itinerary.BindingFor(x => x.OutboundDurationHourMinuteFormatted)<br />
+                @itinerary.BindingFor(x => x.OutboundStopCount) Stops
+            </div>
+        </div>
+        <div class="row hidden-lg-up">
+            <div class="col-5">
+
+                @itinerary.BindingFor(x => x.OutboundDepartureTimeFormatted) <br />
+                @itinerary.BindingFor(x => x.OutboundOriginAirportCode)
+            </div>
+            <div class="col-3">
+                @itinerary.BindingFor(x => x.OutboundDurationHourMinuteFormatted)
+            </div>
+
+            <div class="col-4">
+                <div class="pull-right">
+                    @itinerary.BindingFor(x => x.OutboundArrivalTimeFormatted) <br />
+                    @itinerary.BindingFor(x => x.OutboundDestinationAirportCode)
+                </div>
+               
+            </div>
+        </div>
+        <div class="row" ng-show="@itinerary.BindingFor(x => x.ReturnFlight)">
+            <div class="col-12">
+                <hr />
+            </div>
+            </div>
+        <div class="row hidden-md-down" ng-show="@itinerary.BindingFor(x => x.ReturnFlight)">
+            <div class="col-5">
+
+                @itinerary.BindingFor(x => x.InboundDepartureTimeFormatted) @itinerary.BindingFor(x => x.InboundDepartureDateFormattedLong) <br />
+                @itinerary.BindingFor(x => x.InboundOriginFormatted)
+            </div>
+
+            <div class="col-5">
+                @itinerary.BindingFor(x => x.InboundArrivalTimeFormatted) @itinerary.BindingFor(x => x.InboundArrivalDateFormattedLong) <br />
+                @itinerary.BindingFor(x => x.InboundDestinationFormatted)
+            </div>
+            <div class="col-2">
+                @itinerary.BindingFor(x => x.InboundDurationHourMinuteFormatted)<br />
+                @itinerary.BindingFor(x => x.InboundStopCount) Stops
+            </div>
+        </div>
+        <div class="row hidden-lg-up" ng-show="@itinerary.BindingFor(x => x.ReturnFlight)">
+            <div class="col-5">
+
+                @itinerary.BindingFor(x => x.InboundDepartureTimeFormatted) <br />
+                @itinerary.BindingFor(x => x.InboundOriginAirportCode)
+            </div>
+            <div class="col-3">
+                @itinerary.BindingFor(x => x.InboundDurationHourMinuteFormatted)
+            </div>
+
+            <div class="col-4">
+                <div class="pull-right">
+                    @itinerary.BindingFor(x => x.InboundArrivalTimeFormatted) <br />
+                    @itinerary.BindingFor(x => x.InboundDestinationAirportCode)
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

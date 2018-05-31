@@ -1,0 +1,35 @@
+@model DND.Domain.ViewModels.FlightSearchClientRequestForm
+@{
+    var flightSearch = DND.Common.Helpers.AngularHelperExtension.Angular(Html).ModelFor("vm.flightSearch");
+}
+
+<div class="modal-header">
+    <h3 class="modal-title">Filters</h3>
+</div>
+
+<div class="modal-body">
+
+    <div class="row">
+        @flightSearch.FormGroupFor(x => x.PriceFilterPerAdultMin, true, 12, 12, 12, 12, 12)
+        @flightSearch.FormGroupFor(x => x.PriceFilterPerAdultMax, true, 12, 12, 12, 12, 12)
+
+        @flightSearch.FormGroupFor(x => x.OutboundDepartureTimeFrom, true, 12, 12, 12, 12, 12)
+        @flightSearch.FormGroupFor(x => x.OutboundDepartureTimeTo, true, 12, 12, 12, 12, 12)
+        @flightSearch.FormGroupFor(x => x.OutboundArrivalTimeFrom, true, 12, 12, 12, 12, 12)
+        @flightSearch.FormGroupFor(x => x.OutboundArrivalTimeTo, true, 12, 12, 12, 12, 12)
+        @flightSearch.FormGroupFor(x => x.OutboundDurationMin, true, 12, 12, 12, 12, 12)
+        @flightSearch.FormGroupFor(x => x.OutboundDurationMax, true, 12, 12, 12, 12, 12)
+
+        @flightSearch.FormGroupFor(x => x.InboundDepartureTimeFrom, true, 12, 12, 12, 12, 12, flightSearch.ExpressionFor(x => x.ReturnFlight).ToString())
+        @flightSearch.FormGroupFor(x => x.InboundDepartureTimeTo, true, 12, 12, 12, 12, 12, flightSearch.ExpressionFor(x => x.ReturnFlight).ToString())
+        @flightSearch.FormGroupFor(x => x.InboundArrivalTimeFrom, true, 12, 12, 12, 12, 12, flightSearch.ExpressionFor(x => x.ReturnFlight).ToString())
+        @flightSearch.FormGroupFor(x => x.InboundArrivalTimeTo, true, 12, 12, 12, 12, 12, flightSearch.ExpressionFor(x => x.ReturnFlight).ToString())
+        @flightSearch.FormGroupFor(x => x.InboundDurationMin, true, 12, 12, 12, 12, 12, flightSearch.ExpressionFor(x => x.ReturnFlight).ToString())
+        @flightSearch.FormGroupFor(x => x.InboundDurationMax, true, 12, 12, 12, 12, 12, flightSearch.ExpressionFor(x => x.ReturnFlight).ToString())
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" ng-click="vm.resetFilters()" class="btn btn-primary">Reset</button>
+    <button type="button" ng-click="$dismiss(); vm.closeFilterModal();" class="btn btn-primary">Done</button>
+</div>

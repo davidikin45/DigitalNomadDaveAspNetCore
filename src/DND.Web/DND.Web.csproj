@@ -37,6 +37,7 @@
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.6.19" />
+    <PackageReference Include="HtmlTags.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.1.0" />
@@ -51,6 +52,7 @@
     <PackageReference Include="Microsoft.AspNetCore.ResponseCaching" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.0" />
@@ -84,7 +86,6 @@
     <Folder Include="MVCImplementation\FlightSearch\Controllers\" />
     <Folder Include="MVCImplementation\FlightSearch\Models\" />
     <Folder Include="MVCImplementation\FlightSearch\ViewComponents\" />
-    <Folder Include="MVCImplementation\FlightSearch\Views\" />
     <Folder Include="MVCImplementation\Home\Api\" />
     <Folder Include="MVCImplementation\Home\Models\" />
     <Folder Include="MVCImplementation\Home\ViewComponents\" />
@@ -180,6 +181,12 @@
     </Content>
     <Content Update="appsettings.Production.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="MVCImplementation\FlightSearch\Views\Results.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\FlightSearch\Views\_Search.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
 

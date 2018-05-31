@@ -40,8 +40,9 @@
     "infinite-scroll": "^3.0.2",
     "font-awesome": "^4.7.0",
     "magnific-popup": "^1.1.0",
-    "angular": "^1.6.9",
+    "angular": "^1.5.8",
     "angular-ui-bootstrap": "^2.5.6",
+    "angular-cookies": "^1.7.0",
     "ngmap": "*",
     "underscore": "^1.8.3",
     "@angular/animations": "^5.2.0",
@@ -55,6 +56,7 @@
     "@angular/router": "^5.2.0",
     "core-js": "^2.4.1",
     "rxjs": "^5.5.6",
-    "zone.js": "^0.8.19"
+    "zone.js": "^0.8.19",
+    "@aspnet/signalr": "^1.0.0"
   }
 }

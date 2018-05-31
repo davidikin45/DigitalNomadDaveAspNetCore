@@ -144,9 +144,6 @@ var deps = {
     "angular-bootstrap": {
         "ui-bootstrap-tpls.js": ""
     },
-    "angular-animate": {
-        "angular-animate.js": ""
-    },
     "ngmap": {
         "build/scripts/ng-map.js": "",
         "build/scripts/ng-map.min.js": ""
@@ -180,6 +177,9 @@ var deps = {
     },
     "magnific-popup": {
         "dist/*": ""
+    },
+    "@aspnet/signalr": {
+        "dist/browser/*": ""
     }
 };
 

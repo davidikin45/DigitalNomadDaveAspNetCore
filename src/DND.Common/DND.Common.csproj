@@ -76,6 +76,9 @@
     <Reference Include="HtmlTags.AspNetCore, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HtmlTags.AspNetCore.7.0.0\lib\netstandard2.0\HtmlTags.AspNetCore.dll</HintPath>
     </Reference>
+    <Reference Include="Humanizer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Humanizer.Core.2.2.0\lib\netstandard1.0\Humanizer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -742,6 +745,7 @@
     <Compile Include="Filters\RequestHeaderMatchesMediaTypeAttribute.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationfilter.cs" />
     <Compile Include="Hangfire\HangfireDependencyInjection.cs" />
+    <Compile Include="Helpers\AngularHelper.cs" />
     <Compile Include="Helpers\AsymmetricEncryptionHelper.cs" />
     <Compile Include="Helpers\AsyncHelper.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />

@@ -70,6 +70,10 @@
     "inputFiles": [
       "wwwroot/js/app/app.js",
       "wwwroot/js/app/site/googleMapDirective.js",
+      "wwwroot/js/app/flightSearch/FlightSearchController.js",
+      "wwwroot/js/app/flightSearch/FlightSearchItineraryDirective.js",
+      "wwwroot/js/app/flightSearch/FlightSearchResultsDirective.js",
+      "wwwroot/js/app/flightSearch/flightsearchSvc.js",
       "wwwroot/js/app/utility/ArrayExtensions.js",
       "wwwroot/js/app/utility/bootstrapAlerts.js",
       "wwwroot/js/app/utility/ParseDateFilter.js"
@@ -106,7 +110,8 @@
       "wwwroot/vendor/instafeed.js/instafeed.js",
       "wwwroot/vendor/infinite-scroll/infinite-scroll.pkgd.js",
       "wwwroot/vendor/magnific-popup/jquery.magnific-popup.js",
-      "wwwroot/vendor/ngmap/ng-map.min.js"
+      "wwwroot/vendor/ngmap/ng-map.min.js",
+      "wwwroot/vendor/@aspnet/signalr/signalr.js"
     ],
     "minify": {
       "enabled": true,

@@ -496,7 +496,7 @@ namespace DND.DomainServices.SearchEngines
             {
 
                 var variables = new Dictionary<string, string>();
-                variables.Add("{apiKey}", ApiKey());
+                variables.Add("{apiKey}", "");
                 variables.Add("{market}", country);
                 variables.Add("{currency}", currency);
                 variables.Add("{locale}", locale);
@@ -530,7 +530,7 @@ namespace DND.DomainServices.SearchEngines
             if (data == null && !cache.Contains(cacheKey))
             {
                 var variables = new Dictionary<string, string>();
-                variables.Add("{apiKey}", ApiKey());
+                variables.Add("{apiKey}", "");
                 variables.Add("{market}", country);
                 variables.Add("{currency}", currency);
                 variables.Add("{locale}", locale);

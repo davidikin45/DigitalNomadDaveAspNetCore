@@ -1,0 +1,102 @@
+﻿@model DND.Domain.ViewModels.FlightSearchClientRequestForm
+@{
+    
+    var flightSearch = Html.Angular().ModelFor("vm.flightSearch");
+}
+
+<div ng-controller="FlightSearchController as vm">
+    <div class="card" ng-show="vm.selectedView == 'simpleSearch'">
+        <div class="card-header">
+            <div class="pull-left">
+                <h5>{{vm.originLocation}} > {{vm.destinationLocation}} </h5>
+                <h5>{{@flightSearch.ExpressionFor(x => x.Adults)}} Adult | {{@flightSearch.ExpressionFor(x => x.FlightClass)}}</h5>
+            </div>
+            <div class="pull-right">
+                <a class="btn btn-primary" href=""
+                   ng-click="vm.setView('advancedSearch')">
+                    <i class="fa fa-search"></i>
+                </a>
+            </div>
+            <div class="pull-right">
+                <a class="btn btn-primary btn-pink" href=""
+                   ng-click="vm.openSortModal()">
+                    <i class="fa fa-sort"></i>
+                </a>
+            </div>
+            <div class="pull-right">
+                <a class="btn btn-secondary" href=""
+                   ng-click="vm.openFilterModal()">
+                    <i class="fa fa-filter"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="flight-search" ng-show="vm.selectedView == 'advancedSearch'">
+        <form novalidate
+              name="vm.form"
+              ng-submit="vm.form.$valid && vm.search()">
+            <fieldset ng-disabled="vm.isLoading">
+                <div class="row">
+                    @flightSearch.FormGroupFor(x => x.OriginLocation, false, 12, 12, 6, 6, 6, null, "location as location.placeName+' ('+location.placeId+')'   for location in vm.getLocation($viewValue)")
+                    @flightSearch.FormGroupFor(x => x.DestinationLocation, false, 12, 12, 6, 6, 6, null, "location as location.placeName+' ('+location.placeId+')' for location in vm.getLocation($viewValue)")
+                </div>
+
+                <div class="row">
+
+                    @*http://angular-ui.github.io/bootstrap/*@
+
+                    @flightSearch.FormGroupFor(x => x.OutboundDate, true, 6, 6, 6, 2, 2)
+                    @*<span class="input-group-btn">
+                            <button type="button" class="btn btn-secondary" ng-click="vm.openOutboundDateCalendar()"><i class="fa fa-calendar"></i></button>
+                        </span>*@
+
+                    @*@flightSearch.FormGroupFor(x => x.InboundDate, true, 6, 6, 6, 2, 2, flightSearch.ExpressionForInternal(x => x.ReturnFlight))*@
+                    @*<div class="col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2">*@
+                    <div class="form-group col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2" style="height:4.3rem" form-group-validation="InboundDate" ng-class="vm.getValidationClass()">
+                        <div ng-hide="!@flightSearch.ExpressionFor(x => x.ReturnFlight)">
+                            <label class="col-form-label" for="InboundDate">Return Date</label>
+                            <input name="InboundDate" class="form-control form-control-success form-control-danger" type="date" placeholder="Return Date..." ng-model="@flightSearch.ExpressionFor(x => x.InboundDate)" />
+                        </div>
+                    </div>
+                    @*</div>*@
+
+                    @flightSearch.FormGroupFor(x => x.Adults, true, 4, 4, 4, 2, 2)
+                    @flightSearch.FormGroupFor(x => x.Children, true, 4, 4, 4, 2, 2)
+                    @flightSearch.FormGroupFor(x => x.Infants, true, 4, 4, 4, 2, 2)
+                    @flightSearch.EnumDropdownFor(x => x.FlightClass, true, 12, 12, 12, 2, 2)
+                </div>
+                <div class="row margin-top-10">
+                    <div class="form-group col-6">
+                        <label class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="searchType" ng-model="@flightSearch.ExpressionFor(fs => fs.ReturnFlight)" ng-value="true" /> Return
+                        </label>
+                        <label class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="searchType" ng-model="@flightSearch.ExpressionFor(fs => fs.ReturnFlight)" ng-value="false" /> One-Way
+                        </label>
+
+                    </div>
+                    <div class="form-group col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                        <label class="col-form-label sr-only" for="DirectFlightsOnly">Direct Flights Only</label>
+                        <label class="form-check-inline pull-right">
+                            <input name="DirectFlightsOnly" class="form-check-input ng-pristine ng-untouched ng-valid ng-not-empty" type="checkbox" value="False" ng-model="vm.flightSearch.directFlightsOnly"> Direct Flights Only
+                        </label>
+                    </div>
+                </div>
+                <div class="row margin-top-20">
+                    <div class="col-6">
+                        <button type="button" ng-click="vm.openFilterModal()" class="btn btn-secondary btn-block"><i class="fa fa-filter "></i> Filters </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" ng-click="vm.openSortModal()" class="btn btn-secondary btn-pink btn-block"><i class="fa fa-sort "></i> Sort </button>
+                    </div>
+
+                </div>
+                <div class="row margin-top-10">
+                    <div class="col-12">
+                        <button class="btn btn-success waves-effect waves-light btn-block"><i class="fa fa-search "></i> Search</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
