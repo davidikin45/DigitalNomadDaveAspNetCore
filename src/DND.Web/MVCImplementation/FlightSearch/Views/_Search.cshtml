@@ -46,19 +46,12 @@
                     @*http://angular-ui.github.io/bootstrap/*@
 
                     @flightSearch.FormGroupFor(x => x.OutboundDate, true, 6, 6, 6, 3, 3)
-                    @*<span class="input-group-btn">
-                            <button type="button" class="btn btn-secondary" ng-click="vm.openOutboundDateCalendar()"><i class="fa fa-calendar"></i></button>
-                        </span>*@
-
-                    @*@flightSearch.FormGroupFor(x => x.InboundDate, true, 6, 6, 6, 2, 2, flightSearch.ExpressionForInternal(x => x.ReturnFlight))*@
-                    @*<div class="col-6 col-sm-6 col-md-6 col-lg-2 col-xl-2">*@
                     <div class="form-group col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3" style="height:4.3rem" form-group-validation="InboundDate" ng-class="vm.getValidationClass()">
                         <div ng-hide="!@flightSearch.ExpressionFor(x => x.ReturnFlight)">
                             <label class="col-form-label" for="InboundDate">Return Date</label>
                             <input name="InboundDate" class="form-control form-control-success form-control-danger" type="date" placeholder="Return Date..." ng-model="@flightSearch.ExpressionFor(x => x.InboundDate)" />
                         </div>
                     </div>
-                    @*</div>*@
 
                     @flightSearch.FormGroupFor(x => x.Adults, true, 4, 4, 4, 1, 1)
                     @flightSearch.FormGroupFor(x => x.Children, true, 4, 4, 4, 1, 1)
