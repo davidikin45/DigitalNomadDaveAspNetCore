@@ -6,7 +6,7 @@
 
 @{
     ViewBag.PageTitle = "Flight Search";
-    ViewBag.CustomPageHeader = true;
+    ViewBag.CustomPageHeader = false;
 }
 
 @Html.Partial("~/" + (Settings.GetValue<string>("MVCImplementationFolder")) + "FlightSearch/Views/_Search.cshtml")
