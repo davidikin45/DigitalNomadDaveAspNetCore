@@ -56,11 +56,18 @@ namespace DND.Common.Testing
 
             if (fileNames.Any())
             {
-                ExecuteSqlCommand(Master, $@"
+                try
+                {
+                    ExecuteSqlCommand(Master, $@"
                     ALTER DATABASE [{DBName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
                     EXEC sp_detach_db '{DBName}'");
-
-                fileNames.ForEach(System.IO.File.Delete);
+                    fileNames.ForEach(System.IO.File.Delete);
+                }
+                catch
+                {
+                    ExecuteSqlCommand(Master, $@"
+                    DROP DATABASE [{DBName}];");
+                }
             }
 
             if(File.Exists(MdfFilename))

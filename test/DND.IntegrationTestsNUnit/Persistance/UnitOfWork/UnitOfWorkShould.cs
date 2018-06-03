@@ -1,6 +1,7 @@
 ﻿using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Implementation.UnitOfWork;
+using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Testing;
 using DND.Domain;
 using DND.Domain.Blog.Categories;
@@ -37,17 +38,21 @@ namespace DND.IntegrationTestsNUnit.Persistance.UnitOfWork
         private void Seed()
         {
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
+
             using (var con = new ApplicationDbContext(connectionString, true))
             {
                 var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
-                var repo = new GenericEFRepository<Category>(con, uowFactory.CreateReadOnly(), false);
+                using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
+                {
+                    var repo = new GenericEFRepository<Category>(con, unitOfWork, false);
 
-                var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
-                var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
-                repo.Create(cata);
-                repo.Create(catb);
+                    var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
+                    var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
+                    repo.Create(cata);
+                    repo.Create(catb);
 
-                con.SaveChanges();
+                    con.SaveChanges();
+                }
             }
         }
 

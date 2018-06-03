@@ -1,6 +1,7 @@
 ﻿using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Implementation.UnitOfWork;
+using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Testing;
 using DND.Domain;
 using DND.Domain.Blog.BlogPosts;
@@ -21,6 +22,7 @@ namespace DND.IntegrationTestsNUnit.Persistance.Repositories
     {
         private ApplicationDbContext _context;
         private GenericEFRepository<Category> _repository;
+        private IUnitOfWorkReadOnlyScope _ouw;
 
         [SetUp]
         public void SetUp()
@@ -29,12 +31,14 @@ namespace DND.IntegrationTestsNUnit.Persistance.Repositories
             _context = new ApplicationDbContext(connectionString, true);
 
             var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
-            _repository = new GenericEFRepository<Category>(_context, uowFactory.CreateReadOnly(), false);
+            _ouw = uowFactory.CreateReadOnly();
+            _repository = new GenericEFRepository<Category>(_context, _ouw, false);
         }
 
         [TearDown]
         public void TearDown()
         {
+            _ouw.Dispose();
             _context.Dispose();
         }
 
@@ -44,14 +48,18 @@ namespace DND.IntegrationTestsNUnit.Persistance.Repositories
             using (var con = new ApplicationDbContext(connectionString, true))
             {
                 var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
-                var repo = new GenericEFRepository<Category>(con, uowFactory.CreateReadOnly(), false);
 
-                var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
-                var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
-                repo.Create(cata);
-                repo.Create(catb);
+                using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
+                {
+                    var repo = new GenericEFRepository<Category>(con, unitOfWork, false);
 
-                con.SaveChanges();
+                    var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
+                    var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
+                    repo.Create(cata);
+                    repo.Create(catb);
+
+                    con.SaveChanges();
+                }
             }
         }
 

@@ -12,10 +12,11 @@ using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Interfaces.Repository;
 using DND.Common.Interfaces.Persistance;
 using System.Threading;
+using System;
 
 namespace DND.Common.Implementation.UnitOfWork
 {
-    public class UnitOfWorkReadOnlyScope : BaseUnitOfWorkScope, IUnitOfWorkReadOnlyScope
+    public class UnitOfWorkReadOnlyScope : BaseUnitOfWorkScope, IDisposable, IUnitOfWorkReadOnlyScope
     {
         private UnitOfWorkTransactionScope _internalScope;
 
@@ -35,7 +36,7 @@ namespace DND.Common.Implementation.UnitOfWork
             _internalScope = new UnitOfWorkTransactionScope(joiningOption: joiningOption, readOnly: true, isolationLevel: isolationLevel, dbContextFactory: dbContextFactory, contextLocator: contextLocator, repositoryFactory: repositoryFactory );
         }
 
-        public new void Dispose()
+        public void Dispose()
         {
             _internalScope.Dispose();
         }

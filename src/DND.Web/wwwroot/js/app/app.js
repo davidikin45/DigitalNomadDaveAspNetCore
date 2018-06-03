@@ -132,11 +132,11 @@
         ]);
     }]);
 
-    window.app.config(['$modalProvider', function ($modalProvider) {
+    window.app.config(['$uibModalProvider', function ($uibModalProvider) {
         // Configure existing providers
-        $modalProvider.options.windowClass = 'modal-fullscreen';
-        $modalProvider.options.backdropClass = 'modal-backdrop-fullscreen';
-        $modalProvider.options.backdrop = 'static';
+        $uibModalProvider.options.windowClass = 'modal-fullscreen';
+        $uibModalProvider.options.backdropClass = 'modal-backdrop-fullscreen';
+        $uibModalProvider.options.backdrop = 'static';
     }]);
 
 })();

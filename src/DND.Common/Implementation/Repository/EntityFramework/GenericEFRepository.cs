@@ -186,9 +186,12 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual Result Delete(TEntity entity, string deletedBy = null)
         {
-            if (!(GetExists(x => x.Id.ToString() == entity.Id.ToString())))
+            if (!_context.IsEntityStateAdded(entity))
             {
-                return Result.ObjectDoesNotExist();
+                if (!(GetExists(x => x.Id.ToString() == entity.Id.ToString())))
+                {
+                    return Result.ObjectDoesNotExist();
+                }
             }
 
             var validationResult = Validate(entity, ValidationMode.Delete);
@@ -211,9 +214,12 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<Result> DeleteAsync(TEntity entity, string deletedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (!(await GetExistsAsync(x => x.Id.ToString() == entity.Id.ToString()).ConfigureAwait(false)))
+            if (!_context.IsEntityStateAdded(entity))
             {
-                return Result.ObjectDoesNotExist();
+                if (!(await GetExistsAsync(x => x.Id.ToString() == entity.Id.ToString()).ConfigureAwait(false)))
+                {
+                    return Result.ObjectDoesNotExist();
+                }
             }
 
             var validationResult = await ValidateAsync(entity, ValidationMode.Delete).ConfigureAwait(false);

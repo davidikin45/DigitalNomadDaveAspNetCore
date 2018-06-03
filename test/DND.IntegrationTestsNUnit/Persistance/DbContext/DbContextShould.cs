@@ -55,7 +55,7 @@ namespace DND.IntegrationTestsNUnit.Persistance.DbContext
 
             //Post Commit Events should not be fired until transaction commited.
 
-            Assert.AreEqual(1, categories.Count());
+            Assert.AreEqual(2, categories.Count());
         }
     }
 }

@@ -2,11 +2,13 @@
 using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Implementation.UnitOfWork;
+using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Testing;
 using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Interfaces.Persistance;
 using FluentAssertions;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
@@ -14,16 +16,23 @@ using Xunit;
 
 namespace DND.UnitTests.Persistance.Repositories
 {
-    public class BlogPostRepositoryShould
+    public class BlogPostRepositoryShould : IDisposable
     {
         private InMemoryDataContext _context;
         private GenericEFRepository<BlogPost> _repository;
-       
+        private IUnitOfWorkReadOnlyScope _uow;
+
         public BlogPostRepositoryShould()
         {
             _context = new InMemoryDataContext();
             var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
-            _repository = new GenericEFRepository<BlogPost>(_context, uowFactory.CreateReadOnly(), false);
+            _uow = uowFactory.CreateReadOnly();
+            _repository = new GenericEFRepository<BlogPost>(_context, _uow, false);
+        }
+
+        public void Dispose()
+        {
+            _uow.Dispose();
         }
 
         [Fact]
