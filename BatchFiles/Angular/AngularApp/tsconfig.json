@@ -1,11 +1,7 @@
 {
-  "include": [
-    "Scripts/**/*.ts"
-    ,"./ClientApp"
-  ],
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./Scripts_Compile",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
