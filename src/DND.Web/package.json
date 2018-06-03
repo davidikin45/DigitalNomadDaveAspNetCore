@@ -34,7 +34,7 @@
     "bootstrap": "^4.1.1",
     "jquery": "^3.2.1",
     "jquery-validation": "^1.17.0",
-    "jquery-validation-unobtrusive": "^3.2.6",
+    "jquery-validation-unobtrusive": "^3.2.10",
     "respond.js": "^1.4.2",
     "tinymce": "^4.7.4",
     "instafeed.js": "^1.4.1",

@@ -206,10 +206,10 @@
   </Target>
 
   <Target Name="MyPreCompileTarget" BeforeTargets="Build">
-    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp clean" ContinueOnError="false" />
-    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp less" ContinueOnError="false" />
-    <!--<Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp scripts" ContinueOnError="false" />-->
-    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp min" ContinueOnError="false" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd clean" ContinueOnError="false" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd less" ContinueOnError="false" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd scripts" ContinueOnError="false" />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd min" ContinueOnError="false" />
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

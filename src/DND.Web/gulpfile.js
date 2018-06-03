@@ -136,7 +136,7 @@ var deps = {
         "dist/**/*": ""
     },
     "jquery-validation-unobtrusive": {
-        "jquery.validate.unobtrusive.js": ""
+        "dist/jquery.validate.unobtrusive.js": ""
     },
     "angular": {
         "angular.js": ""
