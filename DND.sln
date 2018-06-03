@@ -47,7 +47,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.Common", "src\DND.Commo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B4CB4FAF-366E-48C6-8283-3D035A848EC8}"
 	ProjectSection(SolutionItems) = preProject
-		nuget.txt = nuget.txt
+		npm and nuget.txt = npm and nuget.txt
 		README.md = README.md
 	EndProjectSection
 EndProject

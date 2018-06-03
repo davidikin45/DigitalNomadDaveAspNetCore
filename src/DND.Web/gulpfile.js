@@ -141,8 +141,8 @@ var deps = {
     "angular": {
         "angular.js": ""
     },
-    "angular-bootstrap": {
-        "ui-bootstrap-tpls.js": ""
+    "angular-ui-bootstrap": {
+        "dist/ui-bootstrap-tpls.js": ""
     },
     "ngmap": {
         "build/scripts/ng-map.js": "",

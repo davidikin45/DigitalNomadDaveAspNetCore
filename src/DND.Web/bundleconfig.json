@@ -104,7 +104,7 @@
       "wwwroot/vendor/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
       "wwwroot/vendor/bootstrap/js/bootstrap.bundle.js",
       "wwwroot/vendor/angular/angular.js",
-      "wwwroot/vendor/angular-bootstrap/ui-bootstrap-tpls.js",
+      "wwwroot/vendor/angular-ui-bootstrap/ui-bootstrap-tpls.js",
       "wwwroot/vendor/respond.js/respond.src.js",
       "wwwroot/vendor/underscore/underscore.js",
       "wwwroot/vendor/instafeed.js/instafeed.js",
