@@ -208,7 +208,7 @@
   <Target Name="MyPreCompileTarget" BeforeTargets="Build">
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp clean" ContinueOnError="false" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp less" ContinueOnError="false" />
-    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp scripts" ContinueOnError="false" />
+    <!--<Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp scripts" ContinueOnError="false" />-->
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp min" ContinueOnError="false" />
   </Target>
 
