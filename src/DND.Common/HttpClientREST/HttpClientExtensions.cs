@@ -15,6 +15,7 @@ namespace DND.Common.HttpClientREST
                                 .AddRequestUri(requestUri)
                                 .AddBearerToken(bearerToken);
 
+
             return await builder.SendAsync(client);
         }
 
