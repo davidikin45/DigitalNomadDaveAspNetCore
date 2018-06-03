@@ -13,4 +13,4 @@ Update-Package -ProjectName DND.IntegrationTestsNUnit
 Update-Package -ProjectName DND.IntegrationTestsXUnit
 Update-Package -ProjectName DND.TestSetup
 Update-Package -ProjectName DND.UITests
-Update-Package -ProjectName DND.UnitTests
+Update-Package -ProjectName DND.UnitTests 
