@@ -6,6 +6,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./Scripts_Compile",
+    "baseUrl": "src",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
