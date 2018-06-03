@@ -170,19 +170,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="node_modules\%40angular\animations\animations.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\common\common.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\common\http\http.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\core\core.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\forms\forms.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\http\http.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\language-service\language-service.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\platform-browser-dynamic\platform-browser-dynamic.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\platform-browser\platform-browser.d.ts" />
-    <TypeScriptCompile Include="node_modules\%40angular\router\router.d.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="appsettings.Integration.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
