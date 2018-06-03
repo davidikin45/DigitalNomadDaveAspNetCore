@@ -6,9 +6,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./Scripts_Compile",
-    "module": "commonjs",
     "sourceMap": true,
     "declaration": false,
+    "module": "system",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
