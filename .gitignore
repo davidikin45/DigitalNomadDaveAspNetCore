@@ -323,6 +323,7 @@ ASALocalRun/
 
 src/DND.Web/App_Data/Logs/*
 src/DND.Web/appsettings.Production.json
+src/DND.Web/appsettings.Staging.json
 src/DND.Web/wwwroot/uploads/gallery/australia
 src/DND.Web/wwwroot/uploads/gallery/australia-two
 src/DND.Web/Scripts_Compile/*

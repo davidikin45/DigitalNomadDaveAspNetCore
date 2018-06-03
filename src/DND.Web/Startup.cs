@@ -543,6 +543,14 @@ namespace DND.Web
             int versionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:VersionedStaticFilesDays");
             int nonVersionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:NonVersionedStaticFilesDays");
 
+            foreach (var publicUploadFolder in publicUploadFoldersString.Split(','))
+            {
+                var path = env.WebRootPath + publicUploadFolder;
+                if(!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+            }
 
             if (enableRedirectNonWwwToWww)
             {
