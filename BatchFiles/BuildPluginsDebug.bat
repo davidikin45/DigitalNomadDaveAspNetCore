@@ -1,1 +1,1 @@
-Build\BuildPlugins.bat Debug %cd%
+Build\BuildPlugins.bat Debug %cd% "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
