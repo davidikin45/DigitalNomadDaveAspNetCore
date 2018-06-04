@@ -219,9 +219,6 @@
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Swashbuckle.AspNetCore, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Swashbuckle.AspNetCore.2.4.0\lib\net451\Swashbuckle.AspNetCore.dll</HintPath>
-    </Reference>
     <Reference Include="Swashbuckle.AspNetCore.Swagger, Version=2.4.0.0, Culture=neutral, PublicKeyToken=62657d7474907593, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Swashbuckle.AspNetCore.Swagger.2.4.0\lib\net451\Swashbuckle.AspNetCore.Swagger.dll</HintPath>
     </Reference>
@@ -456,7 +453,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
