@@ -227,35 +227,52 @@
     <RemoveDir Directories="$(TargetDir)" />
   </Target>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Message Importance="high" Text="Starting Plugin Build" />
+    <Exec Command="SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;del /q %plugins%\*&#xD;&#xA;for /d %%x in (%plugins%\*) do @rd /s /q ^&quot;%%x^&quot;&#xD;&#xA;&#xD;&#xA;call &quot;$(ProjectDir)..\..\BatchFiles\Build\BuildPlugins.bat&quot; $(ConfigurationName) $(ProjectDir)..\ &quot;%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe&quot; &#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y" />
+    <Message Importance="high" Text="Finished Plugin Build" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Message Importance="high" Text="Starting build Plugin Copy" />
+    <Exec Command="SET bin=&quot;$(TargetDir)&quot;&#xD;&#xA;SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;SET project=&quot;$(ProjectDir)&quot;&#xD;&#xA;&#xD;&#xA;for %%F in (%plugins%*) do @if exist &quot;%bin%%%~nxF&quot; (del /q %plugins%%%~nxF)" />
+    <Message Importance="high" Text="Finished build Plugin Copy" />
+  </Target>
+
   <Target Name="MyPreCompileTarget" BeforeTargets="Build">
+    <Message Importance="high" Text="Starting Gulp Tasks" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd clean" ContinueOnError="false" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd less" ContinueOnError="false" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd scripts" ContinueOnError="false" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp.cmd min" ContinueOnError="false" />
+    <Message Importance="high" Text="Finished Gulp Tasks" />
   </Target>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="SET bin=&quot;$(TargetDir)&quot;&#xD;&#xA;SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;SET project=&quot;$(ProjectDir)&quot;&#xD;&#xA;&#xD;&#xA;for %%F in (%plugins%*) do @if exist &quot;%bin%%%~nxF&quot; (del /q %plugins%%%~nxF)" />
-    <Message Importance="Normal" Text="Finished Plugin Copy" />
-  </Target>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;del /q %plugins%\*&#xD;&#xA;for /d %%x in (%plugins%\*) do @rd /s /q ^&quot;%%x^&quot;&#xD;&#xA;&#xD;&#xA;call &quot;$(ProjectDir)..\..\BatchFiles\Build\BuildPlugins.bat&quot; $(ConfigurationName) $(ProjectDir)..\ &quot;%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe&quot; &#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y" />
-    <Message Importance="Normal" Text="Finished Plugin Build" />
+  <Target Name="CustomActionsBeforePublish" BeforeTargets="BeforePublish">
+    <Message Text="BeforePublish" Importance="high" />
+    <Message Text="$(PublishDir)" Importance="high" />
   </Target>
 
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+    <Message Text="Starting PrepareForPublish" Importance="high" />
     <ItemGroup>
       <DocFile Include="bin\$(Configuration)\$(TargetFramework)\*.xml" />
+      <Plugins Include="bin\$(Configuration)\$(TargetFramework)\plugins\*" />
     </ItemGroup>
+    <Message Importance="high" Text="Starting publish xml copy" />
     <Copy SourceFiles="@(DocFile)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="false" />
-    <Message Importance="Normal" Text="Finished xml copy" />
+    <Message Importance="high" Text="Finished publish xml copy" />
+    <Message Importance="high" Text="Starting publish plugin copy" />
+    <Copy SourceFiles="@(Plugins)" DestinationFolder="$(PublishDir)plugins\" SkipUnchangedFiles="false" />
+    <Message Importance="high" Text="Finished publish plugin copy" />
+    <Message Text="Finished PrepareForPublish" Importance="high" />
   </Target>
 
-  <Target Name="PluginCopyPublish" AfterTargets="AfterPublish">
-    <Exec Command="$(ProjectDir)..\..\BatchFiles\Build\PostBuildEventPublish.bat &quot;$(ProjectDir)bin\$(Configuration)\&quot; &quot;$(PublishUrl)&quot; &quot;$(ProjectDir)$(PublishUrl)&quot; " />
-    <Message Importance="Normal" Text="Finished PostBuildEventPublish.bat" />
+  <Target Name="CustomActionsAfterFileSystemPublish" AfterTargets="FileSystemPublish">
+    <Message Text="AfterFileSystemPublish" Importance="high" />
   </Target>
 
-
+  <Target Name="CustomActionsAfterPublish" AfterTargets="AfterPublish">
+    <Message Text="AfterPublish" Importance="high" />
+  </Target>
 </Project>

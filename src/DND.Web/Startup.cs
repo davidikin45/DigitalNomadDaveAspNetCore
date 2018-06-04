@@ -504,6 +504,10 @@ namespace DND.Web
             string pluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), pluginsFolder);
             if (!Directory.Exists(pluginsPath)) Directory.CreateDirectory(pluginsPath);
 
+            //Load plugins into current AppDomain
+            var assemblies = Directory.GetFiles(pluginsPath, "*.dll", SearchOption.TopDirectoryOnly)
+                               .Select(System.Reflection.Assembly.LoadFile);
+
             Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains(commonAssembly));
             Func<string, Boolean> stringFunc = (s => (new FileInfo(s)).Name.Contains(assemblyPrefix) || (new FileInfo(s)).Name.Contains(commonAssembly));
 
@@ -546,7 +550,7 @@ namespace DND.Web
             foreach (var publicUploadFolder in publicUploadFoldersString.Split(','))
             {
                 var path = env.WebRootPath + publicUploadFolder;
-                if(!Directory.Exists(path))
+                if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
