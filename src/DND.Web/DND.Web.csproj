@@ -253,7 +253,7 @@
   </Target>
 
   <Target Name="PluginCopyPublish" AfterTargets="AfterPublish">
-    <Exec Command="$(ProjectDir)..\..\BatchFiles\Build\PostBuildEventPublish.bat &quot;$(ProjectDir)bin\$(Configuration)\&quot; &quot;$(PublishUrl)&quot; &quot;$(ProjectDir)\$(PublishUrl)&quot; " />
+    <Exec Command="$(ProjectDir)..\..\BatchFiles\Build\PostBuildEventPublish.bat &quot;$(ProjectDir)bin\$(Configuration)\&quot; &quot;$(PublishUrl)&quot; &quot;$(ProjectDir)$(PublishUrl)&quot; " />
     <Message Importance="Normal" Text="Finished PostBuildEventPublish.bat" />
   </Target>
 
