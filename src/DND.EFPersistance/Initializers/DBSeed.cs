@@ -29,6 +29,7 @@ namespace DND.EFPersistance.Initializers
             AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.Contact, "<p>Contact</p>");
             AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.Head, "");
             AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.Main, "");
+            AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.PrivacyPolicy, "");
         }
 
         private static void AddContentHTML(ApplicationDbContext context, string id, string content)

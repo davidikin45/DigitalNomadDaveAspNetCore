@@ -28,13 +28,15 @@ namespace DND.Common.Infrastructure
                  "~/" + MVCImplementationFolder + "Shared/Views/Navigation/{0}.cshtml",
                  "~/" + MVCImplementationFolder + "Shared/Views/Footer/{0}.cshtml",
                  "~/" + MVCImplementationFolder + "Shared/Views/Alerts/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Shared/Views/CookieConsent/{0}.cshtml",
 
                 "~/" + MVCImplementationFolder + "Views/Shared/Bundles/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/Sidebar/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/CRUD/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/Navigation/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/Footer/{0}.cshtml",
-                 "~/" + MVCImplementationFolder + "Views/Shared/Alerts/{0}.cshtml"
+                 "~/" + MVCImplementationFolder + "Views/Shared/Alerts/{0}.cshtml",
+                "~/" + MVCImplementationFolder + "Views/Shared/CookieConsent/{0}.cshtml"
             };
 
             return locations;

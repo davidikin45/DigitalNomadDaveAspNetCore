@@ -1,4 +1,6 @@
 ﻿using DND.Common.Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.CodeAnalysis;
@@ -15,6 +17,17 @@ namespace DND.Common.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void AddCookieConsentNeeded(this IServiceCollection services, string cookieConsentName)
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.ConsentCookie.Name = cookieConsentName;
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+        }
+
         public static void AddDbContextInMemory<TContext>(this IServiceCollection services) where TContext : DbContext
         {
             services.AddDbContext<TContext>(options =>

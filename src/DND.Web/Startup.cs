@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -82,6 +83,7 @@ namespace DND.Web
             //Settings
             bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:Switches:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite"));
+            string cookieConsentName = Configuration.GetValue<string>("Settings:CookieConsentName");
             string cookieAuthName = Configuration.GetValue<string>("Settings:CookieAuthName");
             string cookieTempDataName = Configuration.GetValue<string>("Settings:CookieTempDataName");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
@@ -288,6 +290,8 @@ namespace DND.Web
                 options.Level = CompressionLevel.Fastest;
             });
 
+            services.AddCookieConsentNeeded(cookieConsentName);
+
             // Add framework services.
             services.AddMvc(options =>
             {
@@ -372,7 +376,8 @@ namespace DND.Web
             {
                 // new API
                 options.Cookie.Name = cookieTempDataName;
-            });
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
             //https://stackoverflow.com/questions/46374994/correct-way-to-disable-model-validation-in-asp-net-core-2-mvc
@@ -520,10 +525,16 @@ namespace DND.Web
             builder.RegisterType<TaskRunner>().AsSelf().PropertiesAutowired();
         }
 
+        private static bool AreCookiesConsentedCallback(Microsoft.AspNetCore.Http.HttpContext context, string cookieConsentName)
+        {
+            return context.Request.Path.ToString().StartsWith("/api") || (context.Request.Cookies.Keys.Contains(cookieConsentName));
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner)
         {
             //settings
+            bool enableCookieConsent = Configuration.GetValue<bool>("Settings:Switches:EnableCookieConsent");
             bool enableRedirectNonWwwToWww = Configuration.GetValue<bool>("Settings:Switches:EnableRedirectNonWwwToWww");
             bool enableHelloWord = Configuration.GetValue<bool>("Settings:Switches:EnableHelloWorld");
             bool enableSwagger = Configuration.GetValue<bool>("Settings:Switches:EnableSwagger");
@@ -534,6 +545,7 @@ namespace DND.Web
             bool enableETags = Configuration.GetValue<bool>("Settings:Switches:EnableETags");
             bool enableHangfire = Configuration.GetValue<bool>("Settings:Switches:EnableHangfire");
 
+            string cookieConsentName = Configuration.GetValue<string>("Settings:CookieConsentName");
             string publicUploadFoldersString = Configuration.GetValue<string>("Settings:PublicUploadFolders");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
@@ -694,7 +706,19 @@ namespace DND.Web
             //Request Header Cache-Control: max-age=0 or no-cache will bypass Response Caching. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
             if (enableResponseCaching)
             {
-                app.UseResponseCachingCustom(); //Allows Invalidation
+                if (enableCookieConsent)
+                {
+                    app.UseWhen(context => AreCookiesConsentedCallback(context, cookieConsentName),
+                      appBranch =>
+                      {
+                          appBranch.UseResponseCachingCustom(); //Allows Invalidation
+                      }
+                    );
+                }
+                else
+                {
+                    app.UseResponseCachingCustom();
+                }
             }
 
             //Works for: GET, HEAD (efficiency, and saves bandwidth)
@@ -703,7 +727,19 @@ namespace DND.Web
             //Generating ETags is expensive. Putting this after response caching makes sense.
             if (enableETags)
             {
-                app.UseHttpCacheHeaders(true, true, true, true);
+                if (enableCookieConsent)
+                {
+                    app.UseWhen(context => AreCookiesConsentedCallback(context, cookieConsentName),
+                      appBranch =>
+                      {
+                          appBranch.UseHttpCacheHeaders(true, true, true, true);
+                      }
+                    );
+                }
+                else
+                {
+                    app.UseHttpCacheHeaders(true, true, true, true);
+                }
             }
 
             app.MapWhen(
@@ -771,6 +807,11 @@ namespace DND.Web
                 // Configure hangfire to use the new JobActivator.
                 GlobalConfiguration.Configuration.UseActivator(new HangfireDependencyInjectionActivator(serviceProvider));
                 app.UseHangfire();
+            }
+
+            if (enableCookieConsent)
+            {
+                app.UseCookiePolicy();
             }
 
             app.UseMvc(routes =>

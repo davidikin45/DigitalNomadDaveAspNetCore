@@ -13,6 +13,7 @@ namespace DND.Common.Constants
             public const string Contact = "Contact";
             public const string Head = "Head";
             public const string Main = "Main";
+            public const string PrivacyPolicy = "PrivacyPolicy";
         }
 
         public static class ContentText

@@ -145,6 +145,13 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View();
         }
 
+        [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
+        [Route("privacy-policy")]
+        public ActionResult PrivacyPolicy()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("contact")]
