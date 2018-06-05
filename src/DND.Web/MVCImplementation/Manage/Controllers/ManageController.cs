@@ -411,7 +411,17 @@ namespace DND.Web.MVCImplementation.Manage.Controllers
 
             if (!is2faTokenValid)
             {
-                ModelState.AddModelError("model.Code", "Verification code is invalid.");
+                ModelState.AddModelError("Code", "Verification code is invalid.");
+                var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                if (string.IsNullOrEmpty(unformattedKey))
+                {
+                    await _userManager.ResetAuthenticatorKeyAsync(user);
+                    unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+                }
+
+                model.SharedKey = FormatKey(unformattedKey);
+                model.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
+
                 return View(model);
             }
 
