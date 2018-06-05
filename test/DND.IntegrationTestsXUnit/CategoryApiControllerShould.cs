@@ -1,17 +1,10 @@
-﻿using DND.TestSetup;
-using Microsoft.Net.Http.Headers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using DND.Common.HttpClientREST;
+using DND.Domain;
+using DND.Domain.Blog.Categories.Dtos;
+using DND.TestSetup;
+using DND.Web.MVCImplementation.Account.Models;
 using System.Threading.Tasks;
 using Xunit;
-using DND.Common.HttpClientREST;
-using DND.Web.MVCImplementation.Account.Models;
-using DND.Domain.Blog.Categories.Dtos;
-using DND.Domain;
-using System.Transactions;
 
 namespace DND.IntegrationTestsXUnit
 {

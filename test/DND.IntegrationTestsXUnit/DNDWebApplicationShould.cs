@@ -1,14 +1,14 @@
 ﻿using DND.Common.Alerts;
+using DND.TestSetup;
 using DND.Web.MVCImplementation.Contact.Models;
-using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Xunit;
 using System.Linq;
 using System.Net;
-using DND.TestSetup;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace DND.IntegrationTestsXUnit
 {
