@@ -5,12 +5,8 @@ using DND.Common.Implementation.UnitOfWork;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Testing;
 using DND.Domain.Blog.BlogPosts;
-using DND.Domain.Interfaces.Persistance;
 using FluentAssertions;
-using Moq;
 using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using Xunit;
 

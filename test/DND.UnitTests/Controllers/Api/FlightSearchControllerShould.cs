@@ -1,17 +1,16 @@
 ﻿using AutoMapper;
+using DND.Common.Testing;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.ViewModels;
 using DND.Web.MVCImplementation.FlightSearch.Api;
+using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Collections.Generic;
 using System.Threading;
 using Xunit;
-using DND.Common.Testing;
-using Microsoft.AspNetCore.Identity;
-using DND.Common.ActionResults;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DND.UnitTests.Controllers.Api
 {
