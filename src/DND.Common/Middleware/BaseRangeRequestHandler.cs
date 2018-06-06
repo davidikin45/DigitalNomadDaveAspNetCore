@@ -155,7 +155,7 @@ namespace DND.Common.Middleware
 
         public abstract void ParseRequestParameters(HttpContext context);
 
-        public abstract void CreateResponseContentIfRequired(HttpContext context);
+        public abstract Task CreateResponseContentIfRequiredAsync(HttpContext context);
 
         public abstract Stream GetResponseStream(HttpContext context);
 
@@ -188,7 +188,7 @@ namespace DND.Common.Middleware
 
                 InternalRequestedFileEntityTag = GetRequestedFileEntityTag(context);
 
-                CreateResponseContentIfRequired(context);
+               await CreateResponseContentIfRequiredAsync(context);
 
                 InternalRequestedFileMimeType = GetRequestedFileMimeType(context);
                 ParseRequestHeaderRanges(context);

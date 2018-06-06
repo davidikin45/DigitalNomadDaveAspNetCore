@@ -799,6 +799,39 @@ namespace DND.Common.Helpers
             }
         }
 
+        public async static Task<byte[]> GetBytesAsync(string path, int count = 0)
+        {
+            if (count == 0)
+            {
+                byte[] result;
+                using (FileStream stream = File.Open(path, FileMode.Open))
+                {
+                    result = new byte[stream.Length];
+                    await stream.ReadAsync(result, 0, (int)stream.Length);
+                }
+                return result;
+            }
+            else
+            {
+                using (var file = File.OpenRead(path))
+                {
+                    file.Position = 0;
+                    int offset = 0;
+                    byte[] buffer = new byte[count];
+                    int read;
+                    while (count > 0 && (read = await file.ReadAsync(buffer, offset, count)) > 0)
+                    {
+                        offset += read;
+                        count -= read;
+                    }
+
+                    if (count < 0) throw new EndOfStreamException();
+                    return buffer;
+                }
+
+            }
+        }
+
         public static byte[] ReadToEnd(System.IO.Stream stream)
         {
             long position = 0L;

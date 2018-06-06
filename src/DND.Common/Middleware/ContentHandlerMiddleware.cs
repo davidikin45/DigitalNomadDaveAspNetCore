@@ -243,11 +243,11 @@ namespace DND.Common.Middleware
             }
         }
 
-        public override void CreateResponseContentIfRequired(HttpContext context)
+        public async override Task CreateResponseContentIfRequiredAsync(HttpContext context)
         {
             _responseContentType = System.Web.MimeMapping.GetMimeMapping(_physicalFilePath);
 
-            byte[] bytes10 = FileHelper.GetBytes(_physicalFilePath, 10);
+            byte[] bytes10 = await FileHelper.GetBytesAsync(_physicalFilePath, 10);
 
             if (this.width <= 0 && this.height <= 0 && this.size <= 0 && this.maxwidth == 0 && this.maxheight == 0)
             {
@@ -260,7 +260,7 @@ namespace DND.Common.Middleware
 
                     if (changesCanBeMade)
                     {
-                        byte[] array = FileHelper.GetBytes(_physicalFilePath);
+                        byte[] array = await FileHelper.GetBytesAsync(_physicalFilePath);
                         using (Image disposableImage = ImageHelper.GetImage(array))
                         {
                             Image image = disposableImage;
@@ -295,7 +295,7 @@ namespace DND.Common.Middleware
 
                     if (ImageHelper.IsValidImage(bytes10))
                     {
-                        byte[] bytes = FileHelper.GetBytes(_physicalFilePath);
+                        byte[] bytes = await FileHelper.GetBytesAsync(_physicalFilePath);
                         disposableImage = ImageHelper.GetImage(bytes);
                         disposableImage = this.Rotate(disposableImage, ImageHelper.ImageFilterHelper.Rotate.None, ref changesMade);
                     }
@@ -306,7 +306,7 @@ namespace DND.Common.Middleware
                     }
                     else
                     {
-                        byte[] bytes256 = FileHelper.GetBytes(_physicalFilePath, 256);
+                        byte[] bytes256 = await FileHelper.GetBytesAsync(_physicalFilePath, 256);
                         disposableImage = FileHelper.GetFileIconImageFromFileNameAndBytes(_responseFileName, bytes256, true);
                     }
 
