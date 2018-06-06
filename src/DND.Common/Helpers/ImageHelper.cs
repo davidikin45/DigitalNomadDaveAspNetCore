@@ -199,7 +199,16 @@ namespace DND.Common.Helpers
 
         public static Boolean IsVideo(this FileInfo fileinfo)
         {
-            return System.Web.MimeMapping.GetMimeMapping(fileinfo.Name).StartsWith("video/");
+            return IsVideo(fileinfo.Name);
+        }
+
+        public static Boolean IsVideo(this string fileName)
+        {
+            var ext = Path.GetExtension(fileName);
+            if (ext == ".mp4")
+                return true;
+
+            return System.Web.MimeMapping.GetMimeMapping(fileName).StartsWith("video/");
         }
 
         public static Boolean IsYouTube(this String id)
@@ -226,7 +235,7 @@ namespace DND.Common.Helpers
         {
             if (directoryInfo != null)
             {
-                var repository = new BaseFileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4");
+                var repository = new BaseFileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4",".avi");
                 return repository.GetMain();
             }
             return null;
@@ -236,7 +245,7 @@ namespace DND.Common.Helpers
         {
             if (directoryInfo != null)
             {
-                var repository = new BaseFileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4",".txt");
+                var repository = new BaseFileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4",".avi",".txt");
                 return repository.GetMain();
             }
             return null;

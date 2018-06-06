@@ -3,12 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <TypeScriptToolsVersion>2.4</TypeScriptToolsVersion>
+    <UseGlobalApplicationHostFile>True</UseGlobalApplicationHostFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\net472\DND.Web.xml</DocumentationFile>
   </PropertyGroup>
 
+ 
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\net472\DND.Web.xml</DocumentationFile>
   </PropertyGroup>

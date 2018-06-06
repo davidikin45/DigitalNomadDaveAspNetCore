@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
 using DND.Common.Automapper;
 using System;
@@ -19,6 +20,8 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
         protected override void Load(ContainerBuilder builder)
         {
             var config = new MapperConfiguration(cfg => {
+                //!!!!!!IMPORTANT to map delegates with AutoMapper
+                cfg.AddExpressionMapping();
                 new AutoMapperConfiguration(cfg, Filter);
             });
 

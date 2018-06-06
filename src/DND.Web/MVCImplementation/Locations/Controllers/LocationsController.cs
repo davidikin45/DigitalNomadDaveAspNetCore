@@ -108,7 +108,7 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".jpg", ".jpeg", ".mp4", ".txt");
+            var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, physicalPath, true, "*.*", ".jpg", ".jpeg", ".mp4", ".avi", ".txt");
             var dataTask = repository.GetAllAsync(LamdaHelper.GetOrderByFunc<FileInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
             var totalTask = repository.GetCountAsync(null);
 

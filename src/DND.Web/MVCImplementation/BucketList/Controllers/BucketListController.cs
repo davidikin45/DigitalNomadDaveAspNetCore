@@ -39,7 +39,7 @@ namespace DND.Web.MVCImplementation.BucketList.Controllers
            
             try
             {
-                var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, Server.GetWwwFolderPhysicalPathById(Folders.BucketList), true,"*.*", ".jpg",".jpeg", ".txt",".mp4");
+                var repository = _fileSystemGenericRepositoryFactory.CreateFileRepository(cts.Token, Server.GetWwwFolderPhysicalPathById(Folders.BucketList), true,"*.*", ".jpg",".jpeg", ".txt",".mp4",".avi");
                 var dataTask = repository.GetAllAsync(LamdaHelper.GetOrderByFunc<FileInfo>(orderColumn, orderType), (page - 1) * pageSize, pageSize);
                 var totalTask = repository.GetCountAsync(null);
 

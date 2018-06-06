@@ -37,69 +37,69 @@ namespace DND.Common.Middleware
         public static IApplicationBuilder UseVersionedStaticFiles(
          this IApplicationBuilder app, int days)
         {
-           return app.UseWhen(context => context.Request.Query.ContainsKey("v"),
-                  appBranch =>
-                  {
+            return app.UseWhen(context => context.Request.Query.ContainsKey("v"),
+                   appBranch =>
+                   {
                       //cache js, css
                       appBranch.UseStaticFiles(new StaticFileOptions
-                      {
-                          OnPrepareResponse = ctx =>
-                          {
-                              if (days > 0)
-                              {
-                                  TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
-                                  ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
-                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                  {
-                                      Public = true,
-                                      MaxAge = timeSpan
-                                  };
-                              }
-                              else
-                              {
-                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                  {
-                                      NoCache = true
-                                  };
-                              }
-                          }
-                      });
-                  }
-             );
+                       {
+                           OnPrepareResponse = ctx =>
+                           {
+                               if (days > 0)
+                               {
+                                   TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
+                                   ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
+                                   ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                   {
+                                       Public = true,
+                                       MaxAge = timeSpan
+                                   };
+                               }
+                               else
+                               {
+                                   ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                   {
+                                       NoCache = true
+                                   };
+                               }
+                           }
+                       });
+                   }
+              );
         }
 
         public static IApplicationBuilder UseNonVersionedStaticFiles(
        this IApplicationBuilder app, int days)
         {
-           return app.UseWhen(context => !context.Request.Query.ContainsKey("v"),
-                  appBranch =>
-                  {
+            return app.UseWhen(context => !context.Request.Query.ContainsKey("v"),
+                   appBranch =>
+                   {
                       //cache js, css
                       appBranch.UseStaticFiles(new StaticFileOptions
-                      {
-                          OnPrepareResponse = ctx =>
-                          {
-                              if (days > 0)
-                              {
-                                  TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
-                                  ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
-                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                  {
-                                      Public = true,
-                                      MaxAge = timeSpan
-                                  };
-                              }
-                              else
-                              {
-                                  ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
-                                  {
-                                      NoCache = true
-                                  };
-                              }
-                          }
-                      });
-                  }
-             );
+                       {
+                           OnPrepareResponse = ctx =>
+                           {
+                               if (days > 0)
+                               {
+                                   TimeSpan timeSpan = new TimeSpan(days * 24, 0, 0);
+                                   ctx.Context.Response.GetTypedHeaders().Expires = DateTime.Now.Add(timeSpan).Date.ToUniversalTime();
+                                   ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                   {
+                                       Public = true,
+                                       MaxAge = timeSpan
+                                   };
+                               }
+                               else
+                               {
+                                   ctx.Context.Response.GetTypedHeaders().CacheControl = new CacheControlHeaderValue()
+                                   {
+                                       NoCache = true
+                                   };
+                               }
+                           }
+                       });
+                   }
+              );
         }
 
         public static IServiceCollection AddHangfireSqlServer(this IServiceCollection services, string connectionString)
@@ -124,5 +124,9 @@ namespace DND.Common.Middleware
             return builder;
         }
 
+        public static IApplicationBuilder UseStackifyPrefix(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<StackifyMiddleware.RequestTracerMiddleware>();
+        }
     }
 }

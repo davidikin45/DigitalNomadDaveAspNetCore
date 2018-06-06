@@ -210,6 +210,7 @@ Publish DND.Web
 * [Selenium](https://www.seleniumhq.org/) - Browser Automation
 * [.NET Core CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) - .NET Core Command Line Tools
 * [.NET Core TestServer](https://docs.microsoft.com/en-us/aspnet/core/testing/integration-testing?view=aspnetcore-2.0) - InProcess Integration Tests
+* [Stackify Prefix](https://stackify.com/prefix/) - Runtime performance profiler for .NET Core
 
 ## Authors
 

@@ -8,6 +8,7 @@ using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
 using DND.Common.Hangfire;
+using DND.Common.Helpers;
 using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
 using DND.Common.Middleware;
@@ -530,6 +531,16 @@ namespace DND.Web
             builder.RegisterType<TaskRunner>().AsSelf().PropertiesAutowired();
         }
 
+        private static bool IsStreamRequest(Microsoft.AspNetCore.Http.HttpContext context)
+        {
+            var stream = false;
+
+            var filename = Path.GetFileName(context.Request.Path.ToString());
+            stream = !string.IsNullOrEmpty(filename) && context.Request.Query.Keys.Count() == 0 && filename.IsVideo();
+
+            return stream;
+        }
+
         private static bool AreCookiesConsentedCallback(Microsoft.AspNetCore.Http.HttpContext context, string cookieConsentName)
         {
             return context.Request.Path.ToString().StartsWith("/api") || (context.Request.Cookies.Keys.Contains(cookieConsentName));
@@ -610,6 +621,14 @@ namespace DND.Web
                         });
                     }
                );
+            }
+
+            if (env.IsDevelopment())
+            {
+                //1. download profiler from https://stackify.com/prefix/
+                //2. enable .NET profiler in windows tray
+                //3. access results at http://localhost:2012
+                app.UseStackifyPrefix();
             }
 
             if (enableHelloWord)
@@ -713,7 +732,7 @@ namespace DND.Web
             {
                 if (enableCookieConsent)
                 {
-                    app.UseWhen(context => AreCookiesConsentedCallback(context, cookieConsentName),
+                    app.UseWhen(context => AreCookiesConsentedCallback(context, cookieConsentName) && !IsStreamRequest(context),
                       appBranch =>
                       {
                           appBranch.UseResponseCachingCustom(); //Allows Invalidation
@@ -722,7 +741,12 @@ namespace DND.Web
                 }
                 else
                 {
-                    app.UseResponseCachingCustom();
+                    app.UseWhen(context => !IsStreamRequest(context),
+                       appBranch =>
+                       {
+                           appBranch.UseResponseCachingCustom(); //Allows Invalidation
+                      }
+                     );
                 }
             }
 
@@ -734,7 +758,7 @@ namespace DND.Web
             {
                 if (enableCookieConsent)
                 {
-                    app.UseWhen(context => AreCookiesConsentedCallback(context, cookieConsentName),
+                    app.UseWhen(context => AreCookiesConsentedCallback(context, cookieConsentName) && !IsStreamRequest(context),
                       appBranch =>
                       {
                           appBranch.UseHttpCacheHeaders(true, true, true, true);
@@ -743,7 +767,12 @@ namespace DND.Web
                 }
                 else
                 {
-                    app.UseHttpCacheHeaders(true, true, true, true);
+                    app.UseWhen(context => !IsStreamRequest(context),
+                     appBranch =>
+                     {
+                         appBranch.UseHttpCacheHeaders(true, true, true, true);
+                     }
+                   );
                 }
             }
 
