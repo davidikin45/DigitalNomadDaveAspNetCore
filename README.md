@@ -188,6 +188,19 @@ Execute BatchFiles\Test\UITests.bat
 Publish DND.Web
 ```
 
+## Continuous Integration (CI)
+
+Using [Visual Studio Team Services](https://www.visualstudio.com/team-services/)
+
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/CI.png "Continuous Integration")
+
+## Continuous Deployment (CD)
+
+Using [Visual Studio Team Services](https://www.visualstudio.com/team-services/)
+
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/CD.png "Continuous Deployment")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/CD2.png "Continuous Deployment 2")
+
 ## Built With
 
 * [MVC Core](https://www.asp.net/mvc) - Microsoft .NET framework
@@ -211,6 +224,7 @@ Publish DND.Web
 * [.NET Core CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/?tabs=netcore2x) - .NET Core Command Line Tools
 * [.NET Core TestServer](https://docs.microsoft.com/en-us/aspnet/core/testing/integration-testing?view=aspnetcore-2.0) - InProcess Integration Tests
 * [Stackify Prefix](https://stackify.com/prefix/) - Runtime performance profiler for .NET Core
+* [Visual Studio Team Services](https://www.visualstudio.com/team-services/) - Continuous Integration (CI) and Continuous Deployment (CD)
 
 ## Authors
 
@@ -260,6 +274,10 @@ This project is licensed under the MIT License
 * [Automated Business Readable Web Tests with Selenium and SpecFlow](https://app.pluralsight.com/library/courses/selenium-specflow-automated-business-readable-web-tests/table-of-contents)
 * [Business Readable Automated Tests with SpecFlow 2.0](https://app.pluralsight.com/library/courses/specflow-2-0-business-readable-automated-tests/exercise-files)
 * [Integration Testing of Entity Framework Applications](https://app.pluralsight.com/library/courses/entity-framework-applications-integration-testing/table-of-contents)
+
+## Pluralsight Courses for Continuous Integration and Deployment
+* [Developing with .NET on Microsoft Azure - Getting Started](https://app.pluralsight.com/library/courses/developing-dotnet-microsoft-azure-getting-started/table-of-contents)
+* [Getting Started with Visual Studio Team Services (2018)](https://app.pluralsight.com/library/courses/getting-started-visual-studio-team-services-2018/table-of-contents)
 
 ## Pluralsight Courses for Chatbot
 * [Creating Voice and Chatbots That Work Everywhere](https://app.pluralsight.com/library/courses/creating-voice-chatbots-work-everywhere/table-of-contents)
