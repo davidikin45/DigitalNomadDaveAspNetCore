@@ -2,15 +2,12 @@
 using DND.Common.Controllers.Api;
 using DND.Common.Email;
 using DND.Common.Helpers;
-using DND.Domain.FlightSearch.Markets.Dtos;
 using DND.Domain.FlightSearch.Search.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
 using DND.Domain.ViewModels;
+using DND.Interfaces.FlightSearch.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

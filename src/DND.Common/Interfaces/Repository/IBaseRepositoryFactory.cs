@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using System.Threading;
 using DND.Common.Interfaces.UnitOfWork;
 

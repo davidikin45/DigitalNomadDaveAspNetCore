@@ -5,7 +5,7 @@
 }
 
 @{
-    var mainPhotoVideoText = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideoOrText();
+    var mainPhotoVideoText = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideoOrText();
 
     var mainImageShare = "";
     if (mainPhotoVideoText != null)
@@ -125,10 +125,10 @@ else
         }
 
         @Html.Raw(Model.Description)
-        @if (Model.ShowPhotosInAlbum && !string.IsNullOrEmpty(Model.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album))
+        @if (Model.ShowPhotosInAlbum && !string.IsNullOrEmpty(Model.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album))
         {
             <div class="card-columns-md-2 card-spacer-bottom">
-                @foreach (FileInfo file in Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4", ".avi", ".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>
+                @foreach (FileInfo file in Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4", ".avi", ".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>
           (nameof(FileInfo.LastWriteTime), OrderByType.Descending), null, null))
                 {
                     if (mainPhotoVideoText == null || mainPhotoVideoText.FullName != file.FullName)

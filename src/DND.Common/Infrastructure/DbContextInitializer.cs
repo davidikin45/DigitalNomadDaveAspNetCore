@@ -1,4 +1,4 @@
-﻿using DND.Common.Interfaces.Persistance;
+﻿using DND.Common.Interfaces.Data;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

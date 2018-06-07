@@ -77,8 +77,8 @@
     <Reference Include="HtmlAgilityPack, Version=1.8.4.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\HtmlAgilityPack.1.8.4\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlTags.AspNetCore, Version=7.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\HtmlTags.AspNetCore.7.0.1\lib\netstandard2.0\HtmlTags.AspNetCore.dll</HintPath>
+    <Reference Include="HtmlTags.AspNetCore, Version=7.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlTags.AspNetCore.7.0.2\lib\netstandard2.0\HtmlTags.AspNetCore.dll</HintPath>
     </Reference>
     <Reference Include="Humanizer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Humanizer.Core.2.2.0\lib\netstandard1.0\Humanizer.dll</HintPath>
@@ -829,30 +829,30 @@
     <Compile Include="Implementation\Models\BaseValueObject.cs" />
     <Compile Include="Implementation\Models\JpegMetadata.cs" />
     <Compile Include="Implementation\Models\EnumDatasourceAttribute.cs" />
-    <Compile Include="Implementation\Persistance\BaseDbConfigurationSQLite.cs" />
-    <Compile Include="Implementation\Persistance\BaseDbConfiguration.cs" />
-    <Compile Include="Implementation\Persistance\BaseDbContextTransaction.cs" />
-    <Compile Include="Implementation\Persistance\BaseDbContextTransactionAspNetCore.cs" />
-    <Compile Include="Implementation\Persistance\BaseDropCreateForceDatabaseInitializer.cs" />
-    <Compile Include="Implementation\Persistance\BaseDbContext.cs" />
-    <Compile Include="Implementation\Persistance\BaseIdentityDbContext.cs" />
-    <Compile Include="Implementation\Persistance\ConnectionStrings.cs" />
-    <Compile Include="Implementation\Persistance\DbConfigurationSwitcher.cs" />
-    <Compile Include="Implementation\Persistance\DbContextTimestamps.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\InMemoryDbContext.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\Accessor.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\AfterSave.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\BeforeSave.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\ConcurrentList.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\GuidIdentityStrategy.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\IdentityStrategy.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\IntegerIdentityStrategy.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\IIdentityStrategy.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\LongIdentityStrategy.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\ObjectRepresentation.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\ObjectRepresentationRepository.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\ShortIdentityStrategy.cs" />
-    <Compile Include="Implementation\Persistance\InMemory\TestDbAsyncQueryProvider.cs" />
+    <Compile Include="Implementation\Data\BaseDbConfigurationSQLite.cs" />
+    <Compile Include="Implementation\Data\BaseDbConfiguration.cs" />
+    <Compile Include="Implementation\Data\BaseDbContextTransaction.cs" />
+    <Compile Include="Implementation\Data\BaseDbContextTransactionAspNetCore.cs" />
+    <Compile Include="Implementation\Data\BaseDropCreateForceDatabaseInitializer.cs" />
+    <Compile Include="Implementation\Data\BaseDbContext.cs" />
+    <Compile Include="Implementation\Data\BaseIdentityDbContext.cs" />
+    <Compile Include="Implementation\Data\ConnectionStrings.cs" />
+    <Compile Include="Implementation\Data\DbConfigurationSwitcher.cs" />
+    <Compile Include="Implementation\Data\DbContextTimestamps.cs" />
+    <Compile Include="Implementation\Data\InMemory\InMemoryDbContext.cs" />
+    <Compile Include="Implementation\Data\InMemory\Accessor.cs" />
+    <Compile Include="Implementation\Data\InMemory\AfterSave.cs" />
+    <Compile Include="Implementation\Data\InMemory\BeforeSave.cs" />
+    <Compile Include="Implementation\Data\InMemory\ConcurrentList.cs" />
+    <Compile Include="Implementation\Data\InMemory\GuidIdentityStrategy.cs" />
+    <Compile Include="Implementation\Data\InMemory\IdentityStrategy.cs" />
+    <Compile Include="Implementation\Data\InMemory\IntegerIdentityStrategy.cs" />
+    <Compile Include="Implementation\Data\InMemory\IIdentityStrategy.cs" />
+    <Compile Include="Implementation\Data\InMemory\LongIdentityStrategy.cs" />
+    <Compile Include="Implementation\Data\InMemory\ObjectRepresentation.cs" />
+    <Compile Include="Implementation\Data\InMemory\ObjectRepresentationRepository.cs" />
+    <Compile Include="Implementation\Data\InMemory\ShortIdentityStrategy.cs" />
+    <Compile Include="Implementation\Data\InMemory\TestDbAsyncQueryProvider.cs" />
     <Compile Include="Implementation\Repository\GenericRepositoryFactory.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\GenericEFReadOnlyRepository.cs" />
     <Compile Include="Implementation\Repository\EntityFramework\GenericEFRepository.cs" />
@@ -869,7 +869,7 @@
     <Compile Include="Implementation\Services\TypeHelperService.cs" />
     <Compile Include="Implementation\UnitOfWork\AmbientDbContextLocator.cs" />
     <Compile Include="Implementation\UnitOfWork\AmbientUnitOfWorkSuppressor.cs" />
-    <Compile Include="Implementation\UnitOfWork\BaseDbContextCollection.cs" />
+    <Compile Include="Implementation\UnitOfWork\DbContextCollection.cs" />
     <Compile Include="Implementation\UnitOfWork\UnitOfWorkScopeFactory.cs" />
     <Compile Include="Implementation\UnitOfWork\Scopes\UnitOfWorkReadOnlyScope.cs" />
     <Compile Include="Implementation\UnitOfWork\Scopes\BaseUnitOfWorkScope.cs" />
@@ -914,9 +914,9 @@
     <Compile Include="Interfaces\Models\IBaseEntityAggregateRoot.cs" />
     <Compile Include="Interfaces\Models\IBaseEntityAuditable.cs" />
     <Compile Include="Interfaces\Models\IBaseObjectValidatable.cs" />
-    <Compile Include="Interfaces\Persistance\IBaseDbContext.cs" />
-    <Compile Include="Interfaces\Persistance\IBaseDbContextFactory.cs" />
-    <Compile Include="Interfaces\Persistance\IBaseDbContextTransaction.cs" />
+    <Compile Include="Interfaces\Data\IBaseDbContext.cs" />
+    <Compile Include="Interfaces\Data\IBaseDbContextFactory.cs" />
+    <Compile Include="Interfaces\Data\IBaseDbContextTransaction.cs" />
     <Compile Include="Interfaces\Repository\IBaseFileReadOnlyRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseFileRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseFolderReadOnlyRepository.cs" />

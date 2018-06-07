@@ -4,7 +4,7 @@ using DND.Common.Email;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Dtos;
 using DND.Domain.Blog.Locations.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.Blog.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Linq;

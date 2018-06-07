@@ -2,7 +2,7 @@
 using DND.Common.Controllers;
 using DND.Common.Email;
 using DND.Common.Helpers;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.Blog.ApplicationServices;
 using DND.Web.MVCImplementation.Blog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

@@ -6,7 +6,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.Repository;
 using System;
 using System.Collections;

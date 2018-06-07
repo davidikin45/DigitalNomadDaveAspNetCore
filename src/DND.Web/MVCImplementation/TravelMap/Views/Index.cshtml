@@ -11,9 +11,9 @@
     {
         bool outputImage = false;
 
-        if (!item.CurrentLocation && !string.IsNullOrEmpty(item.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + item.Album))
+        if (!item.CurrentLocation && !string.IsNullOrEmpty(item.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + item.Album))
         {
-            var mainPhoto = FileHelper.GetDirectoryInfo(DND.Domain.Constants.Folders.Gallery, item.Album).MainPhotoOrVideoOrText();
+            var mainPhoto = FileHelper.GetDirectoryInfo(DND.Infrastructure.Constants.Folders.Gallery, item.Album).MainPhotoOrVideoOrText();
             if (mainPhoto != null)
             {
                 outputImage = true;

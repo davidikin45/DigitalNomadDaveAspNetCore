@@ -71,15 +71,15 @@
                 <h4 class="hidden-sm-up">Where Next?</h4>
                 <p>
                     @if (nextLocationName != "")
-            {<text><google-map latitude="@nextLocationLatitude" longitude="@nextLocationLongitude"></google-map></text>} &nbsp; @nextLocationName
-        </p>
+                    {<text><google-map latitude="@nextLocationLatitude" longitude="@nextLocationLongitude"></google-map></text>} &nbsp; @nextLocationName
+                </p>
+            </div>
         </div>
-      </div>
     </div>
 </div>
 
 @{
-    var repository = Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Parellax), true, "*.*", ".jpg");
+    var repository = Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Parellax), true, "*.*", ".jpg");
     var data = repository.GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(nameof(FileInfo.LastWriteTime), OrderByType.Descending), 0, 2).ToList();
 }
 

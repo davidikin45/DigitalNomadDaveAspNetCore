@@ -3,7 +3,7 @@ using DND.Common.Controllers.Api;
 using DND.Common.Email;
 using DND.Common.Interfaces.Services;
 using DND.Domain.CMS.ContentHtmls.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.CMS.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 

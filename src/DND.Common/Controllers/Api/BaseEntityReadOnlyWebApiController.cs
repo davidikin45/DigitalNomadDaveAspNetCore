@@ -110,7 +110,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = await Service.GetByIdAsync(ids, cts.Token);
+            var response = await Service.GetByIdsAsync(ids, cts.Token);
 
             var list = response.ToList();
 

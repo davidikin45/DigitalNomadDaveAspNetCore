@@ -1,7 +1,7 @@
 ﻿@model BlogPostDto
 
 @{
-    var mainPhotoVideoText = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideoOrText();
+    var mainPhotoVideoText = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideoOrText();
     var mainImageShare = "";
     if (mainPhotoVideoText != null)
     {

@@ -3,7 +3,7 @@ using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.Services;
 using DND.Common.Interfaces.UnitOfWork;
 using System;
@@ -15,8 +15,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.ApplicationServices
 {
-    public abstract class BaseEntityReadOnlyApplicationService<TContext, TEntity, TDto, TDomainService> : BaseApplicationService, IBaseEntityReadOnlyApplicationService<TDto>
-          where TContext : IBaseDbContext
+    public abstract class BaseEntityReadOnlyApplicationService<TEntity, TDto, TDomainService> : BaseApplicationService, IBaseEntityReadOnlyApplicationService<TDto>
           where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
           where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
           where TDomainService : IBaseEntityReadOnlyDomainService<TEntity>
@@ -211,16 +210,16 @@ namespace DND.Common.Implementation.ApplicationServices
             return Mapper.Map<TDto>(bo);
         }
 
-        public virtual IEnumerable<TDto> GetById(IEnumerable<object> ids)
+        public virtual IEnumerable<TDto> GetByIds(IEnumerable<object> ids)
         {
-            var result = DomainService.GetById(ids);
+            var result = DomainService.GetByIds(ids);
             return Mapper.Map<IEnumerable<TDto>>(result);
         }
 
-        public virtual async Task<IEnumerable<TDto>> GetByIdAsync(IEnumerable<object> ids,
+        public virtual async Task<IEnumerable<TDto>> GetByIdsAsync(IEnumerable<object> ids,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var result = await DomainService.GetByIdAsync(ids, cancellationToken).ConfigureAwait(false);
+            var result = await DomainService.GetByIdsAsync(ids, cancellationToken).ConfigureAwait(false);
             return Mapper.Map<IEnumerable<TDto>>(result);
         }
 

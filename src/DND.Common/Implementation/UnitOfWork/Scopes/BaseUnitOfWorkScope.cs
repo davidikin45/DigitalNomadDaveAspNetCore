@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Repository;
 using DND.Common.Interfaces.UnitOfWork;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 
 using DND.Common.Implementation.Repository.EntityFramework;
 using System.Threading;

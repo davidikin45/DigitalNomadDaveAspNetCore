@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using DND.Common.Controllers.Admin;
-using Microsoft.Extensions.Configuration;
 using DND.Common.Email;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.MVCImplementation.Admin.Controllers
 {

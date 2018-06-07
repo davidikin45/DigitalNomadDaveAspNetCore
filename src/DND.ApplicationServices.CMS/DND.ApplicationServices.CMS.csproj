@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{37FBC095-B03A-466A-8707-3FE2F5534088}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DND.ApplicationServices.CMS</RootNamespace>
+    <AssemblyName>DND.ApplicationServices.CMS</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.7.0.0\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CarouselItems\Services\CarouselItemApplicationService.cs" />
+    <Compile Include="ContentHtmls\Services\ContentHtmlApplicationService.cs" />
+    <Compile Include="ContentTexts\Services\ContentTextApplicationService.cs" />
+    <Compile Include="Faqs\Services\FaqApplicationService.cs" />
+    <Compile Include="MailingLists\Services\MailingListApplicationService.cs" />
+    <Compile Include="Projects\Services\ProjectApplicationService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Testimonials\Services\TestimonialApplicationService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CarouselItems\Commands\" />
+    <Folder Include="CarouselItems\Queries\" />
+    <Folder Include="ContentHtmls\Commands\" />
+    <Folder Include="ContentHtmls\Queries\" />
+    <Folder Include="ContentTexts\Commands\" />
+    <Folder Include="ContentTexts\Queries\" />
+    <Folder Include="Faqs\Commands\" />
+    <Folder Include="Faqs\Queries\" />
+    <Folder Include="MailingLists\Commands\" />
+    <Folder Include="MailingLists\Queries\" />
+    <Folder Include="Projects\Commands\" />
+    <Folder Include="Projects\Queries\" />
+    <Folder Include="Testimonials\Commands\" />
+    <Folder Include="Testimonials\Queries\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj">
+      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
+      <Name>DND.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Domain.CMS\DND.Domain.CMS.csproj">
+      <Project>{fb3174f0-a81a-49f6-ac0f-95e46ab9d0f9}</Project>
+      <Name>DND.Domain.CMS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Interfaces.CMS\DND.Interfaces.CMS.csproj">
+      <Project>{fd348f97-edd9-4e2d-ab0e-bdec23f3cb5a}</Project>
+      <Name>DND.Interfaces.CMS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0243F87D-007F-4B74-9429-FA8CC64C4BAC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DND.Domain.FlightSearch</RootNamespace>
+    <AssemblyName>DND.Domain.FlightSearch</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.7.0.0\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Currencies\Dtos\CurrencyDTO.cs" />
+    <Compile Include="Enums\Adult.cs" />
+    <Compile Include="Enums\Children.cs" />
+    <Compile Include="Enums\FlightClass.cs" />
+    <Compile Include="Enums\FlightSearchType.cs" />
+    <Compile Include="Enums\Infant.cs" />
+    <Compile Include="Enums\SortOrder.cs" />
+    <Compile Include="Enums\SortType.cs" />
+    <Compile Include="Locales\Dtos\LocaleDTO.cs" />
+    <Compile Include="Markets\Dtos\MarketDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\Dtos\FlightSearchRequestDTO.cs" />
+    <Compile Include="Search\Dtos\FlightSearchResponseDTO.cs" />
+    <Compile Include="Search\Dtos\ItineraryDTO.cs" />
+    <Compile Include="Search\Dtos\LocationAutoSuggestRequestDTO.cs" />
+    <Compile Include="Search\Dtos\LocationAutoSuggestResponseDTO.cs" />
+    <Compile Include="Search\Dtos\LocationRequestDTO.cs" />
+    <Compile Include="Search\Dtos\LocationResponseDTO.cs" />
+    <Compile Include="Skyscanner\ModelExtend\Airport.cs" />
+    <Compile Include="Skyscanner\ModelExtend\BrowseDatesServiceResponse.cs" />
+    <Compile Include="Skyscanner\ModelExtend\BrowseRoutesServiceResponse.cs" />
+    <Compile Include="Skyscanner\ModelExtend\City.cs" />
+    <Compile Include="Skyscanner\ModelExtend\Itinerary.cs" />
+    <Compile Include="Skyscanner\ModelExtend\Leg.cs" />
+    <Compile Include="Skyscanner\ModelExtend\Place.cs" />
+    <Compile Include="Skyscanner\ModelExtend\PricingOption.cs" />
+    <Compile Include="Skyscanner\ModelExtend\Segment.cs" />
+    <Compile Include="Skyscanner\ModelImport\Airport.cs" />
+    <Compile Include="Skyscanner\Model\Agent.cs" />
+    <Compile Include="Skyscanner\Model\Airport.cs" />
+    <Compile Include="Skyscanner\Model\BookingDetailsLink.cs" />
+    <Compile Include="Skyscanner\Model\BrowseDatesServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\BrowseGridServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\BrowseRoutesServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\Carrier.cs" />
+    <Compile Include="Skyscanner\Model\City.cs" />
+    <Compile Include="Skyscanner\Model\Continent.cs" />
+    <Compile Include="Skyscanner\Model\CountriesServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\Country.cs" />
+    <Compile Include="Skyscanner\Model\CurrenciesServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\Currency.cs" />
+    <Compile Include="Skyscanner\Model\FlightNumber.cs" />
+    <Compile Include="Skyscanner\Model\GeoServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\InboundLeg.cs" />
+    <Compile Include="Skyscanner\Model\Itinerary.cs" />
+    <Compile Include="Skyscanner\Model\Leg.cs" />
+    <Compile Include="Skyscanner\Model\Locale.cs" />
+    <Compile Include="Skyscanner\Model\LocalesServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\LocationServiceResponse.cs" />
+    <Compile Include="Skyscanner\Model\OutboundLeg.cs" />
+    <Compile Include="Skyscanner\Model\Place.cs" />
+    <Compile Include="Skyscanner\Model\PricingOption.cs" />
+    <Compile Include="Skyscanner\Model\Query.cs" />
+    <Compile Include="Skyscanner\Model\Quote.cs" />
+    <Compile Include="Skyscanner\Model\Region.cs" />
+    <Compile Include="Skyscanner\Model\Route.cs" />
+    <Compile Include="Skyscanner\Model\Segment.cs" />
+    <Compile Include="ViewModels\FlightSearchClientRequestForm.cs" />
+    <Compile Include="ViewModels\LocationAutoSuggestForm.cs" />
+    <Compile Include="ViewModels\LocationForm.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Skyscanner\ModelExtendFilter\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj">
+      <Project>{632121c5-db10-4f32-a239-d4fa4ee8c12e}</Project>
+      <Name>DND.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Infrastructure\DND.Infrastructure.csproj">
+      <Project>{29741BD0-CE09-4455-A83C-FD4A7FEED22E}</Project>
+      <Name>DND.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

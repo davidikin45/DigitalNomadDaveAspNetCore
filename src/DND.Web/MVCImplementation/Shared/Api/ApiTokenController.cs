@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers.Api;
 using DND.Common.Email;
-using DND.Domain.Models;
+using DND.Domain.Identity.Users;
 using DND.Web.MVCImplementation.Account.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

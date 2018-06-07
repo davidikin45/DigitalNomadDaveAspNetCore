@@ -1,7 +1,7 @@
 ﻿using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Domain.Blog.BlogPosts.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.Blog.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

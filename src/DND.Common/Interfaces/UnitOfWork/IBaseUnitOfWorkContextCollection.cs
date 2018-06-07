@@ -7,7 +7,7 @@
  */
 using System;
 using System.Data.Entity;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 
 namespace DND.Common.Interfaces.UnitOfWork
 {

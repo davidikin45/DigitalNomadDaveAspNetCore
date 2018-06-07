@@ -50,6 +50,24 @@ namespace DND.Common.Interfaces.Repository
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
+        IEnumerable<TEntity> SearchNoTracking(
+         string search = "",
+       Expression<Func<TEntity, bool>> filter = null,
+       Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+       int? skip = null,
+       int? take = null,
+       params Expression<Func<TEntity, Object>>[] includeProperties)
+       ;
+
+        Task<IEnumerable<TEntity>> SearchNoTrackingAsync(
+            string search = "",
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            int? skip = null,
+            int? take = null,
+            params Expression<Func<TEntity, Object>>[] includeProperties)
+            ;
+
         IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
@@ -59,6 +77,22 @@ namespace DND.Common.Interfaces.Repository
             ;
 
         Task<IEnumerable<TEntity>> GetAsync(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            int? skip = null,
+            int? take = null,
+            params Expression<Func<TEntity, Object>>[] includeProperties)
+            ;
+
+        IEnumerable<TEntity> GetNoTracking(
+          Expression<Func<TEntity, bool>> filter = null,
+          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+          int? skip = null,
+          int? take = null,
+          params Expression<Func<TEntity, Object>>[] includeProperties)
+          ;
+
+        Task<IEnumerable<TEntity>> GetNoTrackingAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
@@ -76,6 +110,16 @@ namespace DND.Common.Interfaces.Repository
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
+        TEntity GetOneNoTracking(
+        Expression<Func<TEntity, bool>> filter = null,
+        params Expression<Func<TEntity, Object>>[] includeProperties)
+        ;
+
+        Task<TEntity> GetOneNoTrackingAsync(
+            Expression<Func<TEntity, bool>> filter = null,
+            params Expression<Func<TEntity, Object>>[] includeProperties)
+            ;
+
         TEntity GetFirst(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
@@ -88,16 +132,40 @@ namespace DND.Common.Interfaces.Repository
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
+        TEntity GetFirstNoTracking(
+          Expression<Func<TEntity, bool>> filter = null,
+          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+          params Expression<Func<TEntity, Object>>[] includeProperties)
+          ;
+
+        Task<TEntity> GetFirstNoTrackingAsync(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            params Expression<Func<TEntity, Object>>[] includeProperties)
+            ;
+
         TEntity GetById(object id)
             ;
 
         Task<TEntity> GetByIdAsync(object id)
             ;
 
-        IEnumerable<TEntity> GetById(IEnumerable<object> ids)
+        TEntity GetByIdNoTracking(object id)
+          ;
+
+        Task<TEntity> GetByIdNoTrackingAsync(object id)
+            ;
+
+        IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
            ;
 
-        Task<IEnumerable<TEntity>> GetByIdAsync(IEnumerable<object> ids)
+        Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids)
+            ;
+
+        IEnumerable<TEntity> GetByIdsNoTracking(IEnumerable<object> ids)
+       ;
+
+        Task<IEnumerable<TEntity>> GetByIdsNoTrackingAsync(IEnumerable<object> ids)
             ;
 
         int GetCount(Expression<Func<TEntity, bool>> filter = null)

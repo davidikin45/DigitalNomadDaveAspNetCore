@@ -44,7 +44,7 @@ For performance reaons an event is only ever fired if there is at least one Hand
 The methods IDomainEvent methods HandlePreCommitCondition and HandlePostCommitCondition can be used for scenarios where you only want to handle PreCommit or PostCommit.\
 Below is the intended design pattern and an example of two IDomainEventHandlers. Note: This is still a work in progress.
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/Domain%20Events%20Diagram.png "Domain Events Diagram")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/Domain%20Events%20Diagram.png "Domain Events Diagram")
 
 ```C#
  public class Tag
@@ -192,14 +192,14 @@ Publish DND.Web
 
 Using [Visual Studio Team Services](https://www.visualstudio.com/team-services/)
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/CI.png "Continuous Integration")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CI.png "Continuous Integration")
 
 ## Continuous Deployment (CD)
 
 Using [Visual Studio Team Services](https://www.visualstudio.com/team-services/)
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/CD.png "Continuous Deployment")
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/design/CD2.png "Continuous Deployment 2")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CD.png "Continuous Deployment")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CD2.png "Continuous Deployment 2")
 
 ## Built With
 

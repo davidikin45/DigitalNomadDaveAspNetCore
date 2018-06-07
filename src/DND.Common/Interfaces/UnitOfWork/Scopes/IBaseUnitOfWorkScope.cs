@@ -8,7 +8,7 @@ using DND.Common.Interfaces.Repository;
 
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 
 namespace DND.Common.Interfaces.UnitOfWork
 {

@@ -5,7 +5,7 @@ using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using System;
 using System.Linq;
 using System.Threading;
@@ -13,8 +13,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.ApplicationServices
 {
-    public abstract class BaseEntityApplicationService<TContext, TEntity, TCreateDto, TReadDto, TUpdateDto, TDeleteDto, TDomainService> : BaseEntityReadOnlyApplicationService<TContext, TEntity, TReadDto, TDomainService>, IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
-          where TContext : IBaseDbContext
+    public abstract class BaseEntityApplicationService<TEntity, TCreateDto, TReadDto, TUpdateDto, TDeleteDto, TDomainService> : BaseEntityReadOnlyApplicationService<TEntity, TReadDto, TDomainService>, IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
           where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, new()
           where TCreateDto : class, IBaseDto
           where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware

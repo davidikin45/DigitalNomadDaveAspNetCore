@@ -23,11 +23,11 @@
     <p><strong>Link:</strong> <a href="@Model.Link">@(string.IsNullOrEmpty(Model.LinkText) ? Model.Link : Model.LinkText)</a></p>
 }
 
-@if (!string.IsNullOrEmpty(Model.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album))
+@if (!string.IsNullOrEmpty(Model.Album) && FileHelper.FolderExists(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album))
 {
     HashSet<string> files = new HashSet<string>();
     <div class="card-columns-md-2">
-    @foreach (FileInfo file in Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4",".avi",".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(nameof(FileInfo.LastWriteTime), OrderByType.Descending), null, null))
+    @foreach (FileInfo file in Html.FileSystemGenericRepositoryFactory().CreateFileRepositoryReadOnly(default(CancellationToken), Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album, true, "*.*", ".jpg", ".jpeg", ".mp4",".avi",".txt").GetAll(LamdaHelper.GetOrderByFunc<FileInfo>(nameof(FileInfo.LastWriteTime), OrderByType.Descending), null, null))
     {
         if (!files.Contains(file.Name))
         {

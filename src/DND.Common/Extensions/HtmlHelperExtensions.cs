@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using DND.Common.APIs;
 using DND.Common.Infrastructure;
 using DND.Common.Extensions;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.Repository;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;

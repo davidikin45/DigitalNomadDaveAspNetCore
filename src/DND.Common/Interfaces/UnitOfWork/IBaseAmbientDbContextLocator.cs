@@ -6,7 +6,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 using System.Data.Entity;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 
 namespace DND.Common.Interfaces.UnitOfWork
 {

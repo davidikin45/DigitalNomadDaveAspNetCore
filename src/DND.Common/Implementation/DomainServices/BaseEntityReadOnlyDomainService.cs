@@ -1,7 +1,7 @@
 ﻿using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -96,7 +96,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().Search(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
+                var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchNoTracking(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
 
                 return entityList;
             }
@@ -113,7 +113,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchNoTrackingAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
 
                 return entityList;
             }
@@ -128,7 +128,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().Get(filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
+                var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetNoTracking(filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
 
                 return entityList;
             }
@@ -144,7 +144,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAsync(filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
+                var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetNoTrackingAsync(filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
 
                 return entityList;
             }
@@ -212,20 +212,20 @@ namespace DND.Common.Implementation.DomainServices
             }
         }
 
-        public virtual IEnumerable<TEntity> GetById(IEnumerable<object> ids)
+        public virtual IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
-                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(ids);
+                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdsNoTracking(ids);
             }
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetByIdAsync(IEnumerable<object> ids,
+        public virtual async Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(ids).ConfigureAwait(false);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdsNoTrackingAsync(ids).ConfigureAwait(false);
             }
         }
 

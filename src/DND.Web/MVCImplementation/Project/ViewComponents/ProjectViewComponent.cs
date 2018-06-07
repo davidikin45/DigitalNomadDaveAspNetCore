@@ -3,7 +3,7 @@ using DND.Common.Interfaces.Repository;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Common.ViewComponents;
 using DND.Domain.CMS.Projects.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.CMS.ApplicationServices;
 using DND.Web.MVCImplementation.Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

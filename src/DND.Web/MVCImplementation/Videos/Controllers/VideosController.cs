@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
-using DND.Domain.Constants;
-using Microsoft.AspNetCore.Mvc;
 using DND.Common.Controllers;
+using DND.Common.Email;
 using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Dtos;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Repository;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Infrastructure.Constants;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using DND.Common.Email;
 
 namespace DND.Web.MVCImplementation.Videos.Controllers
 {

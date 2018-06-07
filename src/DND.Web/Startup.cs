@@ -3,28 +3,25 @@ using Autofac;
 using DND.Common.Alerts;
 using DND.Common.Controllers.Admin;
 using DND.Common.DependencyInjection.Autofac.Modules;
-using DND.Common.DomainEvents;
 using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
 using DND.Common.Hangfire;
 using DND.Common.Helpers;
-using DND.Common.Implementation.Persistance;
 using DND.Common.Infrastructure;
 using DND.Common.Middleware;
 using DND.Common.Routing;
 using DND.Common.Swagger;
 using DND.Common.Tasks;
-using DND.Domain;
-using DND.Domain.Models;
-using DND.EFPersistance.Identity;
+using DND.Data.Identity;
+using DND.Domain.Identity.Users;
+using DND.Infrastructure;
 using DND.Web.MVCImplementation.FlightSearch.Hubs;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -161,11 +158,11 @@ namespace DND.Web
 
             if (useSQLite)
             {
-                services.AddDbContextSqlite<ApplicationIdentityDbContext>(SQLiteConnectionString);
+                services.AddDbContextSqlite<IdentityDbContext>(SQLiteConnectionString);
             }
             else
             {
-                services.AddDbContextSqlServer<ApplicationIdentityDbContext>(SQLServerConnectionString);
+                services.AddDbContextSqlServer<IdentityDbContext>(SQLServerConnectionString);
             }
 
             if (useSQLite)
@@ -178,7 +175,7 @@ namespace DND.Web
             }
 
             //Adds "Identity.Application"/IdentityConstants.ApplicationScheme cookie authentication scheme 
-            services.AddIdentity<ApplicationIdentityDbContext, User, IdentityRole>(requireDigit, requiredLength, requiredUniqueChars, requireLowercase, requireNonAlphanumeric,
+            services.AddIdentity<IdentityDbContext, User, IdentityRole>(requireDigit, requiredLength, requiredUniqueChars, requireLowercase, requireNonAlphanumeric,
                 requireUppercase, requireConfirmedEmail, registrationEmailConfirmationExprireDays, forgotPasswordEmailConfirmationExpireHours, userDetailsChangeLogoutMinutes);
 
             services.ConfigureApplicationCookie(options =>

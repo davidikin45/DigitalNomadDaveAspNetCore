@@ -13,13 +13,13 @@ namespace DND.Common.Interfaces.Repository
          where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
 
     {
-        Result CreateOrUpdate(TEntity entity, string createdUpdateBy = null);
+        Result InsertOrUpdate(TEntity entity, string createdUpdateBy = null);
 
-        Task<Result> CreateOrUpdateAsync(TEntity entity, string createdUpdateBy = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> InsertOrUpdateAsync(TEntity entity, string createdUpdateBy = null, CancellationToken cancellationToken = default(CancellationToken));
 
-        Result Create(TEntity entity, string createdBy = null);
+        Result Insert(TEntity entity, string createdBy = null);
 
-        Task<Result> CreateAsync(TEntity entity, string createdBy = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> InsertAsync(TEntity entity, string createdBy = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Result Update(TEntity entity, string modifiedBy = null);
 

@@ -2,7 +2,7 @@
 using DND.Common.Controllers;
 using DND.Common.Email;
 using DND.Domain.CMS.Testimonials.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.CMS.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 

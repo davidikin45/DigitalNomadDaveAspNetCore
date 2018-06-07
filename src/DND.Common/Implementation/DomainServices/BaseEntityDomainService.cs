@@ -1,7 +1,7 @@
 ﻿using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.UnitOfWork;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,7 +30,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.Create())
             {
-                var validationResult = unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
+                var validationResult = unitOfWork.Repository<TContext, TEntity>().Insert(entity, createdBy);
                 if (validationResult.IsFailure)
                 {
                     return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
@@ -46,7 +46,7 @@ namespace DND.Common.Implementation.DomainServices
         {
             using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                var validationResult = unitOfWork.Repository<TContext, TEntity>().Create(entity, createdBy);
+                var validationResult = unitOfWork.Repository<TContext, TEntity>().Insert(entity, createdBy);
                 if (validationResult.IsFailure)
                 {
                     return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);

@@ -46,7 +46,7 @@
     <PackageReference Include="AutoMapper" Version="7.0.0" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.6.19" />
-    <PackageReference Include="HtmlTags.AspNetCore" Version="7.0.1" />
+    <PackageReference Include="HtmlTags.AspNetCore" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.1.0" />
@@ -103,6 +103,10 @@
     <Folder Include="MVCImplementation\Countries\ViewComponents\" />
     <Folder Include="MVCImplementation\Manage\Api\" />
     <Folder Include="MVCImplementation\Manage\ViewComponents\" />
+    <Folder Include="MVCImplementation\Product\Api\" />
+    <Folder Include="MVCImplementation\Product\Models\" />
+    <Folder Include="MVCImplementation\Product\Controllers\" />
+    <Folder Include="MVCImplementation\Product\ViewComponents\" />
     <Folder Include="MVCImplementation\Services\" />
     <Folder Include="MVCImplementation\Sidebar\Views\" />
     <Folder Include="MVCImplementation\Tag\Models\" />
@@ -182,10 +186,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\lib\Marvin.Cache.Headers\Marvin.Cache.Headers.csproj" />
     <ProjectReference Include="..\DND.Common\DND.Common.csproj" />
-    <ProjectReference Include="..\DND.Domain\DND.Domain.csproj" />
-    <ProjectReference Include="..\DND.EFPersistance.Identity\DND.EFPersistance.Identity.csproj" />
-    <ProjectReference Include="..\Marvin.Cache.Headers\Marvin.Cache.Headers.csproj" />
+    <ProjectReference Include="..\DND.Data.Identity\DND.Data.Identity.csproj" />
+    <ProjectReference Include="..\DND.Domain.CMS\DND.Domain.CMS.csproj" />
+    <ProjectReference Include="..\DND.Domain.FlightSearch\DND.Domain.FlightSearch.csproj" />
+    <ProjectReference Include="..\DND.Domain.Identity\DND.Domain.Identity.csproj" />
+    <ProjectReference Include="..\DND.Interfaces.Blog\DND.Interfaces.Blog.csproj" />
+    <ProjectReference Include="..\DND.Interfaces.CMS\DND.Interfaces.CMS.csproj" />
+    <ProjectReference Include="..\DND.Interfaces.FlightSearch\DND.Interfaces.FlightSearch.csproj" />
+    <ProjectReference Include="..\DND.Interfaces\DND.Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -217,6 +227,38 @@
     <Content Update="MVCImplementation\Home\Views\PrivacyPolicy.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="MVCImplementation\Product\Views\About.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Product\Views\Contact.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Product\Views\HelpFAQ.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Product\Views\Index.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Product\Views\MyWebsite.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Product\Views\PrivacyPolicy.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Product\Views\Resume.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Product\Views\WorkWithMe.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="MVCImplementation\Shared\Views\CookieConsent\_CookieConsent.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -239,7 +281,7 @@
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Message Importance="high" Text="Starting Plugin Build" />
-    <Exec Command="SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;del /q %plugins%\*&#xD;&#xA;for /d %%x in (%plugins%\*) do @rd /s /q ^&quot;%%x^&quot;&#xD;&#xA;&#xD;&#xA;call &quot;$(ProjectDir)..\..\BatchFiles\Build\BuildPlugins.bat&quot; $(ConfigurationName) $(ProjectDir)..\ &quot;%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe&quot; &#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Repository\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.UnitOfWork\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.EFPersistance\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y" />
+    <Exec Command="SET plugins=&quot;$(TargetDir)plugins\&quot;&#xD;&#xA;del /q %plugins%\*&#xD;&#xA;for /d %%x in (%plugins%\*) do @rd /s /q ^&quot;%%x^&quot;&#xD;&#xA;&#xD;&#xA;call &quot;$(ProjectDir)..\..\batch\Build\BuildPlugins.bat&quot; $(ConfigurationName) $(ProjectDir)..\ &quot;%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe&quot; &#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices.Blog\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices.CMS\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices.FlightSearch\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices.Blog\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices.CMS\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices.FlightSearch\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Data\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Data.Blog\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Data.CMS\bin\$(ConfigurationName)\*.dll&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices.Blog\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices.CMS\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.ApplicationServices.FlightSearch\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices.Blog\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices.CMS\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.DomainServices.FlightSearch\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Data\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Data.Blog\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y&#xD;&#xA;xcopy &quot;$(ProjectDir)..\DND.Data.CMS\bin\$(ConfigurationName)\*.pdb&quot; %plugins% /Y" />
     <Message Importance="high" Text="Finished Plugin Build" />
   </Target>
 

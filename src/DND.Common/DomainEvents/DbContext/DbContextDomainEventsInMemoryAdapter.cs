@@ -1,5 +1,5 @@
 ﻿using DND.Common.Extensions;
-using DND.Common.Implementation.Persistance.InMemory;
+using DND.Common.Implementation.Data.InMemory;
 using DND.Common.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

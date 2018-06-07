@@ -3,9 +3,7 @@ using DND.Common.Controllers.Api;
 using DND.Common.Email;
 using DND.Common.Interfaces.Services;
 using DND.Domain.Blog.Authors.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using DND.Interfaces.Blog.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 

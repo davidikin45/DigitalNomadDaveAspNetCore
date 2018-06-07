@@ -9,7 +9,7 @@ namespace DND.Common.Enums
     public enum ValidationMode
     {
         Entity,
-        Create,
+        Insert,
         Update,
         Delete
     }

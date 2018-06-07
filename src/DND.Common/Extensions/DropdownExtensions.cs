@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using DND.Common.Helpers;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;

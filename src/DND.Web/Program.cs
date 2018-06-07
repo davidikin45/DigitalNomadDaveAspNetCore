@@ -1,17 +1,16 @@
-﻿using DND.Domain.Models;
-using DND.EFPersistance.Identity;
-using DND.EFPersistance.Identity.Initializers;
+﻿using DND.Common.DependencyInjection.Autofac;
+using DND.Data.Identity;
+using DND.Data.Identity.Initializers;
+using DND.Domain.Identity.Users;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using DND.Common.DependencyInjection.Autofac;
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DND.Web
 {
@@ -99,17 +98,17 @@ namespace DND.Web
             {
                 Log.Information("Getting the motors running...");
 
-                var host = BuildWebHost(args);
+                var host = CreateWebHostBuilder(args).Build();
 
                 //Db initialization
                 using (var scope = host.Services.CreateScope())
                 {
                     var services = scope.ServiceProvider;
-                    var context = services.GetRequiredService<ApplicationIdentityDbContext>();
+                    var context = services.GetRequiredService<IdentityDbContext>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                    var initializer = new ApplicationIdentityDbContextInitializer(context, userManager, roleManager);
+                    var initializer = new IdentityDbContextInitializer(context, userManager, roleManager);
                     initializer.Initialize();
                 }
 
@@ -128,7 +127,7 @@ namespace DND.Web
             }
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
                 WebHost.CreateDefaultBuilder(args)
                 .UseSetting("detailedErrors", "true")
                 .CaptureStartupErrors(true)
@@ -136,7 +135,6 @@ namespace DND.Web
                 .UseAutofac()
                 .UseConfiguration(Configuration)
                 .UseSerilog()
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
     }
 }

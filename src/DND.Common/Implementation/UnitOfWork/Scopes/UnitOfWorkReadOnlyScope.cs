@@ -10,7 +10,7 @@ using System.Data;
 
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Interfaces.Repository;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 using System.Threading;
 using System;
 

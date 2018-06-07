@@ -1,6 +1,5 @@
 ﻿using DND.Common.Email;
-using DND.Common.Interfaces.Services;
-using DND.Domain.Models;
+using DND.Domain.Identity.Users;
 using DND.Web.MVCImplementation.Extensions;
 using DND.Web.MVCImplementation.Manage.Models;
 using Microsoft.AspNetCore.Authentication;

@@ -3,7 +3,7 @@ using DND.Common.Controllers.Api;
 using DND.Common.Email;
 using DND.Common.Helpers;
 using DND.Domain.FlightSearch.Currencies.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.FlightSearch.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -30,7 +30,6 @@ namespace DND.Web.MVCImplementation.FlightSearch.Api
     public class CurrenciesController : BaseWebApiController
     {
         private readonly ICurrencyApplicationService _currencyService;
-        private readonly ICategoryApplicationService _categoryService;
 
 
         public CurrenciesController(ICurrencyApplicationService currencyService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, IConfiguration configuration)

@@ -14,7 +14,7 @@
                         bool isVideo = false;
                         bool isImage = false;
                         bool isText = false;
-                        var mainPhoto = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + post.Album).MainPhotoOrVideoOrText();
+                        var mainPhoto = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + post.Album).MainPhotoOrVideoOrText();
                         if (mainPhoto != null)
                         {
                             isVideo = mainPhoto.IsVideo();

@@ -93,10 +93,10 @@ namespace DND.Common.Interfaces.DomainServices
              CancellationToken cancellationToken)
             ;
 
-        IEnumerable<TEntity> GetById(IEnumerable<object> ids)
+        IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
            ;
 
-        Task<IEnumerable<TEntity>> GetByIdAsync(IEnumerable<object> ids,
+        Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids,
              CancellationToken cancellationToken)
             ;
 

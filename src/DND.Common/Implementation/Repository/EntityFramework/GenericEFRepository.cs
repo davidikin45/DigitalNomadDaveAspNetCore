@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Repository;
-using DND.Common.Interfaces.Persistance;
+using DND.Common.Interfaces.Data;
 
 using System.Data.Entity;
 using RefactorThis.GraphDiff;
@@ -28,7 +28,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         {
         }
 
-        public virtual Result CreateOrUpdate(TEntity entity, string createdModifiedBy = null)
+        public virtual Result InsertOrUpdate(TEntity entity, string createdModifiedBy = null)
         {
             var existingEntity = _context.FindEntity<TEntity>(entity.Id);
             if (existingEntity != null)
@@ -38,11 +38,11 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             }
             else
             {
-                return Create(entity, createdModifiedBy);
+                return Insert(entity, createdModifiedBy);
             }
         }
 
-        public async virtual Task<Result> CreateOrUpdateAsync(TEntity entity, string createdModifiedBy = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async virtual Task<Result> InsertOrUpdateAsync(TEntity entity, string createdModifiedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var existingEntity = _context.FindEntity<TEntity>(entity.Id);
             if (existingEntity != null)
@@ -52,13 +52,13 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             }
             else
             {
-                return await CreateAsync(entity, createdModifiedBy, cancellationToken);
+                return await InsertAsync(entity, createdModifiedBy, cancellationToken);
             }
         }
 
-        public virtual Result Create(TEntity entity, string createdBy = null)
+        public virtual Result Insert(TEntity entity, string createdBy = null)
         {
-            var validationResult = Validate(entity, ValidationMode.Create);
+            var validationResult = Validate(entity, ValidationMode.Insert);
 
             if (validationResult.IsFailure)
             {
@@ -72,9 +72,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return Result.Ok(entity);
         }
 
-        public async virtual Task<Result> CreateAsync(TEntity entity, string createdBy = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async virtual Task<Result> InsertAsync(TEntity entity, string createdBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var validationResult = await ValidateAsync(entity, ValidationMode.Create).ConfigureAwait(false);
+            var validationResult = await ValidateAsync(entity, ValidationMode.Insert).ConfigureAwait(false);
 
             if (validationResult.IsFailure)
             {

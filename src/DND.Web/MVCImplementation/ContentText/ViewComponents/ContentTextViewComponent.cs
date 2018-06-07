@@ -1,7 +1,7 @@
 ﻿using DND.Common.Helpers;
 using DND.Common.ViewComponents;
 using DND.Domain.CMS.ContentTexts.Dtos;
-using DND.Domain.Interfaces.ApplicationServices;
+using DND.Interfaces.CMS.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

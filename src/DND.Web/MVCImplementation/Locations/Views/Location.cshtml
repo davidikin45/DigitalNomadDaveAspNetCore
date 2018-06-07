@@ -1,7 +1,7 @@
 ﻿@model LocationDto
 
 @{
-    var mainPhotoVideo = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideo();
+    var mainPhotoVideo = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideo();
     var mainImageShare = mainPhotoVideo != null ? mainPhotoVideo.AbsoluteShareUrlSlug() : "";
 
     ViewBag.PageTitle = Model.Name;

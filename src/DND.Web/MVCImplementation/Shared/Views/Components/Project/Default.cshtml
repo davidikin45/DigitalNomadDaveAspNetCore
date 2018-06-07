@@ -11,16 +11,16 @@
             @Html.Raw(@"<div class=""card-deck"">")
         }
         <div class="card mb-4">
-            @if ((!string.IsNullOrEmpty(project.File) && FileHelper.FileExists(DND.Domain.Constants.Folders.Projects, project.File)) || (!string.IsNullOrEmpty(project.Album) && FileHelper.FolderExists(DND.Domain.Constants.Folders.Gallery, project.Album)))
+            @if ((!string.IsNullOrEmpty(project.File) && FileHelper.FileExists(DND.Infrastructure.Constants.Folders.Projects, project.File)) || (!string.IsNullOrEmpty(project.Album) && FileHelper.FolderExists(DND.Infrastructure.Constants.Folders.Gallery, project.Album)))
                 {
                     bool isVideo = false;
                     bool isImage = false;
                     bool isText = false;
-                    var media = FileHelper.GetFileInfo(DND.Domain.Constants.Folders.Projects, project.File);
+                    var media = FileHelper.GetFileInfo(DND.Infrastructure.Constants.Folders.Projects, project.File);
 
                     if (media == null)
                     {
-                        media = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + project.Album).MainPhotoOrVideoOrText();
+                        media = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + project.Album).MainPhotoOrVideoOrText();
                     }
 
                     if (media != null)

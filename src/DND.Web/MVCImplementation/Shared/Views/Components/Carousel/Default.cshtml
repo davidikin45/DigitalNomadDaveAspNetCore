@@ -18,10 +18,10 @@
 
         @foreach (BlogPostDto post in Model.Posts)
         {
-            var mainPhoto = FileHelper.GetFileInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + post.CarouselImage);
+            var mainPhoto = FileHelper.GetFileInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + post.CarouselImage);
             if (mainPhoto == null)
             {
-                mainPhoto = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Domain.Constants.Folders.Gallery) + post.Album).MainPhotoOrVideo();
+                mainPhoto = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + post.Album).MainPhotoOrVideo();
             }
 
             //var isVideo = mainPhoto.IsVideo();
@@ -128,7 +128,7 @@
 
         @foreach (CarouselItemDto item in Model.CarouselItems)
             {
-                var mainPhoto = FileHelper.GetFileInfo(DND.Domain.Constants.Folders.Carousel, item.File);
+                var mainPhoto = FileHelper.GetFileInfo(DND.Infrastructure.Constants.Folders.Carousel, item.File);
 
                 var title = item.Title;
                 var description = item.CarouselText;
