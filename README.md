@@ -28,6 +28,28 @@ Execute BatchFiles\Launch\LaunchDNDWebDebug.bat to launch Kestral Web Host using
 ```
 Login to /admin with username: admin password: password
 ```
+### Folder Structure
+
+Wherever possible I have opted for Business Component organization over Functional organization. 
+It's very easy to stick with the standard Model, View and Controllers structure but organizing into business components makes it alot easier to maintain and gives ability to easily copy/paste an entire piece of functionality.
+
+## MVC
+This can be achieved in ASP.NET Core by creating a custom view locator implementing IViewLocationExpander.
+
++ MVCImplementation
+    + Aggregate Root
+
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/MVC.png "MVC Folder Structure")
+
+## Bounded Context Assembly
+This can be achieved at an assembly level by creating an Assembly per Bounded Context
+
++ Bounded Context
+    + Aggregate Root
+        + Entity
+
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/BC.png "Bounded Context Folder Structure")
+
 ## Domain Events
 * [Domain events: design and implementation](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/domain-events-design-implementation)
 
