@@ -187,5 +187,41 @@ namespace DND.Common.Helpers
             var MySortedLamda = Expression.Lambda<Func<IEnumerable<T>, IOrderedEnumerable<T>>>(MyMethod, MyEnumeratedObject).Compile();
             return MySortedLamda(items);
         }
+
+        public static Expression<Func<TEntity, bool>> SearchForEntityByIds<TEntity>(IEnumerable<object> ids)
+        {
+            var item = Expression.Parameter(typeof(TEntity), "entity");
+            var prop = Expression.PropertyOrField(item, "Id");
+
+            var propType = typeof(TEntity).GetProperty("Id").PropertyType;
+
+            var genericType = typeof(List<>).MakeGenericType(propType);
+            var idList = Activator.CreateInstance(genericType);
+
+            var add_method = idList.GetType().GetMethod("Add");
+            foreach (var id in ids)
+            {
+                add_method.Invoke(idList, new object[] { (dynamic)Convert.ChangeType(id, propType) });
+            }
+
+            var contains_method = idList.GetType().GetMethod("Contains");
+            var value_expression = Expression.Constant(idList);
+            var contains_expression = Expression.Call(value_expression, contains_method, prop);
+            var lamda = Expression.Lambda<Func<TEntity, bool>>(contains_expression, item);
+            return lamda;
+        }
+
+        public static Expression<Func<TEntity, bool>> SearchForEntityById<TEntity>(object id)
+        {
+            var item = Expression.Parameter(typeof(TEntity), "entity");
+            var prop = Expression.PropertyOrField(item, "Id");
+            var propType = typeof(TEntity).GetProperty("Id").PropertyType;
+
+            var value = Expression.Constant((dynamic)Convert.ChangeType(id, propType));
+
+            var equal = Expression.Equal(prop, value);
+            var lambda = Expression.Lambda<Func<TEntity, bool>>(equal, item);
+            return lambda;
+        }
     }
 }

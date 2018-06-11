@@ -124,11 +124,15 @@ namespace DND.Common.Extensions
             return null;
         }
 
+        public static bool HasProperty(this Type type, string propName)
+        {
+            return type.GetProperty(propName) != null;
+        }
+
         public static bool HasProperty(this object obj, string propName)
         {
             return obj.GetType().GetProperty(propName) != null;
         }
-
 
         public static PropertyInfo[] GetProperties(this object obj)
         {

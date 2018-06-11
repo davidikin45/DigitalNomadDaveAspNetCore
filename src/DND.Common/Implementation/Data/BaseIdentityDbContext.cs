@@ -23,6 +23,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DND.Common.Helpers;
 
 namespace DND.Common.Implementation.Data
 {
@@ -300,9 +301,19 @@ namespace DND.Common.Implementation.Data
             return await base.Set<TResultType>().FromSql(query, paramaters).ToListAsync();
         }
 
+        //Using this should give performance improvement.
+        //https://msdn.microsoft.com/en-us/library/jj592677(v=vs.113).aspx
+        //Note that only properties that are set to different values when copied from the other object will be marked as modified.
         public void UpdateEntity(object existingEntity, object newEntity)
         {
             Entry(existingEntity).CurrentValues.SetValues(newEntity);
+        }
+
+        public void TriggerTrackChanges(object newEntity)
+        {
+            var currentValues = Entry(newEntity).CurrentValues.Clone();
+            Entry(newEntity).CurrentValues.SetValues(Entry(newEntity).OriginalValues);
+            Entry(newEntity).CurrentValues.SetValues(currentValues);
         }
 
         public T UpdateGraph<T>(T entity, Expression<Func<IUpdateConfiguration<T>, object>> mapping = null) where T : class, new()
@@ -325,14 +336,270 @@ namespace DND.Common.Implementation.Data
             Set<TEntity>().Remove(entity);
         }
 
-        public TEntity FindEntity<TEntity>(object id) where TEntity : class
+        public TEntity FindEntityById<TEntity>(object id) where TEntity : class
         {
             return Set<TEntity>().Find(id);
         }
 
-        public TEntity FindEntityLocal<TEntity>(object id) where TEntity : class, IBaseEntity
+        public TEntity FindEntity<TEntity>(TEntity entity) where TEntity : class
         {
-            return Set<TEntity>().Local.Where(e => e.Id.Equals(id)).FirstOrDefault();
+            var local = FindEntityLocal<TEntity>(entity);
+            if (local != null)
+                return local;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return Set<TEntity>().AsNoTracking().Where(filter).SingleOrDefault();
+            }
+
+            return null;
+        }
+
+        public TEntity FindEntityNoTracking<TEntity>(TEntity entity) where TEntity : class
+        {
+            var local = FindEntityLocal<TEntity>(entity);
+            if (local != null)
+                return local;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return Set<TEntity>().AsNoTracking().Where(filter).SingleOrDefault();
+            }
+
+            return null;
+        }
+
+        public async Task<TEntity> FindEntityAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = FindEntityLocal<TEntity>(entity);
+            if (local != null)
+                return local;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return await Set<TEntity>().Where(filter).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            return null;
+        }
+
+        public async Task<TEntity> FindEntityNoTrackingAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = FindEntityLocal<TEntity>(entity);
+            if (local != null)
+                return local;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return await Set<TEntity>().Where(filter).AsNoTracking().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            return null;
+        }
+
+        public TEntity FindEntityByIdNoTracking<TEntity>(object id) where TEntity : class
+        {
+            var local = FindEntityByIdLocal<TEntity>(id);
+            if (local != null)
+                return local;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return Set<TEntity>().AsNoTracking().Where(filter).SingleOrDefault();
+            }
+
+            return null;
+        }
+
+        public async Task<TEntity> FindEntityByIdAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = FindEntityByIdLocal<TEntity>(id);
+            if (local != null)
+                return local;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return await Set<TEntity>().Where(filter).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            return null;
+        }
+
+        public async Task<TEntity> FindEntityByIdNoTrackingAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = FindEntityByIdLocal<TEntity>(id);
+            if (local != null)
+                return local;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return await Set<TEntity>().Where(filter).AsNoTracking().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            return null;
+        }
+
+        public TEntity FindEntityByIdLocal<TEntity>(object id) where TEntity : class
+        {
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id).Compile();
+                return Set<TEntity>().Local.Where(filter).FirstOrDefault();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public bool EntityExistsByIdLocal<TEntity>(object id) where TEntity : class
+        {
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id).Compile();
+                return Set<TEntity>().Local.Any(filter);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public TEntity FindEntityLocal<TEntity>(TEntity entity) where TEntity : class
+        {
+            return Set<TEntity>().Local.FirstOrDefault(x => Equals(x, entity));
+        }
+
+        public bool EntityExistsLocal<TEntity>(TEntity entity) where TEntity : class
+        {
+            return Set<TEntity>().Local.Any(x => Equals(x,entity));
+        }
+
+        public bool EntityExistsById<TEntity>(object id) where TEntity : class
+        {
+            var local = EntityExistsByIdLocal<TEntity>(id);
+            if (local)
+                return true;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return Set<TEntity>().Where(filter).ToList().Any();
+            }
+
+            return false;
+        }
+
+        public async Task<bool> EntityExistsByIdAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = EntityExistsByIdLocal<TEntity>(id);
+            if (local)
+                return true;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return (await Set<TEntity>().Where(filter).ToListAsync(cancellationToken)).Any();
+            }
+
+            return false;
+        }
+
+        public bool EntityExistsByIdNoTracking<TEntity>(object id) where TEntity : class
+        {
+            var local = EntityExistsByIdLocal<TEntity>(id);
+            if (local)
+                return true;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return Set<TEntity>().AsNoTracking().Where(filter).Any();
+            }
+
+            return false;
+        }
+
+        public async Task<bool> EntityExistsByIdNoTrackingAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = EntityExistsByIdLocal<TEntity>(id);
+            if (local)
+                return true;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return await Set<TEntity>().AsNoTracking().Where(filter).AnyAsync(cancellationToken);
+            }
+
+            return false;
+        }
+
+        public bool EntityExists<TEntity>(TEntity entity) where TEntity : class
+        {
+            var local = EntityExistsLocal(entity);
+            if (local)
+                return true;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return Set<TEntity>().Where(filter).ToList().Any();
+            }
+
+            return false;
+        }
+
+        public bool EntityExistsNoTracking<TEntity>(TEntity entity) where TEntity : class
+        {
+            var local = EntityExistsLocal(entity);
+            if (local)
+                return true;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return Set<TEntity>().AsNoTracking().Where(filter).Any();
+            }
+
+            return false;
+        }
+
+        public async Task<bool> EntityExistsAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = EntityExistsLocal(entity);
+            if (local)
+                return true;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return (await Set<TEntity>().Where(filter).ToListAsync(cancellationToken)).Any();
+            }
+
+            return false;
+        }
+
+        public async Task<bool> EntityExistsNoTrackingAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            var local = EntityExistsLocal(entity);
+            if (local)
+                return true;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+                return await Set<TEntity>().AsNoTracking().Where(filter).AnyAsync(cancellationToken);
+            }
+
+            return false;
         }
 
         public IQueryable<TEntity> Queryable<TEntity>() where TEntity : class

@@ -1,4 +1,5 @@
 ﻿using DND.Common.Extensions;
+using DND.Common.Helpers;
 using DND.Common.Interfaces.Models;
 using System;
 using System.Collections;
@@ -309,15 +310,22 @@ namespace DND.Common.Implementation.Data.InMemory
             return _data.Any(x => x.Entity == item);
         }
 
-        internal bool EntityExistsInRepositoryById(object id)
+        internal bool EntityExistsInRepositoryById<TEntity>(object id)
         {
-            return _data.Any(e => e is IBaseEntity && ((IBaseEntity)e.Entity).Id.Equals(id));
+            var query = _data.Where(x => x.Entity is TEntity && x.Entity.HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable();
+            var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+            return query.Where(filter).Any();
         }
 
         internal TEntity FindEntity<TEntity>(object id)
         {
-            var entity = _data.Where(e => e is IBaseEntity && ((IBaseEntity)e.Entity).Id.Equals(id)).FirstOrDefault()?.Entity;
-            return (TEntity)entity;
+            var query = _data.Where(x => x.Entity is TEntity && x.Entity.HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable();
+            var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+            var entity = query.Where(filter).FirstOrDefault();
+            if (entity != null)
+                return (TEntity)entity;
+            else
+                return default(TEntity);       
         }
 
         internal void Commit()

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DND.Common.Extensions;
 
 namespace DND.Common.Implementation.Data.InMemory
 {
@@ -185,6 +186,11 @@ namespace DND.Common.Implementation.Data.InMemory
             return task;
         }
 
+        public void TriggerTrackChanges(object newEntity)
+        {
+
+        }
+
         public IBaseDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
             throw new NotImplementedException();
@@ -207,7 +213,7 @@ namespace DND.Common.Implementation.Data.InMemory
 
         public void RemoveEntity<TEntity>(TEntity entity) where TEntity : class
         {
-            if(IsEntityStateAdded(entity))
+            if (IsEntityStateAdded(entity))
             {
                 SetEntityStateDetached(entity);
             }
@@ -217,14 +223,170 @@ namespace DND.Common.Implementation.Data.InMemory
             }
         }
 
-        public TEntity FindEntity<TEntity>(object id) where TEntity : class
+        public TEntity FindEntityById<TEntity>(object id) where TEntity : class
         {
-            return repo.FindEntity<TEntity>(id);
+            var local = FindEntityByIdLocal<TEntity>(id);
+            if (local != null)
+                return local;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return repo.FindEntity<TEntity>(id);
+            }
+
+            return null;
         }
 
-        TEntity IBaseDbContext.FindEntityLocal<TEntity>(object id)
+        public TEntity FindEntity<TEntity>(TEntity entity) where TEntity : class
         {
-            return repo.FindEntity<TEntity>(id);
+            var local = FindEntityLocal<TEntity>(entity);
+            if (local != null)
+                return local;
+
+            if (entity.HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), entity.GetPropValue(nameof(IBaseEntity.Id))))
+            {
+                return repo.FindEntity<TEntity>(entity.GetPropValue(nameof(IBaseEntity.Id)));
+            }
+
+            return null;
+        }
+
+        public TEntity FindEntityNoTracking<TEntity>(TEntity entity) where TEntity : class
+        {
+            return FindEntity(entity);
+        }
+
+        public Task<TEntity> FindEntityAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            var task = new Task<TEntity>(() => FindEntity<TEntity>(entity));
+            task.Start();
+            return task;
+        }
+
+        public Task<TEntity> FindEntityNoTrackingAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            var task = new Task<TEntity>(() => FindEntity<TEntity>(entity));
+            task.Start();
+            return task;
+        }
+
+        public Task<TEntity> FindEntityByIdAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var task = new Task<TEntity>(() => FindEntityById<TEntity>(id));
+            task.Start();
+            return task;
+        }
+
+        public TEntity FindEntityByIdNoTracking<TEntity>(object id) where TEntity : class
+        {
+            return FindEntityById<TEntity>(id);
+        }
+
+        public Task<TEntity> FindEntityByIdNoTrackingAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var task = new Task<TEntity>(() => FindEntityById<TEntity>(id));
+            task.Start();
+            return task;
+        }
+
+        public bool EntityExistsByIdLocal<TEntity>(object id) where TEntity : class
+        {
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return addQueue.Where(x => x.Entity is TEntity && typeof(TEntity).HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable().Any(filter) ||
+                updateQueue.Where(x => x.Entity is TEntity && typeof(TEntity).HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable().Any(filter) ||
+                removeQueue.Where(x => x.Entity is TEntity && typeof(TEntity).HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable().Any(filter);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public TEntity FindEntityByIdLocal<TEntity>(object id) where TEntity : class
+        {
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                var filter = LamdaHelper.SearchForEntityById<TEntity>(id);
+                return addQueue.Where(x => x.Entity is TEntity && typeof(TEntity).HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable().FirstOrDefault(filter) ??
+                updateQueue.Where(x => x.Entity is TEntity && typeof(TEntity).HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable().FirstOrDefault(filter) ??
+                removeQueue.Where(x => x.Entity is TEntity && typeof(TEntity).HasProperty(nameof(IBaseEntity.Id))).Select(x => x.Entity).Cast<TEntity>().AsQueryable().FirstOrDefault(filter);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public TEntity FindEntityLocal<TEntity>(TEntity entity) where TEntity : class
+        {
+            return addQueue.Where(x => Equals(x.Entity, entity)).Select(x => (TEntity)x.Entity).FirstOrDefault() ?? updateQueue.Where(x => Equals(x.Entity, entity)).Select(x => (TEntity)x.Entity).FirstOrDefault() ?? removeQueue.Where(x => Equals(x.Entity, entity)).Select(x => (TEntity)x.Entity).FirstOrDefault();
+        }
+
+        public bool EntityExistsLocal<TEntity>(TEntity entity) where TEntity : class
+        {
+            return addQueue.Any(x => Equals(x.Entity,entity)) || updateQueue.Any(x => Equals(x.Entity,entity)) || removeQueue.Any(x => Equals(x.Entity,entity));
+        }
+
+        public bool EntityExistsById<TEntity>(object id) where TEntity : class
+        {
+            var local = EntityExistsByIdLocal<TEntity>(id);
+            if (local)
+                return true;
+
+            if (typeof(TEntity).HasProperty(nameof(IBaseEntity.Id)) && !Equals(typeof(TEntity).GetProperty(nameof(IBaseEntity.Id)).PropertyType.DefaultValue(), id))
+            {
+                return repo.EntityExistsInRepositoryById<TEntity>(id);
+            }
+
+            return false;
+        }
+
+        public Task<bool> EntityExistsByIdAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var task = new Task<bool>(() => EntityExistsById<TEntity>(id));
+            task.Start();
+            return task;
+        }
+
+        public bool EntityExistsByIdNoTracking<TEntity>(object id) where TEntity : class
+        {
+            return EntityExistsById<TEntity>(id);
+        }
+
+        public Task<bool> EntityExistsByIdNoTrackingAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class
+        {
+            var task = new Task<bool>(() => EntityExistsById<TEntity>(id));
+            task.Start();
+            return task;
+        }
+
+        public bool EntityExists<TEntity>(TEntity entity) where TEntity : class
+        {
+            var local = EntityExistsLocal(entity);
+            if (local)
+                return true;
+
+            return repo.EntityExistsInRepository(entity);
+        }
+
+        public bool EntityExistsNoTracking<TEntity>(TEntity entity) where TEntity : class
+        {
+            return EntityExists(entity);
+        }
+
+        public Task<bool> EntityExistsAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            var task = new Task<bool>(() => EntityExists(entity));
+            task.Start();
+            return task;
+        }
+
+        public Task<bool> EntityExistsNoTrackingAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class
+        {
+            return EntityExistsAsync(entity, cancellationToken);
         }
 
         public IQueryable<TEntity> Queryable<TEntity>() where TEntity : class
@@ -237,6 +399,9 @@ namespace DND.Common.Implementation.Data.InMemory
             return repo.Data(type);
         }
 
+        //Using this should give performance improvement.
+        //https://msdn.microsoft.com/en-us/library/jj592677(v=vs.113).aspx
+        //Note that only properties that are set to different values when copied from the other object will be marked as modified.
         public void UpdateEntity(object existingEntity, object newEntity)
         {
             updateQueue.Add(new QueueItem(newEntity));
@@ -250,7 +415,7 @@ namespace DND.Common.Implementation.Data.InMemory
 
         public bool IsEntityStateAdded(object entity)
         {
-            return addQueue.Any(x => x.Entity == entity);
+            return addQueue.Any(x => Equals(x.Entity, entity));
         }
 
         public void SetEntityStateAdded(object entity)
@@ -260,7 +425,7 @@ namespace DND.Common.Implementation.Data.InMemory
 
         public bool IsEntityStateDeleted(object entity)
         {
-            return removeQueue.Any(x => x.Entity == entity);
+            return removeQueue.Any(x => Equals(x.Entity,entity));
         }
 
         public void SetEntityStateDeleted(object entity)
@@ -270,7 +435,7 @@ namespace DND.Common.Implementation.Data.InMemory
 
         public bool IsEntityStateModified(object entity)
         {
-            return updateQueue.Any(x => x.Entity == entity);
+            return updateQueue.Any(x => Equals(x.Entity, entity));
         }
 
         public void SetEntityStateModified(object entity)
@@ -280,17 +445,17 @@ namespace DND.Common.Implementation.Data.InMemory
 
         public bool IsEntityStateDetached(object entity)
         {
-            return !addQueue.Any(x => x.Entity == entity) && !updateQueue.Any(x => x.Entity == entity) && !removeQueue.Any(x => x.Entity == entity) && !repo.EntityExistsInRepository(entity);
+            return !addQueue.Any(x => Equals(x.Entity, entity)) && !updateQueue.Any(x => Equals(x.Entity, entity)) && !removeQueue.Any(x => Equals(x.Entity, entity)) && !repo.EntityExistsInRepository(entity);
         }
 
         public void SetEntityStateDetached(object entity)
         {
-            if (addQueue.Any(x => x.Entity == entity))
+            if (addQueue.Any(x => Equals(x.Entity, entity)))
             {
-                addQueue.Remove(addQueue.First(x => x.Entity == entity));
+                addQueue.Remove(addQueue.First(x => Equals(x.Entity, entity)));
             }
 
-            if (updateQueue.Any(x => x.Entity == entity))
+            if (updateQueue.Any(x => Equals(x.Entity, entity)))
             {
                 throw new Exception("If an item has been updated it can't be set to detached");
             }
@@ -300,20 +465,20 @@ namespace DND.Common.Implementation.Data.InMemory
                 throw new Exception("If an item has been commit it can't be detached");
             }
 
-            if (removeQueue.Any(x => x.Entity == entity))
+            if (removeQueue.Any(x => Equals(x.Entity, entity)))
             {
-                removeQueue.Remove(removeQueue.First(x => x.Entity == entity));
+                removeQueue.Remove(removeQueue.First(x => Equals(x.Entity, entity)));
             }
         }
 
         public bool IsEntityStateUnchanged(object entity)
         {
-            return repo.EntityExistsInRepository(entity) && !updateQueue.Any(x => x.Entity == entity);
+            return repo.EntityExistsInRepository(entity) && !updateQueue.Any(x => Equals(x.Entity, entity));
         }
 
         public void SetEntityStateUnchanged(object entity)
         {
-            if (updateQueue.Any(x => x.Entity == entity))
+            if (updateQueue.Any(x => Equals(x.Entity, entity)))
             {
                 throw new Exception("If an item has been updated it can't be set it to unchanged");
             }

@@ -30,11 +30,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual Result InsertOrUpdate(TEntity entity, string createdModifiedBy = null)
         {
-            var existingEntity = _context.FindEntity<TEntity>(entity.Id);
+            var existingEntity = _context.FindEntity<TEntity>(entity);
             if (existingEntity != null)
             {
-                _context.UpdateEntity(existingEntity, entity);
-                return Update(existingEntity, createdModifiedBy);
+                return Update(entity, createdModifiedBy);
             }
             else
             {
@@ -44,11 +43,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<Result> InsertOrUpdateAsync(TEntity entity, string createdModifiedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var existingEntity = _context.FindEntity<TEntity>(entity.Id);
+            var existingEntity = _context.FindEntityById<TEntity>(entity.Id);
             if (existingEntity != null)
             {
-                _context.UpdateEntity(existingEntity, entity);
-                return await UpdateAsync(existingEntity, createdModifiedBy, cancellationToken);
+                return await UpdateAsync(entity, createdModifiedBy, cancellationToken);
             }
             else
             {
@@ -90,7 +88,8 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual Result Update(TEntity entity, string modifiedBy = null)
         {
-            if (!(GetExists(x => x.Id.ToString() == entity.Id.ToString())))
+            //This will attach the Entity and ensure it exists
+            if (!(Exists(entity)))
             {
                 return Result.ObjectDoesNotExist();
             }
@@ -102,16 +101,23 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 return Result.ObjectValidationFail(validationResult.ObjectValidationErrors);
             }
 
-            if (_context.IsEntityStateDetached(entity))
-            {
-                _context.AttachEntity(entity);
-            }
-
             if (!_context.IsEntityStateAdded(entity))
             {
                 entity.DateModified = DateTime.UtcNow;
                 entity.UserModified = modifiedBy;
-                _context.SetEntityStateModified(entity);
+            }
+
+            if (_context.IsEntityStateDetached(entity))
+            {
+                var existingEntity = _context.FindEntity(entity);
+                _context.UpdateEntity(existingEntity, entity);
+            }
+            else
+            {
+                if (!_context.IsEntityStateAdded(entity))
+                {
+                    _context.TriggerTrackChanges(entity);
+                }
             }
 
             return Result.Ok();
@@ -122,7 +128,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<Result> UpdateAsync(TEntity entity, string modifiedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (!(await GetExistsAsync(x => x.Id.ToString() == entity.Id.ToString()).ConfigureAwait(false)))
+            if (!(await ExistsAsync(entity).ConfigureAwait(false)))
             {
                 return Result.ObjectDoesNotExist();
             }
@@ -134,16 +140,23 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 return Result.ObjectValidationFail(validationResult.ObjectValidationErrors);
             }
 
-            if (_context.IsEntityStateDetached(entity))
-            {
-                _context.AttachEntity(entity);
-            }
-
             if (!_context.IsEntityStateAdded(entity))
             {
                 entity.DateModified = DateTime.UtcNow;
                 entity.UserModified = modifiedBy;
-                _context.SetEntityStateModified(entity);
+            }
+
+            if (_context.IsEntityStateDetached(entity))
+            {
+                var existingEntity = _context.FindEntity(entity);
+                _context.UpdateEntity(existingEntity, entity);
+            }
+            else
+            {
+                if (!_context.IsEntityStateAdded(entity))
+                {
+                    _context.TriggerTrackChanges(entity);
+                }
             }
 
             return Result.Ok();
@@ -167,7 +180,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //{
             //    entity = new TEntity() { Id = id };
             //}
-            TEntity entity = _context.FindEntity<TEntity>(id); // For concurrency purposes need to get latest version
+            TEntity entity = _context.FindEntityById<TEntity>(id); // For concurrency purposes need to get latest version
 
             return Delete(entity, deletedBy);
         }
@@ -186,12 +199,17 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual Result Delete(TEntity entity, string deletedBy = null)
         {
-            if (!_context.IsEntityStateAdded(entity))
+            //if (!_context.IsEntityStateAdded(entity))
+            //{
+            //    if (!(Exists(entity)))
+            //    {
+            //        return Result.ObjectDoesNotExist();
+            //    }
+            //}
+
+            if (!(Exists(entity)))
             {
-                if (!(GetExists(x => x.Id.ToString() == entity.Id.ToString())))
-                {
-                    return Result.ObjectDoesNotExist();
-                }
+                return Result.ObjectDoesNotExist();
             }
 
             var validationResult = Validate(entity, ValidationMode.Delete);
@@ -214,12 +232,17 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<Result> DeleteAsync(TEntity entity, string deletedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (!_context.IsEntityStateAdded(entity))
+            //if (!_context.IsEntityStateAdded(entity))
+            //{
+            //    if (!(await ExistsAsync(entity.Id).ConfigureAwait(false)))
+            //    {
+            //        return Result.ObjectDoesNotExist();
+            //    }
+            //}
+
+            if (!(await ExistsAsync(entity).ConfigureAwait(false)))
             {
-                if (!(await GetExistsAsync(x => x.Id.ToString() == entity.Id.ToString()).ConfigureAwait(false)))
-                {
-                    return Result.ObjectDoesNotExist();
-                }
+                return Result.ObjectDoesNotExist();
             }
 
             var validationResult = await ValidateAsync(entity, ValidationMode.Delete).ConfigureAwait(false);

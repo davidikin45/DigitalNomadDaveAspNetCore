@@ -16,6 +16,7 @@ using System.Diagnostics;
 using DND.Common.Implementation.Validation;
 using DND.Common.Enums;
 using DND.Common.Interfaces.UnitOfWork;
+using DND.Common.Helpers;
 
 namespace DND.Common.Implementation.Repository.EntityFramework
 {
@@ -156,10 +157,29 @@ namespace DND.Common.Implementation.Repository.EntityFramework
           int? take = null,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return GetQueryable(false, null, null, orderBy, skip, take, includeProperties).ToList();
+            return GetQueryable(true, null, null, orderBy, skip, take, includeProperties).ToList();
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync(
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            // string includeProperties = null,
+            int? skip = null,
+            int? take = null,
+          params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return await GetQueryable(true, null, null, orderBy, skip, take, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
+        }
+
+        public virtual IEnumerable<TEntity> GetAllNoTracking(
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+        int? skip = null,
+        int? take = null,
+        params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return GetQueryable(false, null, null, orderBy, skip, take, includeProperties).ToList();
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAllNoTrackingAsync(
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             // string includeProperties = null,
             int? skip = null,
@@ -339,62 +359,26 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return await GetQueryable(false, null, filter, orderBy, null, null, includeProperties).FirstOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        private Expression<Func<TEntity, bool>> SearchByIds<TEntity>(IEnumerable<object> ids)
-        {
-            var item = Expression.Parameter(typeof(TEntity), "entity");
-            var prop = Expression.PropertyOrField(item, "Id");
-
-            var propType = typeof(TEntity).GetProperty("Id").PropertyType;
-
-            var genericType = typeof(List<>).MakeGenericType(propType);
-            var idList = Activator.CreateInstance(genericType);
-
-            var add_method = idList.GetType().GetMethod("Add");
-            foreach (var id in ids)
-            {
-                add_method.Invoke(idList, new object[] { (dynamic)Convert.ChangeType(id, propType) });
-            }
-
-            var contains_method = idList.GetType().GetMethod("Contains");
-            var value_expression = Expression.Constant(idList);
-            var contains_expression = Expression.Call(value_expression, contains_method, prop);
-            var lamda = Expression.Lambda<Func<TEntity, bool>>(contains_expression, item);
-            return lamda;
-        }
-
-        private Expression<Func<TEntity, bool>> SearchById<TEntity>(object id)
-        {
-            var item = Expression.Parameter(typeof(TEntity), "entity");
-            var prop = Expression.PropertyOrField(item, "Id");
-            var propType = typeof(TEntity).GetProperty("Id").PropertyType;
-
-            var value = Expression.Constant((dynamic)Convert.ChangeType(id, propType));
-
-            var equal = Expression.Equal(prop, value);
-            var lambda = Expression.Lambda<Func<TEntity, bool>>(equal, item);
-            return lambda;
-        }
-
         public virtual TEntity GetById(object id)
         {
-            return _context.FindEntity<TEntity>(id);
+            return _context.FindEntityById<TEntity>(id);
         }
 
         public virtual TEntity GetByIdNoTracking(object id)
         {
-            Expression<Func<TEntity, bool>> filter = SearchById<TEntity>(id);
+            Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
             return GetQueryable(false, null, filter, null, null).SingleOrDefault();
         }
 
         public async virtual Task<TEntity> GetByIdAsync(object id)
         {
-            Expression<Func<TEntity, bool>> filter = SearchById<TEntity>(id);
+            Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
             return await GetQueryable(true, null, filter, null, null).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public async virtual Task<TEntity> GetByIdNoTrackingAsync(object id)
         {
-            Expression<Func<TEntity, bool>> filter = SearchById<TEntity>(id);
+            Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
             return await GetQueryable(false, null, filter, null, null).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
@@ -406,7 +390,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 list.Add(id);
             }
 
-            Expression<Func<TEntity, bool>> filter = SearchByIds<TEntity>(list);
+            Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityByIds<TEntity>(list);
             return GetQueryable(true, null, filter, null, null).ToList();
         }
 
@@ -418,7 +402,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 list.Add(id);
             }
 
-            Expression<Func<TEntity, bool>> filter = SearchByIds<TEntity>(list);
+            Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityByIds<TEntity>(list);
             return GetQueryable(false, null, filter, null, null).ToList();
         }
 
@@ -430,7 +414,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 list.Add(id);
             }
 
-            Expression<Func<TEntity, bool>> filter = SearchByIds<TEntity>(list);
+            Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityByIds<TEntity>(list);
             return await GetQueryable(false, null, filter, null, null).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
@@ -442,7 +426,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 list.Add(id);
             }
 
-            Expression<Func<TEntity, bool>> filter = SearchByIds<TEntity>(list);
+            Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityByIds<TEntity>(list);
             return await GetQueryable(false, null, filter, null, null).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
@@ -466,14 +450,64 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return await GetQueryable(false, search, filter).CountAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual bool GetExists(Expression<Func<TEntity, bool>> filter = null)
+        public virtual bool Exists(Expression<Func<TEntity, bool>> filter = null)
+        {
+            return GetQueryable(true, null, filter).ToList().Any();
+        }
+
+        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter = null)
+        {
+            return (await GetQueryable(true, null, filter).ToListAsync(_cancellationToken).ConfigureAwait(false)).Any();
+        }
+
+          public virtual bool ExistsNoTracking(Expression<Func<TEntity, bool>> filter = null)
         {
             return GetQueryable(false, null, filter).Any();
         }
 
-        public virtual async Task<bool> GetExistsAsync(Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<bool> ExistsNoTrackingAsync(Expression<Func<TEntity, bool>> filter = null)
         {
             return await GetQueryable(false, null, filter).AnyAsync(_cancellationToken).ConfigureAwait(false);
+        }
+
+        public virtual bool Exists(TEntity entity)
+        {
+            return _context.EntityExists(entity);
+        }
+
+        public virtual async Task<bool> ExistsAsync(TEntity entity)
+        {
+            return await _context.EntityExistsAsync(entity, _cancellationToken);
+        }
+
+        public virtual bool ExistsNoTracking(TEntity entity)
+        {
+            return _context.EntityExistsNoTracking(entity);
+        }
+
+        public virtual async Task<bool> ExistsNoTrackingAsync(TEntity entity)
+        {
+            return await _context.EntityExistsNoTrackingAsync(entity, _cancellationToken);
+        }
+
+        public virtual bool ExistsById(object id)
+        {
+            return _context.EntityExistsById<TEntity>(id);
+        }
+
+        public virtual async Task<bool> ExistsByIdAsync(object id)
+        {
+            return await _context.EntityExistsByIdAsync<TEntity>(id, _cancellationToken).ConfigureAwait(false);
+        }
+
+        public virtual bool ExistsByIdNoTracking(object id)
+        {
+            return _context.EntityExistsByIdNoTracking<TEntity>(id);
+        }
+
+        public virtual async Task<bool> ExistsByIdNoTrackingAsync(object id)
+        {
+            return await _context.EntityExistsByIdNoTrackingAsync<TEntity>(id, _cancellationToken).ConfigureAwait(false);
         }
 
         public Result Validate(TEntity entity, ValidationMode mode)

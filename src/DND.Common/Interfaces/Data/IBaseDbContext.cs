@@ -35,8 +35,30 @@ namespace DND.Common.Interfaces.Data
         void AddEntity<TEntity>(TEntity entity) where TEntity : class;
         void AttachEntity<TEntity>(TEntity entity) where TEntity : class;
         void RemoveEntity<TEntity>(TEntity entity) where TEntity : class;
-        TEntity FindEntity<TEntity>(object id) where TEntity : class;
-        TEntity FindEntityLocal<TEntity>(object id) where TEntity : class, IBaseEntity;
+
+        TEntity FindEntityLocal<TEntity>(TEntity entity) where TEntity : class;
+        TEntity FindEntity<TEntity>(TEntity entity) where TEntity : class;
+        TEntity FindEntityNoTracking<TEntity>(TEntity entity) where TEntity : class;
+        Task<TEntity> FindEntityAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class;
+        Task<TEntity> FindEntityNoTrackingAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class;
+
+        TEntity FindEntityByIdLocal<TEntity>(object id) where TEntity : class;
+        TEntity FindEntityById<TEntity>(object id) where TEntity : class;
+        Task<TEntity> FindEntityByIdAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class;
+        TEntity FindEntityByIdNoTracking<TEntity>(object id) where TEntity : class;
+        Task<TEntity> FindEntityByIdNoTrackingAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class;
+
+        bool EntityExistsByIdLocal<TEntity>(object id) where TEntity : class;
+        bool EntityExistsLocal<TEntity>(TEntity entity) where TEntity : class;
+        bool EntityExistsById<TEntity>(object id) where TEntity : class;
+        Task<bool> EntityExistsByIdAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class;
+        bool EntityExistsByIdNoTracking<TEntity>(object id) where TEntity : class;
+        Task<bool> EntityExistsByIdNoTrackingAsync<TEntity>(object id, CancellationToken cancellationToken) where TEntity : class;
+
+        bool EntityExists<TEntity>(TEntity entity) where TEntity : class;
+        Task<bool> EntityExistsAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class;
+        bool EntityExistsNoTracking<TEntity>(TEntity entity) where TEntity : class;
+        Task<bool> EntityExistsNoTrackingAsync<TEntity>(TEntity entity, CancellationToken cancellationToken) where TEntity : class;
 
         int CachedEntityCount();
 
@@ -57,6 +79,8 @@ namespace DND.Common.Interfaces.Data
         void SetEntityStateUnchanged(object entity);
         IEnumerable<DbEntityValidationResultBetter> GetValidationErrors();
         IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges();
+
+        void TriggerTrackChanges(object newEntity);
 
         IEnumerable<TResultType> SQLQueryNoTracking<TResultType>(string query, params object[] paramaters) where TResultType : class;
         IEnumerable<TResultType> SQLQueryTracking<TResultType>(string query, params object[] paramaters) where TResultType : class;

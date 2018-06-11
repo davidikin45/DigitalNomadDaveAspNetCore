@@ -70,7 +70,8 @@ namespace DND.Common.DomainEvents
                 var properties = new Dictionary<string, OldAndNewValue>();
                 var updatedProperties = new List<string>();
 
-                var dbValues = updatedEntry.GetDatabaseValues();
+                //If we have the original in cache compare to these values, otherwise hit the Db to get the Db values.
+                var dbValues = updatedEntry.OriginalValues ?? updatedEntry.GetDatabaseValues();
                 if (dbValues != null)
                 {
                     foreach (IProperty property in dbValues.Properties)

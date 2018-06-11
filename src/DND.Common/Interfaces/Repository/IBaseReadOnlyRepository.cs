@@ -32,6 +32,19 @@ namespace DND.Common.Interfaces.Repository
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
+        IEnumerable<TEntity> GetAllNoTracking(
+          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+          int? skip = null,
+          int? take = null,
+          params Expression<Func<TEntity, Object>>[] includeProperties);
+
+        Task<IEnumerable<TEntity>> GetAllNoTrackingAsync(
+                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                int? skip = null,
+                int? take = null,
+                params Expression<Func<TEntity, Object>>[] includeProperties)
+                ;
+
         IEnumerable<TEntity> Search(
              string search = "",
            Expression<Func<TEntity, bool>> filter = null,
@@ -181,10 +194,40 @@ namespace DND.Common.Interfaces.Repository
             ;
 
 
-        bool GetExists(Expression<Func<TEntity, bool>> filter = null)
+        bool Exists(Expression<Func<TEntity, bool>> filter = null)
             ;
 
-        Task<bool> GetExistsAsync(Expression<Func<TEntity, bool>> filter = null)
+        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter = null)
+            ;
+
+        bool ExistsNoTracking(Expression<Func<TEntity, bool>> filter = null)
+          ;
+
+        Task<bool> ExistsNoTrackingAsync(Expression<Func<TEntity, bool>> filter = null)
+            ;
+
+        bool Exists(TEntity entity)
+          ;
+
+        Task<bool> ExistsAsync(TEntity entity)
+            ;
+
+        bool ExistsNoTracking(TEntity entity)
+          ;
+
+        Task<bool> ExistsNoTrackingAsync(TEntity entity)
+            ;
+
+        bool ExistsById(object id)
+          ;
+
+        Task<bool> ExistsByIdAsync(object id)
+            ;
+
+        bool ExistsByIdNoTracking(object id)
+          ;
+
+        Task<bool> ExistsByIdNoTrackingAsync(object id)
             ;
 
         Result Validate(TEntity entity, ValidationMode mode);

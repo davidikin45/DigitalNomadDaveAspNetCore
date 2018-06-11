@@ -105,6 +105,7 @@ namespace DND.Common.Extensions
             }
             return builder.ToString();
         }
+
         public static string Truncate(this string source, int length)
         {
             if (source != null)
@@ -115,6 +116,19 @@ namespace DND.Common.Extensions
                 }
             }
             return source;
+        }
+
+        public static int CountStringOccurrences(this string text, string pattern)
+        {
+            // Loop through all instances of the string 'text'.
+            int count = 0;
+            int i = 0;
+            while ((i = text.IndexOf(pattern, i)) != -1)
+            {
+                i += pattern.Length;
+                count++;
+            }
+            return count;
         }
 
     }

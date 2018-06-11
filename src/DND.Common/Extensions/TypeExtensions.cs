@@ -58,5 +58,16 @@ namespace DND.Common.Extensions
             return type == typeof(IEnumerable) || type.GetInterfaces().Contains(typeof(IEnumerable));
         }
 
+        public static object DefaultValue(this Type t)
+        {
+            if (t.IsValueType && Nullable.GetUnderlyingType(t) == null)
+            {
+                return Activator.CreateInstance(t);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

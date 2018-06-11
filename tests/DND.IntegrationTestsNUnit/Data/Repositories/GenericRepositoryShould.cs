@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Repository;
+﻿using DND.Common.Extensions;
+using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Implementation.UnitOfWork;
 using DND.Common.Interfaces.UnitOfWork;
@@ -35,7 +36,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _ouw = uowFactory.CreateReadOnly();
             _repository = new GenericEFRepository<Category>(_context, _ouw, true);
             _log = "";
-            _logBuilder = new StringBuilder();
+            StringBuilder logBuilder = new StringBuilder();
             SetupLogging();
         }
 
@@ -83,6 +84,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             }
         }
 
+
         [Test, Isolated]
         public async Task InsertDeleteUpdate()
         {
@@ -127,6 +129,106 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             Seed();
             var entity = _repository.GetByIdNoTracking(1);
             Assert.AreEqual(0, _context.CachedEntityCount());
+        }
+
+        [Test, Isolated]
+        public void NoCacheEntitiesWhenCountisCalled()
+        {
+            Seed();
+            var entity = _repository.GetCount();
+            WriteLog();
+            Assert.AreEqual(0, _context.CachedEntityCount());
+        }
+
+        [Test, Isolated]
+        public void NoCacheEntitiesWhenExistsNoTrackingsCalled()
+        {
+            Seed();
+            var exists = _repository.ExistsNoTracking();
+            WriteLog();
+            Assert.AreEqual(0, _context.CachedEntityCount());
+        }
+
+        [Test, Isolated]
+        public void CacheEntitiesWhenExistsIsCalled()
+        {
+            Seed();
+            var exists = _repository.Exists();
+            WriteLog();
+            Assert.AreNotEqual(0, _context.CachedEntityCount());
+        }
+
+        [Test, Isolated]
+        public void AllowInsertThenDelete()
+        {
+            var category = new Category { Name = "test", Description = "test", UrlSlug = "test" };
+            _repository.Insert(category);
+            _repository.Delete(category);
+            _context.SaveChanges();
+            WriteLog();
+            Assert.IsTrue(!_log.Contains("Insert"));
+        }
+
+        [Test, Isolated]
+        public void OnlyFetchEntityFromDbOnce()
+        {
+            Seed();
+            var exists = _repository.ExistsById(1);
+            var category = _repository.GetById(1);
+            Assert.AreEqual(1, _context.CachedEntityCount());
+            WriteLog();
+            Assert.AreEqual(1, _log.CountStringOccurrences("SELECT"));
+        }
+
+        [Test, Isolated]
+        public void OnlyFetchEntityFromDbOnceAndUpdateUpdatedFieldsOnlyWhenConnectedUpdateOccurs()
+        {
+            Seed();
+            var category =_repository.GetById(1);
+            Assert.AreEqual(1, _context.CachedEntityCount());
+
+            category.Name = "Updated Name";
+
+            _repository.Update(category);
+            _context.SaveChanges();
+
+            WriteLog();
+
+            //Select only once
+            Assert.AreEqual(1, _log.CountStringOccurrences("[Description] AS [Description]"));
+            //Update only updated fields
+            Assert.IsTrue(!_log.Contains("[Description] = "));
+        }
+
+        [Test, Isolated]
+        public void StoreEntityInCacheWhenExistsIsCalled()
+        {
+            Seed();
+            var category = _repository.GetByIdNoTracking(1);
+            _repository.Exists(category);
+
+            Assert.AreEqual(1, _context.CachedEntityCount());
+        }
+
+        [Test, Isolated]
+        public void OnlyFetchEntityFromDbOnceWhenDisconnectedUpdatedOccurs()
+        {
+            Seed();
+            var category = _repository.GetByIdNoTracking(1);
+            Assert.AreEqual(0, _context.CachedEntityCount());
+
+            category.Name = "Updated Name";
+
+            _repository.Update(category);
+
+            _context.SaveChanges();
+
+            WriteLog();
+
+            //Inital non tracking select + select from update
+            Assert.AreEqual(2, _log.CountStringOccurrences("[Description] AS [Description]"));
+            //Update only updated fields
+            Assert.IsTrue(!_log.Contains("[Description] = "));
         }
 
         [Test, Isolated]
