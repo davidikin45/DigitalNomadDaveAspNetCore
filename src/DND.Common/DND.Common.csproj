@@ -780,7 +780,7 @@
     <Compile Include="Helpers\AsyncHelper.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />
     <Compile Include="Helpers\Cryptography\AsymmetricEncryptionHelper.cs" />
-    <Compile Include="Helpers\Cryptography\BlockChainAddress.cs" />
+    <Compile Include="Helpers\Cryptography\BlockChain.cs" />
     <Compile Include="Helpers\Cryptography\DigitalSignature.cs" />
     <Compile Include="Helpers\Cryptography\Hashing.cs" />
     <Compile Include="Helpers\Cryptography\Hmac.cs" />

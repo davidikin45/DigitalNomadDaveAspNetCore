@@ -10,38 +10,38 @@ namespace DND.Common.Helpers
     //https://www.bitaddress.org
     //https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses Bitcoin address
     //https://en.bitcoin.it/wiki/Wallet_import_format WIF
-    public static class BlockChainAddress
+    public static class BlockChain
     {
         #region Public Key 
         public static string GetPublicKeyUncompressedWIFFromPrivateKeyHex(string privateKeyHex)
         {
             string wif = GetPrivateKeyUncompressedWIFFromPrivateKeyHex(privateKeyHex);
-            var pk = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
-            var pubicKeyWIF = pk.PublicKey.ToString();
+            var privKey = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
+            var pubicKeyWIF = privKey.PublicKey.ToString();
             return pubicKeyWIF;
         }
 
         public static string GetPublicKeyUncompressedHexFromPrivateKeyHex(string privateKeyHex)
         {
             string wif = GetPrivateKeyUncompressedWIFFromPrivateKeyHex(privateKeyHex);
-            var pk = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
-            var pubKey = pk.PublicKey;
+            var privKey = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
+            var pubKey = privKey.PublicKey;
             return ByteToHex(pubKey.PublicKeyBytes);
         }
 
         public static string GetPublicKeyCompressedWIFFromPrivateKeyHex(string privateKeyHex)
         {
             string wif = GetPrivateKeyCompressedWIFFromPrivateKeyHex(privateKeyHex);
-            var pk = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
-            var pubicKeyWIF = pk.PublicKey.ToString();
+            var privKey = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
+            var pubicKeyWIF = privKey.PublicKey.ToString();
             return pubicKeyWIF;
         }
 
         public static string GetPublicKeyCompressedHexFromPrivateKeyHex(string privateKeyHex)
         {
             string wif = GetPrivateKeyCompressedWIFFromPrivateKeyHex(privateKeyHex);
-            var pk = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
-            var pubKey = pk.PublicKey;
+            var privKey = new PrivateKey(Globals.ProdDumpKeyVersion, wif);
+            var pubKey = privKey.PublicKey;
             return ByteToHex(pubKey.PublicKeyBytes);
         }
         #endregion
@@ -63,14 +63,38 @@ namespace DND.Common.Helpers
             byte[] PreHashQ = AppendBitcoinNetwork(HexToByte(privateKeyHex), 128);
             return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
         }
+
+        public static bool PrivateKeyWIFIsValid(string privateKeyWIF)
+        {
+            try
+            {
+                var privKey = new PrivateKey(Globals.ProdDumpKeyVersion, privateKeyWIF);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         #endregion
 
         #region Address
         public static (string address, string publicKeyHex, string privateKeyHex) CreateNewAddress()
         {
-            var keys = DigitalSignature.GetNewECDSAHexKeys();
-            var address = GetAddressFromPublicKeyHex(keys.publicKey);
-            return (address: address, publicKeyHex: keys.publicKey, privateKeyHex: keys.privateKey);
+            var privKey = PrivateKey.CreatePrivateKey(Globals.ProdDumpKeyVersion, true);
+            var privateKeyCompressedWIF = privKey.ToString();
+            var privateKeyHex = ByteToHex(privKey.PrivateKeyBytes);
+            var privateKeyUncompressedWIF = GetPrivateKeyUncompressedWIFFromPrivateKeyHex(privateKeyHex);
+            var privateKeyBase64 = GetPrivateKeyBase64FromPrivateKeyHex(privateKeyHex);
+
+            var publicKeyWIF = privKey.PublicKey.ToString();
+            var publicKeyCompressedHex = ByteToHex(privKey.PublicKey.PublicKeyBytes);
+            var publicKeyUncompressedHex = GetPublicKeyUncompressedHexFromPrivateKeyHex(privateKeyHex);
+
+            var compressedAddress = GetAddressFromPublicKeyHex(publicKeyCompressedHex);
+            var uncompressedAddress = GetAddressFromPublicKeyHex(publicKeyUncompressedHex);
+
+            return (address: compressedAddress, publicKeyHex: publicKeyCompressedHex, privateKeyHex: privateKeyHex);
         }
 
         public static string GetAddressFromPrivateKeyHex(string privateKeyHex)
@@ -179,61 +203,6 @@ namespace DND.Common.Helpers
         public static string ByteToBase64(byte[] array)
         {
             return Convert.ToBase64String(array);
-        }
-
-        private const string _alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-        private static readonly Int32 _base = 58;
-        public static byte[] Base58DecodeChecked(string input)
-        {
-            var tmp = Decode(input);
-            if (tmp.Length < 4)
-                throw new Exception("Input too short");
-            var checksum = new byte[4];
-            Array.Copy(tmp, tmp.Length - 4, checksum, 0, 4);
-            var bytes = new byte[tmp.Length - 4];
-            Array.Copy(tmp, 0, bytes, 0, tmp.Length - 4);
-            tmp = Utilities.DoubleDigest(bytes);
-            var hash = new byte[4];
-            Array.Copy(tmp, 0, hash, 0, 4);
-            if (!hash.SequenceEqual(checksum))
-                throw new Exception("Checksum does not validate");
-            return bytes;
-        }
-
-        public static byte[] Decode(string input)
-        {
-            var bytes = DecodeToBigInteger(input).getBytes();
-            // We may have got one more byte than we wanted, if the high bit of the next-to-last byte was not zero. This
-            // is because BigIntegers are represented with twos-compliment notation, thus if the high bit of the last
-            // byte happens to be 1 another 8 zero bits will be added to ensure the number parses as positive. Detect
-            // that case here and chop it off.
-            var stripSignByte = bytes.Length > 1 && bytes[0] == 0 && bytes[1] >= 0x80;
-            // Count the leading zeros, if any.
-            var leadingZeros = 0;
-            for (var i = 0; input[i] == _alphabet[0]; i++)
-            {
-                leadingZeros++;
-            }
-            // Now cut/pad correctly. Java 6 has a convenience for this, but Android can't use it.
-            var tmp = new byte[bytes.Length - (stripSignByte ? 1 : 0) + leadingZeros];
-            Array.Copy(bytes, stripSignByte ? 1 : 0, tmp, leadingZeros, tmp.Length - leadingZeros);
-            return tmp;
-        }
-
-        public static BigInteger DecodeToBigInteger(string input)
-        {
-            var bi = new BigInteger(0);
-            // Work backwards through the string.
-            for (var i = input.Length - 1; i >= 0; i--)
-            {
-                var alphaIndex = _alphabet.IndexOf(input[i]);
-                if (alphaIndex == -1)
-                {
-                    throw new Exception("Illegal character " + input[i] + " at " + i);
-                }
-                bi = bi + new BigInteger(alphaIndex)*(new BigInteger((long)Math.Pow(_base, (input.Length - 1 - i))));
-            }
-            return bi;
         }
         #endregion
     }
