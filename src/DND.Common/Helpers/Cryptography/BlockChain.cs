@@ -79,7 +79,7 @@ namespace DND.Common.Helpers
         #endregion
 
         #region Address
-        public static (string address, string publicKeyHex, string privateKeyHex) CreateNewAddress()
+        public static (string compressedAddress, string uncompressedAddress, string publicKeyCompressedHex, string publicKeyUncompressedHex, string privateKeyHex, string privateKeyCompressedWIF, string privateKeyUncompressedWIF, string privateKeyBase64) CreateNewAddress()
         {
             var privKey = PrivateKey.CreatePrivateKey(Globals.ProdDumpKeyVersion, true);
             var privateKeyCompressedWIF = privKey.ToString();
@@ -94,7 +94,7 @@ namespace DND.Common.Helpers
             var compressedAddress = GetAddressFromPublicKeyHex(publicKeyCompressedHex);
             var uncompressedAddress = GetAddressFromPublicKeyHex(publicKeyUncompressedHex);
 
-            return (address: compressedAddress, publicKeyHex: publicKeyCompressedHex, privateKeyHex: privateKeyHex);
+            return (compressedAddress: compressedAddress, uncompressedAddress: uncompressedAddress, publicKeyCompressedHex: publicKeyCompressedHex, publicKeyUncompressedHex: publicKeyUncompressedHex, privateKeyHex: privateKeyHex, privateKeyCompressedWIF: privateKeyCompressedWIF, privateKeyUncompressedWIF: privateKeyUncompressedWIF, privateKeyBase64: privateKeyBase64);
         }
 
         public static string GetAddressFromPrivateKeyHex(string privateKeyHex)
@@ -109,11 +109,29 @@ namespace DND.Common.Helpers
             return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
         }
 
-        public static (string address, string publicKeyHex, string privateKeyHex) CreateNewTestAddress()
+        public static string GetTestAddressFromPublicKeyHex(string publicKeyHex)
         {
-            var keys = DigitalSignature.GetNewECDSAHexKeys();
-            var address = GetTestAddress(keys.publicKey);
-            return (address: address, publicKeyHex: keys.publicKey, privateKeyHex: keys.privateKey);
+            byte[] PreHashQ = AppendBitcoinNetwork(RipeMD160(Sha256(HexToByte(publicKeyHex))), 111);
+            return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
+        }
+
+        public static (string compressedAddress, string uncompressedAddress, string publicKeyCompressedHex, string publicKeyUncompressedHex, string privateKeyHex, string privateKeyCompressedWIF, string privateKeyUncompressedWIF, string privateKeyBase64) CreateNewTestAddress()
+        {
+            var privKey = PrivateKey.CreatePrivateKey(Globals.TestAddressVersion, true);
+            var privateKeyCompressedWIF = privKey.ToString();
+            var privateKeyHex = ByteToHex(privKey.PrivateKeyBytes);
+            var privateKeyUncompressedWIF = GetPrivateKeyUncompressedWIFFromPrivateKeyHex(privateKeyHex);
+            var privateKeyBase64 = GetPrivateKeyBase64FromPrivateKeyHex(privateKeyHex);
+
+            var pubKey = new PublicKey(privKey, Globals.TestAddressVersion);
+            var publicKeyWIF = pubKey.ToString();
+            var publicKeyCompressedHex = ByteToHex(pubKey.PublicKeyBytes);
+            var publicKeyUncompressedHex = GetPublicKeyUncompressedHexFromPrivateKeyHex(privateKeyHex);
+
+            var compressedAddress = GetTestAddressFromPublicKeyHex(publicKeyCompressedHex);
+            var uncompressedAddress = GetTestAddressFromPublicKeyHex(publicKeyUncompressedHex);
+
+            return (compressedAddress: compressedAddress, uncompressedAddress: uncompressedAddress, publicKeyCompressedHex: publicKeyCompressedHex, publicKeyUncompressedHex: publicKeyUncompressedHex, privateKeyHex: privateKeyHex, privateKeyCompressedWIF: privateKeyCompressedWIF, privateKeyUncompressedWIF: privateKeyUncompressedWIF, privateKeyBase64: privateKeyBase64);
         }
 
         public static string GetTestAddress(string publicKeyHex)

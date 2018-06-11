@@ -14,7 +14,7 @@ namespace DND.UnitTests.Common.Cryptography
         public void CreateNewAddressAsExpected()
         {
             var data = BlockChain.CreateNewAddress();
-            Assert.Equal('1', data.address.First());
+            Assert.Equal('1', data.compressedAddress.First());
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace DND.UnitTests.Common.Cryptography
         public void CreateNewTestAddressAsExpected()
         {
             var data = BlockChain.CreateNewTestAddress();
-            Assert.True(data.address.First() == 'm' || data.address.First() == 'n');
+            Assert.True(data.compressedAddress.First() == 'm' || data.compressedAddress.First() == 'n');
         }
 
         [Fact]
