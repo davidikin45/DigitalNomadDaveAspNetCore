@@ -23,8 +23,8 @@ namespace DND.Common.Implementation.Repository.EntityFramework
     public class GenericEFRepository<TEntity> : GenericEFReadOnlyRepository<TEntity>, IBaseRepository<TEntity>
      where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
     {
-        public GenericEFRepository(IBaseDbContext context, IBaseUnitOfWorkScope uow, Boolean tracking, CancellationToken cancellationToken = default(CancellationToken))
-            : base(context, uow, tracking, cancellationToken)
+        public GenericEFRepository(IBaseDbContext context, IBaseUnitOfWorkScope uow, CancellationToken cancellationToken = default(CancellationToken))
+            : base(context, uow, cancellationToken)
         {
         }
 
@@ -43,7 +43,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<Result> InsertOrUpdateAsync(TEntity entity, string createdModifiedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var existingEntity = _context.FindEntityById<TEntity>(entity.Id);
+            var existingEntity = await _context.FindEntityAsync<TEntity>(entity, cancellationToken);
             if (existingEntity != null)
             {
                 return await UpdateAsync(entity, createdModifiedBy, cancellationToken);
@@ -199,14 +199,6 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual Result Delete(TEntity entity, string deletedBy = null)
         {
-            //if (!_context.IsEntityStateAdded(entity))
-            //{
-            //    if (!(Exists(entity)))
-            //    {
-            //        return Result.ObjectDoesNotExist();
-            //    }
-            //}
-
             if (!(Exists(entity)))
             {
                 return Result.ObjectDoesNotExist();
@@ -232,14 +224,6 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<Result> DeleteAsync(TEntity entity, string deletedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            //if (!_context.IsEntityStateAdded(entity))
-            //{
-            //    if (!(await ExistsAsync(entity.Id).ConfigureAwait(false)))
-            //    {
-            //        return Result.ObjectDoesNotExist();
-            //    }
-            //}
-
             if (!(await ExistsAsync(entity).ConfigureAwait(false)))
             {
                 return Result.ObjectDoesNotExist();

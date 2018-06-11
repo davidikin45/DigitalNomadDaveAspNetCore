@@ -40,7 +40,7 @@ namespace DND.IntegrationTestsNUnit.Data.UnitOfWork
                 var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
                 using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
                 {
-                    var repo = new GenericEFRepository<Category>(con, unitOfWork, false);
+                    var repo = new GenericEFRepository<Category>(con, unitOfWork);
 
                     var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
                     var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };

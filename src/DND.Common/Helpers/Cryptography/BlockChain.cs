@@ -10,6 +10,7 @@ namespace DND.Common.Helpers
     //https://www.bitaddress.org
     //https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses Bitcoin address
     //https://en.bitcoin.it/wiki/Wallet_import_format WIF
+    //https://www.scottbrady91.com/C-Sharp/JWT-Signing-using-ECDSA-in-dotnet-Core
     public static class BlockChain
     {
         #region Public Key 
@@ -54,13 +55,13 @@ namespace DND.Common.Helpers
 
         public static string GetPrivateKeyCompressedWIFFromPrivateKeyHex(string privateKeyHex)
         {
-            byte[] PreHashQ = AppendCompressed(AppendBitcoinNetwork(HexToByte(privateKeyHex), 128), 1);
+            byte[] PreHashQ = AppendCompressed(AppendBitcoinNetwork(HexToByte(privateKeyHex), Globals.ProdDumpKeyVersion[0]), 1);
             return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
         }
 
         public static string GetPrivateKeyUncompressedWIFFromPrivateKeyHex(string privateKeyHex)
         {
-            byte[] PreHashQ = AppendBitcoinNetwork(HexToByte(privateKeyHex), 128);
+            byte[] PreHashQ = AppendBitcoinNetwork(HexToByte(privateKeyHex), Globals.ProdDumpKeyVersion[0]);
             return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
         }
 
@@ -78,7 +79,7 @@ namespace DND.Common.Helpers
         }
         #endregion
 
-        #region Address
+        #region Prod Address
         public static (string compressedAddress, string uncompressedAddress, string publicKeyCompressedHex, string publicKeyUncompressedHex, string privateKeyHex, string privateKeyCompressedWIF, string privateKeyUncompressedWIF, string privateKeyBase64) CreateNewAddress()
         {
             var privKey = PrivateKey.CreatePrivateKey(Globals.ProdDumpKeyVersion, true);
@@ -105,38 +106,7 @@ namespace DND.Common.Helpers
 
         public static string GetAddressFromPublicKeyHex(string publicKeyHex)
         {
-            byte[] PreHashQ = AppendBitcoinNetwork(RipeMD160(Sha256(HexToByte(publicKeyHex))), 0);
-            return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
-        }
-
-        public static string GetTestAddressFromPublicKeyHex(string publicKeyHex)
-        {
-            byte[] PreHashQ = AppendBitcoinNetwork(RipeMD160(Sha256(HexToByte(publicKeyHex))), 111);
-            return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
-        }
-
-        public static (string compressedAddress, string uncompressedAddress, string publicKeyCompressedHex, string publicKeyUncompressedHex, string privateKeyHex, string privateKeyCompressedWIF, string privateKeyUncompressedWIF, string privateKeyBase64) CreateNewTestAddress()
-        {
-            var privKey = PrivateKey.CreatePrivateKey(Globals.TestAddressVersion, true);
-            var privateKeyCompressedWIF = privKey.ToString();
-            var privateKeyHex = ByteToHex(privKey.PrivateKeyBytes);
-            var privateKeyUncompressedWIF = GetPrivateKeyUncompressedWIFFromPrivateKeyHex(privateKeyHex);
-            var privateKeyBase64 = GetPrivateKeyBase64FromPrivateKeyHex(privateKeyHex);
-
-            var pubKey = new PublicKey(privKey, Globals.TestAddressVersion);
-            var publicKeyWIF = pubKey.ToString();
-            var publicKeyCompressedHex = ByteToHex(pubKey.PublicKeyBytes);
-            var publicKeyUncompressedHex = GetPublicKeyUncompressedHexFromPrivateKeyHex(privateKeyHex);
-
-            var compressedAddress = GetTestAddressFromPublicKeyHex(publicKeyCompressedHex);
-            var uncompressedAddress = GetTestAddressFromPublicKeyHex(publicKeyUncompressedHex);
-
-            return (compressedAddress: compressedAddress, uncompressedAddress: uncompressedAddress, publicKeyCompressedHex: publicKeyCompressedHex, publicKeyUncompressedHex: publicKeyUncompressedHex, privateKeyHex: privateKeyHex, privateKeyCompressedWIF: privateKeyCompressedWIF, privateKeyUncompressedWIF: privateKeyUncompressedWIF, privateKeyBase64: privateKeyBase64);
-        }
-
-        public static string GetTestAddress(string publicKeyHex)
-        {
-            byte[] PreHashQ = AppendBitcoinNetwork(RipeMD160(Sha256(HexToByte(publicKeyHex))), 111);
+            byte[] PreHashQ = AppendBitcoinNetwork(RipeMD160(Sha256(HexToByte(publicKeyHex))), Globals.ProdAddressVersion[0]);
             return Base58Encode(ConcatAddress(PreHashQ, Sha256(Sha256(PreHashQ))));
         }
         #endregion

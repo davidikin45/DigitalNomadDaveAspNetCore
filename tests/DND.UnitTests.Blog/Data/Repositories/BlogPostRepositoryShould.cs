@@ -23,7 +23,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
             _context = new InMemoryDataContext();
             var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _uow = uowFactory.CreateReadOnly();
-            _repository = new GenericEFRepository<BlogPost>(_context, _uow, false);
+            _repository = new GenericEFRepository<BlogPost>(_context, _uow);
         }
 
         public void Dispose()
@@ -35,7 +35,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         public async Task Add()
         {
             var post = new BlogPost() { Title = "Test Post" };
-            _repository.Create(post);
+            _repository.Insert(post);
 
             await _context.SaveChangesAsync();
 
@@ -50,7 +50,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         public async Task AddThenUpdate()
         {
             var post = new BlogPost() { Title = "Test Post" };
-            _repository.Create(post);
+            _repository.Insert(post);
 
             post.Title = "Test Post 2";
             _repository.Update(post);
@@ -66,7 +66,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         public async Task AddThenDelete()
         {
             var post = new BlogPost() { Title = "Test Post" };
-            _repository.Create(post);
+            _repository.Insert(post);
 
             _repository.Delete(post);
 
@@ -81,7 +81,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         public async Task Update()
         {
             var post = new BlogPost() { Title = "Test Post" };
-            _repository.Create(post);
+            _repository.Insert(post);
 
             await _context.SaveChangesAsync();
 
@@ -105,7 +105,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         public async Task Delete()
         {
             var post = new BlogPost() { Title = "Test Post" };
-            _repository.Create(post);
+            _repository.Insert(post);
 
             await _context.SaveChangesAsync();
 
@@ -126,8 +126,8 @@ namespace DND.UnitTests.Blog.Data.Repositories
         {
             var post = new BlogPost();
             var post2 = new BlogPost();
-            _repository.Create(post);
-            _repository.Create(post2);
+            _repository.Insert(post);
+            _repository.Insert(post2);
 
             await _context.SaveChangesAsync();
 

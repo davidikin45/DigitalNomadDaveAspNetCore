@@ -34,9 +34,9 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
 
             var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _ouw = uowFactory.CreateReadOnly();
-            _repository = new GenericEFRepository<Category>(_context, _ouw, true);
+            _repository = new GenericEFRepository<Category>(_context, _ouw);
             _log = "";
-            StringBuilder logBuilder = new StringBuilder();
+            _logBuilder = new StringBuilder();
             SetupLogging();
         }
 
@@ -63,6 +63,8 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _context.Dispose();
         }
 
+        private int insertedCategoryId;
+
         public void Seed()
         {
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
@@ -72,7 +74,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
 
                 using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
                 {
-                    var repo = new GenericEFRepository<Category>(con, unitOfWork, false);
+                    var repo = new GenericEFRepository<Category>(con, unitOfWork);
 
                     var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
                     var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
@@ -80,6 +82,9 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
                     repo.Insert(catb);
 
                     con.SaveChanges();
+
+                    insertedCategoryId = cata.Id;
+
                 }
             }
         }
@@ -173,8 +178,8 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         public void OnlyFetchEntityFromDbOnce()
         {
             Seed();
-            var exists = _repository.ExistsById(1);
-            var category = _repository.GetById(1);
+            var exists = _repository.ExistsById(insertedCategoryId);
+            var category = _repository.GetById(insertedCategoryId);
             Assert.AreEqual(1, _context.CachedEntityCount());
             WriteLog();
             Assert.AreEqual(1, _log.CountStringOccurrences("SELECT"));
@@ -184,7 +189,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         public void OnlyFetchEntityFromDbOnceAndUpdateUpdatedFieldsOnlyWhenConnectedUpdateOccurs()
         {
             Seed();
-            var category =_repository.GetById(1);
+            var category =_repository.GetById(insertedCategoryId);
             Assert.AreEqual(1, _context.CachedEntityCount());
 
             category.Name = "Updated Name";
@@ -204,7 +209,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         public void StoreEntityInCacheWhenExistsIsCalled()
         {
             Seed();
-            var category = _repository.GetByIdNoTracking(1);
+            var category = _repository.GetByIdNoTracking(insertedCategoryId);
             _repository.Exists(category);
 
             Assert.AreEqual(1, _context.CachedEntityCount());
@@ -214,7 +219,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         public void OnlyFetchEntityFromDbOnceWhenDisconnectedUpdatedOccurs()
         {
             Seed();
-            var category = _repository.GetByIdNoTracking(1);
+            var category = _repository.GetByIdNoTracking(insertedCategoryId);
             Assert.AreEqual(0, _context.CachedEntityCount());
 
             category.Name = "Updated Name";

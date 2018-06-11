@@ -25,16 +25,14 @@ namespace DND.Common.Implementation.Repository.EntityFramework
     {
         protected readonly IBaseUnitOfWorkScope _uow;
         protected readonly IBaseDbContext _context;
-        protected readonly Boolean _allowTracking;
         protected readonly CancellationToken _cancellationToken;
 
         //AsNoTracking() causes EF to bypass cache for reads and writes - Ideal for Web Applications and short lived contexts
 
-        public GenericEFReadOnlyRepository(IBaseDbContext context, IBaseUnitOfWorkScope uow, Boolean allowTracking, CancellationToken cancellationToken = default(CancellationToken))
+        public GenericEFReadOnlyRepository(IBaseDbContext context, IBaseUnitOfWorkScope uow, CancellationToken cancellationToken = default(CancellationToken))
         {
             this._uow = uow;
             this._context = context;
-            this._allowTracking = allowTracking;
             this._cancellationToken = cancellationToken;
         }
 
@@ -49,7 +47,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         {
             //includeProperties = includeProperties ?? string.Empty;
             IQueryable<TEntity> query = _context.Queryable<TEntity>();
-            if (!_allowTracking || !tracking)
+            if (!tracking)
             {
                 query = query.AsNoTracking();
             }

@@ -11,12 +11,12 @@ namespace DND.Common.Implementation.Repository
     {
         public virtual IBaseRepository<TEntity> Get<TEntity>(IBaseDbContext context, IBaseUnitOfWorkScope uow, CancellationToken cancellationToken = default(CancellationToken)) where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
         {
-            return new GenericEFRepository<TEntity>(context, uow, true, cancellationToken);
+            return new GenericEFRepository<TEntity>(context, uow, cancellationToken);
         }
 
         public virtual IBaseReadOnlyRepository<TEntity> GetReadOnly<TEntity>(IBaseDbContext context, IBaseUnitOfWorkScope uow, CancellationToken cancellationToken = default(CancellationToken)) where TEntity : class, IBaseEntity, new()
         {
-            return new GenericEFReadOnlyRepository<TEntity>(context, uow, true, cancellationToken);
+            return new GenericEFReadOnlyRepository<TEntity>(context, uow, cancellationToken);
         }
     }
 }
