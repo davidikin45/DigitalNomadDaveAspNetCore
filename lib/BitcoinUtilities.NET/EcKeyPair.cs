@@ -16,6 +16,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -134,9 +135,19 @@ namespace Bitcoin.BitcoinUtilities
             get { return _pub; }
         }
 
+        public string PublicKeyHex
+        {
+            get { return Utilities.BytesToHexString(_pub); }
+        }
+
         public byte[] PrivateKey
         {
             get { return pGetPrivateKeyBytes(); }
+        }
+
+        public string PrivateKeyHex
+        {
+            get { return Utilities.BytesToHexString(pGetPrivateKeyBytes()); }
         }
 
         /// <summary>
@@ -160,16 +171,21 @@ namespace Bitcoin.BitcoinUtilities
             return b.ToString();
         }
 
+        public string SignHashAsHex(byte[] hash)
+        {
+            return ByteToHex(SignHash(hash));
+        }
+
         /// <summary>
         /// Calculates an ECDSA signature in DER format for the given input hash. Note that the input is expected to be
         /// 32 bytes long.
         /// </summary>
-        public byte[] Sign(byte[] input)
+        public byte[] SignHash(byte[] hash)
         {
             var signer = new ECDsaSigner();
             var privKey = new ECPrivateKeyParameters(_priv, _ecParams);
             signer.Init(true, privKey);
-            var sigs = signer.GenerateSignature(input);
+            var sigs = signer.GenerateSignature(hash);
             // What we get back from the signer are the two components of a signature, r and s. To get a flat byte stream
             // of the type used by BitCoin we have to encode them using DER encoding, which is just a way to pack the two
             // components into a structure.
@@ -183,13 +199,36 @@ namespace Bitcoin.BitcoinUtilities
             }
         }
 
-        /// <summary>
-        /// Verifies the given ASN.1 encoded ECDSA signature against a hash using the public key.
-        /// </summary>
-        /// <param name="data">Hash of the data to verify.</param>
-        /// <param name="signature">ASN.1 encoded signature.</param>
-        /// <param name="pub">The public key bytes to use.</param>
-        public static bool Verify(byte[] data, byte[] signature, byte[] pub)
+        public static string ByteToHex(byte[] array)
+        {
+            return BitConverter.ToString(array).Replace("-", string.Empty);
+        }
+
+        public static byte[] HexToByte(string HexString)
+        {
+            if (HexString.Length % 2 != 0)
+                throw new Exception("Invalid HEX");
+            byte[] retArray = new byte[HexString.Length / 2];
+            for (int i = 0; i < retArray.Length; ++i)
+            {
+                retArray[i] = byte.Parse(HexString.Substring(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            }
+
+            return retArray;
+        }
+
+        public static bool Verify(byte[] hash, string signatureHex, byte[] pub)
+        {
+            return Verify(hash, HexToByte(signatureHex), pub);
+        }
+
+            /// <summary>
+            /// Verifies the given ASN.1 encoded ECDSA signature against a hash using the public key.
+            /// </summary>
+            /// <param name="data">Hash of the data to verify.</param>
+            /// <param name="signature">ASN.1 encoded signature.</param>
+            /// <param name="pub">The public key bytes to use.</param>
+        public static bool Verify(byte[] hash, byte[] signature, byte[] pub)
         {
             var signer = new ECDsaSigner();
             var @params = new ECPublicKeyParameters(_ecParams.Curve.DecodePoint(pub), _ecParams);
@@ -202,7 +241,7 @@ namespace Bitcoin.BitcoinUtilities
                 r = (DerInteger) seq[0];
                 s = (DerInteger) seq[1];
             }
-            return signer.VerifySignature(data, r.Value, s.Value);
+            return signer.VerifySignature(hash, r.Value, s.Value);
         }
 
         /// <summary>

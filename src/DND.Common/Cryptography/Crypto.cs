@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -38,6 +39,16 @@ namespace DND.Common.Cryptography
                 bytes = decoded;
             }
 
+            return DecodeRsaPrivateKey(bytes);
+        }
+        public static RSACryptoServiceProvider DecodeRsaPrivateKeyHex(string privateKeyHex)
+        {
+            byte[] bytes = HexToByte(privateKeyHex);
+            return DecodeRsaPrivateKey(bytes);
+        }
+        public static RSACryptoServiceProvider DecodeRsaPrivateKeyBase64(string privateKeyBase64, string password = "")
+        {
+            byte[] bytes = Convert.FromBase64String(privateKeyBase64);
             return DecodeRsaPrivateKey(bytes);
         }
         public static RSACryptoServiceProvider DecodeRsaPrivateKey(byte[] privateKeyBytes)// PKCS1 
@@ -128,6 +139,14 @@ namespace DND.Common.Cryptography
         public static RSACryptoServiceProvider DecodeRsaPublicKey(string publicKey)
         {
             return DecodeRsaPublicKey(Helpers.GetBytesFromPEM(publicKey));
+        }
+        public static RSACryptoServiceProvider DecodeRsaPublicKeyFromHex(string publicKeyHex)
+        {
+            return DecodeRsaPublicKey(HexToByte(publicKeyHex));
+        }
+        public static RSACryptoServiceProvider DecodeRsaPublicKeyFromBase64(string publicKeyBase64)
+        {
+            return DecodeRsaPublicKey(Convert.FromBase64String(publicKeyBase64));
         }
         public static RSACryptoServiceProvider DecodeRsaPublicKey(byte[] publicKeyBytes)   // PKCS1
         {
@@ -356,6 +375,85 @@ namespace DND.Common.Cryptography
             }
             //return outputStream.ToString().Replace("\r","").Replace("\n\n", "\n");
         }
+        public static string ExportPrivateKeyToRSAPEMHex(RSACryptoServiceProvider csp) // PKCS1
+        {
+            TextWriter outputStream = new StringWriter();
+
+            if (csp.PublicOnly) throw new ArgumentException("CSP does not contain a private key", "csp");
+            var parameters = csp.ExportParameters(true);
+            using (var stream = new MemoryStream())
+            {
+                var writer = new BinaryWriter(stream);
+                writer.Write((byte)0x30); // SEQUENCE
+                using (var innerStream = new MemoryStream())
+                {
+                    var innerWriter = new BinaryWriter(innerStream);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, new byte[] { 0x00 }); // Version
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.Modulus);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.Exponent);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.D);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.P);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.Q);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.DP);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.DQ);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.InverseQ);
+                    var length = (int)innerStream.Length;
+                    Helpers.EncodeLength(writer, length);
+                    writer.Write(innerStream.GetBuffer(), 0, length);
+                }
+
+                return ByteToHex(stream.GetBuffer());
+                //var base64 = Convert.ToBase64String(stream.GetBuffer(), 0, (int)stream.Length).ToCharArray();
+                //outputStream.WriteLine(Helpers.PEMheader(PEMtypes.PEM_RSA));//  "-----BEGIN RSA PRIVATE KEY-----");
+                //// Output as Base64 with lines chopped at 64 characters
+                //for (var i = 0; i < base64.Length; i += 64)
+                //{
+                //    outputStream.WriteLine(base64, i, Math.Min(64, base64.Length - i));
+                //}
+                //outputStream.WriteLine(Helpers.PEMfooter(PEMtypes.PEM_RSA)); //"-----END RSA PRIVATE KEY-----");
+            }
+            //return outputStream.ToString().Replace("\r","").Replace("\n\n", "\n");
+        }
+        public static string ExportPrivateKeyToRSAPEMBase64(RSACryptoServiceProvider csp) // PKCS1
+        {
+            TextWriter outputStream = new StringWriter();
+
+            if (csp.PublicOnly) throw new ArgumentException("CSP does not contain a private key", "csp");
+            var parameters = csp.ExportParameters(true);
+            using (var stream = new MemoryStream())
+            {
+                var writer = new BinaryWriter(stream);
+                writer.Write((byte)0x30); // SEQUENCE
+                using (var innerStream = new MemoryStream())
+                {
+                    var innerWriter = new BinaryWriter(innerStream);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, new byte[] { 0x00 }); // Version
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.Modulus);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.Exponent);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.D);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.P);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.Q);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.DP);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.DQ);
+                    Helpers.EncodeIntegerBigEndian(innerWriter, parameters.InverseQ);
+                    var length = (int)innerStream.Length;
+                    Helpers.EncodeLength(writer, length);
+                    writer.Write(innerStream.GetBuffer(), 0, length);
+                }
+
+                return Convert.ToBase64String(stream.GetBuffer());
+                //var base64 = Convert.ToBase64String(stream.GetBuffer(), 0, (int)stream.Length).ToCharArray();
+                //outputStream.WriteLine(Helpers.PEMheader(PEMtypes.PEM_RSA));//  "-----BEGIN RSA PRIVATE KEY-----");
+                //// Output as Base64 with lines chopped at 64 characters
+                //for (var i = 0; i < base64.Length; i += 64)
+                //{
+                //    outputStream.WriteLine(base64, i, Math.Min(64, base64.Length - i));
+                //}
+                //outputStream.WriteLine(Helpers.PEMfooter(PEMtypes.PEM_RSA)); //"-----END RSA PRIVATE KEY-----");
+            }
+            //return outputStream.ToString().Replace("\r","").Replace("\n\n", "\n");
+        }
+
         public static String ExportPublicKeyToRSAPEM(RSACryptoServiceProvider csp)   // PKCS1
         {
             TextWriter outputStream = new StringWriter();
@@ -422,6 +520,31 @@ namespace DND.Common.Cryptography
             return packagePEM(key.GetBytes(), PEMtypes.PEM_PUBLIC);
 
         }
+        public static String ExportPublicKeyToX509Base64(RSACryptoServiceProvider csp)   // x509
+        {
+            // Encoded key
+            AsnKeyBuilder.AsnMessage key = null;
+            // actualKey
+            RSAParameters actualKey = csp.ExportParameters(false);
+            key = AsnKeyBuilder.PublicKeyToX509(actualKey);
+
+            var bytes = key.GetBytes();
+
+            return Convert.ToBase64String(bytes, 0, (int)bytes.Length);
+        }
+        public static String ExportPublicKeyToX509Hex(RSACryptoServiceProvider csp)   // x509
+        {
+            // Encoded key
+            AsnKeyBuilder.AsnMessage key = null;
+            // actualKey
+            RSAParameters actualKey = csp.ExportParameters(false);
+            key = AsnKeyBuilder.PublicKeyToX509(actualKey);
+
+            var bytes = key.GetBytes();
+
+            return ByteToHex(bytes);
+        }
+
         public static string packagePEM(byte[] bytes,PEMtypes type)
         {
             TextWriter outputStream = new StringWriter();
@@ -620,5 +743,24 @@ namespace DND.Common.Cryptography
             rsa.PersistKeyInCsp = false;
             return rsa;
         }
+
+        private static string ByteToHex(byte[] array)
+        {
+            return BitConverter.ToString(array).Replace("-", string.Empty);
+        }
+
+        private static byte[] HexToByte(string HexString)
+        {
+            if (HexString.Length % 2 != 0)
+                throw new Exception("Invalid HEX");
+            byte[] retArray = new byte[HexString.Length / 2];
+            for (int i = 0; i < retArray.Length; ++i)
+            {
+                retArray[i] = byte.Parse(HexString.Substring(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            }
+
+            return retArray;
+        }
+
     }
 }

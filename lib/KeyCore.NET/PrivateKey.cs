@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Bitcoin.BitcoinUtilities;
+using System.Globalization;
 
 namespace Bitcoin.KeyCore
 {
@@ -11,6 +12,10 @@ namespace Bitcoin.KeyCore
     public class PrivateKey : VersionedChecksummedBytes
     {
         private bool _isCompressedPub;
+
+        public PrivateKey(byte[] version, string keyHex, bool compressedPublicKey = true) : this(version, HexToBytes(keyHex), compressedPublicKey)
+        {           
+        }
 
         /// <summary>
         /// Generates a PrivateKey object from 32 byte array
@@ -86,6 +91,18 @@ namespace Bitcoin.KeyCore
             }
         }
 
+        public string SignHashAsHex(byte[] hash)
+        {
+            var ecKeyPair = new EcKeyPair(PrivateKeyBytes, true);
+            return ecKeyPair.SignHashAsHex(hash);
+        }
+
+        public byte[] SignHash(byte[] hash)
+        {
+            var ecKeyPair = new EcKeyPair(PrivateKeyBytes, true);
+            return ecKeyPair.SignHash(hash);
+        }
+
         /// <summary>
         /// Gets if this private key should make a compressed public key or not
         /// </summary>
@@ -142,6 +159,19 @@ namespace Bitcoin.KeyCore
             }
 
             return keyBytes;
+        }
+
+        private static byte[] HexToBytes(string HexString)
+        {
+            if (HexString.Length % 2 != 0)
+                throw new Exception("Invalid HEX");
+            byte[] retArray = new byte[HexString.Length / 2];
+            for (int i = 0; i < retArray.Length; ++i)
+            {
+                retArray[i] = byte.Parse(HexString.Substring(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            }
+
+            return retArray;
         }
     }
 }

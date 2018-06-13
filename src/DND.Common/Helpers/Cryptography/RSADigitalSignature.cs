@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DND.Common.Helpers
 {
-    public class DigitalSignature
+    public class RSADigitalSignature
     {
         private RSAParameters _publicKey;
         private RSAParameters _privateKey;
@@ -18,7 +18,19 @@ namespace DND.Common.Helpers
             {
                 rsa.PersistKeyInCsp = false;
                 _publicKey = rsa.ExportParameters(false);
+                _publicKey = rsa.ExportParameters(false);
                 _privateKey = rsa.ExportParameters(true);
+            }
+        }
+
+        public static byte[] GeneratePrivateKey(int keySizeBytes = 32)
+        {
+            using (var randomNumberGenerator = new RNGCryptoServiceProvider())
+            {
+                var randomNumber = new byte[keySizeBytes];
+                randomNumberGenerator.GetBytes(randomNumber);
+
+                return randomNumber;
             }
         }
 

@@ -11,6 +11,7 @@ namespace DND.Common.Helpers
     //https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses Bitcoin address
     //https://en.bitcoin.it/wiki/Wallet_import_format WIF
     //https://www.scottbrady91.com/C-Sharp/JWT-Signing-using-ECDSA-in-dotnet-Core
+    //https://pascalpares.gitbooks.io/implementation-of-the-bitcoin-system/content/1-transaction-4-structure.html Bitcoin datastructure
     public static class BlockChain
     {
         #region Public Key 
@@ -79,8 +80,40 @@ namespace DND.Common.Helpers
         }
         #endregion
 
+        #region Signing
+        public static string SignHashAsHexWithPrivateKeyWIF(byte[] hash, string privateKeyWIF)
+        {
+            var key = new PrivateKey(Globals.ProdDumpKeyVersion, privateKeyWIF);
+            return key.SignHashAsHex(hash);
+        }
+
+        public static string SignHashasHexWithPrivateKeyHex(byte[] hash, string privateKeyHex)
+        {
+            var key = new PrivateKey(Globals.ProdDumpKeyVersion, privateKeyHex, true);
+            return key.SignHashAsHex(hash);
+        }
+
+        public static string SignHashAsHexWithPrivateKey(byte[] hash, byte[] privateKey)
+        {
+            var key = new PrivateKey(Globals.ProdDumpKeyVersion, privateKey);
+            return key.SignHashAsHex(hash);
+        }
+
+        public static bool VerifySignatureWithPublicKeyHex(byte[] hash, string signatureHex, string publicKeyHex)
+        {
+            var key = new PublicKey(publicKeyHex, Globals.ProdDumpKeyVersion);
+            return key.VerifySignature(hash, signatureHex);
+        }
+
+        public static bool VerifySignatureWithPublicKey(byte[] hash, string signatureHex, byte[] publicKey)
+        {
+            var key = new PublicKey(publicKey, Globals.ProdDumpKeyVersion);
+            return key.VerifySignature(hash, signatureHex);
+        }
+        #endregion
+
         #region Prod Address
-        public static (string compressedAddress, string uncompressedAddress, string publicKeyCompressedHex, string publicKeyUncompressedHex, string privateKeyHex, string privateKeyCompressedWIF, string privateKeyUncompressedWIF, string privateKeyBase64) CreateNewAddress()
+        public static (string compressedAddress, string uncompressedAddress, string publicKeyCompressedHex, string publicKeyUncompressedHex, string privateKeyHex, string privateKeyCompressedWIF, string privateKeyUncompressedWIF, string privateKeyBase64, PrivateKey privateKey, PublicKey publickey) CreateNewAddress()
         {
             var privKey = PrivateKey.CreatePrivateKey(Globals.ProdDumpKeyVersion, true);
             var privateKeyCompressedWIF = privKey.ToString();
@@ -88,6 +121,7 @@ namespace DND.Common.Helpers
             var privateKeyUncompressedWIF = GetPrivateKeyUncompressedWIFFromPrivateKeyHex(privateKeyHex);
             var privateKeyBase64 = GetPrivateKeyBase64FromPrivateKeyHex(privateKeyHex);
 
+            var publickey = privKey.PublicKey;
             var publicKeyWIF = privKey.PublicKey.ToString();
             var publicKeyCompressedHex = ByteToHex(privKey.PublicKey.PublicKeyBytes);
             var publicKeyUncompressedHex = GetPublicKeyUncompressedHexFromPrivateKeyHex(privateKeyHex);
@@ -95,7 +129,7 @@ namespace DND.Common.Helpers
             var compressedAddress = GetAddressFromPublicKeyHex(publicKeyCompressedHex);
             var uncompressedAddress = GetAddressFromPublicKeyHex(publicKeyUncompressedHex);
 
-            return (compressedAddress: compressedAddress, uncompressedAddress: uncompressedAddress, publicKeyCompressedHex: publicKeyCompressedHex, publicKeyUncompressedHex: publicKeyUncompressedHex, privateKeyHex: privateKeyHex, privateKeyCompressedWIF: privateKeyCompressedWIF, privateKeyUncompressedWIF: privateKeyUncompressedWIF, privateKeyBase64: privateKeyBase64);
+            return (compressedAddress: compressedAddress, uncompressedAddress: uncompressedAddress, publicKeyCompressedHex: publicKeyCompressedHex, publicKeyUncompressedHex: publicKeyUncompressedHex, privateKeyHex: privateKeyHex, privateKeyCompressedWIF: privateKeyCompressedWIF, privateKeyUncompressedWIF: privateKeyUncompressedWIF, privateKeyBase64: privateKeyBase64, privateKey: privKey, publickey: publickey);
         }
 
         public static string GetAddressFromPrivateKeyHex(string privateKeyHex)
@@ -112,18 +146,6 @@ namespace DND.Common.Helpers
         #endregion
 
         #region Helper Methods
-        public static byte[] HexToByte(string HexString)
-        {
-            if (HexString.Length % 2 != 0)
-                throw new Exception("Invalid HEX");
-            byte[] retArray = new byte[HexString.Length / 2];
-            for (int i = 0; i < retArray.Length; ++i)
-            {
-                retArray[i] = byte.Parse(HexString.Substring(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-            }
-
-            return retArray;
-        }
 
         public static byte[] Sha256(byte[] array)
         {
@@ -181,6 +203,19 @@ namespace DND.Common.Helpers
                 retString = ALPHABET[0] + retString;
 
             return retString;
+        }
+
+        public static byte[] HexToByte(string HexString)
+        {
+            if (HexString.Length % 2 != 0)
+                throw new Exception("Invalid HEX");
+            byte[] retArray = new byte[HexString.Length / 2];
+            for (int i = 0; i < retArray.Length; ++i)
+            {
+                retArray[i] = byte.Parse(HexString.Substring(i * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            }
+
+            return retArray;
         }
 
         public static string ByteToHex(byte [] array)

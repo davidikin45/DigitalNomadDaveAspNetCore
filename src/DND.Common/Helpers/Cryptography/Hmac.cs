@@ -6,18 +6,16 @@ namespace DND.Common.Helpers
 {
 	public class Hmac
 	{
-		private const int KeySize = 32;
-
         public static string GenerateKeyBase64()
         {
-            return Convert.ToBase64String(GenerateKey());
+            return Convert.ToBase64String(GeneratePrivateKey());
         }
 
-        public static byte[] GenerateKey()
+        public static byte[] GeneratePrivateKey(int keySizeBytes = 32)
 		{
 			using (var randomNumberGenerator = new RNGCryptoServiceProvider())
 			{
-				var randomNumber = new byte[KeySize];
+				var randomNumber = new byte[keySizeBytes];
 				randomNumberGenerator.GetBytes(randomNumber);
 
 				return randomNumber;
