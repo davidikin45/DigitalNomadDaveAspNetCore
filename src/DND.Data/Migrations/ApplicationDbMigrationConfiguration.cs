@@ -26,8 +26,9 @@ namespace DND.Data.Migrations
     public sealed class ApplicationDbMigrationConfiguration : BaseDbConfiguration<ApplicationDbContext>
     {
         public ApplicationDbMigrationConfiguration()
-        {      
+        {
             //Seed(ApplicationDbContext.Create());
+            ContextKey = "DND.Data.Migrations.ApplicationDbMigrationConfiguration";
         }
 
         protected override void Seed(ApplicationDbContext context)

@@ -84,7 +84,6 @@ namespace DND.Data
         public ApplicationDbContext(string connectionString, bool logSql, IDomainEvents domainEvents = null)
             : base(connectionString, logSql, domainEvents)
         {
-            
             this.Database.CommandTimeout = 180;
             //SqlProviderServices.SqlServerTypesAssemblyName = "Microsoft.SqlServer.Types, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
             //Once a migration is created DB is never created
