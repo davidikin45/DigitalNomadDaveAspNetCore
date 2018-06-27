@@ -86,6 +86,19 @@ namespace Bitcoin.KeyCore
             }
         }
 
+        public string PublicKeyHex
+        {
+            get
+            {
+                return ByteToHex(Bytes);
+            }
+        }
+
+        private static string ByteToHex(byte[] array)
+        {
+            return BitConverter.ToString(array).Replace("-", string.Empty);
+        }
+
         private static byte[] HexToBytes(string HexString)
         {
             if (HexString.Length % 2 != 0)

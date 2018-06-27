@@ -91,6 +91,14 @@ namespace Bitcoin.KeyCore
             }
         }
 
+        public string PrivateKeyHex
+        {
+            get
+            {
+                return ByteToHex(PrivateKeyBytes);
+            }
+        }
+
         public string SignHashAsHex(byte[] hash)
         {
             var ecKeyPair = new EcKeyPair(PrivateKeyBytes, true);
@@ -159,6 +167,11 @@ namespace Bitcoin.KeyCore
             }
 
             return keyBytes;
+        }
+
+        private static string ByteToHex(byte[] array)
+        {
+            return BitConverter.ToString(array).Replace("-", string.Empty);
         }
 
         private static byte[] HexToBytes(string HexString)
