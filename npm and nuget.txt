@@ -12,6 +12,7 @@ Update-Package -ProjectName DND.DomainServices.FlightSearch
 Update-Package -ProjectName DND.Domain.Blog
 Update-Package -ProjectName DND.Domain.CMS
 Update-Package -ProjectName DND.Domain.FlightSearch
+Update-Package -ProjectName DND.Domain.Identity
 Update-Package -ProjectName DND.Data
 Update-Package -ProjectName DND.Data.Identity
 Update-Package -ProjectName DND.Data.Blog

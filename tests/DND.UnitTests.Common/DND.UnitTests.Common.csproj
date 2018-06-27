@@ -68,6 +68,10 @@
     <Analyzer Include="..\..\packages\xunit.analyzers.0.9.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\lib\KeyCore.NET\KeyCore.NET.csproj">
+      <Project>{C4DEA306-79E2-4154-9F46-EC1D22530850}</Project>
+      <Name>KeyCore.NET</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DND.Common\DND.Common.csproj">
       <Project>{632121C5-DB10-4F32-A239-D4FA4EE8C12E}</Project>
       <Name>DND.Common</Name>
