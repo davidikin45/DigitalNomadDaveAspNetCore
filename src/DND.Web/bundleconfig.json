@@ -57,6 +57,7 @@
       "wwwroot/js/qrcode.js",
       "wwwroot/js/return-to-top.js",
       "wwwroot/js/scroll-position.js",
+      "wwwroot/js/signalr-notifications.js",
       "wwwroot/js/site.js"
     ],
     "minify": {

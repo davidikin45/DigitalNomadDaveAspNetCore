@@ -2,39 +2,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.FlightSearch.Hubs
 {
     public class FlightSearchHub : Hub
     {
-        //public async Task SendMessage(string user, string message)
-        //{
-        //    await Clients.All.SendAsync("ReceiveMessage", user, message);
-        //}
-
-        public async Task Search(string request)
+        //Client submits via API and receives an Accepted 202 response
+        //Client then call this method and receives results
+        public async Task GetResults(int id)
         {
-            var searchResult = "test"; ;
-           await Clients.Caller.SendAsync("ReceiveSearchResult", searchResult);
+            CheckResult result;
+            do
+            {
+                result = new CheckResult();
+                await Task.Delay(1000);
+                if (result.New)
+                    await Clients.Caller.SendAsync("ReceiveResult", result.Status);
+            } while (!result.Finished);
+            await Clients.Caller.SendAsync("Finished");
         }
+    }
 
-        //public Task SendMessageToGroups(string message)
-        //{
-        //    List<string> groups = new List<string>() { "SignalR Users" };
-        //    return Clients.Groups(groups).SendAsync("ReceiveMessage", message);
-        //}
-
-        //public override async Task OnConnectedAsync()
-        //{
-        //    await Groups.AddToGroupAsync(Context.ConnectionId, "SignalR Users");
-        //    await base.OnConnectedAsync();
-        //}
-
-        //public override async Task OnDisconnectedAsync(Exception exception)
-        //{
-        //    await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
-        //    await base.OnDisconnectedAsync(exception);
-        //}
+    public class CheckResult
+    {
+        public bool New { get; set; }
+        public string Status { get; set; }
+        public bool Finished { get; set; }
     }
 }

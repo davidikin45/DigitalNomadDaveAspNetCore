@@ -50,6 +50,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DND.Common.SignalRHubs;
 using static DND.Common.Helpers.NavigationMenuHelperExtension;
 
 namespace DND.Web
@@ -687,7 +688,8 @@ namespace DND.Web
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<FlightSearchHub>("/api/flight-search-real-time");
+                routes.MapHub<NotificationHub>("/api/signalR/notifications");
+                routes.MapHub<FlightSearchHub>("/api/signalR/flight-search");
             });
 
             //Cache-Control:max-age=0

@@ -7,6 +7,7 @@ using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Repository;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.SignalRHubs;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Domain.Blog.Categories.Dtos;
 using DND.Domain.Blog.Locations.Dtos;
@@ -21,6 +22,7 @@ using DND.Web.MVCImplementation.Countries.Controllers;
 using DND.Web.MVCImplementation.Locations.Controllers;
 using DND.Web.MVCImplementation.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -50,7 +52,6 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             _locationService = locationService;
             _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
             _mailingListService = mailingListService;
-
         }
 
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
