@@ -290,7 +290,8 @@ This project is licensed under the MIT License
 * [Enterprise Patterns: Concurrency in Business Applications](https://app.pluralsight.com/library/courses/enterprise-patterns-concurrency-business-applications/table-of-contents)
 * [ASP.NET Core Identity Deep Dive](https://app.pluralsight.com/library/courses/aspdotnet-core-identity-deep-dive/table-of-contents)
 
-## Pluralsight Courses for Security
+## Pluralsight Courses for Security and Identity Server
+* [Securing ASP.NET Core with OAuth2 and OpenID Connect](https://app.pluralsight.com/library/courses/asp-dotnet-core-oauth2-openid-connect-securing/exercise-files)
 * [Securing ASP.NET Core 2 with OAuth2 and OpenID Connect](https://app.pluralsight.com/library/courses/securing-aspdotnet-core2-oauth2-openid-connect/table-of-contents)
 
 ## Pluralsight Courses for Unit Testing, Integration Testing and UI Testing

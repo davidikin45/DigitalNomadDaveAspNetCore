@@ -47,12 +47,15 @@
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.6.19" />
     <PackageReference Include="HtmlTags.AspNetCore" Version="7.0.3" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.6.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.1.1" />
@@ -89,6 +92,7 @@
     <Folder Include="Controllers\Api\" />
     <Folder Include="MVCImplementation\Account\ViewComponents\" />
     <Folder Include="MVCImplementation\Admin\ViewComponents\" />
+    <Folder Include="MVCImplementation\Authentication\Views\" />
     <Folder Include="MVCImplementation\Author\ViewComponents\" />
     <Folder Include="MVCImplementation\BucketList\ViewComponents\" />
     <Folder Include="MVCImplementation\Countries\Api\" />
@@ -216,6 +220,9 @@
     </Content>
     <Content Update="appsettings.Production.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="MVCImplementation\Authorization\Views\AccessDenied.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="MVCImplementation\FlightSearch\Views\Results.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>

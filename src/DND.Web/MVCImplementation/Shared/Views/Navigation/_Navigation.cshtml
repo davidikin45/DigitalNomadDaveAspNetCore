@@ -1,7 +1,5 @@
 ﻿@inject IConfiguration Configuration
 @inject IHttpContextAccessor HttpContext
-@inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
 @{
     var Settings = Configuration.GetSection("Settings");
 }
@@ -37,7 +35,7 @@
             }
 
             <ul class="navbar-nav">
-                @if (SignInManager.IsSignedIn(User))
+                @if(User.Identity.IsAuthenticated)
                 {
 
                     <li class="nav-item">
@@ -73,7 +71,7 @@
                     {
                         <a href="@(Url.Action((string)menuItem.Action,(string)menuItem.Controller))">@((string)menuItem.LinkText)</a>
                     }
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (User.Identity.IsAuthenticated)
                     {
                         @(Html.MenuLink<ManageController>(c => c.Index(null), "Manage", ""))
                         using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))

@@ -52,6 +52,11 @@ using System.Reflection;
 using System.Text;
 using DND.Common.SignalRHubs;
 using static DND.Common.Helpers.NavigationMenuHelperExtension;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityServer4.AccessTokenValidation;
 
 namespace DND.Web
 {
@@ -73,6 +78,8 @@ namespace DND.Web
             Configuration.PopulateStaticConnectionStrings();
 
             HostingEnvironment = hostingEnvironment;
+
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
         }
 
         public IHostingEnvironment HostingEnvironment { get; }
@@ -85,6 +92,7 @@ namespace DND.Web
             bool useSQLite = bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite"));
             string cookieConsentName = Configuration.GetValue<string>("Settings:CookieConsentName");
             string cookieAuthName = Configuration.GetValue<string>("Settings:CookieAuthName");
+            string cookieExternalAuthName = Configuration.GetValue<string>("Settings:CookieExternalAuthName");
             string cookieTempDataName = Configuration.GetValue<string>("Settings:CookieTempDataName");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
@@ -114,6 +122,11 @@ namespace DND.Web
             int userDetailsChangeLogoutMinutes = Configuration.GetValue<int>("Settings:User:UserDetailsChangeLogoutMinutes");
 
             //External Logins
+            bool enableApplicationLogin = Configuration.GetValue<bool>("Settings:Login:Application:Enable");
+            bool enableJwtTokenLogin = Configuration.GetValue<bool>("Settings:Login:JwtToken:Enable");
+            bool enableOpenIdConnectLogin = Configuration.GetValue<bool>("Settings:Login:OpenIdConnect:Enable");
+            bool enableOpenIdConnectJwtTokenLogin = Configuration.GetValue<bool>("Settings:Login:OpenIdConnectJwtToken:Enable");
+
             bool enableGoogleLogin = Configuration.GetValue<bool>("Settings:Login:Google:Enable");
             string googleClientId = Configuration.GetValue<string>("Settings:Login:Google:ClientId");
             string googleClientSecret = Configuration.GetValue<string>("Settings:Login:Google:ClientSecret");
@@ -175,29 +188,98 @@ namespace DND.Web
                 services.AddHangfireSqlServer(SQLServerConnectionString);
             }
 
-            //Adds "Identity.Application"/IdentityConstants.ApplicationScheme cookie authentication scheme 
-            services.AddIdentity<IdentityDbContext, User, IdentityRole>(requireDigit, requiredLength, requiredUniqueChars, requireLowercase, requireNonAlphanumeric,
-                requireUppercase, requireConfirmedEmail, registrationEmailConfirmationExprireDays, forgotPasswordEmailConfirmationExpireHours, userDetailsChangeLogoutMinutes);
-
-            services.ConfigureApplicationCookie(options =>
+            if (enableApplicationLogin)
             {
-                options.LoginPath = "/Account/Login";
-                options.Cookie.Name = cookieAuthName;
+                //Adds Scheme = "Identity.Application" (IdentityConstants.ApplicationScheme) cookie authentication scheme 
+                services.AddIdentity<IdentityDbContext, User, IdentityRole>(requireDigit, requiredLength, requiredUniqueChars, requireLowercase, requireNonAlphanumeric,
+                    requireUppercase, requireConfirmedEmail, registrationEmailConfirmationExprireDays, forgotPasswordEmailConfirmationExpireHours, userDetailsChangeLogoutMinutes);
+
+                services.ConfigureApplicationCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.Cookie.Name = cookieAuthName;
+                });
+            }
+
+            services.ConfigureExternalCookie(options =>
+            {
+                options.Cookie.Name = cookieExternalAuthName;
             });
 
-            var authenticationBuilder = services.AddAuthentication()
-                 //.AddCookie(options => {
-                 //    options.CookieName = cookieAuthName;
-                 //    options.LoginPath = "/account/Login";
-                 //})
-                 .AddJwtBearer(cfg =>
-                     cfg.TokenValidationParameters = new TokenValidationParameters()
-                     {
-                         ValidIssuer = bearerTokenIssuer,
-                         ValidAudience = bearerTokenAudience,
-                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey))
-                     }
-                 );
+            var authenticationBuilder = services.AddAuthentication();
+
+            if (enableJwtTokenLogin)
+            {
+                //Adds Scheme = "Bearer" (JwtBearerDefaults.AuthenticationScheme) authentication scheme 
+                authenticationBuilder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, cfg =>
+                         cfg.TokenValidationParameters = new TokenValidationParameters()
+                         {
+                             ValidIssuer = bearerTokenIssuer,
+                             ValidAudience = bearerTokenAudience,
+                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey))
+                         }
+                     );
+            }
+
+            if (enableOpenIdConnectJwtTokenLogin)
+            {
+                services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = "https://localhost:44318/";
+                    options.ApiName = "api";
+                    options.ApiSecret = "apisecret";
+                });
+            }
+
+            if (enableOpenIdConnectLogin)
+            {
+                services.Configure<AuthenticationOptions>(options =>
+                {
+                    //overides "Identity.Application"/IdentityConstants.ApplicationScheme set by AddIdentity
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                });
+
+                authenticationBuilder.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (options) =>
+                {
+                    options.AccessDeniedPath = "Authorization/AccessDenied";
+                });
+                authenticationBuilder.AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+                {
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.Authority = "https://localhost:44318";
+                    options.ResponseType = "code id_token";
+                    //options.CallbackPath = new PathString("...")
+                    //options.SignedOutCallbackPath = new PathString("...")
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("address");
+                    options.Scope.Add("roles");
+                    options.Scope.Add("api");
+                    options.Scope.Add("subscriptionlevel");
+                    options.Scope.Add("country");
+                    options.Scope.Add("offline_access");
+                    options.SaveTokens = true;
+
+                    options.ClientId = "mvc";
+                    options.ClientSecret = "secret";
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.ClaimActions.Remove("amr");
+                    options.ClaimActions.DeleteClaim("sid");
+                    options.ClaimActions.DeleteClaim("idp");
+
+                    options.ClaimActions.MapUniqueJsonKey("role", "role");
+                    options.ClaimActions.MapUniqueJsonKey("subscriptionlevel", "subscriptionlevel");
+                    options.ClaimActions.MapUniqueJsonKey("country", "country");
+
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        NameClaimType = "given_name",
+                        RoleClaimType = "role"
+                    };
+                });
+            }
 
             if (enableGoogleLogin)
             {
@@ -227,6 +309,14 @@ namespace DND.Web
                 {
                     policyBuilder.RequireAuthenticatedUser();
                     policyBuilder.RequireRole("Admin");
+                    //policyBuilder.AddRequirements();
+                });
+
+                options.AddPolicy("Order", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.RequireClaim("country", "be" , "fr", "nl");
+                    policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
                     //policyBuilder.AddRequirements();
                 });
             });
@@ -437,6 +527,20 @@ namespace DND.Web
                 return new UrlHelper(actionContext);
             });
 
+            //HSTS
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+            });
+
+            //HTTPS
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+            });
+
             //CORS
             //https://docs.microsoft.com/en-us/aspnet/core/security/cors
             services.AddCors(options =>
@@ -550,6 +654,8 @@ namespace DND.Web
             //settings
             bool enableCookieConsent = Configuration.GetValue<bool>("Settings:Switches:EnableCookieConsent");
             bool enableRedirectNonWwwToWww = Configuration.GetValue<bool>("Settings:Switches:EnableRedirectNonWwwToWww");
+            bool enableRedirectHttpToHttps = Configuration.GetValue<bool>("Settings:Switches:EnableRedirectHttpToHttps");
+            bool enableHsts = Configuration.GetValue<bool>("Settings:Switches:EnableHsts");
             bool enableHelloWord = Configuration.GetValue<bool>("Settings:Switches:EnableHelloWorld");
             bool enableSwagger = Configuration.GetValue<bool>("Settings:Switches:EnableSwagger");
             bool enableResponseCompression = Configuration.GetValue<bool>("Settings:Switches:EnableResponseCompression");
@@ -582,13 +688,6 @@ namespace DND.Web
                 }
             }
 
-            if (enableRedirectNonWwwToWww)
-            {
-                var options = new RewriteOptions();
-                options.AddRedirectToWww();
-                app.UseRewriter(options);
-            }
-
             if (env.IsDevelopment() || env.EnvironmentName == "Integration")
             {
                 app.UseDeveloperExceptionPage();
@@ -619,6 +718,28 @@ namespace DND.Web
                         });
                     }
                );
+
+                if (enableHsts)
+                {
+                    //Only ever use HSTS in production!!!!!
+                    //https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-2.1&tabs=visual-studio
+                    app.UseHsts();
+                }
+            }
+
+            if (enableRedirectHttpToHttps)
+            {
+                //https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-2.1&tabs=visual-studio
+                //picks up port automatically
+                app.UseHttpsRedirection();
+            }
+
+            if (enableRedirectNonWwwToWww)
+            {
+                var options = new RewriteOptions();
+                options.AddRedirectToWww();
+                //options.AddRedirectToHttps(StatusCodes.Status307TemporaryRedirect); // Does not pick up port automatically
+                app.UseRewriter(options);
             }
 
             if (env.IsDevelopment())
@@ -744,7 +865,7 @@ namespace DND.Web
                        appBranch =>
                        {
                            appBranch.UseResponseCachingCustom(); //Allows Invalidation
-                      }
+                       }
                      );
                 }
             }

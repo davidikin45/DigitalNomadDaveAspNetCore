@@ -105,10 +105,10 @@ namespace DND.Web
                 {
                     var services = scope.ServiceProvider;
                     var context = services.GetRequiredService<IdentityDbContext>();
-                    var userManager = services.GetRequiredService<UserManager<User>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    //var userManager = services.GetRequiredService<UserManager<User>>();
+                    //var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-                    var initializer = new IdentityDbContextInitializer(context, userManager, roleManager);
+                    var initializer = new IdentityDbContextInitializer(context);
                     initializer.Initialize();
                 }
 
