@@ -39,7 +39,7 @@ namespace DND.Common.OpenIDConnect
 
         public async Task<IEnumerable<Claim>> GetUserInfo(HttpContext context)
         {
-            return await GetUserInfo(await context.OIDCGetAccessToken());
+            return await GetUserInfo(await context.OIDCGetAccessTokenAsync());
         }
 
         //Get access token by await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken)
@@ -60,9 +60,9 @@ namespace DND.Common.OpenIDConnect
         public async Task<string> RenewTokens(HttpContext context)
         {
             await LoadEndpoints();
-            var accessToken = await context.OIDCGetAccessToken();
+            var accessToken = await context.OIDCGetAccessTokenAsync();
             var tokenClient = new TokenClient(tokenEndpoint, "mvc", "secret");
-            var currentRefreshToken = await context.OIDCGetRefreshToken();
+            var currentRefreshToken = await context.OIDCGetRefreshTokenAsync();
             var tokenResult = await tokenClient.RequestRefreshTokenAsync(currentRefreshToken);
 
             if (!tokenResult.IsError)
@@ -110,8 +110,8 @@ namespace DND.Common.OpenIDConnect
         public async Task LogOut(HttpContext context)
         {
             await RevokeAccess(context);
-            await context.OIDCSignOutOfLocal();
-            await context.OIDCSignOutIDP();
+            await context.OIDCSignOutOfLocalAsync();
+            await context.OIDCSignOutIDPAsync();
         }
 
         public async Task RevokeAccess(HttpContext context)
@@ -120,7 +120,7 @@ namespace DND.Common.OpenIDConnect
 
             var revocationClient = new TokenRevocationClient(revocationEndpoint, "mvc", "secret");
 
-            var accessToken = await context.OIDCGetAccessToken();
+            var accessToken = await context.OIDCGetAccessTokenAsync();
 
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
@@ -132,7 +132,7 @@ namespace DND.Common.OpenIDConnect
                 }
             }
 
-            var refreshToken = await context.OIDCGetRefreshToken();
+            var refreshToken = await context.OIDCGetRefreshTokenAsync();
 
             if (!string.IsNullOrWhiteSpace(refreshToken))
             {
@@ -148,27 +148,32 @@ namespace DND.Common.OpenIDConnect
 
     public static class OpenIDConnectExtensions
     {
-        public static async Task OIDCSignOutOfLocal(this HttpContext context)
+        public static IEnumerable<Claim> OIDCClaims(this HttpContext context)
+        {
+            return context.User.Claims;
+        }
+
+        public static async Task OIDCSignOutOfLocalAsync(this HttpContext context)
         {
             await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-        public static async Task OIDCSignOutIDP(this HttpContext context)
+        public static async Task OIDCSignOutIDPAsync(this HttpContext context)
         {
             await context.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         }
 
-        public static async Task<string> OIDCGetAccessToken(this HttpContext context)
+        public static async Task<string> OIDCGetAccessTokenAsync(this HttpContext context)
         {
             return await context.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
         }
 
-        public static async Task<string> OIDCGetRefreshToken(this HttpContext context)
+        public static async Task<string> OIDCGetRefreshTokenAsync(this HttpContext context)
         {
             return await context.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
         }
 
-        public static async Task<Nullable<DateTime>> OIDCGetTokenExpiry(this HttpContext context)
+        public static async Task<Nullable<DateTime>> OIDCGetTokenExpiryAsync(this HttpContext context)
         {
             var value = await context.GetTokenAsync("expires_at");
             if (string.IsNullOrWhiteSpace(value))

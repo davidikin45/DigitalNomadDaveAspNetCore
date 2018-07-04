@@ -27,7 +27,9 @@ namespace DND.Web
         //Critical = 5
 
         //Default Environment
-        private static readonly Dictionary<string, string> defaults = new Dictionary<string, string> { { WebHostDefaults.EnvironmentKey, "Development" } };
+        private static readonly Dictionary<string, string> defaults = new Dictionary<string, string> { {
+                WebHostDefaults.EnvironmentKey, "Development"
+            } };
 
         public static IConfiguration Configuration;
 
@@ -104,12 +106,7 @@ namespace DND.Web
                 using (var scope = host.Services.CreateScope())
                 {
                     var services = scope.ServiceProvider;
-                    var context = services.GetRequiredService<IdentityDbContext>();
-                    //var userManager = services.GetRequiredService<UserManager<User>>();
-                    //var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-                    var initializer = new IdentityDbContextInitializer(context);
-                    initializer.Initialize();
+                    MigrateDatabases(services);
                 }
 
                 host.Run();
@@ -127,6 +124,14 @@ namespace DND.Web
             }
         }
 
+        private static void MigrateDatabases(IServiceProvider services)
+        {
+            var context = services.GetRequiredService<IdentityDbContext>();
+
+            var initializer = new IdentityDbContextInitializer(context);
+            initializer.Initialize();
+        }
+
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
                 WebHost.CreateDefaultBuilder(args)
                 .UseSetting("detailedErrors", "true")
@@ -136,5 +141,14 @@ namespace DND.Web
                 .UseConfiguration(Configuration)
                 .UseSerilog()
                 .UseStartup<Startup>();
+
+        // Only used by EF Core Tooling if IDesignTimeDbContextFactory is not implemented
+        // Generally its not good practice to DB in the MVC Project so best to use IDesignTimeDbContextFactory
+        //https://wildermuth.com/2017/07/06/Program-cs-in-ASP-NET-Core-2-0
+       // public static IWebHost BuildWebHost(string[] args)
+        //{
+           // Configuration = BuildWebHostConfiguration(args, Directory.GetCurrentDirectory());
+            //return CreateWebHostBuilder(args).Build();
+        //}
     }
 }

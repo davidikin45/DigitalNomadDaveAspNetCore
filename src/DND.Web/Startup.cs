@@ -214,8 +214,8 @@ namespace DND.Web
                 authenticationBuilder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, cfg =>
                          cfg.TokenValidationParameters = new TokenValidationParameters()
                          {
-                             ValidIssuer = bearerTokenIssuer,
-                             ValidAudience = bearerTokenAudience,
+                             ValidIssuer = bearerTokenIssuer, //in the JWT this is iss
+                             ValidAudience = bearerTokenAudience, //in the JWT this is aud
                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey))
                          }
                      );
@@ -223,6 +223,7 @@ namespace DND.Web
 
             if (enableOpenIdConnectJwtTokenLogin)
             {
+                //scheme
                 services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
@@ -241,6 +242,7 @@ namespace DND.Web
                     options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 });
 
+                //authetication scheme
                 authenticationBuilder.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (options) =>
                 {
                     options.AccessDeniedPath = "Authorization/AccessDenied";
@@ -249,7 +251,14 @@ namespace DND.Web
                 {
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.Authority = "https://localhost:44318";
-                    options.ResponseType = "code id_token";
+
+                    //options.ResponseType = "code"; //Authorization
+                    //options.ResponseType = "id_token"; //Implicit
+                    //options.ResponseType = "id_token token"; //Implicit
+                    options.ResponseType = "code id_token"; //Hybrid
+                    //options.ResponseType = "code token"; //Hybrid
+                    //options.ResponseType = "code id_token token"; //Hybrid
+
                     //options.CallbackPath = new PathString("...")
                     //options.SignedOutCallbackPath = new PathString("...")
                     options.Scope.Add("openid");

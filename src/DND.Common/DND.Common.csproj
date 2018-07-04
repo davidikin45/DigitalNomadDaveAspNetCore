@@ -320,6 +320,9 @@
     <Reference Include="Microsoft.Extensions.Configuration.FileExtensions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Configuration.FileExtensions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Json, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Json.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.2.1.1\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
@@ -840,6 +843,7 @@
     <Compile Include="Implementation\ApplicationServices\BaseApplicationService.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseEntityApplicationService.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseEntityReadOnlyApplicationService.cs" />
+    <Compile Include="Implementation\Data\DesignTimeDbContextFactoryBase.cs" />
     <Compile Include="Implementation\DTOs\BaseDtoAggregateRoot.cs" />
     <Compile Include="Implementation\DTOs\BaseDto.cs" />
     <Compile Include="Implementation\DTOs\FolderMetadataDto.cs" />

@@ -94,7 +94,7 @@ namespace DND.IDP
                 {
                     ClientName = "MVC Client",
                     ClientId = "mvc",
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.Hybrid,//Hybrid for MVC Client
                     AccessTokenType = AccessTokenType.Reference, //More control over lifetime
                     RequireConsent = true,
                     //IdentityTokenLifetime = 
