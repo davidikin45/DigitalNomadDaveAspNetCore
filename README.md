@@ -286,11 +286,14 @@ This project is licensed under the MIT License
 * [Building a RESTful API with ASP.NET Core](https://app.pluralsight.com/library/courses/asp-dot-net-core-restful-api-building/table-of-contents)
 * [Building Business Applications with Angular and ASP.NET Core](https://www.pluralsight.com/courses/angular-aspdotnet-core-business-applications)
 
+## Pluralsight Courses for securing APIs with Bearer Tokens
+* [Building a Web App with ASP.NET Core, MVC, Entity Framework Core, Bootstrap, and Angular](https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents)
+
 ## Pluralsight Courses for Concurrecny and Identity
 * [Enterprise Patterns: Concurrency in Business Applications](https://app.pluralsight.com/library/courses/enterprise-patterns-concurrency-business-applications/table-of-contents)
 * [ASP.NET Core Identity Deep Dive](https://app.pluralsight.com/library/courses/aspdotnet-core-identity-deep-dive/table-of-contents)
 
-## Pluralsight Courses for Security and Identity Server
+## Pluralsight Courses for Identity Server (OAuth2 and OpenID Connect)
 * [Securing ASP.NET Core with OAuth2 and OpenID Connect](https://app.pluralsight.com/library/courses/asp-dotnet-core-oauth2-openid-connect-securing/exercise-files)
 * [Securing ASP.NET Core 2 with OAuth2 and OpenID Connect](https://app.pluralsight.com/library/courses/securing-aspdotnet-core2-oauth2-openid-connect/table-of-contents)
 

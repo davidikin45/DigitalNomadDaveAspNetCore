@@ -776,6 +776,7 @@
     <Compile Include="Enums\ResourceUriType.cs" />
     <Compile Include="Enums\CropType.cs" />
     <Compile Include="Extensions\AutomapperExtensions.cs" />
+    <Compile Include="Extensions\ExpandoObjectExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\ConfigurationExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
