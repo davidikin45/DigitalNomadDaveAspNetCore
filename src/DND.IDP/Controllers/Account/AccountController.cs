@@ -37,7 +37,6 @@ namespace DND.IDP.Controllers.Account
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
         private readonly IUserRepository _userRepository;
-        private bool twoFA = false;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
@@ -117,7 +116,7 @@ namespace DND.IDP.Controllers.Account
                 // validate username/password against in-memory store
                 if (_userRepository.AreUserCredentialsValid(model.Username, model.Password))
                 {
-                    if (!twoFA)
+                    if (!AccountOptions.Use2FA)
                     {
                         var user = _userRepository.GetUserByUsername(model.Username);
 

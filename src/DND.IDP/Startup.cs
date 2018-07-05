@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using DND.IDP.Cryptography;
 using DND.IDP.Entities;
+using DND.IDP.Extensions;
 using DND.IDP.Services;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DND.IDP
 {
@@ -38,16 +41,29 @@ namespace DND.IDP
 
             var builder = services.AddIdentityServer();
 
-            if(HostingEnvironment.IsProduction())
+            if (HostingEnvironment.IsProduction())
             {
-                builder.AddSigningCredential(LoadCertificateFromStore());
+                string privateSigningKeyPath = HostingEnvironment.MapContentPath("~/SigningKeys/private.rsa.pem");
+                builder.AddSigningCredential(SigningKey.LoadPrivateRsaSigningKey(privateSigningKeyPath));
             }
             else
             {
                 builder.AddDeveloperSigningCredential();
             }
 
-            if(InMemory)
+            //Windows Authentication
+            //https://stackoverflow.com/questions/36946304/using-windows-authentication-in-asp-net
+            //Ensure windows authentication is enabled in Solution\.vs\config\applicationhost.config
+            //Windows 10 Home
+            //dism /online /norestart /add-package:%SystemRoot%\servicing\Packages\Microsoft-Windows-IIS-WebServer-AddOn-2-Package~31bf3856ad364e35~amd64~~10.0.17134.1.mum
+            //Turn Windows features on or off > Internet Information Services > World Wide Web Services > Security > Windows Authentication
+            services.Configure<IISOptions>(iis =>
+            {
+                iis.AuthenticationDisplayName = "Windows";
+                iis.AutomaticAuthentication = true;
+            });
+
+            if (InMemory)
             {
                 builder.AddTestUsers(Config.GetUsers());
                 builder.AddInMemoryIdentityResources(Config.GetIdentityResources());
@@ -59,8 +75,6 @@ namespace DND.IDP
             {
                 var connectionString = Configuration["connectionStrings:IDPUserDBConnectionString"];
                 services.AddDbContext<UserContext>(o => o.UseSqlServer(connectionString));
-
-                services.AddScoped<IUserRepository, UserRepository>();
 
                 var idpDataDBConnectionString = Configuration["connectionStrings:IDPDataDBConnectionString"];
 
@@ -83,14 +97,15 @@ namespace DND.IDP
                 });
             }
 
-            services.AddAuthentication(options => {
+            services.AddAuthentication(options =>
+            {
                 options.DefaultScheme = IdentityServerConstants.DefaultCookieAuthenticationScheme;
                 options.DefaultChallengeScheme = IdentityServerConstants.DefaultCookieAuthenticationScheme;
             }
-            ).AddCookie(IdentityServerConstants.DefaultCookieAuthenticationScheme+".2FA", options =>
-            {
+            ).AddCookie(IdentityServerConstants.DefaultCookieAuthenticationScheme + ".2FA", options =>
+              {
 
-            });
+              });
 
             services.AddAuthentication().AddFacebook(options =>
             {
@@ -103,6 +118,7 @@ namespace DND.IDP
         //Load from here to prevent load balancer issues
         public X509Certificate2 LoadCertificateFromStore()
         {
+
             string thumbPrint = "AD4AD167DE7171FAA3185480C088C877CD702562";
 
             using (var store = new X509Store(StoreName.My, StoreLocation.LocalMachine))

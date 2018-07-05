@@ -37,6 +37,20 @@ namespace DND.Common.OpenIDConnect
             }
         }
 
+        public async Task<string> GetApiAccessToken(string clientId, string clientSecret, string apiResource)
+        {
+            await LoadEndpoints();
+            var tokenClient = new TokenClient(tokenEndpoint, clientId, clientSecret);
+            var response = await tokenClient.RequestClientCredentialsAsync(apiResource);
+
+            if (response.IsError)
+            {
+                throw new Exception("Problem accessing the Token endpoint.", response.Exception);
+            }
+
+            return response.AccessToken;
+        }
+
         public async Task<IEnumerable<Claim>> GetUserInfo(HttpContext context)
         {
             return await GetUserInfo(await context.OIDCGetAccessTokenAsync());
@@ -61,7 +75,7 @@ namespace DND.Common.OpenIDConnect
         {
             await LoadEndpoints();
             var accessToken = await context.OIDCGetAccessTokenAsync();
-            var tokenClient = new TokenClient(tokenEndpoint, "mvc", "secret");
+            var tokenClient = new TokenClient(tokenEndpoint, "mvc_client", "secret");
             var currentRefreshToken = await context.OIDCGetRefreshTokenAsync();
             var tokenResult = await tokenClient.RequestRefreshTokenAsync(currentRefreshToken);
 
@@ -118,7 +132,7 @@ namespace DND.Common.OpenIDConnect
         {
             await LoadEndpoints();
 
-            var revocationClient = new TokenRevocationClient(revocationEndpoint, "mvc", "secret");
+            var revocationClient = new TokenRevocationClient(revocationEndpoint, "mvc_client", "secret");
 
             var accessToken = await context.OIDCGetAccessTokenAsync();
 

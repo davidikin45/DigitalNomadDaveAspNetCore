@@ -57,6 +57,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.IdentityModel.Tokens.Jwt;
 using IdentityServer4.AccessTokenValidation;
+using System.Security.Cryptography.X509Certificates;
+using DND.Common.Controllers.Api;
 
 namespace DND.Web
 {
@@ -78,8 +80,6 @@ namespace DND.Web
             Configuration.PopulateStaticConnectionStrings();
 
             HostingEnvironment = hostingEnvironment;
-
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
         }
 
         public IHostingEnvironment HostingEnvironment { get; }
@@ -91,7 +91,8 @@ namespace DND.Web
             bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:Switches:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite"));
             string cookieConsentName = Configuration.GetValue<string>("Settings:CookieConsentName");
-            string cookieAuthName = Configuration.GetValue<string>("Settings:CookieAuthName");
+            string cookieAuthName = Configuration.GetValue<string>("Settings:CookieAuthName"); //OpenID Connect
+            string cookieApplicationAuthName = Configuration.GetValue<string>("Settings:CookieApplicationAuthName");
             string cookieExternalAuthName = Configuration.GetValue<string>("Settings:CookieExternalAuthName");
             string cookieTempDataName = Configuration.GetValue<string>("Settings:CookieTempDataName");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
@@ -156,6 +157,10 @@ namespace DND.Web
             bool writeEmailsToFileSystem = Configuration.GetValue<bool>("Settings:Email:WriteEmailsToFileSystem");
             string fileSystemFolder = Configuration.GetValue<string>("Settings:Email:FileSystemFolder");
 
+            //Signing Keys
+            string privateSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Settings:SigningKeys:Private"));
+            string publicSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Settings:SigningKeys:Public"));
+
             var emailsFileSystemPath = fileSystemFolder;
             if (!emailsFileSystemPath.Contains(@":\"))
             {
@@ -197,11 +202,12 @@ namespace DND.Web
                 services.ConfigureApplicationCookie(options =>
                 {
                     options.LoginPath = "/Account/Login";
-                    options.Cookie.Name = cookieAuthName;
+                    options.Cookie.Name = cookieApplicationAuthName;
                 });
             }
 
-            services.ConfigureExternalCookie(options =>
+
+          services.ConfigureExternalCookie(options =>
             {
                 options.Cookie.Name = cookieExternalAuthName;
             });
@@ -211,12 +217,22 @@ namespace DND.Web
             if (enableJwtTokenLogin)
             {
                 //Adds Scheme = "Bearer" (JwtBearerDefaults.AuthenticationScheme) authentication scheme 
+
+                //https://developer.okta.com/blog/2018/03/23/token-authentication-aspnetcore-complete-guide
                 authenticationBuilder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, cfg =>
                          cfg.TokenValidationParameters = new TokenValidationParameters()
                          {
-                             ValidIssuer = bearerTokenIssuer, //in the JWT this is iss
-                             ValidAudience = bearerTokenAudience, //in the JWT this is aud
-                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey))
+                             ValidateIssuer = true,
+                             ValidIssuer = bearerTokenIssuer, //in the JWT this is the uri of the Identity Provider which issues the token.
+
+                             ValidateAudience = true,
+                             ValidAudiences = new string[] { ApiScopes.Full, ApiScopes.Create, ApiScopes.Read, ApiScopes.Update, ApiScopes.Delete },
+
+                            // ValidAudience = bearerTokenAudience, //in the JWT this is aud. This is the resource the user is expected to have.
+                             //IssuerSigningKey = new RsaSecurityKey( ),
+
+                             //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey)) // If IssueSignKey isnt present it will call ValidIssuer to get the publickey
+                             IssuerSigningKey = SigningKey.LoadPublicRsaSigningKey(publicSigningKeyPath)
                          }
                      );
             }
@@ -229,22 +245,25 @@ namespace DND.Web
                 {
                     options.Authority = "https://localhost:44318/";
                     options.ApiName = "api";
-                    options.ApiSecret = "apisecret";
+                    options.ApiSecret = "apisecret"; //Only need this if AccessTokenType = AccessTokenType.Reference
                 });
             }
 
             if (enableOpenIdConnectLogin)
             {
+                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
                 services.Configure<AuthenticationOptions>(options =>
                 {
+                    https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.1&tabs=aspnetcore2x
                     //overides "Identity.Application"/IdentityConstants.ApplicationScheme set by AddIdentity
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme; // Challenge scheme is how user should login if they arent already logged in.
                 });
 
                 //authetication scheme
                 authenticationBuilder.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (options) =>
                 {
+                    options.Cookie.Name = cookieAuthName;
                     options.AccessDeniedPath = "Authorization/AccessDenied";
                 });
                 authenticationBuilder.AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
@@ -271,7 +290,7 @@ namespace DND.Web
                     options.Scope.Add("offline_access");
                     options.SaveTokens = true;
 
-                    options.ClientId = "mvc";
+                    options.ClientId = "mvc_client";
                     options.ClientSecret = "secret";
                     options.GetClaimsFromUserInfoEndpoint = true;
                     options.ClaimActions.Remove("amr");
@@ -321,15 +340,55 @@ namespace DND.Web
                     //policyBuilder.AddRequirements();
                 });
 
-                options.AddPolicy("Order", policyBuilder =>
+                options.AddPolicy(ApiScopes.Full, policyBuilder =>
                 {
-                    policyBuilder.RequireAuthenticatedUser();
-                    policyBuilder.RequireClaim("country", "be" , "fr", "nl");
-                    policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
-                    //policyBuilder.AddRequirements();
+                    policyBuilder.RequireAuthenticatedUser()
+                    .RequireAssertion(ctx =>
+                    {
+                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full);
+                    });
+                });
+
+                options.AddPolicy(ApiScopes.Create, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                   .RequireAssertion(ctx =>
+                    {
+                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
+                        ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Create);
+                    });
+                });
+
+                options.AddPolicy(ApiScopes.Read, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                    .RequireAssertion(ctx =>
+                     {
+                         return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
+                         ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Read);
+                     });
+                });
+
+                options.AddPolicy(ApiScopes.Update, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                   .RequireAssertion(ctx =>
+                    {
+                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
+                        ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Update);
+                    });
+                });
+
+                options.AddPolicy(ApiScopes.Delete, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                   .RequireAssertion(ctx =>
+                    {
+                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
+                        ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Delete);
+                    });
                 });
             });
-
 
             services.Configure<EmailServiceOptions>(options =>
             {
@@ -586,7 +645,7 @@ namespace DND.Web
                 c.AddSecurityDefinition(IdentityConstants.ApplicationScheme, new ApiKeyScheme
                 {
                     Description = "Cookie Authorization scheme. Example: \"Set-Cookie: Key=Value\"",
-                    Name = cookieAuthName,
+                    Name = cookieApplicationAuthName,
                     In = "cookie",
                     Type = "apiKey"
                 });

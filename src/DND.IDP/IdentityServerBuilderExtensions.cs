@@ -7,7 +7,7 @@ namespace DND.IDP
     {
         public static IIdentityServerBuilder AddUserStore(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddSingleton<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.AddProfileService<UserProfileService>();
             return builder;
         }

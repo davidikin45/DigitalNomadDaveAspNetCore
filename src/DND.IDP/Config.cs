@@ -81,7 +81,35 @@ namespace DND.IDP
             {
                 new ApiResource("api", "My API", new List<string>() {"role" })
                 {
-                    ApiSecrets = {new Secret("apisecret".Sha256())}
+                    ApiSecrets = {new Secret("apisecret".Sha256())} // Only required if AccessTokenType = AccessTokenType.Reference
+                    ,Scopes =
+                    {
+                        new Scope()
+                        {
+                            Name = ApiScopes.Full,
+                            DisplayName = "Full access to API"
+                        },
+                        new Scope
+                        {
+                            Name = ApiScopes.Create,
+                            DisplayName = "Create only access to API"
+                        },
+                        new Scope
+                        {
+                            Name = ApiScopes.Read,
+                            DisplayName = "Read only access to API"
+                        },
+                        new Scope
+                        {
+                            Name = ApiScopes.Update,
+                            DisplayName = "Update only access to API"
+                        },
+                        new Scope
+                        {
+                            Name = ApiScopes.Delete,
+                            DisplayName = "Delete only access to API"
+                        }
+                    }
                 }
             };
         }
@@ -90,16 +118,17 @@ namespace DND.IDP
         {
             return new List<Client>()
             {
+                //Calling APIs on behalf of user
                 new Client
                 {
                     ClientName = "MVC Client",
-                    ClientId = "mvc",
+                    ClientId = "mvc_client",
                     AllowedGrantTypes = GrantTypes.Hybrid,//Hybrid for MVC Client
-                    AccessTokenType = AccessTokenType.Reference, //More control over lifetime
+                    AccessTokenType = AccessTokenType.Reference, //More control over lifetime with Reference. Requires Api to have ApiSecret
                     RequireConsent = true,
                     //IdentityTokenLifetime = 
                     //AuthorizationCodeLifetime =
-                    AccessTokenLifetime = 120,
+                    AccessTokenLifetime = 1200,
                     AllowOfflineAccess = true,
                     //AbsoluteRefreshTokenLifetime
                     UpdateAccessTokenClaimsOnRefresh = true,
@@ -117,7 +146,7 @@ namespace DND.IDP
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         "roles",
-                        "api",
+                        ApiScopes.Read,
                         "country",
                         "subscriptionlevel"
                     },
@@ -125,8 +154,42 @@ namespace DND.IDP
                     {
                         new Secret("secret".Sha256())
                     }
+                },
+                 //Server Initiation to Server Api
+                new Client
+                {
+                    ClientId = "api_client",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AccessTokenType = AccessTokenType.Jwt,
+                    ClientSecrets = new[] { new Secret("secret".Sha256()) },
+                    AllowedScopes = new List<string> {
+                        ApiScopes.Full ,
+                        ApiScopes.Create,
+                        ApiScopes.Read,
+                        ApiScopes.Update,
+                        ApiScopes.Delete
+                    }
+                },
+                //Client Initiation to Server Api
+                new Client
+                {
+                    ClientId = "spa",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AccessTokenType = AccessTokenType.Jwt,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        ApiScopes.Read
+                    },
+                    RedirectUris = { "https://localhost:44343/SignInCallback.html" },
+                    PostLogoutRedirectUris = { "https://localhost:44343/SignOutCallback.html" },
+                    AllowedCorsOrigins = { "https://localhost:44343" },
+                    RequireConsent = false,
+                    AccessTokenLifetime = 1200
                 }
-             };
+            };
         }
     }
 }

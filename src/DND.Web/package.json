@@ -30,6 +30,7 @@
     "typescript": "~2.5.3"
   },
   "dependencies": {
+    "oidc-client": "^1.5.2-beta.1",
     "@aspnet/signalr": "^1.0.0",
     "bootstrap": "^4.1.1",
     "jquery": "^3.2.1",

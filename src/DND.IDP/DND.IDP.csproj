@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\UserRegistration\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +25,12 @@
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
     <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.1.2" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SigningKeys\public.x509.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

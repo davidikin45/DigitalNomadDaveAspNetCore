@@ -262,9 +262,9 @@ namespace DND.Common.Helpers
             }
         }
 
-        public class RsaWithPEMKey
+        public static class RsaWithPEMKey
         {
-            public void AssignNewKey(string publicKeyPath, string privateKeyPath)
+            public static void AssignNewKey(string publicKeyPath, string privateKeyPath)
             {
                 using (var rsa = new RSACryptoServiceProvider(2048))
                 {
@@ -298,7 +298,23 @@ namespace DND.Common.Helpers
                 }
             }
 
-            public byte[] EncryptData(string publicKeyPath, byte[] dataToEncrypt)
+            public static RSAParameters GetPublicKeyRSAParameters(string publicKeyPath)
+            {
+                using (var rsa = Crypto.DecodeX509PublicKey(File.ReadAllText(publicKeyPath)))
+                {
+                    return rsa.ExportParameters(false);
+                }
+            }
+
+            public static RSAParameters GetPrivateKeyRSAParameters(string privateKeyPath)
+            {
+                using (var rsa = Crypto.DecodeRsaPrivateKey(File.ReadAllText(privateKeyPath)))
+                {
+                    return rsa.ExportParameters(true);
+                }
+            }
+
+            public static byte[] EncryptData(string publicKeyPath, byte[] dataToEncrypt)
             {
                 byte[] cipherbytes;
 
@@ -311,7 +327,7 @@ namespace DND.Common.Helpers
                 return cipherbytes;
             }
 
-            public byte[] DecryptData(string privateKeyPath, byte[] dataToEncrypt)
+            public static byte[] DecryptData(string privateKeyPath, byte[] dataToEncrypt)
             {
                 byte[] plain;
 
@@ -347,9 +363,9 @@ namespace DND.Common.Helpers
             }
         }
 
-        public class RsaWithPEMKeyString
+        public static class RsaWithPEMKeyString
         {
-            public (string publicKey, string privateKey) AssignNewKey()
+            public static (string publicKey, string privateKey) AssignNewKey()
             {
                 using (var rsa = new RSACryptoServiceProvider(2048))
                 {
@@ -362,7 +378,23 @@ namespace DND.Common.Helpers
                 }
             }
 
-            public byte[] EncryptData(string publicKeyString, byte[] dataToEncrypt)
+            public static RSAParameters GetPublicKeyRSAParameters(string publicKeyString)
+            {
+                using (var rsa = Crypto.DecodeX509PublicKey(publicKeyString))
+                {
+                    return rsa.ExportParameters(false);
+                }
+            }
+
+            public static RSAParameters GetPrivateKeyRSAParameters(string privateKeyPath)
+            {
+                using (var rsa = Crypto.DecodeRsaPrivateKey(privateKeyPath))
+                {
+                    return rsa.ExportParameters(true);
+                }
+            }
+
+            public static byte[] EncryptData(string publicKeyString, byte[] dataToEncrypt)
             {
                 byte[] cipherbytes;
 
@@ -375,7 +407,7 @@ namespace DND.Common.Helpers
                 return cipherbytes;
             }
 
-            public byte[] DecryptData(string privateKeyString, byte[] dataToEncrypt)
+            public static byte[] DecryptData(string privateKeyString, byte[] dataToEncrypt)
             {
                 byte[] plain;
 

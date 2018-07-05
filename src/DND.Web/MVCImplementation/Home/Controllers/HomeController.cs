@@ -328,5 +328,11 @@ namespace DND.Web.MVCImplementation.Home.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("Spa")]
+        public IActionResult Spa()
+        {
+            return View();
+        }
     }
 }

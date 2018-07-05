@@ -129,15 +129,21 @@ namespace DND.IDP
         {
             var userContext = services.GetRequiredService<UserContext>();
 
+            Log.Information("Migrating UserContext");
+
             userContext.Database.Migrate();
             userContext.EnsureSeedDataForContext();
 
             var configurationContext = services.GetRequiredService<ConfigurationDbContext>();
 
+            Log.Information("Migrating ConfigurationContext");
+
             configurationContext.Database.Migrate();
             configurationContext.EnsureSeedDataForContext();
 
             var persisntedGrantContext = services.GetRequiredService<PersistedGrantDbContext>();
+
+            Log.Information("Migrating PersistedGrantContext");
 
             persisntedGrantContext.Database.Migrate();
         }
@@ -147,6 +153,7 @@ namespace DND.IDP
                 .UseSetting("detailedErrors", "true")
                 .CaptureStartupErrors(true)
                 .UseKestrel(c => c.AddServerHeader = false)
+                .UseIISIntegration()
                 .UseConfiguration(Configuration)
                 .UseSerilog()
                 .UseStartup<Startup>();

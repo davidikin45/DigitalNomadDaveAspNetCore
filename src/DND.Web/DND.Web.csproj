@@ -274,6 +274,12 @@
     <None Update="DND.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="SigningKeys\private.rsa.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SigningKeys\public.x509.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="MyPreCleanTarget" BeforeTargets="Clean">

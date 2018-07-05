@@ -129,6 +129,9 @@ function getBundles(regexPattern) {
 
 // NPM Dependency Dirs
 var deps = {
+    "oidc-client": {
+        "dist/*": ""
+    },
     "jquery": {
         "dist/*": ""
     },

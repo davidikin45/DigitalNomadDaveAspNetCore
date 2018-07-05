@@ -1,17 +1,16 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers.Api;
 using DND.Common.Email;
+using DND.Common.Extensions;
+using DND.Common.JwtTokens;
 using DND.Domain.Identity.Users;
 using DND.Web.MVCImplementation.Account.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,26 +23,31 @@ namespace DND.Web.MVCImplementation.Shared.Api
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly string _privateSigningKeyPath;
 
         public ApiTokenController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
+            IHostingEnvironment hostingEnvironment,
             IConfiguration configuration,
             IMapper mapper, 
             IEmailService emailService,
             IUrlHelper urlHelper)
             :base(mapper, emailService, urlHelper)
         {
+            _hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+
+            _privateSigningKeyPath = _hostingEnvironment.MapContentPath(_configuration.GetValue<string>("Settings:SigningKeys:Private"));
         }
 
-
         //[FromBody]
-        [HttpPost]
+        [HttpPost("FullAccessToken")]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        public async Task<IActionResult> FullAccessToken([FromBody] LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -54,40 +58,128 @@ namespace DND.Web.MVCImplementation.Shared.Api
 
                     if (result.Succeeded)
                     {
-                        var claims = new List<Claim>()
-                        {
-                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
-                        };
 
                         //Add roles
                         var roles = await _userManager.GetRolesAsync(user);
-                        foreach(string role in roles)
-                        {
-                            claims.Add(new Claim(ClaimTypes.Role, role));
-                        }
 
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
-                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(
-                            _configuration["Tokens:Issuer"],
-                            _configuration["Tokens:Audience"],
-                            claims,
-                            expires: DateTime.UtcNow.AddMinutes(20),
-                            signingCredentials: creds);
+                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
 
-                        var results = new
-                        {
-                            token = new JwtSecurityTokenHandler().WriteToken(token),
-                            expiration = token.ValidTo
-                        };
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Full);
 
                         return Created("", results);
                     }
                 }
 
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost("CreateAccessToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateAccessToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+                    if (result.Succeeded)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
+
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Create);
+
+                        return Created("", results);
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost("ReadAccessToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ReadAccessToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+                    if (result.Succeeded)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
+
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Read);
+
+                        return Created("", results);
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost("UpdateAccessToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateAccessToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+                    if (result.Succeeded)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
+
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Update);
+
+                        return Created("", results);
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost("DeleteAccessToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteAccessToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+                    if (result.Succeeded)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+                        var key =  SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
+
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Delete);
+
+                        return Created("", results);
+                    }
+                }
             }
 
             return BadRequest();

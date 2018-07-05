@@ -157,6 +157,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyCore.NET", "lib\KeyCore.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DND.IDP", "src\DND.IDP\DND.IDP.csproj", "{68B84F31-BE01-4C97-A052-76D26438D10D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.Cryptography", "src\DND.Cryptography\DND.Cryptography.csproj", "{AC8AFEFD-FD61-4752-A7F6-A2828332E44A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -303,6 +305,10 @@ Global
 		{68B84F31-BE01-4C97-A052-76D26438D10D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68B84F31-BE01-4C97-A052-76D26438D10D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68B84F31-BE01-4C97-A052-76D26438D10D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC8AFEFD-FD61-4752-A7F6-A2828332E44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC8AFEFD-FD61-4752-A7F6-A2828332E44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC8AFEFD-FD61-4752-A7F6-A2828332E44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC8AFEFD-FD61-4752-A7F6-A2828332E44A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

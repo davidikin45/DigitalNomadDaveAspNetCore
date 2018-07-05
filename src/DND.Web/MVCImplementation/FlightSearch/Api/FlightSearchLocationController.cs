@@ -27,6 +27,7 @@ namespace DND.Web.MVCImplementation.FlightSearch.Api
 
 
         [Route("")]
+        [HttpGet]
         public async Task<IActionResult> GetByID([FromBody]LocationForm requestForm, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
@@ -49,6 +50,7 @@ namespace DND.Web.MVCImplementation.FlightSearch.Api
         }
 
         [Route("auto-suggest")]
+        [HttpGet]
         public async Task<IActionResult> LocationAutoSuggest([FromBody]LocationAutoSuggestForm requestForm, CancellationToken cancellationToken = default(CancellationToken))
         {
             try

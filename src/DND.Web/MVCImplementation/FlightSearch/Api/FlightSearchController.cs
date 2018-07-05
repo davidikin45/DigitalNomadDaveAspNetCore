@@ -39,14 +39,16 @@ namespace DND.Web.MVCImplementation.FlightSearch.Api
         }
 
         //[Route("")] - Only required when method needs to be accesed by route prefix. can still access via default route.
+        [HttpGet]
         [Route("~/flight-search")]
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
 
+        [HttpGet]
         [Route("~/flight-search-results")]
-        public ActionResult Results()
+        public async Task<IActionResult> Results()
         {
             return View();
         }

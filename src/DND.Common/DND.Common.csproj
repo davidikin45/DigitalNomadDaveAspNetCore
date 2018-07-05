@@ -719,10 +719,11 @@
     <Compile Include="Constants\Folders.cs" />
     <Compile Include="Controllers\Admin\AdminFileManagerController.cs" />
     <Compile Include="Controllers\Admin\BaseAdminController.cs" />
-    <Compile Include="Controllers\Api\BaseEntityReadOnlyWebApiController.cs" />
+    <Compile Include="Controllers\Api\ApiScopes.cs" />
     <Compile Include="Controllers\Api\BaseEntityReadOnlyWebApiControllerAuthorize.cs" />
-    <Compile Include="Controllers\Api\BaseEntityWebApiController.cs" />
+    <Compile Include="Controllers\Api\BaseEntityReadOnlyWebApiController.cs" />
     <Compile Include="Controllers\Api\BaseEntityWebApiControllerAuthorize.cs" />
+    <Compile Include="Controllers\Api\BaseEntityWebApiController.cs" />
     <Compile Include="Controllers\Api\BaseWebApiController.cs" />
     <Compile Include="Controllers\Api\BaseWebApiControllerAuthorize.cs" />
     <Compile Include="Controllers\Api\TestController.cs" />
@@ -777,6 +778,7 @@
     <Compile Include="Enums\CropType.cs" />
     <Compile Include="Extensions\AutomapperExtensions.cs" />
     <Compile Include="Extensions\ExpandoObjectExtensions.cs" />
+    <Compile Include="Extensions\HostingEnvironmentExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\ConfigurationExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
@@ -975,6 +977,7 @@
     <Compile Include="Interfaces\UnitOfWork\Scopes\IBaseUnitOfWorkTransactionalScope.cs" />
     <Compile Include="Interfaces\Validation\IBaseError.cs" />
     <Compile Include="Interfaces\Validation\IValidationErrors.cs" />
+    <Compile Include="JwtTokens\JwtTokenHelper.cs" />
     <Compile Include="Middleware\BaseRangeRequestHandler.cs" />
     <Compile Include="Middleware\ApiErrorHandlingMiddleware.cs" />
     <Compile Include="Middleware\ContentHandlerMiddleware.cs" />

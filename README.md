@@ -296,6 +296,7 @@ This project is licensed under the MIT License
 ## Pluralsight Courses for Identity Server (OAuth2 and OpenID Connect)
 * [Securing ASP.NET Core with OAuth2 and OpenID Connect](https://app.pluralsight.com/library/courses/asp-dotnet-core-oauth2-openid-connect-securing/exercise-files)
 * [Securing ASP.NET Core 2 with OAuth2 and OpenID Connect](https://app.pluralsight.com/library/courses/securing-aspdotnet-core2-oauth2-openid-connect/table-of-contents)
+* [ASP.NET Core 2 Authentication Playbook](https://app.pluralsight.com/library/courses/aspnet-core-identity-management-playbook/table-of-contents)
 
 ## Pluralsight Courses for Unit Testing, Integration Testing and UI Testing
 * [ASP.NET Core MVC Testing Fundamentals](https://app.pluralsight.com/library/courses/aspdotnet-core-mvc-testing-fundamentals/table-of-contents)
