@@ -1,6 +1,6 @@
 # Digital Nomad Dave ASP.NET Core
 
-A custom built Content Management System using Bootstrap 4, Angular, C# MVC Core, xUnit, SpecFlow, Selenium, VSTS.
+A custom built Content Management System using Bootstrap 4, Angular, C# MVC Core, xUnit, SpecFlow, Selenium, VSTS, JwtTokens, OpenID Connect, Identity Server 4.
 
 ## URLs
 * [Website](http://www.digitalnomaddave.com)
@@ -251,6 +251,7 @@ Using [Visual Studio Team Services](https://www.visualstudio.com/team-services/)
 * [.NET Core TestServer](https://docs.microsoft.com/en-us/aspnet/core/testing/integration-testing?view=aspnetcore-2.0) - InProcess Integration Tests
 * [Stackify Prefix](https://stackify.com/prefix/) - Runtime performance profiler for .NET Core
 * [Visual Studio Team Services](https://www.visualstudio.com/team-services/) - Continuous Integration (CI) and Continuous Deployment (CD)
+* [Identity Server 4](http://docs.identityserver.io/en/release/) - .NET Core Identity Provider
 
 ## Authors
 
@@ -268,6 +269,8 @@ This project is licensed under the MIT License
 * [Favic-o-matic](http://www.favicomatic.com/)
 * [Highway.Data EF6 InMemory DbContext](https://github.com/HighwayFramework/Highway.Data)
 * [Privacy Policies](https://privacypolicies.com)
+* [Jwt Tokens](https://jwt.io/)
+* [OpenID Connect](http://openid.net/connect/)
 
 ## Pluralsight Courses for Builing a Web App with MVC and Angular
 * [Building a Web App with ASP.NET Core, MVC, Entity Framework Core, Bootstrap, and Angular](https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents)
