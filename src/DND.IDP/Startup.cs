@@ -9,6 +9,7 @@ using DND.IDP.Entities;
 using DND.IDP.Extensions;
 using DND.IDP.Services;
 using IdentityServer4;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DND.IDP
@@ -26,11 +28,13 @@ namespace DND.IDP
 
         public IHostingEnvironment HostingEnvironment { get; }
         public IConfiguration Configuration { get; }
+        public ILoggerFactory LoggerFactory { get; }
 
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
             HostingEnvironment = hostingEnvironment;
+            LoggerFactory = loggerFactory;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -50,6 +54,14 @@ namespace DND.IDP
             {
                 builder.AddDeveloperSigningCredential();
             }
+
+            //Discovery endpoint cors
+            var cors = new DefaultCorsPolicyService(LoggerFactory.CreateLogger<DefaultCorsPolicyService>())
+            {
+                AllowedOrigins = { "https://localhost:44372"}
+                //,AllowAll = true
+            };
+            services.AddSingleton<ICorsPolicyService>(cors);
 
             //Windows Authentication
             //https://stackoverflow.com/questions/36946304/using-windows-authentication-in-asp-net

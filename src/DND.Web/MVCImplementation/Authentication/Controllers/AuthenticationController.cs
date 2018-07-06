@@ -17,7 +17,7 @@ namespace DND.Web.MVCImplementation.Authentication.Controllers
     {
         public async Task Logout()
         {
-            var openIDConnectClient = new OpenIDConnectClient("https://localhost:44318/");
+            var openIDConnectClient = new OpenIDConnectClient("https://localhost:44318/", "mvc_client", "secret");
             await openIDConnectClient.LogOut(HttpContext);
         }
     }

@@ -41,7 +41,7 @@ namespace DND.Web.MVCImplementation.Shared.Api
             _signInManager = signInManager;
             _configuration = configuration;
 
-            _privateSigningKeyPath = _hostingEnvironment.MapContentPath(_configuration.GetValue<string>("Settings:SigningKeys:Private"));
+            _privateSigningKeyPath = _hostingEnvironment.MapContentPath(_configuration.GetValue<string>("Tokens:PrivateKeyPath"));
         }
 
         //[FromBody]

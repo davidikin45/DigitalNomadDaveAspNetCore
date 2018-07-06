@@ -118,7 +118,43 @@ namespace DND.IDP
         {
             return new List<Client>()
             {
-                //Calling APIs on behalf of user
+                 //Server Initiation to Server Api
+                new Client
+                {
+                    ClientName = "API Client",
+                    ClientId = "api_server_client",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AccessTokenType = AccessTokenType.Jwt,
+                    ClientSecrets = new[] { new Secret("secret".Sha256()) },
+                    AllowedScopes = new List<string> {
+                        ApiScopes.Full ,
+                        ApiScopes.Create,
+                        ApiScopes.Read,
+                        ApiScopes.Update,
+                        ApiScopes.Delete
+                    }
+                },
+                //Client Initiation to Server Api
+                new Client
+                {
+                    ClientName = "Spa",
+                    ClientId = "spa",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AccessTokenType = AccessTokenType.Jwt,
+                    AllowAccessTokensViaBrowser = true,
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        ApiScopes.Read
+                    },
+                    RedirectUris = { "https://localhost:44372/SignInCallback.html" },
+                    PostLogoutRedirectUris = { "https://localhost:44372/SignOutCallback.html" },
+                    AllowedCorsOrigins = { "https://localhost:44372" }, //CORS for IDP
+                    RequireConsent = false,
+                    AccessTokenLifetime = 1200
+                },
+                 //Calling APIs on behalf of user
                 new Client
                 {
                     ClientName = "MVC Client",
@@ -155,40 +191,6 @@ namespace DND.IDP
                         new Secret("secret".Sha256())
                     }
                 },
-                 //Server Initiation to Server Api
-                new Client
-                {
-                    ClientId = "api_client",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    AccessTokenType = AccessTokenType.Jwt,
-                    ClientSecrets = new[] { new Secret("secret".Sha256()) },
-                    AllowedScopes = new List<string> {
-                        ApiScopes.Full ,
-                        ApiScopes.Create,
-                        ApiScopes.Read,
-                        ApiScopes.Update,
-                        ApiScopes.Delete
-                    }
-                },
-                //Client Initiation to Server Api
-                new Client
-                {
-                    ClientId = "spa",
-                    AllowedGrantTypes = GrantTypes.Implicit,
-                    AccessTokenType = AccessTokenType.Jwt,
-                    AllowAccessTokensViaBrowser = true,
-                    AllowedScopes =
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        ApiScopes.Read
-                    },
-                    RedirectUris = { "https://localhost:44343/SignInCallback.html" },
-                    PostLogoutRedirectUris = { "https://localhost:44343/SignOutCallback.html" },
-                    AllowedCorsOrigins = { "https://localhost:44343" },
-                    RequireConsent = false,
-                    AccessTokenLifetime = 1200
-                }
             };
         }
     }

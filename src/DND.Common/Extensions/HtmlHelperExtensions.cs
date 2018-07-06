@@ -469,7 +469,7 @@ namespace DND.Common.Extensions
         public static HtmlString AddThisScript(this IHtmlHelper helper, string pubid)
         {
             HtmlTag script = new HtmlTag("script");
-            script.Attr("src", "http://s7.addthis.com/js/300/addthis_widget.js#pubid=" + pubid);
+            script.Attr("src", "https://s7.addthis.com/js/300/addthis_widget.js#pubid=" + pubid);
             script.Attr("type", "text/javascript");
 
             return new HtmlString(script.ToString());

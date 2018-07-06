@@ -15,14 +15,19 @@ namespace DND.Common.OpenIDConnect
     public class OpenIDConnectClient
     {
         private string idpServerEndpoint;
+        private string clientId;
+        private string clientSecret;
+
         private string userInfoEndpoint;
         private string tokenEndpoint;
         private string revocationEndpoint;
         private bool endPointsLoaded;
 
-        public OpenIDConnectClient(string idpServerEndpoint)
+        public OpenIDConnectClient(string idpServerEndpoint, string clientId, string clientSecret)
         {
             this.idpServerEndpoint = idpServerEndpoint;
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
         }
 
         private async Task LoadEndpoints()
@@ -37,11 +42,11 @@ namespace DND.Common.OpenIDConnect
             }
         }
 
-        public async Task<string> GetApiAccessToken(string clientId, string clientSecret, string apiResource)
+        public async Task<string> GetApiAccessToken(string apiResourceScope)
         {
             await LoadEndpoints();
             var tokenClient = new TokenClient(tokenEndpoint, clientId, clientSecret);
-            var response = await tokenClient.RequestClientCredentialsAsync(apiResource);
+            var response = await tokenClient.RequestClientCredentialsAsync(apiResourceScope);
 
             if (response.IsError)
             {
@@ -75,7 +80,7 @@ namespace DND.Common.OpenIDConnect
         {
             await LoadEndpoints();
             var accessToken = await context.OIDCGetAccessTokenAsync();
-            var tokenClient = new TokenClient(tokenEndpoint, "mvc_client", "secret");
+            var tokenClient = new TokenClient(tokenEndpoint, clientId, clientSecret);
             var currentRefreshToken = await context.OIDCGetRefreshTokenAsync();
             var tokenResult = await tokenClient.RequestRefreshTokenAsync(currentRefreshToken);
 
@@ -132,7 +137,7 @@ namespace DND.Common.OpenIDConnect
         {
             await LoadEndpoints();
 
-            var revocationClient = new TokenRevocationClient(revocationEndpoint, "mvc_client", "secret");
+            var revocationClient = new TokenRevocationClient(revocationEndpoint, clientId, clientSecret);
 
             var accessToken = await context.OIDCGetAccessTokenAsync();
 

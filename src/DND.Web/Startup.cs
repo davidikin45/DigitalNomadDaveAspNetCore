@@ -59,6 +59,7 @@ using System.IdentityModel.Tokens.Jwt;
 using IdentityServer4.AccessTokenValidation;
 using System.Security.Cryptography.X509Certificates;
 using DND.Common.Controllers.Api;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace DND.Web
 {
@@ -96,12 +97,13 @@ namespace DND.Web
             string cookieExternalAuthName = Configuration.GetValue<string>("Settings:CookieExternalAuthName");
             string cookieTempDataName = Configuration.GetValue<string>("Settings:CookieTempDataName");
             string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
+            string domain = Configuration.GetValue<string>("Settings:Domain");
             string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
             string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             string xmlDocumentationFileName = assemblyName + ".xml";
             int responseCacheSizeMB = Configuration.GetValue<int>("Settings:ResponseCacheSizeMB");
 
-            string bearerTokenIssuer = Configuration["Tokens:Issuer"];
+            string bearerTokenIssuers = Configuration["Tokens:Issuers"];
             string bearerTokenAudience = Configuration["Tokens:Audience"];
             string bearerTokenKey = Configuration["Tokens:Key"];
 
@@ -158,8 +160,8 @@ namespace DND.Web
             string fileSystemFolder = Configuration.GetValue<string>("Settings:Email:FileSystemFolder");
 
             //Signing Keys
-            string privateSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Settings:SigningKeys:Private"));
-            string publicSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Settings:SigningKeys:Public"));
+            string privateSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PrivateKeyPath"));
+            string publicSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PublicKeyPath"));
 
             var emailsFileSystemPath = fileSystemFolder;
             if (!emailsFileSystemPath.Contains(@":\"))
@@ -207,10 +209,10 @@ namespace DND.Web
             }
 
 
-          services.ConfigureExternalCookie(options =>
-            {
-                options.Cookie.Name = cookieExternalAuthName;
-            });
+            services.ConfigureExternalCookie(options =>
+              {
+                  options.Cookie.Name = cookieExternalAuthName;
+              });
 
             var authenticationBuilder = services.AddAuthentication();
 
@@ -223,12 +225,12 @@ namespace DND.Web
                          cfg.TokenValidationParameters = new TokenValidationParameters()
                          {
                              ValidateIssuer = true,
-                             ValidIssuer = bearerTokenIssuer, //in the JWT this is the uri of the Identity Provider which issues the token.
+                             ValidIssuers = bearerTokenIssuers.Split(','), //in the JWT this is the uri of the Identity Provider which issues the token.
 
                              ValidateAudience = true,
                              ValidAudiences = new string[] { ApiScopes.Full, ApiScopes.Create, ApiScopes.Read, ApiScopes.Update, ApiScopes.Delete },
 
-                            // ValidAudience = bearerTokenAudience, //in the JWT this is aud. This is the resource the user is expected to have.
+                             // ValidAudience = bearerTokenAudience, //in the JWT this is aud. This is the resource the user is expected to have.
                              //IssuerSigningKey = new RsaSecurityKey( ),
 
                              //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey)) // If IssueSignKey isnt present it will call ValidIssuer to get the publickey
@@ -609,7 +611,9 @@ namespace DND.Web
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
             });
 
-            //CORS
+
+            //CORS = Cross Origin Resource Sharing 
+            //Is a client side security. Does not prevent 
             //https://docs.microsoft.com/en-us/aspnet/core/security/cors
             services.AddCors(options =>
             {
@@ -618,7 +622,15 @@ namespace DND.Web
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
+
+                //https://docs.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-2.1
+                options.AddPolicy("AllowSpecificOrigin",
+                  builder => builder
+                  .WithOrigins("https://www." + domain + ".com", "http://www." + domain + ".com", "https://" + domain + ".com", "http://" + domain + ".com")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader());
             });
+
 
             //Used for returning only certain fields in API
             //services.AddTransient<ITypeHelperService, TypeHelperService>();
@@ -872,7 +884,14 @@ namespace DND.Web
 
             if (enableCors)
             {
-                app.UseCors("AllowAnyOrigin");
+                if (HostingEnvironment.IsProduction())
+                {
+                    app.UseCors("AllowSpecificOrigin");
+                }
+                else
+                {
+                    app.UseCors("AllowAnyOrigin");
+                }
             }
 
             app.UseSignalR(routes =>
