@@ -155,6 +155,10 @@ public class CategoryPropertyUpdatedEventHandler : IDomainEventHandler<EntityPro
 }
 ```
 
+## Jwt Tokens, OpenID Connect and Identity Server 4
+
+Todo
+
 ## Running the tests
 
 All web host processes and database creation/teardown have been automated using xUnit/NUnit test fixtures.
