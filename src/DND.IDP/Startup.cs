@@ -46,18 +46,8 @@ namespace DND.IDP
             var builder = services.AddIdentityServer();
 
             string privateSigningKeyPath = HostingEnvironment.MapContentPath("~/SigningKeys/private.rsa.pem");
-            builder.AddSigningCredential(SigningKey.LoadPrivateRsaSigningKey(privateSigningKeyPath));
-
+            builder.AddSigningCredential(LoadSigningCredential(privateSigningKeyPath));
             //builder.AddDeveloperSigningCredential(); //Adds kid so is unique each time it starts
-
-
-            //Discovery endpoint cors
-            var cors = new DefaultCorsPolicyService(LoggerFactory.CreateLogger<DefaultCorsPolicyService>())
-            {
-                AllowedOrigins = { "https://localhost:44372"}
-                //,AllowAll = true
-            };
-            services.AddSingleton<ICorsPolicyService>(cors);
 
             //Windows Authentication
             //https://stackoverflow.com/questions/36946304/using-windows-authentication-in-asp-net
@@ -121,6 +111,11 @@ namespace DND.IDP
                 options.AppId = "1570475679676847";
                 options.AppSecret = "5b9f4bca5da29e234b706040aca883d3";
             });
+        }
+
+        public RsaSecurityKey LoadSigningCredential(string privateSigningKeyPath)
+        {
+            return SigningKey.LoadPrivateRsaSigningKey(privateSigningKeyPath);
         }
 
         //Load from here to prevent load balancer issues

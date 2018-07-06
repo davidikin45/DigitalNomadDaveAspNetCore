@@ -104,9 +104,6 @@ namespace DND.Common.JwtTokens
                         expires: DateTime.UtcNow.AddMinutes(minuteExpiry),
                         signingCredentials: creds);
 
-
-            //token.Header.Add("kid", creds.Key.KeyId);
-
             var results = new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
