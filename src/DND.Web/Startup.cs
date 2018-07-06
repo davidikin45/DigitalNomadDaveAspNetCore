@@ -60,6 +60,7 @@ using IdentityServer4.AccessTokenValidation;
 using System.Security.Cryptography.X509Certificates;
 using DND.Common.Controllers.Api;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DND.Web
 {
@@ -102,10 +103,6 @@ namespace DND.Web
             string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             string xmlDocumentationFileName = assemblyName + ".xml";
             int responseCacheSizeMB = Configuration.GetValue<int>("Settings:ResponseCacheSizeMB");
-
-            string bearerTokenIssuers = Configuration["Tokens:Issuers"];
-            string bearerTokenAudience = Configuration["Tokens:Audience"];
-            string bearerTokenKey = Configuration["Tokens:Key"];
 
             string SQLiteConnectionString = DNDConnectionStrings.GetConnectionString("SQLite");
             string SQLServerConnectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
@@ -159,9 +156,14 @@ namespace DND.Web
             bool writeEmailsToFileSystem = Configuration.GetValue<bool>("Settings:Email:WriteEmailsToFileSystem");
             string fileSystemFolder = Configuration.GetValue<string>("Settings:Email:FileSystemFolder");
 
-            //Signing Keys
-            string privateSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PrivateKeyPath"));
-            string publicSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PublicKeyPath"));
+            //Token Signing Keys
+            string bearerTokenLocalIssuer = Configuration["Tokens:LocalIssuer"];
+            string bearerTokenExternalIssuers = Configuration["Tokens:ExternalIssuers"];
+            string bearerTokenAudiences = Configuration["Tokens:Audiences"];
+
+            string bearerTokenKey = Configuration["Tokens:Key"];
+            string bearerTokenPrivateSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PrivateKeyPath"));
+            string bearerTokenPublicSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PublicKeyPath"));
 
             var emailsFileSystemPath = fileSystemFolder;
             if (!emailsFileSystemPath.Contains(@":\"))
@@ -220,21 +222,58 @@ namespace DND.Web
             {
                 //Adds Scheme = "Bearer" (JwtBearerDefaults.AuthenticationScheme) authentication scheme 
 
+                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
+
+                var signingKeys = new List<SecurityKey>();
+                if (!String.IsNullOrWhiteSpace(bearerTokenKey))
+                {
+                    //Symmetric
+                    signingKeys.Add(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey)));
+                }
+
+                if (!String.IsNullOrWhiteSpace(bearerTokenPublicSigningKeyPath))
+                {
+                    //Assymetric
+                    signingKeys.Add(SigningKey.LoadPublicRsaSigningKey(bearerTokenPublicSigningKeyPath));
+                }
+
+                var validIssuers = new List<string>();
+                foreach (var externalIssuer in bearerTokenExternalIssuers.Split(','))
+                {
+                    if (!string.IsNullOrWhiteSpace(externalIssuer))
+                    {
+                        validIssuers.Add(externalIssuer);
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(bearerTokenLocalIssuer))
+                {
+                    validIssuers.Add(bearerTokenLocalIssuer);
+                }
+
+                var validAudiences = new List<string>();
+                foreach (var audience in bearerTokenAudiences.Split(','))
+                {
+                    if (!string.IsNullOrWhiteSpace(audience))
+                    {
+                        validAudiences.Add(audience);
+                    }
+                }
+
                 //https://developer.okta.com/blog/2018/03/23/token-authentication-aspnetcore-complete-guide
                 authenticationBuilder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, cfg =>
                          cfg.TokenValidationParameters = new TokenValidationParameters()
                          {
+                             // Specify what in the JWT needs to be checked 
                              ValidateIssuer = true,
-                             ValidIssuers = bearerTokenIssuers.Split(','), //in the JWT this is the uri of the Identity Provider which issues the token.
-
                              ValidateAudience = true,
-                             ValidAudiences = new string[] { ApiScopes.Full, ApiScopes.Create, ApiScopes.Read, ApiScopes.Update, ApiScopes.Delete },
+                             ValidateLifetime = true,
+                             ValidateIssuerSigningKey = true,
+                             RequireSignedTokens = true,
 
-                             // ValidAudience = bearerTokenAudience, //in the JWT this is aud. This is the resource the user is expected to have.
-                             //IssuerSigningKey = new RsaSecurityKey( ),
+                             ValidIssuers = validIssuers, //in the JWT this is the uri of the Identity Provider which issues the token.
+                             ValidAudiences = validAudiences, //in the JWT this is aud. This is the resource the user is expected to have.
 
-                             //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(bearerTokenKey)) // If IssueSignKey isnt present it will call ValidIssuer to get the publickey
-                             IssuerSigningKey = SigningKey.LoadPublicRsaSigningKey(publicSigningKeyPath)
+                             IssuerSigningKeys = signingKeys
                          }
                      );
             }
@@ -342,53 +381,30 @@ namespace DND.Web
                     //policyBuilder.AddRequirements();
                 });
 
+                //http://docs.identityserver.io/en/release/topics/apis.html
                 options.AddPolicy(ApiScopes.Full, policyBuilder =>
                 {
-                    policyBuilder.RequireAuthenticatedUser()
-                    .RequireAssertion(ctx =>
-                    {
-                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full);
-                    });
+                    policyBuilder.RequireScope(ApiScopes.Full);
                 });
 
                 options.AddPolicy(ApiScopes.Create, policyBuilder =>
                 {
-                    policyBuilder.RequireAuthenticatedUser()
-                   .RequireAssertion(ctx =>
-                    {
-                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
-                        ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Create);
-                    });
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Create);
                 });
 
                 options.AddPolicy(ApiScopes.Read, policyBuilder =>
                 {
-                    policyBuilder.RequireAuthenticatedUser()
-                    .RequireAssertion(ctx =>
-                     {
-                         return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
-                         ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Read);
-                     });
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Read);
                 });
 
                 options.AddPolicy(ApiScopes.Update, policyBuilder =>
                 {
-                    policyBuilder.RequireAuthenticatedUser()
-                   .RequireAssertion(ctx =>
-                    {
-                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
-                        ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Update);
-                    });
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Update);
                 });
 
                 options.AddPolicy(ApiScopes.Delete, policyBuilder =>
                 {
-                    policyBuilder.RequireAuthenticatedUser()
-                   .RequireAssertion(ctx =>
-                    {
-                        return ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Full) ||
-                        ctx.User.HasClaim(JwtRegisteredClaimNames.Aud, ApiScopes.Delete);
-                    });
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Delete);
                 });
             });
 

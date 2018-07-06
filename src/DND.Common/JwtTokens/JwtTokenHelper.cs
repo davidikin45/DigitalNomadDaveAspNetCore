@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace DND.Common.JwtTokens
 {
+    //https://www.carlrippon.com/asp-net-core-web-api-multi-tenant-jwts/
     public static class JwtTokenHelper
     {
         //Assymetric
-        public static dynamic CreateJwtTokenSigningWithRsaSecurityKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, RsaSecurityKey key, string issuer, string audience)
+        public static dynamic CreateJwtTokenSigningWithRsaSecurityKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, RsaSecurityKey key, string issuer, string audience, params string[] scopes)
         {
             var claims = new List<Claim>()
                         {
@@ -20,6 +21,12 @@ namespace DND.Common.JwtTokens
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.UniqueName, userName)
                         };
+
+            // add scopes
+            foreach (var scope in scopes)
+            {
+                claims.Add(new Claim("scope", scope));
+            }
 
             //Add roles
             foreach (string role in roles)
@@ -27,14 +34,13 @@ namespace DND.Common.JwtTokens
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            // SecurityAlgorithms.HmacSha256
             var creds = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
 
             return CreateJwtToken(minuteExpiry, issuer, audience, claims, creds);
         }
 
-        //Symmetric
-        public static dynamic CreateJwtTokenSigningWithKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, string hmacKey, string issuer, string audience)
+        //Assymetric
+        public static dynamic CreateJwtTokenSigningWithCertificateSecurityKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, X509SecurityKey key, string issuer, string audience, params string[] scopes)
         {
             var claims = new List<Claim>()
                         {
@@ -42,6 +48,39 @@ namespace DND.Common.JwtTokens
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.UniqueName, userName)
                         };
+
+            // add scopes
+            foreach (var scope in scopes)
+            {
+                claims.Add(new Claim("scope", scope));
+            }
+
+            //Add roles
+            foreach (string role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
+
+            return CreateJwtToken(minuteExpiry, issuer, audience, claims, creds);
+        }
+
+        //Symmetric
+        public static dynamic CreateJwtTokenSigningWithKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, string hmacKey, string issuer, string audience, params string[] scopes)
+        {
+            var claims = new List<Claim>()
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            new Claim(JwtRegisteredClaimNames.UniqueName, userName)
+                        };
+
+            // add scopes
+            foreach (var scope in scopes)
+            {
+                claims.Add(new Claim("scope", scope));
+            }
 
             //Add roles
             foreach (string role in roles)
@@ -50,6 +89,7 @@ namespace DND.Common.JwtTokens
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(hmacKey));
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             return CreateJwtToken(minuteExpiry, issuer, audience, claims, creds);
@@ -63,6 +103,9 @@ namespace DND.Common.JwtTokens
                         claims,
                         expires: DateTime.UtcNow.AddMinutes(minuteExpiry),
                         signingCredentials: creds);
+
+
+            //token.Header.Add("kid", creds.Key.KeyId);
 
             var results = new
             {

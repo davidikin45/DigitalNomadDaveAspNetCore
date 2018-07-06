@@ -12,13 +12,16 @@ namespace DND.IDP
         public static RsaSecurityKey LoadPrivateRsaSigningKey(string privateKeyPath)
         {
             var rsaParameters = AsymmetricEncryptionHelper.RsaWithPEMKey.GetPrivateKeyRSAParameters(privateKeyPath);
-            return new RsaSecurityKey(rsaParameters);
+            var key = new RsaSecurityKey(rsaParameters);
+            //key.KeyId = "IDP";
+            return key;
         }
-
         public static RsaSecurityKey LoadPublicRsaSigningKey(string publicKeyPath)
         {
             var rsaParameters = AsymmetricEncryptionHelper.RsaWithPEMKey.GetPublicKeyRSAParameters(publicKeyPath);
-            return new RsaSecurityKey(rsaParameters);
+            var key = new RsaSecurityKey(rsaParameters);
+            //key.KeyId = "IDP";
+            return key;
         }
     }
 }

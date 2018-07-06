@@ -65,7 +65,7 @@ namespace DND.Web.MVCImplementation.Shared.Api
 
                         var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
 
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Full);
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Full);
 
                         return Created("", results);
                     }
@@ -93,7 +93,7 @@ namespace DND.Web.MVCImplementation.Shared.Api
 
                         var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
 
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Create);
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Create);
 
                         return Created("", results);
                     }
@@ -120,7 +120,7 @@ namespace DND.Web.MVCImplementation.Shared.Api
 
                         var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
 
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Read);
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Read);
 
                         return Created("", results);
                     }
@@ -147,7 +147,7 @@ namespace DND.Web.MVCImplementation.Shared.Api
 
                         var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
 
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Update);
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Update);
 
                         return Created("", results);
                     }
@@ -175,7 +175,7 @@ namespace DND.Web.MVCImplementation.Shared.Api
                         //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
                         var key =  SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
 
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:Issuer"], ApiScopes.Delete);
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Delete);
 
                         return Created("", results);
                     }

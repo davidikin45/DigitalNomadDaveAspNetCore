@@ -32,7 +32,7 @@ namespace DND.Common.SignalRHubs
 
         public override async Task OnConnectedAsync()
         {
-            var roles = Context.User.Claims.Where(c => c.Type == ClaimTypes.Role)
+            var roles = Context.User.Claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
                        .Select(c => c.Value)
                        .ToList();
 
@@ -46,7 +46,7 @@ namespace DND.Common.SignalRHubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var roles = Context.User.Claims.Where(c => c.Type == ClaimTypes.Role)
+            var roles = Context.User.Claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
                      .Select(c => c.Value)
                      .ToList();
 

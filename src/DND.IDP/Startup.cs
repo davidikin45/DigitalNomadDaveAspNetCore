@@ -45,15 +45,11 @@ namespace DND.IDP
 
             var builder = services.AddIdentityServer();
 
-            if (HostingEnvironment.IsProduction())
-            {
-                string privateSigningKeyPath = HostingEnvironment.MapContentPath("~/SigningKeys/private.rsa.pem");
-                builder.AddSigningCredential(SigningKey.LoadPrivateRsaSigningKey(privateSigningKeyPath));
-            }
-            else
-            {
-                builder.AddDeveloperSigningCredential();
-            }
+            string privateSigningKeyPath = HostingEnvironment.MapContentPath("~/SigningKeys/private.rsa.pem");
+            builder.AddSigningCredential(SigningKey.LoadPrivateRsaSigningKey(privateSigningKeyPath));
+
+            //builder.AddDeveloperSigningCredential(); //Adds kid so is unique each time it starts
+
 
             //Discovery endpoint cors
             var cors = new DefaultCorsPolicyService(LoggerFactory.CreateLogger<DefaultCorsPolicyService>())
