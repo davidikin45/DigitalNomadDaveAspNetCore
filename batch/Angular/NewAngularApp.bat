@@ -1,1 +1,1 @@
-ng new AngularApp --minimal
+ng new AngularApp2

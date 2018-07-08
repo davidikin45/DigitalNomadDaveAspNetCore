@@ -1,11 +1,13 @@
 https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents
 10.Client-side-Development-with-Angular
 
+npm install -g typescript
+
 
 1. Run NewAngularApp.bat
 2. Run NewAngularClientApp.bat
 3. Copy ClientApp folder to the root of web app.
-3. Copy AngularApp\.angular-cli.json and AngularApp\tsconfig.json to the root of web app.
+3. Copy AngularApp\.angular-cli.json, and AngularApp\tsconfig.json to the root of web app.
 4. Copy contents of AngularApp\package.json into web app package.json.
 5. Edit web app tsconfig.json
 - Set outDir to "./wwwroot/clientapp/out-tsc"
