@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { OpenIdConnectService } from '../shared/open-id-connect.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -15,4 +16,9 @@ export class NavMenuComponent {
   toggle() {
     this.isExpanded = !this.isExpanded;
   }
+
+  constructor(private openIdConnectService: OpenIdConnectService) {
+  }
 }
+
+

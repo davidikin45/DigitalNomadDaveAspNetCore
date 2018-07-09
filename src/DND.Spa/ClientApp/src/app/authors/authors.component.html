@@ -1,0 +1,37 @@
+<div class='panel panel-primary'>
+  <div class='panel-heading'>
+    Your authors
+  </div>
+
+  <a class="btn btn-primary" style="width:100px; margin-left:10px; margin-top:10px;"  [routerLink]="['/author-add']">
+    Add a author
+  </a>
+
+  <div class='panel-body'>
+    <div class='table-responsive'>
+      <table class='table' *ngIf='authors && authors.length'>
+        <thead>
+          <tr>            
+            <th>Author</th>
+            <th>Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor='let author of authors'>
+            <td>{{author.Description}}</td>
+            <td>
+              <a [routerLink]="['/authors', author.Id]">
+                {{author.title}}
+              </a>
+            </td>           
+            <td>
+              <a class="btn btn-primary" [routerLink]="['/author-update', author.Id]">
+                Edit
+              </a>
+            </td>         
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

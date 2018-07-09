@@ -148,9 +148,18 @@ namespace DND.IDP
                         IdentityServerConstants.StandardScopes.Profile,
                         ApiScopes.Read
                     },
-                    RedirectUris = { "https://localhost:44372/SignInCallback.html" },
-                    PostLogoutRedirectUris = { "https://localhost:44372/SignOutCallback.html" },
-                    AllowedCorsOrigins = { "https://localhost:44372" }, //CORS for IDP
+                    RedirectUris = {
+                        "https://localhost:44372/SignInCallback.html",
+                        "https://localhost:44332/redirect-silentrenew",
+                    },
+                    PostLogoutRedirectUris = {
+                        "https://localhost:44372/SignOutCallback.html",
+                        "https://localhost:44332/",
+                    },
+                    AllowedCorsOrigins = {
+                        "https://localhost:44372",
+                        "https://localhost:44332"
+                    }, //CORS for IDP
                     RequireConsent = false,
                     AccessTokenLifetime = 1200
                 },

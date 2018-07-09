@@ -277,6 +277,9 @@ This project is licensed under the MIT License
 * [Build Your Own Application Framework with ASP.NET MVC 5](https://app.pluralsight.com/library/courses/build-application-framework-aspdotnet-mvc-5/table-of-contents)
 * [Building Strongly-typed AngularJS Apps with ASP.NET MVC 5](https://app.pluralsight.com/library/courses/building-strongly-typed-angularjs-apps-aspdotnet-mvc5/table-of-contents)
 
+## Pluralsight Courses for Builing a Single Page Application (SPA) with Angular, API and OpenID Connect
+* [Building Business Applications with Angular and ASP.NET Core](https://app.pluralsight.com/library/courses/angular-aspdotnet-core-business-applications/table-of-contents)
+
 ## Pluralsight Courses for Domain Driven Design and Rich Model
 * [Clean Architecture: Patterns, Practices, and Principles](https://app.pluralsight.com/library/courses/clean-architecture-patterns-practices-principles/table-of-contents)
 * [Modern Software Architecture: Domain Models, CQRS, and Event Sourcing](https://app.pluralsight.com/library/courses/modern-software-architecture-domain-models-cqrs-event-sourcing/table-of-contents)
