@@ -174,26 +174,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CarouselItems\CarouselItem.cs" />
-    <Compile Include="CarouselItems\Dtos\CarouselItemDeleteDTO.cs" />
-    <Compile Include="CarouselItems\Dtos\CarouselItemDTO.cs" />
+    <Compile Include="CarouselItems\Dtos\CarouselItemDeleteDto.cs" />
+    <Compile Include="CarouselItems\Dtos\CarouselItemDto.cs" />
     <Compile Include="ContentHtmls\ContentHTML.cs" />
-    <Compile Include="ContentHtmls\Dtos\ContentHtmlDeleteDTO.cs" />
-    <Compile Include="ContentHtmls\Dtos\ContentHtmlDTO.cs" />
+    <Compile Include="ContentHtmls\Dtos\ContentHtmlDeleteDto.cs" />
+    <Compile Include="ContentHtmls\Dtos\ContentHtmlDto.cs" />
     <Compile Include="ContentTexts\ContentText.cs" />
-    <Compile Include="ContentTexts\Dtos\ContentTextDeleteDTO.cs" />
-    <Compile Include="ContentTexts\Dtos\ContentTextDTO.cs" />
-    <Compile Include="Faqs\Dtos\FaqDeleteDTO.cs" />
-    <Compile Include="Faqs\Dtos\FaqDTO.cs" />
+    <Compile Include="ContentTexts\Dtos\ContentTextDeleteDto.cs" />
+    <Compile Include="ContentTexts\Dtos\ContentTextDto.cs" />
+    <Compile Include="Faqs\Dtos\FaqDeleteDto.cs" />
+    <Compile Include="Faqs\Dtos\FaqDto.cs" />
     <Compile Include="Faqs\Faq.cs" />
-    <Compile Include="MailingLists\Dtos\MailingListDeleteDTO.cs" />
-    <Compile Include="MailingLists\Dtos\MailingListDTO.cs" />
+    <Compile Include="MailingLists\Dtos\MailingListDeleteDto.cs" />
+    <Compile Include="MailingLists\Dtos\MailingListDto.cs" />
     <Compile Include="MailingLists\MailingList.cs" />
-    <Compile Include="Projects\Dtos\ProjectDeleteDTO.cs" />
-    <Compile Include="Projects\Dtos\ProjectDTO.cs" />
+    <Compile Include="Projects\Dtos\ProjectDeleteDto.cs" />
+    <Compile Include="Projects\Dtos\ProjectDto.cs" />
     <Compile Include="Projects\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Testimonials\Dtos\TestimonialDeleteDTO.cs" />
-    <Compile Include="Testimonials\Dtos\TestimonialDTO.cs" />
+    <Compile Include="Testimonials\Dtos\TestimonialDeleteDto.cs" />
+    <Compile Include="Testimonials\Dtos\TestimonialDto.cs" />
     <Compile Include="Testimonials\Testimonial.cs" />
   </ItemGroup>
   <ItemGroup>

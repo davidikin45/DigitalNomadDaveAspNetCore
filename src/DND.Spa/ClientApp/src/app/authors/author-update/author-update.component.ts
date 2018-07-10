@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MasterDataService } from '../../shared/master-data.service';
 import { AuthorService } from '../shared/author.service';
-import { Author } from '../shared/author.model';
+import { AuthorForRead } from '../shared/author-for-read.model';
 import { Band } from '../../shared/band.model';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,8 +18,8 @@ import { compare } from 'fast-json-patch';
 export class AuthorUpdateComponent implements OnInit, OnDestroy {
 
   public authorForm: FormGroup;
-  private author: Author;
-  private id: string;
+  private author: AuthorForRead;
+  private id: number;
   private sub: Subscription;
   private originalAuthorForUpdate: AuthorForUpdate;
 
@@ -32,8 +32,8 @@ export class AuthorUpdateComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // define the authorForm (with empty default values)
     this.authorForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(200)]],
-      description: ['', [Validators.required, Validators.maxLength(2000)]]
+      name: ['', [Validators.required, Validators.maxLength(200)]],
+      urlSlug: ['', [Validators.required, Validators.maxLength(2000)]]
     }, {  });
 
     // get route data (id)
@@ -66,8 +66,8 @@ export class AuthorUpdateComponent implements OnInit, OnDestroy {
     let dateFormat = 'yyyy-MM-dd';
 
     this.authorForm.patchValue({
-      title: this.author.title,
-      description: this.author.description,
+      name: this.author.name,
+      urlSlug: this.author.urlSlug,
     });
   }
 

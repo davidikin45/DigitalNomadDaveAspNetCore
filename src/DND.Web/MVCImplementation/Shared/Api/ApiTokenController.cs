@@ -76,6 +76,37 @@ namespace DND.Web.MVCImplementation.Shared.Api
             return BadRequest();
         }
 
+        [HttpPost("WriteAccessToken")]
+        [AllowAnonymous]
+        public async Task<IActionResult> WriteAccessToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+                    if (result.Succeeded)
+                    {
+
+                        //Add roles
+                        var roles = await _userManager.GetRolesAsync(user);
+
+
+                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
+
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Write);
+
+                        return Created("", results);
+                    }
+                }
+
+            }
+
+            return BadRequest();
+        }
+
         [HttpPost("CreateAccessToken")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateAccessToken([FromBody] LoginViewModel model)

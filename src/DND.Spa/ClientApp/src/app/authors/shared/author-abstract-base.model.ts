@@ -1,4 +1,4 @@
 export abstract class AuthorAbstractBase { 
-    title: string;
-    description: string;
+    name: string;
+    urlSlug: string;
 }

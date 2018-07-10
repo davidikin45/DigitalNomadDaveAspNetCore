@@ -1,34 +1,34 @@
-<div class='panel panel-primary'>
-  <div class='panel-heading'>
-    Your authors
+<div class="card">
+  <div class="card-header">
+    <span class="h4">Authors</span>
+    <div class="btn-toolbar mb-2 mb-md-0 pull-right">
+      <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/authors-add']">Add</a>
+    </div>
   </div>
-
-  <a class="btn btn-primary" style="width:100px; margin-left:10px; margin-top:10px;"  [routerLink]="['/author-add']">
-    Add a author
-  </a>
-
-  <div class='panel-body'>
+  <div class="card-body">
     <div class='table-responsive'>
       <table class='table' *ngIf='authors && authors.length'>
         <thead>
-          <tr>            
-            <th>Author</th>
-            <th>Title</th>
+          <tr>
+            <th>Name</th>
+            <th>Url Slug</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor='let author of authors'>
-            <td>{{author.Description}}</td>
             <td>
-              <a [routerLink]="['/authors', author.Id]">
-                {{author.title}}
+              <a [routerLink]="['/authors', author.id]">
+                {{author.name}}
               </a>
-            </td>           
+            </td>
             <td>
-              <a class="btn btn-primary" [routerLink]="['/author-update', author.Id]">
+              {{author.urlSlug}}
+            </td>
+            <td>
+              <a class="btn btn-primary btn-sm" [routerLink]="['/authors/edit', author.id]">
                 Edit
               </a>
-            </td>         
+            </td>
           </tr>
         </tbody>
       </table>

@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace DND.Common.Implementation.ApplicationServices
 {
@@ -100,6 +101,17 @@ namespace DND.Common.Implementation.ApplicationServices
             return Mapper.Map<TUpdateDto>(bo);
         }
 
+        public virtual List<Result> BulkUpdate(TUpdateDto[] dtos, string updatedBy)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = Update(((IBaseDtoWithId)dto).Id, dto, updatedBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
         public virtual Result Update(object id, TUpdateDto dto, string updatedBy)
         {
             var objectValidationErrors = dto.Validate().ToList();
@@ -129,6 +141,17 @@ namespace DND.Common.Implementation.ApplicationServices
             }
 
             return Result.Ok();
+        }
+
+        public async virtual Task<List<Result>> BulkUpdateAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = await UpdateAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
         }
 
         public virtual async Task<Result> UpdateAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken)

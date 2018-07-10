@@ -56,5 +56,22 @@ namespace DND.Common.Extensions
         {
             return func(result);
         }
+
+        public static bool IsSuccess(this IEnumerable<Result> results)
+        {
+            foreach (var result in results)
+            {
+                if (result.IsFailure)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool IsFailure(this IEnumerable<Result> results)
+        {
+            return !IsSuccess(results);
+        }
     }
 }

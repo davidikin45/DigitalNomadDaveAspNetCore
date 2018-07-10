@@ -4,6 +4,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common'
 import { HttpClient } from '@angular/common/http/src/client';
+import { } from "automapper-ts";
 
 import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './not-found.component';
@@ -32,17 +33,18 @@ import { AuthorService } from './authors/shared/author.service';
 import { MasterDataService } from './shared/master-data.service';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [RequireAuthenticatedUserRouteGuardService] },
+  { path: '', component: HomeComponent, pathMatch: 'full'},
 
   { path: 'about', component: AboutComponent },
 
-  { path: 'authors', component: AuthorsComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
   { path: 'authors/:id', component: AuthorDetailComponent, canActivate: [RequireAuthenticatedUserRouteGuardService]},
-  { path: 'author-update/:id', component: AuthorUpdateComponent, canActivate: [RequireAuthenticatedUserRouteGuardService]},
-  { path: 'author-add', component: AuthorAddComponent, canActivate: [RequireAuthenticatedUserRouteGuardService]},
+  { path: 'authors/edit/:id', component: AuthorUpdateComponent, canActivate: [RequireAuthenticatedUserRouteGuardService]},
+  { path: 'authors-add', component: AuthorAddComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
+  { path: 'authors',  component: AuthorsComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
 
-  { path: 'counter', component: CounterComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
-  { path: 'fetch-data', component: FetchDataComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
+  { path: 'counter', component: CounterComponent},
+  { path: 'fetch-data', component: FetchDataComponent},
+
   { path: 'signin-oidc', component: SigninOidcComponent },
   { path: 'redirect-silentrenew', component: RedirectSilentRenewComponent },
   { path: '**', component: PageNotFoundComponent }
@@ -54,10 +56,14 @@ const appRoutes: Routes = [
     NavMenuComponent,
     NavSidebarComponent,
     HomeComponent,
+    SigninOidcComponent,
+    RedirectSilentRenewComponent,
+    PageNotFoundComponent,
+
+    AboutComponent,
     CounterComponent,
     FetchDataComponent,
-    SigninOidcComponent,
-    AboutComponent,
+
     AuthorsComponent,
     AuthorDetailComponent,
     AuthorAddComponent,
@@ -100,5 +106,6 @@ export class AppModule {
   constructor() {
     automapper.createMap('AuthorFormModel', 'AuthorForCreation');
     automapper.createMap('AuthorFormModel', 'AuthorForUpdate');
+    automapper.createMap('AuthorFormModel', 'AuthorForDeletion');
   }
 }

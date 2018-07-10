@@ -1,6 +1,7 @@
 ﻿using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,10 @@ namespace DND.Common.Interfaces.ApplicationServices
         Result Update(object id, TUpdateDto dto, string updatedBy);
 
         Task<Result> UpdateAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
+
+        List<Result> BulkUpdate(TUpdateDto[] dtos, string updatedBy);
+
+        Task<List<Result>> BulkUpdateAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
         Result Delete(object id, string deletedBy);
 

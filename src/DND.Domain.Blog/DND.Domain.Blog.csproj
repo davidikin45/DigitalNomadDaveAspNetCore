@@ -180,21 +180,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authors\Author.cs" />
-    <Compile Include="Authors\Dtos\AuthorDeleteDTO.cs" />
-    <Compile Include="Authors\Dtos\AuthorDTO.cs" />
+    <Compile Include="Authors\Dtos\AuthorDeleteDto.cs" />
+    <Compile Include="Authors\Dtos\AuthorDto.cs" />
     <Compile Include="Authors\Dtos\TestDto.cs" />
     <Compile Include="BlogPosts\BlogPost.cs" />
     <Compile Include="BlogPosts\BlogPostLocation.cs" />
     <Compile Include="BlogPosts\BlogPostTag.cs" />
-    <Compile Include="BlogPosts\Dtos\BlogPostDeleteDTO.cs" />
-    <Compile Include="BlogPosts\Dtos\BlogPostDTO.cs" />
-    <Compile Include="BlogPosts\Dtos\BlogPostLocationDTO.cs" />
-    <Compile Include="BlogPosts\Dtos\BlogPostTagDTO.cs" />
+    <Compile Include="BlogPosts\Dtos\BlogPostDeleteDto.cs" />
+    <Compile Include="BlogPosts\Dtos\BlogPostDto.cs" />
+    <Compile Include="BlogPosts\Dtos\BlogPostLocationDto.cs" />
+    <Compile Include="BlogPosts\Dtos\BlogPostTagDto.cs" />
     <Compile Include="Categories\Category.cs" />
-    <Compile Include="Categories\Dtos\CategoryDeleteDTO.cs" />
-    <Compile Include="Categories\Dtos\CategoryDTO.cs" />
-    <Compile Include="Locations\Dtos\LocationDeleteDTO.cs" />
-    <Compile Include="Locations\Dtos\LocationDTO.cs" />
+    <Compile Include="Categories\Dtos\CategoryDeleteDto.cs" />
+    <Compile Include="Categories\Dtos\CategoryDto.cs" />
+    <Compile Include="Locations\Dtos\LocationDeleteDto.cs" />
+    <Compile Include="Locations\Dtos\LocationDto.cs" />
     <Compile Include="Locations\Enums\LocationType.cs" />
     <Compile Include="Locations\Location.cs" />
     <Compile Include="Models\BinaryData.cs" />
@@ -202,8 +202,8 @@
     <Compile Include="Models\Email.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tags\Dtos\TagDeleteDTO.cs" />
-    <Compile Include="Tags\Dtos\TagDTO.cs" />
+    <Compile Include="Tags\Dtos\TagDeleteDto.cs" />
+    <Compile Include="Tags\Dtos\TagDto.cs" />
     <Compile Include="Tags\Tag.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Author } from '../shared/author.model';
+import { AuthorForRead } from '../shared/author-for-read.model';
 import { AuthorService } from '../shared/author.service';
 import { ActivatedRoute } from '@angular/router';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';

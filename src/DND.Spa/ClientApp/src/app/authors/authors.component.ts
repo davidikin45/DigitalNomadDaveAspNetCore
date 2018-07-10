@@ -1,6 +1,6 @@
 import { Component, OnInit, ErrorHandler } from '@angular/core';
 
-import { Author } from './shared/author.model';
+import { AuthorForRead } from './shared/author-for-read.model';
 import { AuthorService } from './shared/author.service';
 
 @Component({
@@ -10,13 +10,13 @@ import { AuthorService } from './shared/author.service';
 })
 export class AuthorsComponent implements OnInit {
   title: string = 'Author overview'
-  authors: Author[] = [];
+  authors: AuthorForRead[] = [];
 
   constructor(private authorService: AuthorService) {    
         }
 
   ngOnInit() {
-    this.authorService.getAuthors()
+    this.authorService.getAll()
       .subscribe(authors => {
       this.authors = authors;
     });    

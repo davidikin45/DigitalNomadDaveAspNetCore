@@ -89,6 +89,11 @@ namespace DND.IDP
                             Name = ApiScopes.Full,
                             DisplayName = "Full access to API"
                         },
+                         new Scope
+                        {
+                            Name = ApiScopes.Write,
+                            DisplayName = "Write access to API"
+                        },
                         new Scope
                         {
                             Name = ApiScopes.Create,
@@ -146,15 +151,17 @@ namespace DND.IDP
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        "roles",
                         ApiScopes.Read
                     },
                     RedirectUris = {
                         "https://localhost:44372/SignInCallback.html",
+                        "https://localhost:44332/signin-oidc",
                         "https://localhost:44332/redirect-silentrenew",
                     },
                     PostLogoutRedirectUris = {
                         "https://localhost:44372/SignOutCallback.html",
-                        "https://localhost:44332/",
+                        "https://localhost:44332/"
                     },
                     AllowedCorsOrigins = {
                         "https://localhost:44372",

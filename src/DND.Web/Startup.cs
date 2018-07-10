@@ -61,6 +61,7 @@ using System.Security.Cryptography.X509Certificates;
 using DND.Common.Controllers.Api;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json.Serialization;
 
 namespace DND.Web
 {
@@ -389,7 +390,7 @@ namespace DND.Web
 
                 options.AddPolicy(ApiScopes.Create, policyBuilder =>
                 {
-                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Create);
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Write, ApiScopes.Create);
                 });
 
                 options.AddPolicy(ApiScopes.Read, policyBuilder =>
@@ -399,12 +400,12 @@ namespace DND.Web
 
                 options.AddPolicy(ApiScopes.Update, policyBuilder =>
                 {
-                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Update);
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Write, ApiScopes.Update);
                 });
 
                 options.AddPolicy(ApiScopes.Delete, policyBuilder =>
                 {
-                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Delete);
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Write, ApiScopes.Delete);
                 });
             });
 
@@ -551,6 +552,7 @@ namespace DND.Web
             {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 opt.SerializerSettings.Formatting = Formatting.Indented;
+                opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             })
             .AddCookieTempDataProvider(options =>
             {

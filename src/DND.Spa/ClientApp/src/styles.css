@@ -11,6 +11,11 @@ body {
   vertical-align: text-bottom;
 }
 
+.content {
+  padding-top: .5rem;
+}
+
+
 /*
  * Sidebar
  */

@@ -30,8 +30,8 @@ export class AuthorAddComponent implements OnInit {
 
     // define the authorForm (with empty default values)
     this.authorForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(200)]],
-      description: ['', Validators.maxLength(2000)],
+      name: ['', [Validators.required, Validators.maxLength(200)]],
+      urlSlug: ['', Validators.maxLength(2000)],
     }, {  });
 
     // get bands from master data service
@@ -51,18 +51,16 @@ export class AuthorAddComponent implements OnInit {
  
   addAuthor(): void {
     if (this.authorForm.dirty && this.authorForm.valid) {
-      if (this.isAdmin === true) {
         let author = automapper.map(
           'AuthorFormModel',
           'AuthorForCreation',
           this.authorForm.value);
-        this.authorService.add(author)
+        this.authorService.create(author)
           .subscribe(
             () => {
               this.router.navigateByUrl('/authors');
             },
             (validationResult) => { ValidationErrorHandler.handleValidationErrors(this.authorForm, validationResult); });
-      }
     }
   }
 }

@@ -21,8 +21,23 @@ namespace DND.Common.ActionResults
             StatusCode = 422; //Unprocessable Entity 
         }
 
+        public UnprocessableEntityObjectResult(IEnumerable<WebApiMessage> webApiMessages)
+           : base(webApiMessages)
+        {
+            if (webApiMessages == null)
+            {
+                throw new ArgumentNullException(nameof(webApiMessages));
+            }
+            StatusCode = 422; //Unprocessable Entity 
+        }
+
         public static WebApiMessage CreateWebApiMessage(string message, ModelStateDictionary modelState)
         {
+            if (modelState == null)
+            {
+                throw new ArgumentNullException(nameof(modelState));
+            }
+
             var errors = modelState.Values.SelectMany(v => v.Errors);
             var errorList = new List<string>();
             foreach (var error in errors)

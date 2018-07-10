@@ -97,13 +97,13 @@ namespace DND.DomainServices.FlightSearch.Search.Services
                 if ("anywhere".Contains(request.Search.ToLower()))
                 {
                     anywhereAdded = true;
-                    response.Locations.Add(new LocationResponsedto { PlaceId = "anywhere", PlaceName = "Anywhere" });
+                    response.Locations.Add(new LocationResponseDto { PlaceId = "anywhere", PlaceName = "Anywhere" });
                 }
 
                 if ("nearest current".Contains(request.Search.ToLower()))
                 {
                     nearestAdded = true;
-                    response.Locations.Add(new LocationResponsedto { PlaceId = "nearest", PlaceName = "Nearest Airport" });
+                    response.Locations.Add(new LocationResponseDto { PlaceId = "nearest", PlaceName = "Nearest Airport" });
                 }
 
 
@@ -114,25 +114,25 @@ namespace DND.DomainServices.FlightSearch.Search.Services
 
                 foreach (Place p in results.Places)
                 {
-                    var location = new LocationResponsedto { PlaceId = p.PlaceId.Replace("-sky", ""), PlaceName = p.PlaceName, CityId = p.CityId.Replace("-sky", ""), CountryId = p.CountryId.Replace("-sky", ""), CountryName = p.CountryName, RegionId = p.RegionId.Replace("-sky", "") };
+                    var location = new LocationResponseDto { PlaceId = p.PlaceId.Replace("-sky", ""), PlaceName = p.PlaceName, CityId = p.CityId.Replace("-sky", ""), CountryId = p.CountryId.Replace("-sky", ""), CountryName = p.CountryName, RegionId = p.RegionId.Replace("-sky", "") };
                     response.Locations.Add(location);
                 }
             }
 
             if (!anywhereAdded)
             {
-                response.Locations.Add(new LocationResponsedto { PlaceId = "anywhere", PlaceName = "Anywhere" });
+                response.Locations.Add(new LocationResponseDto { PlaceId = "anywhere", PlaceName = "Anywhere" });
             }
 
             if (!nearestAdded)
             {
-                response.Locations.Add(new LocationResponsedto { PlaceId = "nearest", PlaceName = "Nearest Airport" });
+                response.Locations.Add(new LocationResponseDto { PlaceId = "nearest", PlaceName = "Nearest Airport" });
             }
 
             return response;
         }
 
-        public async Task<LocationResponsedto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken)
+        public async Task<LocationResponseDto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new ValidationErrors(new GeneralError("Invaid Request"));
@@ -144,7 +144,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
 
             var p = await locationSearchEngine.GetByIDAsync(request.Market[0], request.Currency, request.Locale, request.Id, cancellationToken).ConfigureAwait(false);
 
-            var location = new LocationResponsedto { PlaceId = p.PlaceId.Replace("-sky", ""), PlaceName = p.PlaceName, CityId = p.CityId.Replace("-sky", ""), CountryId = p.CountryId.Replace("-sky", ""), CountryName = p.CountryName, RegionId = "" };
+            var location = new LocationResponseDto { PlaceId = p.PlaceId.Replace("-sky", ""), PlaceName = p.PlaceName, CityId = p.CityId.Replace("-sky", ""), CountryId = p.CountryId.Replace("-sky", ""), CountryName = p.CountryName, RegionId = "" };
 
             return location;
         }

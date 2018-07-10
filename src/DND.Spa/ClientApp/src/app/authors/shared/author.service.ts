@@ -2,34 +2,19 @@ import { Injectable, ErrorHandler } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap, filter, catchError, mergeMap } from "rxjs/operators";
-
-import { Author } from './author.model';
-import { BaseService } from '../../shared/base.service';
-import { AuthorForCreation } from './author-for-creation.model';
+import { BaseCrudApiService } from '../../shared/base-crud-api.service';
 import { Operation } from 'fast-json-patch';
 
+import { AuthorForCreation } from './author-for-creation.model';
+import { AuthorForRead } from './author-for-read.model';
+import { AuthorForUpdate } from './author-for-update.model';
+import { AuthorForDeletion } from './author-for-deletion.model';
+
 @Injectable()
-export class AuthorService extends BaseService {
+export class AuthorService extends BaseCrudApiService<AuthorForCreation, AuthorForRead, AuthorForUpdate, AuthorForDeletion> {
 
-  constructor(private http: HttpClient) {
-    super();
+  constructor(protected http: HttpClient) {
+    super('authors',http);
   }
 
-  getAll(): Observable<Author[]> {
-    return this.http.get<Author[]>(`${this.apiUrl}/authors`);
-  }
-
-  get(id: string): Observable<Author> {
-    return this.http.get<Author>(`${this.apiUrl}/authors/${id}`);
-  }
-
-  add(entityToAdd: AuthorForCreation): Observable<Author> {
-    return this.http.post<Author>(`${this.apiUrl}/authors`, entityToAdd,
-      { headers: { 'Content-Type': 'application/json' } });
-  }
-
-  partiallyUpdate(id: string, patchDocument: Operation[]): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/authors/${id}`, patchDocument,
-      { headers: { 'Content-Type': 'application/json-patch+json' } });
-  }
 }

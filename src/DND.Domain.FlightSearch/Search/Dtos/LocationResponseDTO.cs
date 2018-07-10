@@ -1,6 +1,6 @@
 ﻿namespace DND.Domain.FlightSearch.Search.Dtos
 {
-    public class LocationResponsedto
+    public class LocationResponseDto
     {
         public string PlaceId { get; set; }
         public string PlaceName { get; set; }

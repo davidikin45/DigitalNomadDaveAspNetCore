@@ -10,6 +10,6 @@ namespace DND.Interfaces.FlightSearch.ApplicationServices
         Task<FlightSearchResponseDto> SearchAsync(FlightSearchRequestDto request, CancellationToken cancellationToken);
 
         Task<LocationAutoSuggestResponseDto> LocationAutoSuggestAsync(LocationAutoSuggestRequestDto request, CancellationToken cancellationToken);
-        Task<LocationResponsedto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken);
+        Task<LocationResponseDto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken);
     }
 }

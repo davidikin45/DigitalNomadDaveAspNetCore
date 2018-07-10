@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Currencies\Dtos\CurrencyDTO.cs" />
+    <Compile Include="Currencies\Dtos\CurrencyDto.cs" />
     <Compile Include="Enums\Adult.cs" />
     <Compile Include="Enums\Children.cs" />
     <Compile Include="Enums\FlightClass.cs" />
@@ -56,16 +56,16 @@
     <Compile Include="Enums\Infant.cs" />
     <Compile Include="Enums\SortOrder.cs" />
     <Compile Include="Enums\SortType.cs" />
-    <Compile Include="Locales\Dtos\LocaleDTO.cs" />
-    <Compile Include="Markets\Dtos\MarketDTO.cs" />
+    <Compile Include="Locales\Dtos\LocaleDto.cs" />
+    <Compile Include="Markets\Dtos\MarketDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search\Dtos\FlightSearchRequestDTO.cs" />
-    <Compile Include="Search\Dtos\FlightSearchResponseDTO.cs" />
-    <Compile Include="Search\Dtos\ItineraryDTO.cs" />
-    <Compile Include="Search\Dtos\LocationAutoSuggestRequestDTO.cs" />
-    <Compile Include="Search\Dtos\LocationAutoSuggestResponseDTO.cs" />
-    <Compile Include="Search\Dtos\LocationRequestDTO.cs" />
-    <Compile Include="Search\Dtos\LocationResponseDTO.cs" />
+    <Compile Include="Search\Dtos\FlightSearchRequestDto.cs" />
+    <Compile Include="Search\Dtos\FlightSearchResponseDto.cs" />
+    <Compile Include="Search\Dtos\ItineraryDto.cs" />
+    <Compile Include="Search\Dtos\LocationAutoSuggestRequestDto.cs" />
+    <Compile Include="Search\Dtos\LocationAutoSuggestResponseDto.cs" />
+    <Compile Include="Search\Dtos\LocationRequestDto.cs" />
+    <Compile Include="Search\Dtos\LocationResponseDto.cs" />
     <Compile Include="Skyscanner\ModelExtend\Airport.cs" />
     <Compile Include="Skyscanner\ModelExtend\BrowseDatesServiceResponse.cs" />
     <Compile Include="Skyscanner\ModelExtend\BrowseRoutesServiceResponse.cs" />

@@ -22,10 +22,10 @@ namespace DND.Domain.FlightSearch.Search.Dtos
 
         public LoadMoreList<ItineraryDto> Itineraries { get; set; }
 
-        public List<LocationResponsedto> OutboundOriginAirports { get; set; }
-        public List<LocationResponsedto> OutboundDestinationAirports { get; set; }
-        public List<LocationResponsedto> InboundOriginAirports { get; set; }
-        public List<LocationResponsedto> InboundDestinationAirports { get; set; }
+        public List<LocationResponseDto> OutboundOriginAirports { get; set; }
+        public List<LocationResponseDto> OutboundDestinationAirports { get; set; }
+        public List<LocationResponseDto> InboundOriginAirports { get; set; }
+        public List<LocationResponseDto> InboundDestinationAirports { get; set; }
 
         public FlightSearchRequestDto Request { get; set; }
 

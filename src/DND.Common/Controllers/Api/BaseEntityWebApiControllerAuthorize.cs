@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DND.Common.Extensions;
 
 namespace DND.Common.Controllers.Api
 {
@@ -124,6 +125,25 @@ namespace DND.Common.Controllers.Api
             //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
             //return Success(dto);
             return NoContent();
+        }
+
+
+        /// <summary>
+        /// Bulks the update.
+        /// </summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns></returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
+        [Route("")]
+        [HttpPut]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> BulkUpdate([FromBody] TUpdateDto[] dtos)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var results = await Service.BulkUpdateAsync(dtos, Username, cts.Token);
+
+            return BulkUpdateResponse(results);
         }
 
         /// <summary>

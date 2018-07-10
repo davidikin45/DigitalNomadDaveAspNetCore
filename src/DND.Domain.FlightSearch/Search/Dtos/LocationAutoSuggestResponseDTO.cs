@@ -9,10 +9,10 @@ namespace DND.Domain.FlightSearch.Search.Dtos
     {
         public LocationAutoSuggestResponseDto()
         {
-            Locations = new List<LocationResponsedto>();
+            Locations = new List<LocationResponseDto>();
         }
 
-        public IList<LocationResponsedto> Locations { get; set; }
+        public IList<LocationResponseDto> Locations { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

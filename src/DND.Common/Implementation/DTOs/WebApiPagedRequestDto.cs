@@ -12,15 +12,15 @@ namespace DND.Common.Implementation.Dtos
     {
         // no. of records to fetch
         public int PageSize
-        { get; set; }
+        { get; set; } = 10;
 
         // the page index
         public int Page
-        { get; set; }
+        { get; set; } = 1;
 
         // sort column name
         public string OrderBy
-        { get; set; }
+        { get; set; } = "id";
 
         // sort order "asc" or "desc"
         public string OrderType

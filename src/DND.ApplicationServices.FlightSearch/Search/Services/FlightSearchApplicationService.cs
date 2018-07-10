@@ -27,7 +27,7 @@ namespace DND.ApplicationServices.FlightSearch.Search.Services
             return await DomainService.LocationAutoSuggestAsync(request, cancellationToken);
         }
 
-        public async Task<LocationResponsedto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken)
+        public async Task<LocationResponseDto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken)
         {
             return await DomainService.GetLocationAsync(request, cancellationToken);
         }
