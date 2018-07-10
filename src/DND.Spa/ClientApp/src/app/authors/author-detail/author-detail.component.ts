@@ -6,6 +6,7 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { MasterDataService } from '../../shared/master-data.service';
 import { Subscription } from 'rxjs';
 import { OpenIdConnectService } from '../../shared/open-id-connect.service';
+import { ShowForRead } from '../shows/shared/show-for-read.model';
 
 @Component({
   selector: 'app-author-detail',

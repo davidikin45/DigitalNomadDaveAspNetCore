@@ -10,5 +10,17 @@
       <div class="col-md-2">Url Slug:</div>
       <div class="col-md-10">{{author.urlSlug}}</div>
     </div>
+    <div class="row" style="margin-top:10px;">
+      <div class="col-md-2 h3">Shows</div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn btn-primary"
+              [routerLink]="['show-add']"
+              style="width:100px; margin-left:10px">
+        Add show(s)
+      </button>
+    </div>
+    <app-shows *ngIf='author && author.shows && author.shows.length'
+               [shows]="author.shows"></app-shows>
   </div>
 </div>

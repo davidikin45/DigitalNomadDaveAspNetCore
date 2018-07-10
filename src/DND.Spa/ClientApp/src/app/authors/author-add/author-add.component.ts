@@ -9,6 +9,8 @@ import { Manager } from '../../shared/manager.model';
 import { ValidationErrorHandler } from '../../shared/validation-error-handler';
 import { OpenIdConnectService } from '../../shared/open-id-connect.service';
 
+import { ShowSingleComponent } from '../shows/show-single/show-single.component';
+
 @Component({
   selector: 'app-author-add',
   templateUrl: './author-add.component.html',
@@ -32,6 +34,7 @@ export class AuthorAddComponent implements OnInit {
     this.authorForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(200)]],
       urlSlug: ['', Validators.maxLength(2000)],
+      shows: this.formBuilder.array([])
     }, {  });
 
     // get bands from master data service
@@ -48,7 +51,13 @@ export class AuthorAddComponent implements OnInit {
     //    });
     //}
   }
- 
+
+  addShow(): void {
+    let showsFormArray = this.authorForm.get('shows') as FormArray;
+    // add show 
+    showsFormArray.push(ShowSingleComponent.createShow());
+  }
+
   addAuthor(): void {
     if (this.authorForm.dirty && this.authorForm.valid) {
         let author = automapper.map(

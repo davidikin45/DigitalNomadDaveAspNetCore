@@ -19,6 +19,7 @@ import { SigninOidcComponent } from './signin-oidc/signin-oidc.component';
 import { RequireAuthenticatedUserRouteGuardService } from './shared/require-authenticated-user-route-guard.service';
 import { AddAuthorizationHeaderInterceptor } from './shared/add-authorization-header-interceptor';
 import { RedirectSilentRenewComponent } from './redirect-silent-renew/redirect-silent-renew.component';
+import { ToastrService } from './shared/toastr.service';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -28,8 +29,13 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 
 import { AboutComponent } from './about';
+
 import { AuthorsComponent, AuthorDetailComponent, AuthorUpdateComponent, AuthorAddComponent } from './authors';
+import { ShowsComponent, ShowAddComponent } from './authors/shows/index';
+import { ShowSingleComponent } from './authors/shows/show-single/show-single.component';
 import { AuthorService } from './authors/shared/author.service';
+import { ShowService } from './authors/shows/shared/show.service';
+
 import { MasterDataService } from './shared/master-data.service';
 
 const appRoutes: Routes = [
@@ -40,10 +46,13 @@ const appRoutes: Routes = [
   { path: 'authors/:id', component: AuthorDetailComponent, canActivate: [RequireAuthenticatedUserRouteGuardService]},
   { path: 'authors/edit/:id', component: AuthorUpdateComponent, canActivate: [RequireAuthenticatedUserRouteGuardService]},
   { path: 'authors-add', component: AuthorAddComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
-  { path: 'authors',  component: AuthorsComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
+  { path: 'authors', component: AuthorsComponent, canActivate: [RequireAuthenticatedUserRouteGuardService] },
+  { path: 'authors/:id/show-add', component: ShowAddComponent, canActivate: [RequireAuthenticatedUserRouteGuardService]},
 
   { path: 'counter', component: CounterComponent},
-  { path: 'fetch-data', component: FetchDataComponent},
+  { path: 'fetch-data', component: FetchDataComponent },
+
+  { path: 'user', loadChildren: './user/user.module#UserModule' },
 
   { path: 'signin-oidc', component: SigninOidcComponent },
   { path: 'redirect-silentrenew', component: RedirectSilentRenewComponent },
@@ -68,6 +77,9 @@ const appRoutes: Routes = [
     AuthorDetailComponent,
     AuthorAddComponent,
     AuthorUpdateComponent,
+    ShowsComponent,
+    ShowSingleComponent,
+    ShowAddComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -97,7 +109,7 @@ const appRoutes: Routes = [
       useClass: HandleHttpErrorInterceptor,
       multi: true,
     },
-    GlobalErrorHandler, ErrorLoggerService, AuthorService, MasterDataService, DatePipe, OpenIdConnectService,
+    GlobalErrorHandler, ErrorLoggerService, ToastrService, AuthorService, ShowService, MasterDataService, DatePipe, OpenIdConnectService,
     RequireAuthenticatedUserRouteGuardService],
   bootstrap: [AppComponent]
 })
@@ -107,5 +119,7 @@ export class AppModule {
     automapper.createMap('AuthorFormModel', 'AuthorForCreation');
     automapper.createMap('AuthorFormModel', 'AuthorForUpdate');
     automapper.createMap('AuthorFormModel', 'AuthorForDeletion');
+
+    automapper.createMap('ShowCollectionFormModelShowsArray', 'ShowCollectionForCreation');
   }
 }
