@@ -8,6 +8,7 @@ namespace DND.Common.Interfaces.Services
 {
     public interface ITypeHelperService
     {
+        bool TypeHasProperties(Type type, string fields);
         bool TypeHasProperties<T>(string fields);
     }
 }

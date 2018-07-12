@@ -35,11 +35,11 @@ namespace DND.Common.Implementation.UnitOfWork
             _cancellationToken = cancellationToken;
         }
 
-        public IBaseReadOnlyRepository<TEntity> ReadOnlyRepository<TContext, TEntity>()
+        public IGenericEFReadOnlyRepository<TEntity> ReadOnlyRepository<TContext, TEntity>()
              where TContext : IBaseDbContext
             where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
         {
-            return (IBaseReadOnlyRepository<TEntity>)_readOnlyRepositories.GetOrAdd(
+            return (IGenericEFReadOnlyRepository<TEntity>)_readOnlyRepositories.GetOrAdd(
                 typeof(TEntity),
                 t => _repositoryFactory.GetReadOnly<TEntity>(DbContexts.Get<TContext>(), this, _cancellationToken)
             );

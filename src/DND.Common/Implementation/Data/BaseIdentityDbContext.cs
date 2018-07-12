@@ -281,6 +281,86 @@ namespace DND.Common.Implementation.Data
             Entry(entity).State = EntityState.Unchanged;
         }
 
+        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null)
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            if (skip.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => skip.Value;
+                typeof(EntityFrameworkQueryableExtensions).GetMethod("Skip").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                //query.Skip(skip.Value);
+            }
+
+            if (take.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => take.Value;
+                typeof(EntityFrameworkQueryableExtensions).GetMethod("Take").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                //query.Take(take.Value);
+            }
+
+            typeof(EntityFrameworkQueryableExtensions).GetMethod("Load").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query });
+        }
+
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            if (skip.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => skip.Value;
+                typeof(EntityFrameworkQueryableExtensions).GetMethod("Skip").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                //query.Skip(skip.Value);
+            }
+
+            if (take.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => take.Value;
+                typeof(EntityFrameworkQueryableExtensions).GetMethod("Take").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                //query.Take(take.Value);
+            }
+
+            await ((Task)(typeof(EntityFrameworkQueryableExtensions).GetMethod("LoadAsync", new Type[] { iQueryableType, typeof(CancellationToken) }).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, cancellationToken }))).ConfigureAwait(false);
+        }
+
+        public int CollectionPropertyCount(object entity, string collectionProperty)
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            return ((int)(typeof(EntityFrameworkQueryableExtensions).GetMethod("Count", new Type[] { iQueryableType }).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query })));
+        }
+
+        public async Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            return await ((Task<int>)(typeof(EntityFrameworkQueryableExtensions).GetMethods().Where(m => m.Name == "CountAsync" && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType == typeof(CancellationToken)).FirstOrDefault().MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, cancellationToken }))).ConfigureAwait(false);
+        }
+
         public IEnumerable<TResultType> SQLQueryNoTracking<TResultType>(string query, params object[] paramaters) where TResultType : class
         {
             return base.Set<TResultType>().AsNoTracking().FromSql(query, paramaters).ToList();

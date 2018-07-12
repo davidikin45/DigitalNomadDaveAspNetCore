@@ -197,17 +197,43 @@ namespace DND.Common.Implementation.ApplicationServices
             return Mapper.Map<TDto>(bo);
         }
 
-        public virtual TDto GetById(object id)
+        public virtual TDto GetById(object id, params Expression<Func<TDto, Object>>[] includeProperties)
         {
-            var bo = DomainService.GetById(id);
+            var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+
+            var bo = DomainService.GetById(id, includesConverted);
             return Mapper.Map<TDto>(bo);
         }
 
         public virtual async Task<TDto> GetByIdAsync(object id,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default(CancellationToken), params Expression<Func<TDto, Object>>[] includeProperties)
         {
-            var bo = await DomainService.GetByIdAsync(id, cancellationToken).ConfigureAwait(false);
+            var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+
+            var bo = await DomainService.GetByIdAsync(id, cancellationToken, includesConverted).ConfigureAwait(false);
             return Mapper.Map<TDto>(bo);
+        }
+
+        public virtual TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        {
+            var bo = DomainService.GetByIdWithPagedCollectionProperty(id, collectionProperty, pageNo, pageSize);
+            return Mapper.Map<TDto>(bo);
+        }
+
+        public virtual async Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        {
+            var bo = await DomainService.GetByIdWithPagedCollectionPropertyAsync(cancellationToken, id, collectionProperty, pageNo, pageSize);
+            return Mapper.Map<TDto>(bo);
+        }
+
+        public int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty)
+        {
+            return DomainService.GetByIdWithPagedCollectionPropertyCount(id, collectionProperty);
+        }
+
+        public virtual async Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, object id, string collectionProperty)
+        {
+            return await DomainService.GetByIdWithPagedCollectionPropertyCountAsync(cancellationToken, id, collectionProperty);
         }
 
         public virtual IEnumerable<TDto> GetByIds(IEnumerable<object> ids)

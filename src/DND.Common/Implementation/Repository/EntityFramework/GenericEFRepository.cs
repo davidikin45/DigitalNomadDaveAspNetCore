@@ -20,7 +20,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
 // Setting state manually is important in case of detached entities (entities loaded without change tracking or created outside of the current context).
 {
-    public class GenericEFRepository<TEntity> : GenericEFReadOnlyRepository<TEntity>, IBaseRepository<TEntity>
+    public class GenericEFRepository<TEntity> : GenericEFReadOnlyRepository<TEntity>, IGenericEFRepository<TEntity>
      where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
     {
         public GenericEFRepository(IBaseDbContext context, IBaseUnitOfWorkScope uow, CancellationToken cancellationToken = default(CancellationToken))

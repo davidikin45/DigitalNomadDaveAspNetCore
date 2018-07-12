@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace DND.Common.Interfaces.Repository
 {
-    public interface IBaseReadOnlyRepository<TEntity>
+    public interface IGenericEFReadOnlyRepository<TEntity>
             where TEntity : class, IBaseEntity
     {
 
@@ -157,17 +157,30 @@ namespace DND.Common.Interfaces.Repository
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetById(object id)
+        TEntity GetById(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        Task<TEntity> GetByIdAsync(object id)
+        Task<TEntity> GetByIdAsync(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetByIdNoTracking(object id)
+
+        TEntity GetByIdNoTracking(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
           ;
 
-        Task<TEntity> GetByIdNoTrackingAsync(object id)
+        Task<TEntity> GetByIdNoTrackingAsync(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
+
+        TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null);
+
+        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, string collectionProperty, int? skip = null, int? take = null);
+
+        TEntity GetByIdWithPagedCollectionPropertyNoTracking(object id, string collectionProperty, int? skip = null, int? take = null);
+
+        Task<TEntity> GetByIdWithPagedCollectionPropertyNoTrackingAsync(object id, string collectionProperty, int? skip = null, int? take = null);
+
+        int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
+
+        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, string collectionProperty);
 
         IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
            ;

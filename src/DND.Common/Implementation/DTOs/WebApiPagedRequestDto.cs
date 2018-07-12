@@ -20,7 +20,7 @@ namespace DND.Common.Implementation.Dtos
 
         // sort column name
         public string OrderBy
-        { get; set; } = "id";
+        { get; set; }
 
         // sort order "asc" or "desc"
         public string OrderType

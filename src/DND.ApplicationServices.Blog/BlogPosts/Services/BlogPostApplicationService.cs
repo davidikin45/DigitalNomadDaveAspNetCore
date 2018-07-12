@@ -158,7 +158,7 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
             return list;
         }
 
-        public async override Task<BlogPostDto> GetByIdAsync(object id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<BlogPostDto> GetByIdAsync(object id, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await GetPostAsync(int.Parse(id.ToString()), cancellationToken);
         }

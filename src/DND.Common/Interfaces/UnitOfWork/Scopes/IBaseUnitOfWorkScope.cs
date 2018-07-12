@@ -15,7 +15,7 @@ namespace DND.Common.Interfaces.UnitOfWork
     public interface IBaseUnitOfWorkScope
     {
 
-        IBaseReadOnlyRepository<TEntity> ReadOnlyRepository<TContext, TEntity>()
+        IGenericEFReadOnlyRepository<TEntity> ReadOnlyRepository<TContext, TEntity>()
             where TContext : IBaseDbContext
            where TEntity : class, IBaseEntity, IBaseEntityAuditable, new();
     }

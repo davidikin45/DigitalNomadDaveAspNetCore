@@ -9,7 +9,7 @@ using DND.Common.Interfaces.Models;
 
 namespace DND.Common.Interfaces.Repository
 {
-    public interface IBaseRepository<TEntity> : IBaseReadOnlyRepository<TEntity>
+    public interface IGenericEFRepository<TEntity> : IGenericEFReadOnlyRepository<TEntity>
          where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
 
     {

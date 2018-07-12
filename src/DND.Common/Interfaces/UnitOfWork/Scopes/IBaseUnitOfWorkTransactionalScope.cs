@@ -44,7 +44,7 @@ namespace DND.Common.Interfaces.UnitOfWork
     /// </summary>
     public interface IUnitOfWorkTransactionScope : IDisposable, IUnitOfWorkReadOnlyScope
     {
-        IBaseRepository<TEntity> Repository<TContext, TEntity>()
+        IGenericEFRepository<TEntity> Repository<TContext, TEntity>()
        where TContext : IBaseDbContext
       where TEntity : class, IBaseEntity, IBaseEntityAuditable, new();
 

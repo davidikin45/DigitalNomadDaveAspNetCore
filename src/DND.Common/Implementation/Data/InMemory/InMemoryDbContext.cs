@@ -318,6 +318,28 @@ namespace DND.Common.Implementation.Data.InMemory
             }
         }
 
+        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null)
+        {
+
+        }
+
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+
+        }
+
+        public int CollectionPropertyCount(object entity, string collectionProperty)
+        {
+            return ((ICollection<Object>)entity.GetPropValue(collectionProperty)).Count();
+        }
+
+        public Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
+        {
+            var task = new Task<int>(() => CollectionPropertyCount(entity, collectionProperty));
+            task.Start();
+            return task;
+        }
+
         public IEnumerable<DbEntityValidationResultBetter> GetValidationErrors()
         {
             return GetValidationErrorsForNewChanges(false);

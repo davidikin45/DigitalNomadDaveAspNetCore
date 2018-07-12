@@ -26,11 +26,11 @@ namespace DND.Common.Implementation.UnitOfWork
 {
     public class UnitOfWorkTransactionScope : BaseUnitOfWorkScope, IUnitOfWorkTransactionScope
     {
-        public IBaseRepository<TEntity> Repository<TContext, TEntity>()
+        public IGenericEFRepository<TEntity> Repository<TContext, TEntity>()
         where TContext : IBaseDbContext
         where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
         {
-            return (IBaseRepository<TEntity>)_repositories.GetOrAdd(
+            return (IGenericEFRepository<TEntity>)_repositories.GetOrAdd(
                 typeof(TEntity),
                 t => _repositoryFactory.Get<TEntity>(DbContexts.Get<TContext>(), this, _cancellationToken)
             );

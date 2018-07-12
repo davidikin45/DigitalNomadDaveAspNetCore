@@ -37,6 +37,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
@@ -958,8 +966,8 @@
     <Compile Include="Interfaces\Repository\IBaseFolderRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseJpegMetadataReadOnlyRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseJpegMetadataRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseReadOnlyRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseRepository.cs" />
+    <Compile Include="Interfaces\Repository\IGenericEFReadOnlyRepository.cs" />
+    <Compile Include="Interfaces\Repository\IGenericEFRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseRepositoryFactory.cs" />
     <Compile Include="Interfaces\Repository\IFileSystemRepositoryFactory.cs" />
     <Compile Include="Interfaces\DomainServices\IBaseDomainService.cs" />

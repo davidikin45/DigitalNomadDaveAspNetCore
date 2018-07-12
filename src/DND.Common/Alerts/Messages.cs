@@ -19,6 +19,7 @@ namespace DND.Common.Alerts
 
         public const string NotFound = "Object not found.";
 
+        public const string CollectionInvalid = "Collection invalid.";
         public const string FieldsInvalid = "One or more of the fields are invalid.";
 
         public const string MessageSentSuccessfully = "Thankyou, your message was sent successfully.";

@@ -171,9 +171,9 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dataTask = Service.GetAllAsync(cts.Token, LamdaHelper.GetOrderBy<TDto>(resourceParameters.OrderBy, resourceParameters.OrderType), resourceParameters.Page - 1, resourceParameters.PageSize);
+            var dataTask = Service.SearchAsync(cts.Token, resourceParameters.Search, null, LamdaHelper.GetOrderBy<TDto>(resourceParameters.OrderBy, resourceParameters.OrderType), resourceParameters.Page - 1, resourceParameters.PageSize);
 
-            var totalTask = Service.GetCountAsync(cts.Token);
+            var totalTask = Service.GetSearchCountAsync(cts.Token, resourceParameters.Search, null);
 
             await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
 
@@ -229,6 +229,88 @@ namespace DND.Common.Controllers.Api
             {
                 value = shapedDataWithLinks,
                 links = links
+            };
+
+            return Ok(linkedCollectionResource);
+        }
+
+        /// <summary>
+        /// Gets the paged.
+        /// </summary>
+        /// <param name="resourceParameters">The resource parameters.</param>
+        /// <returns></returns>
+        [FormatFilter]
+        [Route("{id}/{collectionProperty}")]
+        [Route("{id}/{collectionProperty}.{format}")]
+        [HttpGet]
+        [HttpHead]
+        [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
+        public virtual async Task<IActionResult> GetCollectionProperty(string id, string collectionProperty, string fields, int page = 1, int pageSize = 10)
+        {
+            if (!typeof(TDto).HasProperty(collectionProperty) || !typeof(TDto).GetProperty(collectionProperty).PropertyType.IsCollection())
+            {
+                return ApiErrorMessage(Messages.CollectionInvalid);
+            }
+
+            var collectionItemType = typeof(TDto).GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+            if (!TypeHelperService.TypeHasProperties(collectionItemType, fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+           
+            var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collectionProperty, page - 1, pageSize);
+
+            var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collectionProperty);
+
+            await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
+
+            var data = dataTask.Result.GetPropValue(collectionProperty);
+            var total = totalTask.Result;
+
+            var paginationMetadata = new WebApiPagedResponseDto<TDto>
+            {
+                Page = page,
+                PageSize = pageSize,
+                Records = total,
+                PreviousPageLink = null,
+                NextPageLink = null
+            };
+
+            if (paginationMetadata.HasPrevious)
+            {
+                //paginationMetadata.PreviousPageLink = CreateResourceUri(resourceParameters, ResourceUriType.PreviousPage);
+            }
+
+            if (paginationMetadata.HasNext)
+            {
+                //paginationMetadata.NextPageLink = CreateResourceUri(resourceParameters, ResourceUriType.NextPage);
+            }
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
+
+            //var links = CreateLinksForCollections(resourceParameters,paginationMetadata.HasNext, paginationMetadata.HasPrevious);
+
+            IEnumerable<Object> list = ((IEnumerable<Object>)(typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(typeof(Object)).Invoke(null, new object[] { data })));
+
+            var shapedData = IEnumerableExtensions.ShapeData(list, collectionItemType, fields);
+
+            var shapedDataWithLinks = shapedData.Select(author =>
+            {
+                var authorAsDictionary = author as IDictionary<string, object>;
+                //var authorLinks = CreateLinks(authorAsDictionary["Id"].ToString(), fields);
+                var authorLinks = new List<LinkDto>(); //Collection property links
+
+                authorAsDictionary.Add("links", authorLinks);
+
+                return authorAsDictionary;
+            });
+
+            var linkedCollectionResource = new
+            {
+                value = shapedDataWithLinks
+                //,links = links
             };
 
             return Ok(linkedCollectionResource);

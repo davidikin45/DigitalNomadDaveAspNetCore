@@ -87,12 +87,20 @@ namespace DND.Common.Interfaces.ApplicationServices
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
-        TDto GetById(object id)
+        TDto GetById(object id, params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
-        Task<TDto> GetByIdAsync(object id,
-             CancellationToken cancellationToken)
+        Task<TDto> GetByIdAsync(object id, 
+             CancellationToken cancellationToken, params Expression<Func<TDto, Object>>[] includeProperties)
             ;
+
+        TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null);
+
+        Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null);
+
+        int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
+
+        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, object id, string collectionProperty);
 
         IEnumerable<TDto> GetByIds(IEnumerable<object> ids)
            ;

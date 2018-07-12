@@ -194,21 +194,55 @@ namespace DND.Common.Implementation.DomainServices
             }
         }
 
-        public virtual TEntity GetById(object id)
+        public virtual TEntity GetById(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
-                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id);
+                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id, includeProperties);
             }
         }
 
         public virtual async Task<TEntity> GetByIdAsync(object id,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default(CancellationToken), params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id).ConfigureAwait(false);
+            }
+        }
+
+        public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        {
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
+            {
+
+                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionProperty(id, collectionProperty, pageNo, pageSize);
+            }
+        }
+
+        public virtual async Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        {
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
+            {
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionPropertyAsync(id, collectionProperty, pageNo, pageSize).ConfigureAwait(false);
+            }
+        }
+
+        public virtual int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty)
+        {
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
+            {
+
+                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionPropertyCount(id, collectionProperty);
+            }
+        }
+
+        public virtual async Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, object id, string collectionProperty)
+        {
+            using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
+            {
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionPropertyCountAsync(id, collectionProperty).ConfigureAwait(false);
             }
         }
 

@@ -86,12 +86,21 @@ namespace DND.Common.Interfaces.DomainServices
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetById(object id)
+        TEntity GetById(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        Task<TEntity> GetByIdAsync(object id,
-             CancellationToken cancellationToken)
+
+        TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null);
+
+        int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
+
+        Task<TEntity> GetByIdAsync(object id, 
+             CancellationToken cancellationToken, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
+
+        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null);
+
+        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, object id, string collectionProperty);
 
         IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
            ;
