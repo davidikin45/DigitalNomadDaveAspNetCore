@@ -94,9 +94,9 @@ namespace DND.Common.Interfaces.ApplicationServices
              CancellationToken cancellationToken, params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
-        TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null);
+        TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object colectionItemId = null);
 
-        Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null);
+        Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object colectionItemId = null);
 
         int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
 

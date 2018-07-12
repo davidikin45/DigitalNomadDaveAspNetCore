@@ -318,28 +318,6 @@ namespace DND.Common.Implementation.Data.InMemory
             }
         }
 
-        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null)
-        {
-
-        }
-
-        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, CancellationToken cancellationToken = default(CancellationToken))
-        {
-
-        }
-
-        public int CollectionPropertyCount(object entity, string collectionProperty)
-        {
-            return ((ICollection<Object>)entity.GetPropValue(collectionProperty)).Count();
-        }
-
-        public Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
-        {
-            var task = new Task<int>(() => CollectionPropertyCount(entity, collectionProperty));
-            task.Start();
-            return task;
-        }
-
         public IEnumerable<DbEntityValidationResultBetter> GetValidationErrors()
         {
             return GetValidationErrorsForNewChanges(false);
@@ -407,6 +385,30 @@ namespace DND.Common.Implementation.Data.InMemory
         {
             throw new NotImplementedException();
         }
+
+        #region Collection Properties
+        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
+        {
+
+        }
+
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+
+        }
+
+        public int CollectionPropertyCount(object entity, string collectionProperty)
+        {
+            return ((ICollection<Object>)entity.GetPropValue(collectionProperty)).Count();
+        }
+
+        public Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
+        {
+            var task = new Task<int>(() => CollectionPropertyCount(entity, collectionProperty));
+            task.Start();
+            return task;
+        }
+        #endregion
 
         #region Local Entity Cache
         public bool EntityExistsLocal<TEntity>(TEntity entity) where TEntity : class

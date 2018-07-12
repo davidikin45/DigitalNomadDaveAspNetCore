@@ -212,20 +212,20 @@ namespace DND.Common.Implementation.DomainServices
             }
         }
 
-        public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object collectionItemId = null)
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
-                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionProperty(id, collectionProperty, pageNo, pageSize);
+                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionProperty(id, collectionProperty, pageNo, pageSize, collectionItemId);
             }
         }
 
-        public virtual async Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        public virtual async Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object collectionItemId = null)
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionPropertyAsync(id, collectionProperty, pageNo, pageSize).ConfigureAwait(false);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdWithPagedCollectionPropertyAsync(id, collectionProperty, pageNo, pageSize, collectionItemId).ConfigureAwait(false);
             }
         }
 

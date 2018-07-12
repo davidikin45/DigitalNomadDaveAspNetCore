@@ -170,13 +170,9 @@ namespace DND.Common.Interfaces.Repository
         Task<TEntity> GetByIdNoTrackingAsync(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null);
+        TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null);
 
-        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, string collectionProperty, int? skip = null, int? take = null);
-
-        TEntity GetByIdWithPagedCollectionPropertyNoTracking(object id, string collectionProperty, int? skip = null, int? take = null);
-
-        Task<TEntity> GetByIdWithPagedCollectionPropertyNoTrackingAsync(object id, string collectionProperty, int? skip = null, int? take = null);
+        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null);
 
         int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
 

@@ -214,15 +214,15 @@ namespace DND.Common.Implementation.ApplicationServices
             return Mapper.Map<TDto>(bo);
         }
 
-        public virtual TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        public virtual TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object collectionItemId = null)
         {
-            var bo = DomainService.GetByIdWithPagedCollectionProperty(id, collectionProperty, pageNo, pageSize);
+            var bo = DomainService.GetByIdWithPagedCollectionProperty(id, collectionProperty, pageNo, pageSize, collectionItemId);
             return Mapper.Map<TDto>(bo);
         }
 
-        public virtual async Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null)
+        public virtual async Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object collectionItemId = null)
         {
-            var bo = await DomainService.GetByIdWithPagedCollectionPropertyAsync(cancellationToken, id, collectionProperty, pageNo, pageSize);
+            var bo = await DomainService.GetByIdWithPagedCollectionPropertyAsync(cancellationToken, id, collectionProperty, pageNo, pageSize, collectionItemId);
             return Mapper.Map<TDto>(bo);
         }
 

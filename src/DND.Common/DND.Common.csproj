@@ -861,6 +861,7 @@
     <Compile Include="Implementation\DTOs\FileMetadataDto.cs" />
     <Compile Include="Implementation\DTOs\JpegMetadataDto.cs" />
     <Compile Include="Implementation\DTOs\LinkDTO.cs" />
+    <Compile Include="Implementation\DTOs\WebApiPagedSearchOrderingRequestDto.cs" />
     <Compile Include="Implementation\DTOs\WebApiPagedRequestDto.cs" />
     <Compile Include="Implementation\DTOs\WebApiPagedResponseDto.cs" />
     <Compile Include="Implementation\Models\BaseEntityAggregateRoot.cs" />

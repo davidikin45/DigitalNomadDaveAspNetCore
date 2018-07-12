@@ -388,45 +388,26 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return await GetQueryable(false, null, filter, null, null, null, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null)
+        public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
         {
             var entity = GetById(id);
             if(entity != null)
             {
-                _context.LoadCollectionProperty(entity, collectionProperty, skip, take);
+                _context.LoadCollectionProperty(entity, collectionProperty, skip, take, collectionItemId);
             }
             return entity;
         }
 
-        public virtual TEntity GetByIdWithPagedCollectionPropertyNoTracking(object id, string collectionProperty, int? skip = null, int? take = null)
-        {
-            var entity = GetByIdNoTracking(id);
-            if (entity != null)
-            {
-                _context.LoadCollectionProperty(entity, collectionProperty, skip, take);
-            }
-            return entity;
-        }
-
-        public async virtual Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, string collectionProperty, int? skip = null, int? take = null)
+        public async virtual Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
             {
-               await _context.LoadCollectionPropertyAsync(entity, collectionProperty, skip, take);
+               await _context.LoadCollectionPropertyAsync(entity, collectionProperty, skip, take, collectionItemId);
             }
             return entity;
         }
 
-        public async virtual Task<TEntity> GetByIdWithPagedCollectionPropertyNoTrackingAsync(object id, string collectionProperty, int? skip = null, int? take = null)
-        {
-            var entity = await GetByIdAsync(id);
-            if (entity != null)
-            {
-                await _context.LoadCollectionPropertyAsync(entity, collectionProperty, skip, take, _cancellationToken);
-            }
-            return entity;
-        }
 
         public virtual int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty)
         {

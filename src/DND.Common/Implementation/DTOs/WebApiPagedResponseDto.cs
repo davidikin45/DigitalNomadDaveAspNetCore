@@ -42,12 +42,15 @@ namespace DND.Common.Implementation.Dtos
             }
         }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Search
         { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string OrderColumn
         { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string OrderType
         { get; set; }
 

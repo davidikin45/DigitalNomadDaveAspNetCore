@@ -239,86 +239,6 @@ namespace DND.Common.Implementation.Data
             Entry(entity).State = EntityState.Unchanged;
         }
 
-        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null)
-        {
-            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
-
-            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
-
-            var query = Entry(entity)
-            .Collection(collectionProperty)
-            .Query();
-
-            if (skip.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => skip.Value;
-                typeof(QueryableExtensions).GetMethod("Skip").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-                //query.Skip(skip.Value);
-            }
-
-            if (take.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => take.Value;
-                typeof(QueryableExtensions).GetMethod("Take").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-                //query.Take(take.Value);
-            }
-
-            query.Load();
-        }
-
-        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, CancellationToken cancellationToken = default(CancellationToken))
-        {
-           var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
-
-            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
-
-            var query = Entry(entity)
-            .Collection(collectionProperty)
-            .Query();
-
-            if (skip.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => skip.Value;
-                typeof(QueryableExtensions).GetMethod("Skip").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-                //query.Skip(skip.Value);
-            }
-
-            if (take.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => take.Value;
-                typeof(QueryableExtensions).GetMethod("Take").MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-                //query.Take(take.Value);
-            }
-
-            await query.LoadAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        public int CollectionPropertyCount(object entity, string collectionProperty)
-        {
-            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
-
-            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
-
-            var query = Entry(entity)
-            .Collection(collectionProperty)
-            .Query();
-
-            return ((int)(typeof(QueryableExtensions).GetMethod("Count", new Type[] { iQueryableType}).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query })));
-        }
-
-        public async Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
-        {
-            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
-
-            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
-
-            var query = Entry(entity)
-            .Collection(collectionProperty)
-            .Query();
-
-           return await ((Task<int>)(typeof(QueryableExtensions).GetMethods().Where(m => m.Name == "CountAsync" && m.GetParameters().Length == 2 && m.GetParameters()[1].ParameterType == typeof(CancellationToken)).FirstOrDefault().MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, cancellationToken }))).ConfigureAwait(false);
-        }
-
         public IBaseDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
             return new BaseDbContextTransaction(Database.BeginTransaction(isolationLevel));
@@ -448,6 +368,96 @@ namespace DND.Common.Implementation.Data
         {
             return (IQueryable<Object>)Set(type);
         }
+
+        #region Collection Property
+        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            if (skip.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => skip.Value;
+                typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Skip)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+            }
+
+            if (take.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => take.Value;
+                typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Take)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+            }
+
+            if (collectionItemId != null)
+            {
+                var whereClause = LamdaHelper.SearchForEntityById(collectionItemType, collectionItemId);
+                typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, whereClause });
+            }
+
+            query.Load();
+        }
+
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            if (skip.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => skip.Value;
+                typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Skip)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+            }
+
+            if (take.HasValue)
+            {
+                Expression<Func<int>> countAccessor = () => take.Value;
+                typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Take)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+            }
+
+            if(collectionItemId != null)
+            {
+                var whereClause = LamdaHelper.SearchForEntityById(collectionItemType, collectionItemId);
+                typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, whereClause });
+            }
+
+            await query.LoadAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public int CollectionPropertyCount(object entity, string collectionProperty)
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            return ((int)(typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Count)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query })));
+        }
+
+        public async Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
+        {
+            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+
+            Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
+
+            var query = Entry(entity)
+            .Collection(collectionProperty)
+            .Query();
+
+            return await ((Task<int>)(typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CountEF6Async)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, cancellationToken }))).ConfigureAwait(false);
+        }
+        #endregion
 
         #region "UTC"
         private static void ReadAllDateTimeValuesAsUtc(object sender, ObjectMaterializedEventArgs evArg)

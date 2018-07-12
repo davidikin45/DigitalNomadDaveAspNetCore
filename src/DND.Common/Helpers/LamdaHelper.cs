@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Common.Helpers
@@ -222,6 +223,51 @@ namespace DND.Common.Helpers
             var equal = Expression.Equal(prop, value);
             var lambda = Expression.Lambda<Func<TEntity, bool>>(equal, item);
             return lambda;
+        }
+
+        public static object SearchForEntityById(Type type, object id)
+        {
+            Type funcType = typeof(Func<,>).MakeGenericType(new[] { type, typeof(bool) });
+          
+            var item = Expression.Parameter(type, "entity");
+            var prop = Expression.PropertyOrField(item, "Id");
+            var propType = type.GetProperty("Id").PropertyType;
+
+            var value = Expression.Constant((dynamic)Convert.ChangeType(id, propType));
+
+            var equal = Expression.Equal(prop, value);
+
+            return typeof(LamdaHelper).GetMethod(nameof(Lambda)).MakeGenericMethod(funcType).Invoke(null, new object[] { equal, new ParameterExpression[] { item } });
+        }
+
+        public static int Count<TSource>(IQueryable<TSource> source)
+        {
+            return Queryable.Count(source);
+        }
+
+        public static Task<int> CountEF6Async<TSource>(IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            return System.Data.Entity.QueryableExtensions.CountAsync(source, cancellationToken);
+        }
+
+        public static Task<int> CountEFCoreAsync<TSource>(IQueryable<TSource> source, CancellationToken cancellationToken)
+        {
+            return Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync(source, cancellationToken);
+        }
+
+        public static Expression<TDelegate> Lambda<TDelegate>(Expression body, params ParameterExpression[] parameters)
+        {
+            return Expression.Lambda<TDelegate>(body, parameters);
+        }
+
+        public static IQueryable<TSource> Where<TSource>(IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            return Queryable.Where(source, predicate);
+        }
+
+        public static TSource FirstOrDefault<TSource>(IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            return Enumerable.FirstOrDefault(source, predicate);
         }
     }
 }

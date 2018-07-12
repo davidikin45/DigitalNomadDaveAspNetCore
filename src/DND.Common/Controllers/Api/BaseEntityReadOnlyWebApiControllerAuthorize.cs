@@ -20,6 +20,8 @@ using DND.Common.Interfaces.Dtos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Net.Http;
+using System.Net;
 
 namespace DND.Common.Controllers.Api
 {
@@ -153,13 +155,10 @@ namespace DND.Common.Controllers.Api
         [FormatFilter]
         [Route("")]
         [Route(".{format}")]
-        //[Route("get-paged")]
-        //[Route("get-paged.{format}")]
         [HttpGet]
-        //[HttpPost]
         [HttpHead]
         [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
-        public virtual async Task<IActionResult> GetPaged(WebApiPagedRequestDto resourceParameters)
+        public virtual async Task<IActionResult> GetPaged(WebApiPagedSearchOrderingRequestDto resourceParameters)
         {
             if (string.IsNullOrEmpty(resourceParameters.OrderBy))
                 resourceParameters.OrderBy = "id";
@@ -171,7 +170,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dataTask = Service.SearchAsync(cts.Token, resourceParameters.Search, null, LamdaHelper.GetOrderBy<TDto>(resourceParameters.OrderBy, resourceParameters.OrderType), resourceParameters.Page - 1, resourceParameters.PageSize);
+            var dataTask = Service.SearchAsync(cts.Token, resourceParameters.Search, null, LamdaHelper.GetOrderBy<TDto>(resourceParameters.OrderBy, resourceParameters.OrderType), resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize);
 
             var totalTask = Service.GetSearchCountAsync(cts.Token, resourceParameters.Search, null);
 
@@ -180,18 +179,10 @@ namespace DND.Common.Controllers.Api
             var data = dataTask.Result;
             var total = totalTask.Result;
 
-            //var response = new WebApiPagedResponseDto<TDto>
-            //{
-            //    Page = jqParams.Page,
-            //    PageSize = jqParams.PageSize,
-            //    Records = total,
-            //    Rows = data.ToList()
-            //};
-
             var paginationMetadata = new WebApiPagedResponseDto<TDto>
             {
-                Page = resourceParameters.Page,
-                PageSize = resourceParameters.PageSize,
+                Page = resourceParameters.Page.HasValue ? resourceParameters.Page.Value : 1,
+                PageSize = resourceParameters.PageSize.HasValue ? resourceParameters.PageSize.Value : data.Count(),
                 Records = total,
                 PreviousPageLink = null,
                 NextPageLink = null
@@ -214,15 +205,15 @@ namespace DND.Common.Controllers.Api
 
             var shapedData = IEnumerableExtensions.ShapeData(data.ToList(), resourceParameters.Fields);
 
-            var shapedDataWithLinks = shapedData.Select(author =>
+            var shapedDataWithLinks = shapedData.Select(dto =>
             {
-                var authorAsDictionary = author as IDictionary<string, object>;
-                var authorLinks = CreateLinks(
-                    authorAsDictionary["Id"].ToString(), resourceParameters.Fields);
+                var dtoAsDictionary = dto as IDictionary<string, object>;
+                var dtoLinks = CreateLinks(
+                    dtoAsDictionary["Id"].ToString(), resourceParameters.Fields);
 
-                authorAsDictionary.Add("links", authorLinks);
+                dtoAsDictionary.Add("links", dtoLinks);
 
-                return authorAsDictionary;
+                return dtoAsDictionary;
             });
 
             var linkedCollectionResource = new
@@ -240,39 +231,41 @@ namespace DND.Common.Controllers.Api
         /// <param name="resourceParameters">The resource parameters.</param>
         /// <returns></returns>
         [FormatFilter]
-        [Route("{id}/{collectionProperty}")]
-        [Route("{id}/{collectionProperty}.{format}")]
+        [Route("{id}/{collection}")]
+        [Route("{id}/{collection}.{format}")]
         [HttpGet]
         [HttpHead]
         [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
-        public virtual async Task<IActionResult> GetCollectionProperty(string id, string collectionProperty, string fields, int page = 1, int pageSize = 10)
+        public virtual async Task<IActionResult> GetCollectionProperty(string id, string collection, WebApiPagedRequestDto resourceParameters)
         {
-            if (!typeof(TDto).HasProperty(collectionProperty) || !typeof(TDto).GetProperty(collectionProperty).PropertyType.IsCollection())
+            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).GetProperty(collection).PropertyType.IsCollection())
             {
                 return ApiErrorMessage(Messages.CollectionInvalid);
             }
 
-            var collectionItemType = typeof(TDto).GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
-            if (!TypeHelperService.TypeHasProperties(collectionItemType, fields))
+            var collectionItemType = typeof(TDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
+            if (!TypeHelperService.TypeHasProperties(collectionItemType, resourceParameters.Fields))
             {
                 return ApiErrorMessage(Messages.FieldsInvalid);
             }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-           
-            var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collectionProperty, page - 1, pageSize);
 
-            var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collectionProperty);
+            var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize);
+
+            var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collection);
 
             await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
 
-            var data = dataTask.Result.GetPropValue(collectionProperty);
+            var data = dataTask.Result.GetPropValue(collection);
             var total = totalTask.Result;
+
+            IEnumerable<Object> list = ((IEnumerable<Object>)(typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(typeof(Object)).Invoke(null, new object[] { data })));
 
             var paginationMetadata = new WebApiPagedResponseDto<TDto>
             {
-                Page = page,
-                PageSize = pageSize,
+                Page = resourceParameters.Page.HasValue ? resourceParameters.Page.Value : 1,
+                PageSize = resourceParameters.PageSize.HasValue ? resourceParameters.PageSize.Value : list.Count(),
                 Records = total,
                 PreviousPageLink = null,
                 NextPageLink = null
@@ -280,40 +273,83 @@ namespace DND.Common.Controllers.Api
 
             if (paginationMetadata.HasPrevious)
             {
-                //paginationMetadata.PreviousPageLink = CreateResourceUri(resourceParameters, ResourceUriType.PreviousPage);
+                paginationMetadata.PreviousPageLink = CreateCollectionPropertyResourceUri(collection, resourceParameters, ResourceUriType.PreviousPage);
             }
 
             if (paginationMetadata.HasNext)
             {
-                //paginationMetadata.NextPageLink = CreateResourceUri(resourceParameters, ResourceUriType.NextPage);
+                paginationMetadata.NextPageLink = CreateCollectionPropertyResourceUri(collection, resourceParameters, ResourceUriType.NextPage);
             }
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 
-            //var links = CreateLinksForCollections(resourceParameters,paginationMetadata.HasNext, paginationMetadata.HasPrevious);
+            var links = CreateLinksForCollectionProperty(collection, resourceParameters,paginationMetadata.HasNext, paginationMetadata.HasPrevious);
 
-            IEnumerable<Object> list = ((IEnumerable<Object>)(typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(typeof(Object)).Invoke(null, new object[] { data })));
+            var shapedData = IEnumerableExtensions.ShapeData(list, collectionItemType, resourceParameters.Fields);
 
-            var shapedData = IEnumerableExtensions.ShapeData(list, collectionItemType, fields);
-
-            var shapedDataWithLinks = shapedData.Select(author =>
+            var shapedDataWithLinks = shapedData.Select(collectionPropertyDtoItem =>
             {
-                var authorAsDictionary = author as IDictionary<string, object>;
-                //var authorLinks = CreateLinks(authorAsDictionary["Id"].ToString(), fields);
-                var authorLinks = new List<LinkDto>(); //Collection property links
+                var collectionPropertyDtoItemAsDictionary = collectionPropertyDtoItem as IDictionary<string, object>;
+                var collectionPropertyDtoItemLinks = CreateLinksForCollectionItem(id, collection, collectionPropertyDtoItemAsDictionary["Id"].ToString(), resourceParameters.Fields);
 
-                authorAsDictionary.Add("links", authorLinks);
+                collectionPropertyDtoItemAsDictionary.Add("links", collectionPropertyDtoItem);
 
-                return authorAsDictionary;
+                return collectionPropertyDtoItemAsDictionary;
             });
 
             var linkedCollectionResource = new
             {
                 value = shapedDataWithLinks
-                //,links = links
+                ,links = links
             };
 
             return Ok(linkedCollectionResource);
+        }
+
+        [FormatFilter]
+        [Route("{id}/{collection}/{collectionItemId}"), Route("{id}/{collection}/{collectionItemId}.{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(object), 200)]
+        public virtual async Task<IActionResult> GetCollectionItem(string id, string collection, string collectionItemId, [FromQuery] string fields)
+        {
+            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).GetProperty(collection).PropertyType.IsCollection())
+            {
+                return ApiErrorMessage(Messages.CollectionInvalid);
+            }
+
+            var collectionItemType = typeof(TDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
+            if (!TypeHelperService.TypeHasProperties(collectionItemType, fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, null, null, collectionItemId);
+
+            if (response == null || response.GetPropValue(collection) == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var whereClause = LamdaHelper.SearchForEntityById(collectionItemType, collectionItemId);
+            var collectionItem = typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.FirstOrDefault)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { response.GetPropValue(collection), whereClause });
+
+            if (collectionItem == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var links = CreateLinksForCollectionItem(id, collection, collectionItemId,  fields);
+
+            var linkedResourceToReturn = collectionItem.ShapeData(collectionItemType, fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+
+            // Success(shapedData);
         }
 
         /// <summary>
@@ -337,14 +373,6 @@ namespace DND.Common.Controllers.Api
 
             var data = dataTask.Result;
             var total = totalTask.Result;
-
-            //var response = new WebApiPagedResponseDto<TDto>
-            //{
-            //    CurrentPage = 1,
-            //    PageSize = total,
-            //    Records = total,
-            //    Rows = data.ToList()
-            //};
 
             var paginationMetadata = new WebApiPagedResponseDto<TDto>
             {
@@ -407,7 +435,7 @@ namespace DND.Common.Controllers.Api
 
         #region HATEOAS
         private string CreateResourceUri(
-WebApiPagedRequestDto resourceParameters,
+WebApiPagedSearchOrderingRequestDto resourceParameters,
 ResourceUriType type)
         {
             switch (type)
@@ -452,6 +480,50 @@ ResourceUriType type)
             }
         }
 
+        private string CreateCollectionPropertyResourceUri(
+            string collection,
+            WebApiPagedRequestDto resourceParameters,
+            ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return UrlHelper.Action(nameof(GetCollection),
+                          UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                      new
+                      {
+                          collection = collection,
+                          fields = resourceParameters.Fields,
+                          page = resourceParameters.Page - 1,
+                          pageSize = resourceParameters.PageSize
+                      },
+                      UrlHelper.ActionContext.HttpContext.Request.Scheme);
+                case ResourceUriType.NextPage:
+                    return UrlHelper.Action(nameof(GetCollection),
+                          UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                      new
+                      {
+                          collection = collection,
+                          fields = resourceParameters.Fields,
+                          page = resourceParameters.Page + 1,
+                          pageSize = resourceParameters.PageSize
+                      },
+                      UrlHelper.ActionContext.HttpContext.Request.Scheme);
+
+                default:
+                    return UrlHelper.Action(nameof(GetCollection),
+                    UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+                    new
+                    {
+                        collection = collection,
+                        fields = resourceParameters.Fields,
+                        page = resourceParameters.Page,
+                        pageSize = resourceParameters.PageSize
+                    },
+                      UrlHelper.ActionContext.HttpContext.Request.Scheme);
+            }
+        }
+
         private IEnumerable<LinkDto> CreateLinks(string id, string fields)
         {
             var links = new List<LinkDto>();
@@ -461,37 +533,80 @@ ResourceUriType type)
                 links.Add(
                   new LinkDto(UrlHelper.Action(nameof(Get), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                   "self",
-                  "GET"));
+                  HttpMethod.Get.Method));
             }
             else
             {
                 links.Add(
                   new LinkDto(UrlHelper.Action(nameof(Get), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id, fields = fields }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                   "self",
-                  "GET"));
+                  HttpMethod.Get.Method));
             }
 
             links.Add(
               new LinkDto(UrlHelper.Action("Delete", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
               "delete",
-              "DELETE"));
+              HttpMethod.Delete.Method));
 
             links.Add(
                 new LinkDto(UrlHelper.Action("Update", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
                 new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                 "update",
-                "PUT"));
+                 HttpMethod.Put.Method));
 
             links.Add(
                 new LinkDto(UrlHelper.Action("UpdatePartial", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
                 new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                 "partially_update",
-                "PATCH"));
+                new HttpMethod("PATCH").Method));
 
             return links;
         }
 
-        private  IEnumerable<LinkDto> CreateLinksForCollections(WebApiPagedRequestDto resourceParameters, bool hasNext, bool hasPrevious)
+        private IEnumerable<LinkDto> CreateLinksForCollectionItem(string id, string collection, string collectionItemId, string fields)
+        {
+            var links = new List<LinkDto>();
+
+            //Create links for Collection Item Get, Delete and Update. Not sure if we want to allow 
+
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                links.Add(
+                  new LinkDto(UrlHelper.Action(nameof(GetCollectionItem), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new {  id = id, collection = collection, collectionItemId = collectionItemId }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  "self",
+                  HttpMethod.Get.Method));
+            }
+            else
+            {
+                links.Add(
+                  new LinkDto(UrlHelper.Action(nameof(GetCollectionItem), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id, collection = collection, collectionItemId = collectionItemId, fields = fields }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  "self",
+                  HttpMethod.Get.Method));
+            }
+
+            //Create links for Collection Item Delete and Update. Not sure if we want to allow this.
+
+            //links.Add(
+            //  new LinkDto(UrlHelper.Action("Delete", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+            //  "delete",
+            //  "DELETE"));
+
+            //links.Add(
+            //    new LinkDto(UrlHelper.Action("Update", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+            //    new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+            //    "update",
+            //    "PUT"));
+
+            //links.Add(
+            //    new LinkDto(UrlHelper.Action("UpdatePartial", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+            //    new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+            //    "partially_update",
+            //    "PATCH"));
+
+            return links;
+        }
+
+        private IEnumerable<LinkDto> CreateLinksForCollections(WebApiPagedSearchOrderingRequestDto resourceParameters, bool hasNext, bool hasPrevious)
         {
             var links = new List<LinkDto>();
 
@@ -499,20 +614,20 @@ ResourceUriType type)
             links.Add(
                new LinkDto(CreateResourceUri(resourceParameters,
                ResourceUriType.Current)
-               , "self", "GET"));
+               , "self", HttpMethod.Get.Method));
 
             links.Add(
            new LinkDto(UrlHelper.Action("Create", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
           null, UrlHelper.ActionContext.HttpContext.Request.Scheme),
            "add",
-           "POST"));
+           HttpMethod.Post.Method));
 
             if (hasNext)
             {
                 links.Add(
                   new LinkDto(CreateResourceUri(resourceParameters,
                   ResourceUriType.NextPage),
-                  "nextPage", "GET"));
+                  "nextPage", HttpMethod.Get.Method));
             }
 
             if (hasPrevious)
@@ -520,7 +635,51 @@ ResourceUriType type)
                 links.Add(
                     new LinkDto(CreateResourceUri(resourceParameters,
                     ResourceUriType.PreviousPage),
-                    "previousPage", "GET"));
+                    "previousPage", HttpMethod.Get.Method));
+            }
+
+            return links;
+        }
+
+        /// <summary>
+        /// Creates the links for collection property.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="resourceParameters">The resource parameters.</param>
+        /// <param name="hasNext">if set to <c>true</c> [has next].</param>
+        /// <param name="hasPrevious">if set to <c>true</c> [has previous].</param>
+        /// <returns></returns>
+        private IEnumerable<LinkDto> CreateLinksForCollectionProperty(string collection, WebApiPagedRequestDto resourceParameters, bool hasNext, bool hasPrevious)
+        {
+            var links = new List<LinkDto>();
+
+            // self 
+            links.Add(
+               new LinkDto(CreateCollectionPropertyResourceUri(collection, resourceParameters,
+               ResourceUriType.Current)
+               , "self", HttpMethod.Get.Method));
+
+            //Todo if want to allow Add to collection property
+          //  links.Add(
+          // new LinkDto(UrlHelper.Action("Create", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(),
+          //null, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+          // "add",
+          // "POST"));
+
+            if (hasNext)
+            {
+                links.Add(
+                  new LinkDto(CreateCollectionPropertyResourceUri(collection, resourceParameters,
+                  ResourceUriType.NextPage),
+                  "nextPage", HttpMethod.Get.Method));
+            }
+
+            if (hasPrevious)
+            {
+                links.Add(
+                    new LinkDto(CreateCollectionPropertyResourceUri(collection, resourceParameters,
+                    ResourceUriType.PreviousPage),
+                    "previousPage", HttpMethod.Get.Method));
             }
 
             return links;

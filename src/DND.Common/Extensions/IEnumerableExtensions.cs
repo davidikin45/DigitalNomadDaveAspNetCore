@@ -169,12 +169,12 @@ namespace DND.Common.Extensions
             // run through the source objects
             foreach (Object sourceObject in source)
             {
-                // create an ExpandoObject that will hold the 
-                // selected properties & values
-                var dataShapedObject = new ExpandoObject();
-
-                if(sourceObject!= null)
+                if (sourceObject != null)
                 {
+                    // create an ExpandoObject that will hold the 
+                    // selected properties & values
+                    var dataShapedObject = new ExpandoObject();
+
                     // Get the value of each property we have to return.  For that,
                     // we run through the list
                     foreach (var propertyInfo in propertyInfoList)
@@ -185,10 +185,10 @@ namespace DND.Common.Extensions
                         // add the field to the ExpandoObject
                         ((IDictionary<string, object>)dataShapedObject).Add(propertyInfo.Name, propertyValue);
                     }
-                }
 
-                // add the ExpandoObject to the list
-                expandoObjectList.Add(dataShapedObject);
+                    // add the ExpandoObject to the list
+                    expandoObjectList.Add(dataShapedObject);
+                }
             }
 
             // return the list
