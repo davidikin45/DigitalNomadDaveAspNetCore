@@ -61,7 +61,7 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         public List<int> LocationIds { get; set; }
 
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false)]
-        public List<LocationDto> Locations { get; set; }
+        public List<BlogPostLocationDto> Locations { get; set; }
 
         [Required]
         public bool ShowLocationDetail { get; set; }
@@ -125,15 +125,19 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            configuration.CreateMap<BlogPost, BlogPostDto>()
-              .ForMember(dto => dto.Tags, bo => bo.MapFrom(s => s.Tags.Select(y => y.Tag).ToList()))
-              .ForMember(dto => dto.TagIds, bo => bo.MapFrom(s => s.Tags.Select(y => y.Tag.Id).ToList()))
-              .ForMember(dto => dto.Locations, bo => bo.MapFrom(s => s.Locations.Select(y => y.Location).ToList()))
-               .ForMember(dto => dto.LocationIds, bo => bo.MapFrom(s => s.Locations.Select(y => y.Location.Id).ToList()));
+            configuration.CreateMap<BlogPost, BlogPostDto>();
+               //.ForMember(dto => dto.Tags, bo => bo.MapFrom(s => s.Tags.Select(y => y.Tag).ToList()))
+               //.ForMember(dto => dto.TagIds, bo => bo.MapFrom(s => s.Tags.Select(y => y.Tag.Id).ToList()))
+               //.ForMember(dto => dto.TagIds, bo => bo.MapFrom(s => s.Tags))
+               //.ForMember(dto => dto.Locations, bo => bo.MapFrom(s => s.Locations.Select(y => y.Location).ToList()))
+               //.ForMember(dto => dto.LocationIds, bo => bo.MapFrom(s => s.Locations.Select(y => y.Location.Id).ToList()));
+               //.ForMember(dto => dto.LocationIds, bo => bo.MapFrom(s => s.Locations));
 
             configuration.CreateMap<BlogPostDto, BlogPost>()
                 .ForMember(bo => bo.DateModified, dto => dto.Ignore())
                  .ForMember(bo => bo.DateCreated, dto => dto.Ignore())
+                 .ForMember(bo => bo.LocationIds, dto => dto.Ignore())
+                 .ForMember(bo => bo.TagIds, dto => dto.Ignore())
                  .ForMember(bo => bo.Tags, dto => dto.ResolveUsing(new BlogPostTagResolver()))
                 .ForMember(bo => bo.Locations, dto => dto.ResolveUsing(new BlogPostLocationResolver()));
         }

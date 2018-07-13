@@ -35,6 +35,11 @@ namespace DND.Common.Implementation.ApplicationServices
             DomainService = domainService;
         }
 
+        public virtual void AddIncludes(List<Expression<Func<TEntity, Object>>> includes)
+        {
+
+        }
+
         public virtual IEnumerable<TDto> GetAll(
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
             int? pageNo = null,
@@ -43,6 +48,9 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var entityList = DomainService.GetAll(orderByConverted, pageNo, pageSize, includesConverted);
 
@@ -60,6 +68,9 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var entityList = await DomainService.GetAllAsync(cancellationToken, orderByConverted, pageNo, pageSize, includesConverted).ConfigureAwait(false);
 
@@ -79,6 +90,9 @@ namespace DND.Common.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var entityList = DomainService.Search(search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
 
@@ -99,6 +113,9 @@ namespace DND.Common.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var entityList = await DomainService.SearchAsync(cancellationToken, search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted).ConfigureAwait(false);
 
@@ -117,6 +134,9 @@ namespace DND.Common.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var entityList = DomainService.Get(filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
 
@@ -136,6 +156,9 @@ namespace DND.Common.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var entityList = await DomainService.GetAsync(cancellationToken, filterConverted, orderByConverted, pageNo, pageSize, includesConverted).ConfigureAwait(false);
 
@@ -150,6 +173,9 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var bo = DomainService.GetOne(filterConverted, includesConverted);
 
@@ -163,6 +189,9 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var bo = await DomainService.GetOneAsync(cancellationToken, filterConverted, includesConverted).ConfigureAwait(false);
 
@@ -177,6 +206,9 @@ namespace DND.Common.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var bo = DomainService.GetFirst(filterConverted, orderByConverted, includesConverted);
 
@@ -192,6 +224,9 @@ namespace DND.Common.Implementation.ApplicationServices
             var filterConverted = GetMappedSelector<TDto, TEntity, bool>(filter);
             var orderByConverted = GetMappedOrderBy<TDto, TEntity>(orderBy);
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var bo = await DomainService.GetFirstAsync(cancellationToken, filterConverted, orderByConverted, includesConverted).ConfigureAwait(false);
 
@@ -201,6 +236,9 @@ namespace DND.Common.Implementation.ApplicationServices
         public virtual TDto GetById(object id, params Expression<Func<TDto, Object>>[] includeProperties)
         {
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var bo = DomainService.GetById(id, includesConverted);
             return Mapper.Map<TDto>(bo);
@@ -210,6 +248,9 @@ namespace DND.Common.Implementation.ApplicationServices
             CancellationToken cancellationToken = default(CancellationToken), params Expression<Func<TDto, Object>>[] includeProperties)
         {
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
+            var list = includesConverted.ToList();
+            AddIncludes(list);
+            includesConverted = list.ToArray();
 
             var bo = await DomainService.GetByIdAsync(id, cancellationToken, includesConverted).ConfigureAwait(false);
             return Mapper.Map<TDto>(bo);

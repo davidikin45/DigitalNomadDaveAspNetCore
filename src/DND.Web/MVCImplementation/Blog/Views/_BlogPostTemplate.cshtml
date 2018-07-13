@@ -55,7 +55,7 @@
                     @foreach (var tag in Model.Tags)
                     {
                         <div class="blog-post-tags-div">
-                            @(Html.ActionLink<BlogController>(c => c.Tag(tag.UrlSlug, 1), tag.Name, new { title = String.Format("See all posts in {0}", tag.Name) }))
+                            @(Html.ActionLink<BlogController>(c => c.Tag(tag.Tag.UrlSlug, 1), tag.Tag.Name, new { title = String.Format("See all posts in {0}", tag.Tag.Name) }))
                         </div>
                     }
                 </div>

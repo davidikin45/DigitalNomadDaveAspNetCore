@@ -14,9 +14,9 @@ namespace DND.Data.Configurations.Blog.BlogPosts
             Ignore(p => p.DateDeleted);
             Ignore(p => p.UserDeleted);
 
-            HasRequired(p => p.BlogPost)
-                .WithMany()
-                .HasForeignKey(p => p.BlogPostId);
+            //HasRequired(p => p.BlogPost)
+            //    .WithMany()
+            //    .HasForeignKey(p => p.BlogPostId);
 
             HasRequired(p => p.Location)
                 .WithMany()

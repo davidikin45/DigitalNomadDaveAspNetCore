@@ -123,8 +123,10 @@ namespace DND.Common.Helpers
 
             string methodName = (orderType == "asc"  || orderType == "OrderBy") ? "OrderBy" : "OrderByDescending";
 
+            var genericTypes = new Type[] { typeof(TEntity), type };
+
             MethodCallExpression resultExp =
-                Expression.Call(typeof(Queryable), methodName, new Type[] { typeof(TEntity), type }, outerExpression.Body, Expression.Quote(lambda));
+                Expression.Call(typeof(Queryable), methodName, genericTypes, outerExpression.Body, Expression.Quote(lambda));
 
             var finalLambda = Expression.Lambda(resultExp, argQueryable);
 

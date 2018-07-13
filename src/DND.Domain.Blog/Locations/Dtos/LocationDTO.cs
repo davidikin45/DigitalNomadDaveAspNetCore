@@ -2,6 +2,7 @@ using AutoMapper;
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Blog.Locations.Enums;
 using DND.Infrastructure.Constants;
 using System;

@@ -22,6 +22,11 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
 
         }
 
+        public override void AddIncludes(List<Expression<Func<BlogPost, object>>> includes)
+        {
+        
+        }
+
         public async Task<int> GetTotalPostsAsync(bool checkIsPublished, CancellationToken cancellationToken)
         {
             return await DomainService.GetTotalPostsAsync(checkIsPublished, cancellationToken);
@@ -126,22 +131,6 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
         }
 
         #region "Admin"
-        public override async Task<IEnumerable<BlogPostDto>> SearchAsync(CancellationToken cancellationToken, string search = "", Expression<Func<BlogPostDto, bool>> filter = null, Expression<Func<IQueryable<BlogPostDto>, IOrderedQueryable<BlogPostDto>>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<BlogPostDto, object>>[] includeProperties)
-        {
-            var filterConverted = GetMappedSelector<BlogPostDto, BlogPost, bool>(filter);
-            var orderByConverted = GetMappedOrderBy<BlogPostDto, BlogPost>(orderBy);
-            var includesConverted = GetMappedIncludes<BlogPostDto, BlogPost>(includeProperties);
-            var list = includesConverted.ToList();
-            list.Add(p => p.Tags.Select(t => t.Tag));
-            includesConverted = list.ToArray();
-
-            var entityList = await DomainService.SearchAsync(cancellationToken, search, filterConverted, orderByConverted, pageNo, pageSize, includesConverted);
-
-            IEnumerable<BlogPostDto> dtoList = entityList.ToList().Select(Mapper.Map<BlogPost, BlogPostDto>);
-
-            return dtoList;
-        }
-
         public async override Task<IEnumerable<BlogPostDto>> GetAllAsync(CancellationToken cancellationToken, Expression<Func<IQueryable<BlogPostDto>, IOrderedQueryable<BlogPostDto>>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<BlogPostDto, object>>[] includeProperties)
         {
             return await GetPostsAsync(pageNo.Value, pageSize.Value, orderBy, cancellationToken);

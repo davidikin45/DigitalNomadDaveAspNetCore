@@ -23,6 +23,11 @@ namespace DND.Common.Implementation.DomainServices
 
         }
 
+        public virtual void AddIncludes(List<Expression<Func<TEntity, Object>>> includes)
+        {
+
+        }
+
         protected virtual IQueryable<TEntity> GetQueryable(
           IEnumerable<TEntity> list,
           Expression<Func<TEntity, bool>> filter = null,
@@ -63,6 +68,10 @@ namespace DND.Common.Implementation.DomainServices
             int? pageSize = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
                 var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAllNoTracking(orderBy, pageNo * pageSize, pageSize, includeProperties);
@@ -78,6 +87,10 @@ namespace DND.Common.Implementation.DomainServices
             int? pageSize = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetAllNoTrackingAsync(orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
@@ -94,6 +107,10 @@ namespace DND.Common.Implementation.DomainServices
        int? pageSize = null,
        params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
                 var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchNoTracking(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
@@ -111,6 +128,10 @@ namespace DND.Common.Implementation.DomainServices
             int? pageSize = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().SearchNoTrackingAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
@@ -126,6 +147,10 @@ namespace DND.Common.Implementation.DomainServices
             int? pageSize = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
                 var entityList = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetNoTracking(filter, orderBy, pageNo * pageSize, pageSize, includeProperties);
@@ -142,6 +167,10 @@ namespace DND.Common.Implementation.DomainServices
             int? pageSize = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 var entityList = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetNoTrackingAsync(filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);
@@ -154,6 +183,10 @@ namespace DND.Common.Implementation.DomainServices
             Expression<Func<TEntity, bool>> filter = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
                 return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetOne(filter, includeProperties);
@@ -165,6 +198,10 @@ namespace DND.Common.Implementation.DomainServices
             Expression<Func<TEntity, bool>> filter = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetOneAsync(filter, includeProperties).ConfigureAwait(false);
@@ -176,6 +213,10 @@ namespace DND.Common.Implementation.DomainServices
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
                 return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetFirst(filter, orderBy, includeProperties);
@@ -188,6 +229,10 @@ namespace DND.Common.Implementation.DomainServices
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {             
                 return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetFirstAsync(filter, orderBy, includeProperties).ConfigureAwait(false);
@@ -196,6 +241,10 @@ namespace DND.Common.Implementation.DomainServices
 
         public virtual TEntity GetById(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
@@ -206,9 +255,13 @@ namespace DND.Common.Implementation.DomainServices
         public virtual async Task<TEntity> GetByIdAsync(object id,
             CancellationToken cancellationToken = default(CancellationToken), params Expression<Func<TEntity, Object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id).ConfigureAwait(false);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id, includeProperties).ConfigureAwait(false);
             }
         }
 

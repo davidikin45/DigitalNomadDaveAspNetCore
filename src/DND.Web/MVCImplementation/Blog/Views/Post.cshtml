@@ -31,7 +31,7 @@
     ViewBag.PageTitle = Model.Title;
     ViewBag.Blog = true;
     ViewBag.BlogFullWidth = true;
-    ViewBag.Keywords = string.Join(", ", Model.Tags.Select(t => t.Name).ToArray());
+    ViewBag.Keywords = string.Join(", ", Model.Tags.Select(t => t.Tag.Name).ToArray());
     ViewBag.Description = Model.ShortDescription;
     ViewBag.MainImage = mainImageShare;
     ViewBag.Author = Model.Author.Name;
@@ -97,7 +97,7 @@ else
                     @foreach (var tag in Model.Tags)
                     {
                         <div class="blog-post-tags-div">
-                            @(Html.ActionLink<BlogController>(c => c.Tag(tag.UrlSlug, 1), tag.Name, new { title = String.Format("See all posts in {0}", tag.Name) }))
+                            @(Html.ActionLink<BlogController>(c => c.Tag(tag.Tag.UrlSlug, 1), tag.Tag.Name, new { title = String.Format("See all posts in {0}", tag.Tag.Name) }))
                         </div>
                     }
                 </div>
@@ -142,20 +142,20 @@ else
 
         @if (Model.ShowLocationDetail)
         {
-            foreach (LocationDto location in Model.Locations.OrderBy(l => l.DateCreated))
+            foreach (BlogPostLocationDto location in Model.Locations.OrderBy(l => l.Location.DateCreated))
             {
-                @Html.Partial("~/"+ (Settings.GetValue<string>("MVCImplementationFolder")) +"Locations/Views/_Location.cshtml", location)
+                @Html.Partial("~/"+ (Settings.GetValue<string>("MVCImplementationFolder")) +"Locations/Views/_Location.cshtml", location.Location)
             }
                 }
 
                 @if (Model.ShowLocationMap && Model.Locations.Count > 0)
         {
-                    var centre = Model.Locations.Select(l => l.GPSLocation).ToList().GetCentralGeoCoordinate();
+                    var centre = Model.Locations.Select(l => l.Location.GPSLocation).ToList().GetCentralGeoCoordinate();
 
             <ng-map style="height:@(Model.MapHeight)px;" center="@centre.Latitude.ToString(),@centre.Longitude.ToString()" zoom="@Model.MapZoom" ng-controller="MapCtrl as vm">
-                @foreach (LocationDto location in Model.Locations)
+                @foreach (BlogPostLocationDto location in Model.Locations)
                 {
-                    <marker position="@location.GPSLocation.Latitude.ToString(),@location.GPSLocation.Longitude.ToString()" title="@location.Name" on-click="vm.openGoogleMap(event, '@(location.PlaceId)')"></marker>
+                    <marker position="@location.Location.GPSLocation.Latitude.ToString(),@location.Location.GPSLocation.Longitude.ToString()" title="@location.Location.Name" on-click="vm.openGoogleMap(event, '@(location.Location.PlaceId)')"></marker>
                 }
             </ng-map>
         }

@@ -85,10 +85,10 @@ namespace DND.Common.Controllers
         public virtual async Task<ActionResult> Edit(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            TReadDto data = null;
+            TUpdateDto data = null;
             try
             {
-                data = await Service.GetByIdAsync(id, cts.Token);
+                data = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = Admin;
                 return View("Edit", data);
@@ -137,10 +137,10 @@ namespace DND.Common.Controllers
         public virtual async Task<ActionResult> Delete(string id)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            TReadDto data = null;
+            TDeleteDto data = null;
             try
             {             
-               data = await Service.GetByIdAsync(id, cts.Token);
+                data = await Service.GetDeleteDtoByIdAsync(id, cts.Token);
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = Admin;
                 return View("Delete", data);

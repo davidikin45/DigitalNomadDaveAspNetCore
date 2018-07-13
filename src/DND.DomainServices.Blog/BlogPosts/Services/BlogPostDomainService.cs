@@ -22,6 +22,12 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
 
         }
 
+        public override void AddIncludes(List<Expression<Func<BlogPost, object>>> includes)
+        {
+            includes.Add(p => p.Tags);
+            includes.Add(p => p.Locations);
+        }
+
         public async Task<int> GetTotalPostsAsync(bool checkIsPublished, CancellationToken cancellationToken)
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
@@ -138,6 +144,10 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
         #region "Admin"
         public override async Task<IEnumerable<BlogPost>> SearchAsync(CancellationToken cancellationToken, string search = "", Expression<Func<BlogPost, bool>> filter = null, Func<IQueryable<BlogPost>, IOrderedQueryable<BlogPost>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<BlogPost, object>>[] includeProperties)
         {
+            var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<BlogPost, Object>>>();
+            AddIncludes(includes);
+            includeProperties = includes.ToArray();
+
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
                 return await unitOfWork.ReadOnlyRepository<IBlogDbContext, BlogPost>().SearchAsync(search, filter, orderBy, pageNo * pageSize, pageSize, includeProperties).ConfigureAwait(false);

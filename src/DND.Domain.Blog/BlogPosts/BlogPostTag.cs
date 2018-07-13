@@ -12,7 +12,7 @@ namespace DND.Domain.Blog.BlogPosts
     {
         //[Required]
         public int BlogPostId { get; set; }
-        public virtual BlogPost BlogPost { get; set; }
+        //public virtual BlogPost BlogPost { get; set; }
 
         //[Required]
         public int TagId { get; set; }
