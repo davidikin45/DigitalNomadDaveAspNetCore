@@ -5,8 +5,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common'
 import { HttpClient } from '@angular/common/http/src/client';
 import { } from "automapper-ts";
-
 import { RouterModule, Routes } from '@angular/router';
+
+import { JQ_TOKEN, TOASTR_TOKEN, Toastr } from './shared-third-party/index';
+
 import { PageNotFoundComponent } from './not-found.component';
 
 import { GlobalErrorHandler } from './shared/global-error-handler';
@@ -19,7 +21,7 @@ import { SigninOidcComponent } from './signin-oidc/signin-oidc.component';
 import { RequireAuthenticatedUserRouteGuardService } from './shared/require-authenticated-user-route-guard.service';
 import { AddAuthorizationHeaderInterceptor } from './shared/add-authorization-header-interceptor';
 import { RedirectSilentRenewComponent } from './redirect-silent-renew/redirect-silent-renew.component';
-import { JQ_TOKEN, TOASTR_TOKEN, Toastr, CollapsibleCardComponent } from './shared/index';
+import { CollapsibleCardComponent } from './shared/collapsible-card.component';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -38,6 +40,7 @@ import { ShowService } from './authors/shows/shared/show.service';
 
 import { MasterDataService } from './shared/master-data.service';
 
+/** Third Party */
 let toastr: Toastr = window['toastr'];
 let jQuery = window['$'];
 
@@ -55,6 +58,7 @@ const appRoutes: Routes = [
   { path: 'counter', component: CounterComponent},
   { path: 'fetch-data', component: FetchDataComponent },
 
+  /** Lazy Loaded Module */
   { path: 'user', loadChildren: './user/user.module#UserModule' },
 
   { path: 'signin-oidc', component: SigninOidcComponent },

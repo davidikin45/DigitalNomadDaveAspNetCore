@@ -845,7 +845,7 @@ namespace DND.Web
                 //1. download profiler from https://stackify.com/prefix/
                 //2. enable .NET profiler in windows tray
                 //3. access results at http://localhost:2012
-                app.UseStackifyPrefix();
+                //app.UseStackifyPrefix();
             }
 
             if (enableHelloWord)
