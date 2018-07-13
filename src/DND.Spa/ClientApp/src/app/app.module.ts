@@ -19,7 +19,7 @@ import { SigninOidcComponent } from './signin-oidc/signin-oidc.component';
 import { RequireAuthenticatedUserRouteGuardService } from './shared/require-authenticated-user-route-guard.service';
 import { AddAuthorizationHeaderInterceptor } from './shared/add-authorization-header-interceptor';
 import { RedirectSilentRenewComponent } from './redirect-silent-renew/redirect-silent-renew.component';
-import { ToastrService } from './shared/toastr.service';
+import { JQ_TOKEN, TOASTR_TOKEN, Toastr, CollapsibleCardComponent } from './shared/index';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -37,6 +37,9 @@ import { AuthorService } from './authors/shared/author.service';
 import { ShowService } from './authors/shows/shared/show.service';
 
 import { MasterDataService } from './shared/master-data.service';
+
+let toastr: Toastr = window['toastr'];
+let jQuery = window['$'];
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full'},
@@ -68,6 +71,7 @@ const appRoutes: Routes = [
     SigninOidcComponent,
     RedirectSilentRenewComponent,
     PageNotFoundComponent,
+    CollapsibleCardComponent,
 
     AboutComponent,
     CounterComponent,
@@ -109,8 +113,16 @@ const appRoutes: Routes = [
       useClass: HandleHttpErrorInterceptor,
       multi: true,
     },
-    GlobalErrorHandler, ErrorLoggerService, ToastrService, AuthorService, ShowService, MasterDataService, DatePipe, OpenIdConnectService,
-    RequireAuthenticatedUserRouteGuardService],
+    GlobalErrorHandler,
+    ErrorLoggerService,
+    { provide: TOASTR_TOKEN, useValue: toastr },
+    { provide: JQ_TOKEN, useValue: jQuery },
+    MasterDataService,
+    DatePipe,
+    OpenIdConnectService,
+    RequireAuthenticatedUserRouteGuardService,
+    AuthorService,
+    ShowService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

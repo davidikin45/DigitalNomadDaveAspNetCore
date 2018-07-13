@@ -25,6 +25,11 @@ namespace DND.Common.Extensions
             return list;
         }
 
+        public static MemberInfo GetDestinationMappedProperty<TSource, TDestination>(this IMapper mapper, string sourcePropertyName)
+        {
+            return GetDestinationMappedProperty(mapper, typeof(TSource), typeof(TDestination), sourcePropertyName);
+        }
+
         public static MemberInfo GetDestinationMappedProperty(this IMapper mapper, Type sourceType, Type destinationType, string sourcePropertyName)
         {
             MemberInfo sourceProperty = sourceType.GetProperty(sourcePropertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
