@@ -137,7 +137,7 @@ namespace DND.Common.Extensions
                     var linkToCollection = propertyType.IsCollection() && prop.AdditionalValues.ContainsKey("LinkToCollectionInGrid") && (Boolean)prop.AdditionalValues["LinkToCollectionInGrid"];
 
 
-                    if (prop.AdditionalValues.ContainsKey("DropdownModelType"))
+                    if (prop.AdditionalValues.ContainsKey("ModelType"))
                     {
                         if(linkToCollection)
                         {

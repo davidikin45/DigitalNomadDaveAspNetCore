@@ -21,18 +21,18 @@ namespace DND.Common.Extensions
             var modelExplorer = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider);
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = modelExplorer.Metadata;
 
-            var modelType = ((Type)metadata.AdditionalValues["DropdownModelType"]);
-            var keyProperty = ((string)metadata.AdditionalValues["DropdownKeyProperty"]);
-            var valueProperty = ((string)metadata.AdditionalValues["DropdownValueProperty"]);
-            var bindingProperty = ((string)metadata.AdditionalValues["DropdownBindingProperty"]);
+            var modelType = ((Type)metadata.AdditionalValues["ModelType"]);
+            var keyProperty = ((string)metadata.AdditionalValues["KeyProperty"]);
+            var valueProperty = ((string)metadata.AdditionalValues["ValueProperty"]);
+            var bindingProperty = ((string)metadata.AdditionalValues["BindingProperty"]);
 
-            var orderByProperty = ((string)metadata.AdditionalValues["DropdownOrderByProperty"]);
-            var orderByType = ((string)metadata.AdditionalValues["DropdownOrderByType"]);
+            var orderByProperty = ((string)metadata.AdditionalValues["OrderByProperty"]);
+            var orderByType = ((string)metadata.AdditionalValues["OrderByType"]);
 
-            var physicalFilePath = ((string)metadata.AdditionalValues["DropdownPhysicalFilePath"]);
-            var physicalFolderPath = ((string)metadata.AdditionalValues["DropdownPhysicalFolderPath"]);
+            var physicalFilePath = ((string)metadata.AdditionalValues["PhysicalFilePath"]);
+            var physicalFolderPath = ((string)metadata.AdditionalValues["PhysicalFolderPath"]);
 
-            var nullable = ((bool)metadata.AdditionalValues["DropdownNullable"]);
+            var nullable = ((bool)metadata.AdditionalValues["Nullable"]);
 
             Type propertyType = GetNonNullableModelType(metadata);
             List<SelectListItem> items = new List<SelectListItem>();
@@ -102,6 +102,17 @@ namespace DND.Common.Extensions
                    Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString().Replace(physicalFilePath, "") : "",
                    Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString().Replace(physicalFilePath, ""))
                }));
+            }
+            else if(metadata.DataTypeName == "ModelRepeater")
+            {
+                ((IEnumerable)modelExplorer.Model).Cast<Object>().ToList().ForEach(item =>
+
+                    items.Add(new SelectListItem()
+                    {
+                        Text = GetValueString(item, valueProperty),
+                        Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
+                        Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
+                    }));
             }
             else
             {
