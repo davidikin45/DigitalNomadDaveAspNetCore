@@ -7,6 +7,7 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
     public class RenderAttribute : Attribute, IMetadataAttribute
     {
         public bool ShowForGrid { get; set; }
+        public bool LinkToCollectionInGrid { get; set; }
         public bool AllowSortForGrid { get; set; }
         public bool ShowForEdit { get; set; }
         private bool _showForCreateSet;
@@ -25,6 +26,7 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
         public RenderAttribute()
         {
             ShowForGrid = true;
+            LinkToCollectionInGrid = false;
             AllowSortForGrid = true;
             ShowForEdit = true;
             _showForCreate = true;
@@ -38,6 +40,7 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
             var propertyName = context.Key.Name;
 
             modelMetadata.AdditionalValues["ShowForGrid"] = ShowForGrid;
+            modelMetadata.AdditionalValues["LinkToCollectionInGrid"] = LinkToCollectionInGrid;
             modelMetadata.AdditionalValues["AllowSortForGrid"] = AllowSortForGrid;
             modelMetadata.ShowForEdit = ShowForEdit;
 

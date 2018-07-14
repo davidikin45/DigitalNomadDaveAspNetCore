@@ -15,76 +15,42 @@ namespace DND.Common.Helpers
     {
         //Expression > Func yes
         //Func > Expression no compiled
+        public static Expression<Func<TDestination, Object>>[] GetMappedIncludes<TSource, TDestination>(IMapper mapper, Expression<Func<TSource, Object>>[] selectors)
+        {
+            if (selectors == null)
+                return new Expression<Func<TDestination, Object>>[] { };
+
+            List<Expression<Func<TDestination, Object>>> returnList = new List<Expression<Func<TDestination, Object>>>();
+
+            foreach (var selector in selectors)
+            {
+                returnList.Add(mapper.Map<Expression<Func<TDestination, Object>>>(selector));
+            }
+
+            return returnList.ToArray();
+        }
+
         public static Expression<Func<TDestination, TProperty>> GetMappedSelector<TSource, TDestination, TProperty>(IMapper mapper, Expression<Func<TSource, TProperty>> selector)
         {
             return mapper.Map<Expression<Func<TDestination, TProperty>>>(selector);
-
-            //if (selector == null)
-            //    return null;
-            //return Mapper.Map<Expression<Func<TDestination, TProperty>>>(selector);
-
-            //return mapper.MapTo<>
-
-
-            //var map = mapper.ConfigurationProvider.FindTypeMapFor<TSource, TDestination>();
-
-            //var mInfo = ReflectionHelper.GetMemberInfo(selector);
-
-            //if (mInfo == null)
-            //{
-            //    throw new Exception(string.Format(
-            //        "Can't get PropertyMap. \"{0}\" is not a member expression", selector));
-            //}
-
-            //var sourceType = typeof(TSource);
-            //var destinationType = typeof(TDestination);
-            //var destinationProperty = mapper.GetDestinationMappedProperty(sourceType, destinationType, mInfo);
-
-            //var param = Expression.Parameter(typeof(TDestination));
-            //var body = Expression.MakeMemberAccess(param, destinationProperty);
-            //var lambda = Expression.Lambda<Func<TDestination, TProperty>>(body, param);
-
-            //return lambda;
         }
 
-
-        public static Func<IQueryable<TDestination>, IOrderedQueryable<TDestination>> GetMappedOrderBy<TSource, TDestination>(IMapper mapper, Expression<Func<IQueryable<TSource>, IOrderedQueryable<TSource>>> orderBy)
+        public static Expression<Func<IQueryable<TDestination>, IOrderedQueryable<TDestination>>> GetMappedOrderBy<TSource, TDestination>(IMapper mapper, Expression<Func<IQueryable<TSource>, IOrderedQueryable<TSource>>> orderBy)
         {
-            return Mapper.Map<Func<IQueryable<TDestination>, IOrderedQueryable<TDestination>>>(orderBy);
+            if (orderBy == null)
+                return null;
 
-            //if (orderBy == null)
-            //    return null;
-
-            //var orderType = ((MethodCallExpression)orderBy.Body).Method.Name;
-            //var arguments = ((LambdaExpression)((UnaryExpression)((MethodCallExpression)orderBy.Body).Arguments[1]).Operand).Body;
-
-            //MemberExpression ex = ((MemberExpression)arguments);
-
-            //List<Type> sourceTypes = new List<Type>();
-
-            //Type sourceType = ex.Expression.Type;
-
-            //sourceTypes.Add(sourceType);
-
-            //var sourceProperty = (PropertyInfo)ex.Member;
-
-            //var orderColumn = sourceProperty.Name;
-
-            //while (ex.Expression is MemberExpression)
-            //{
-            //    ex = ((MemberExpression)ex.Expression);
-            //    sourceType = ex.Expression.Type;
-            //    sourceTypes.Add(sourceType);
-
-            //    sourceProperty = (PropertyInfo)ex.Member;
-
-            //    orderColumn = sourceProperty.Name + "." + orderColumn;
-            //}
-
-            //sourceTypes.Reverse();
-
-            //return GetOrderBy<TDestination>(orderColumn, orderType, mapper, sourceTypes).Compile();
+            return mapper.Map<Expression<Func<IQueryable<TDestination>, IOrderedQueryable<TDestination>>>>(orderBy);
         }
+
+        public static Func<IQueryable<TDestination>, IOrderedQueryable<TDestination>> GetMappedOrderByCompiled<TSource, TDestination>(IMapper mapper, Expression<Func<IQueryable<TSource>, IOrderedQueryable<TSource>>> orderBy)
+        {
+            if (orderBy == null)
+                return null;
+
+            return mapper.Map<Expression<Func<IQueryable<TDestination>, IOrderedQueryable<TDestination>>>>(orderBy).Compile();
+        }
+
         public static Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> GetOrderByFunc<TEntity>(string orderColumn, string orderType, IMapper mapper = null, List<Type> sourceTypes = null)
         {
             return GetOrderBy<TEntity>(orderColumn, orderType, mapper, sourceTypes).Compile();

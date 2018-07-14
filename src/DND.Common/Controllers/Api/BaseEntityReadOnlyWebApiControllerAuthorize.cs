@@ -161,7 +161,7 @@ namespace DND.Common.Controllers.Api
         public virtual async Task<IActionResult> GetPaged(WebApiPagedSearchOrderingRequestDto resourceParameters)
         {
             if (string.IsNullOrEmpty(resourceParameters.OrderBy))
-                resourceParameters.OrderBy = "id";
+                resourceParameters.OrderBy = nameof(IBaseDtoWithId.Id);
 
             if (!TypeHelperService.TypeHasProperties<TDto>(resourceParameters.Fields))
             {
@@ -209,7 +209,7 @@ namespace DND.Common.Controllers.Api
             {
                 var dtoAsDictionary = dto as IDictionary<string, object>;
                 var dtoLinks = CreateLinks(
-                    dtoAsDictionary["Id"].ToString(), resourceParameters.Fields);
+                    dtoAsDictionary[nameof(IBaseDtoWithId.Id)].ToString(), resourceParameters.Fields);
 
                 dtoAsDictionary.Add("links", dtoLinks);
 
@@ -260,7 +260,7 @@ namespace DND.Common.Controllers.Api
             var data = dataTask.Result.GetPropValue(collection);
             var total = totalTask.Result;
 
-            IEnumerable<Object> list = ((IEnumerable<Object>)(typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(typeof(Object)).Invoke(null, new object[] { data })));
+            IEnumerable<Object> list = ((IEnumerable<Object>)(typeof(Enumerable).GetMethod(nameof(Enumerable.Cast)).MakeGenericMethod(typeof(Object)).Invoke(null, new object[] { data })));
 
             var paginationMetadata = new WebApiPagedResponseDto<TDto>
             {
@@ -290,7 +290,7 @@ namespace DND.Common.Controllers.Api
             var shapedDataWithLinks = shapedData.Select(collectionPropertyDtoItem =>
             {
                 var collectionPropertyDtoItemAsDictionary = collectionPropertyDtoItem as IDictionary<string, object>;
-                var collectionPropertyDtoItemLinks = CreateLinksForCollectionItem(id, collection, collectionPropertyDtoItemAsDictionary["Id"].ToString(), resourceParameters.Fields);
+                var collectionPropertyDtoItemLinks = CreateLinksForCollectionItem(id, collection, collectionPropertyDtoItemAsDictionary[nameof(IBaseDtoWithId.Id)].ToString(), resourceParameters.Fields);
 
                 collectionPropertyDtoItemAsDictionary.Add("links", collectionPropertyDtoItem);
 

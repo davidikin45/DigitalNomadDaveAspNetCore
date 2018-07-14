@@ -40,6 +40,7 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
     {
         public Type ModelType { get; set; }
         public string KeyProperty { get; set; }
+        public string BindingProperty { get; set; }
         public string ValueProperty { get; set; }
         public string OrderByProperty { get; set; }
         public string OrderByType { get; set; }
@@ -67,20 +68,26 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
         //typeof
         //nameof
         public DropdownAttribute(Type modelType, string valueProperty)
-            :this(modelType, "Id", valueProperty, "Id", DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending)
+            :this(modelType, nameof(IBaseEntity.Id), valueProperty, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
         {
 
         }
 
         public DropdownAttribute(Type modelType, string valueProperty, string orderByProperty, string orderByType)
-           : this(modelType, "Id", valueProperty, orderByProperty, orderByType)
+           : this(modelType, nameof(IBaseEntity.Id), valueProperty, orderByProperty, orderByType, false, null)
+        {
+
+        }
+
+        public DropdownAttribute(Type modelType, string valueProperty, string orderByProperty, string orderByType, string bindingProperty)
+          : this(modelType, nameof(IBaseEntity.Id), valueProperty, orderByProperty, orderByType, false, bindingProperty)
         {
 
         }
 
         //typeof
         //nameof
-        public DropdownAttribute(Type modelType, string keyProperty, string valueProperty, string orderByProperty, string orderByType, Boolean nullable = false)
+        public DropdownAttribute(Type modelType, string keyProperty, string valueProperty, string orderByProperty, string orderByType, Boolean nullable = false, string bindingProperty = null)
         {
             if (!modelType.GetInterfaces().Contains(typeof(IBaseEntity)))
             {
@@ -90,6 +97,8 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
             ModelType = modelType;
             KeyProperty = keyProperty;
             ValueProperty = valueProperty;
+
+            BindingProperty = bindingProperty;
 
             OrderByProperty = orderByProperty;
             OrderByType = orderByType;
@@ -107,6 +116,8 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
             modelMetadata.AdditionalValues["DropdownModelType"] = ModelType;
             modelMetadata.AdditionalValues["DropdownKeyProperty"] = KeyProperty;
             modelMetadata.AdditionalValues["DropdownValueProperty"] = ValueProperty;
+
+            modelMetadata.AdditionalValues["DropdownBindingProperty"] = BindingProperty;
 
             modelMetadata.AdditionalValues["DropdownOrderByProperty"] = OrderByProperty;
             modelMetadata.AdditionalValues["DropdownOrderByType"] = OrderByType;

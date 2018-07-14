@@ -24,6 +24,7 @@ namespace DND.Common.Extensions
             var modelType = ((Type)metadata.AdditionalValues["DropdownModelType"]);
             var keyProperty = ((string)metadata.AdditionalValues["DropdownKeyProperty"]);
             var valueProperty = ((string)metadata.AdditionalValues["DropdownValueProperty"]);
+            var bindingProperty = ((string)metadata.AdditionalValues["DropdownBindingProperty"]);
 
             var orderByProperty = ((string)metadata.AdditionalValues["DropdownOrderByProperty"]);
             var orderByType = ((string)metadata.AdditionalValues["DropdownOrderByType"]);
@@ -45,7 +46,14 @@ namespace DND.Common.Extensions
                     {
                         if (val != null)
                         {
-                            ids.Add(val.ToString());
+                            if (!string.IsNullOrWhiteSpace(bindingProperty))
+                            {
+                                ids.Add(val.GetPropValue(bindingProperty).ToString());
+                            }
+                            else
+                            {
+                                ids.Add(val.ToString());
+                            }
                         }
                     }
                 }
@@ -54,7 +62,14 @@ namespace DND.Common.Extensions
             {
                 if (modelExplorer.Model != null)
                 {
-                    ids.Add(modelExplorer.Model.ToString());
+                    if(!string.IsNullOrWhiteSpace(bindingProperty))
+                    {
+                        ids.Add(modelExplorer.Model.GetPropValue(bindingProperty).ToString());
+                    }
+                    else
+                    {
+                        ids.Add(modelExplorer.Model.ToString());
+                    }
                 }
             }
 

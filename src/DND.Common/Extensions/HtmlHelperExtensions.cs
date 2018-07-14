@@ -58,6 +58,13 @@ namespace DND.Common.Extensions
                 htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression)));
         }
 
+        public static string ToString(IHtmlContent content)
+        {
+            var writer = new System.IO.StringWriter();
+            content.WriteTo(writer, HtmlEncoder.Default);
+            return writer.ToString();
+        }
+
         public static HtmlString Grid(this IHtmlHelper<dynamic> html, Boolean details, Boolean edit, Boolean delete, Boolean sorting)
         {
             var table = new TagBuilder("table");
@@ -71,7 +78,7 @@ namespace DND.Common.Extensions
             Boolean hasActions = (details || edit || delete);
 
             foreach (var prop in html.ViewData.ModelMetadata().Properties
-            .Where(p => p.ShowForDisplay && (!p.AdditionalValues.ContainsKey("ShowForGrid") || (Boolean)p.AdditionalValues["ShowForGrid"])))
+            .Where(p => (p.ShowForDisplay && !(p.AdditionalValues.ContainsKey("ShowForGrid")) || (p.AdditionalValues.ContainsKey("ShowForGrid") && (Boolean)p.AdditionalValues["ShowForGrid"]))))
             {
                 var th = new TagBuilder("th");
 
@@ -122,13 +129,26 @@ namespace DND.Common.Extensions
                 var tbodytr = new TagBuilder("tr");
 
                 foreach (var prop in html.ViewData.ModelMetadata().Properties
-               .Where(p => p.ShowForDisplay && (!p.AdditionalValues.ContainsKey("ShowForGrid") || (Boolean)p.AdditionalValues["ShowForGrid"])))
+               .Where(p => (p.ShowForDisplay && !(p.AdditionalValues.ContainsKey("ShowForGrid")) || (p.AdditionalValues.ContainsKey("ShowForGrid") && (Boolean)p.AdditionalValues["ShowForGrid"]))))
                 {
                     var td = new TagBuilder("td");
 
+                    var propertyType = GetNonNullableModelType(prop);
+                    var linkToCollection = propertyType.IsCollection() && prop.AdditionalValues.ContainsKey("LinkToCollectionInGrid") && (Boolean)prop.AdditionalValues["LinkToCollectionInGrid"];
+
+
                     if (prop.AdditionalValues.ContainsKey("DropdownModelType"))
                     {
-                        HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                        if(linkToCollection)
+                        {
+                            string linkText = HtmlHelperExtensions.ToString(ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                            var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = prop.PropertyName.ToLower() });
+                            HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, collectionLink);
+                        }
+                        else
+                        {
+                            HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                        }
                     }
                     else if (prop.ModelType == typeof(FileInfo))
                     {
@@ -145,8 +165,17 @@ namespace DND.Common.Extensions
                     }
                     else
                     {
-                        string value = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();
-                        td.InnerHtml.Append(value.Truncate(70));
+                        if (linkToCollection)
+                        {
+                            string linkText = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();
+                            var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = prop.PropertyName });
+                            HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, collectionLink);
+                        }
+                        else
+                        {
+                            string value = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();
+                            td.InnerHtml.Append(value.Truncate(70));
+                        }
                     }
 
                     tbodytr.InnerHtml.AppendHtml(td);
@@ -245,6 +274,20 @@ namespace DND.Common.Extensions
 
           
             return new HtmlString(nav.Render());
+        }
+
+        private static Type GetNonNullableModelType(Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata modelMetadata)
+        {
+            Type realModelType = modelMetadata.ModelType;
+            Type underlyingType = Nullable.GetUnderlyingType(realModelType);
+
+
+            if (underlyingType != null)
+            {
+                realModelType = underlyingType;
+            }
+
+            return realModelType;
         }
 
         //@Html.BootstrapPager(pageIndex, index => Url.Action("Index", "Product", new { pageIndex = index }), Model.TotalCount, numberOfLinks: 10)

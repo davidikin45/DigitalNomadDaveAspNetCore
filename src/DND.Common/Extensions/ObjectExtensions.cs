@@ -182,6 +182,11 @@ namespace DND.Common.Extensions
             return null;
         }
 
+        public static void SetPropValue(this object obj, string propName, object value)
+        {
+            obj.GetType().GetProperty(propName).SetValue(obj, value);
+        }
+
         public static bool HasProperty(this Type type, string propName)
         {
             return type.GetProperty(propName) != null;

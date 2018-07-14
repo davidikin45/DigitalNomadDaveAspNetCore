@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.BlogPosts.Dtos
 {
-    public class BlogPostLocationDto : BaseDto, IMapTo<BlogPostLocation>, IMapFrom<BlogPostLocation>, IHaveCustomMappings
+    public class BlogPostLocationDto : BaseDto<int>, IMapTo<BlogPostLocation>, IMapFrom<BlogPostLocation>, IHaveCustomMappings
     {
         [Required]
         public int LocationId { get; set; }
