@@ -155,15 +155,18 @@ namespace DND.IDP
                         ApiScopes.Read
                     },
                     RedirectUris = {
+                        "https://localhost:5001/SignInCallback.html",
                         "https://localhost:44372/SignInCallback.html",
                         "https://localhost:44332/signin-oidc",
                         "https://localhost:44332/redirect-silentrenew",
                     },
                     PostLogoutRedirectUris = {
+                        "https://localhost:5001/SignOutCallback.html",
                         "https://localhost:44372/SignOutCallback.html",
                         "https://localhost:44332/"
                     },
                     AllowedCorsOrigins = {
+                        "https://localhost:5001",
                         "https://localhost:44372",
                         "https://localhost:44332"
                     }, //CORS for IDP
@@ -186,10 +189,12 @@ namespace DND.IDP
                     UpdateAccessTokenClaimsOnRefresh = true,
                     RedirectUris = new List<string>()
                     {
+                        "https://localhost:5001/signin-oidc",
                         "https://localhost:44372/signin-oidc"
                     },
                     PostLogoutRedirectUris = new List<string>()
                     {
+                        "https://localhost:5001/signout-callback-oidc",
                         "https://localhost:44372/signout-callback-oidc"
                     },
                     AllowedScopes =

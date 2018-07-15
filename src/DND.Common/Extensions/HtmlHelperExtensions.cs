@@ -700,14 +700,14 @@ namespace DND.Common.Extensions
             return For<TModel>(helper.ViewContext, helper.ViewData);
         }
 
-        public static HtmlHelper<dynamic> For(this IHtmlHelper helper, dynamic model)
-        {
-            return For(helper.ViewContext, helper.ViewData, model);
-        }
-
         public static HtmlHelper<TModel> For<TModel>(this IHtmlHelper helper, TModel model)
         {
             return For<TModel>(helper.ViewContext, helper.ViewData, model);
+        }
+
+        public static HtmlHelper<dynamic> For(this IHtmlHelper helper, dynamic model)
+        {
+            return For(helper.ViewContext, helper.ViewData, model);
         }
 
         public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData) where TModel : class, new()
@@ -718,7 +718,11 @@ namespace DND.Common.Extensions
 
         public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, TModel model)
         {
-            var newViewData = new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { Model = model };
+
+            var metadataProvider = HttpContext.GetInstance<IModelMetadataProvider>();
+            //var metadataProvider = new EmptyModelMetadataProvider();
+
+            var newViewData = new ViewDataDictionary<TModel>(metadataProvider, new ModelStateDictionary()) { Model = model };
 
             ViewContext newViewContext = new ViewContext(
                 viewContext,
@@ -742,8 +746,14 @@ namespace DND.Common.Extensions
             return helper;
         }
 
-        public static HtmlHelper<dynamic> For(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, dynamic model)
+        public static HtmlHelper<dynamic> ForDynamic(this IHtmlHelper helper, dynamic model)
         {
+            return ForDynamic(helper.ViewContext, helper.ViewData, model);
+        }
+
+        public static HtmlHelper<dynamic> ForDynamic(ViewContext viewContext, ViewDataDictionary viewData, dynamic model)
+        {
+            
             var newViewData = new ViewDataDictionary<dynamic>(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { Model = model };
 
             ViewContext newViewContext = new ViewContext(
