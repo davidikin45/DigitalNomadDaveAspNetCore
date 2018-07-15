@@ -910,6 +910,7 @@
     <Compile Include="Implementation\DomainServices\BaseDomainService.cs" />
     <Compile Include="Implementation\DomainServices\BaseEntityDomainService.cs" />
     <Compile Include="Implementation\DomainServices\BaseEntityReadOnlyDomainService.cs" />
+    <Compile Include="Implementation\Services\HelperGeneratorService.cs" />
     <Compile Include="Implementation\Services\TypeHelperService.cs" />
     <Compile Include="Implementation\UnitOfWork\AmbientDbContextLocator.cs" />
     <Compile Include="Implementation\UnitOfWork\AmbientUnitOfWorkSuppressor.cs" />
@@ -976,6 +977,7 @@
     <Compile Include="Interfaces\ApplicationServices\IBaseEntityReadOnlyApplicationService.cs" />
     <Compile Include="Interfaces\DomainServices\IBaseEntityDomainService.cs" />
     <Compile Include="Interfaces\DomainServices\IBaseEntityReadOnlyDomainService.cs" />
+    <Compile Include="Interfaces\Services\IHelperGeneratorService.cs" />
     <Compile Include="Interfaces\Services\ITypeHelperService.cs" />
     <Compile Include="Interfaces\UnitOfWork\BaseUnitOfWorkScopeOption.cs" />
     <Compile Include="Interfaces\UnitOfWork\IBaseAmbientDbContextLocator.cs" />

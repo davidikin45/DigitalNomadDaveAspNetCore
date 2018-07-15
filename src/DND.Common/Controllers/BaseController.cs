@@ -17,6 +17,11 @@ using DND.Common.Extensions;
 using DND.Common.Email;
 using DND.Common.Interfaces.Dtos;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using System.IO;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 namespace DND.Common.Controllers
 {
@@ -203,7 +208,5 @@ namespace DND.Common.Controllers
         {
             get { return this.HttpContext.Request.Path; }
         }
-
-
     }
 }

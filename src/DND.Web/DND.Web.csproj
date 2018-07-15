@@ -273,6 +273,9 @@
     <Content Update="MVCImplementation\Shared\Views\CookieConsent\_CookieConsent.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\ModelRepeaterItem.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="MVCImplementation\Shared\Views\EditorTemplates\ModelRepeater.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

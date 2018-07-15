@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using DND.Common.Interfaces.Dtos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using DND.Common.Extensions;
+using System.Linq;
 
 namespace DND.Common.Controllers
 {
@@ -34,10 +36,10 @@ namespace DND.Common.Controllers
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
         public BaseEntityControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
-        : base(admin, service, mapper,emailService, configuration)
+        : base(admin, service, mapper, emailService, configuration)
         {
         }
-        
+
         // GET: Default/Create
         [Route("create")]
         public virtual ActionResult Create()
@@ -130,6 +132,25 @@ namespace DND.Common.Controllers
             ViewBag.PageTitle = Title;
             ViewBag.Admin = Admin;
             return View("Edit", dto);
+        }
+
+        [HttpGet]
+        [Route("{collection}/create")]
+        public virtual ActionResult CreateCollectionItem(string collection)
+        {
+            if (!typeof(TUpdateDto).HasProperty(collection) || !typeof(TUpdateDto).GetProperty(collection).PropertyType.IsCollection())
+            {
+                return HandleReadException();
+            }
+
+            ViewBag.Collection = collection;
+            ViewBag.CollectionIndex = Guid.NewGuid().ToString();
+
+            var collectionItemType = typeof(TUpdateDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
+
+            var instance = Activator.CreateInstance(collectionItemType);
+
+            return PartialView("_CreateCollectionItem", instance);
         }
 
         // GET: Default/Delete/5
