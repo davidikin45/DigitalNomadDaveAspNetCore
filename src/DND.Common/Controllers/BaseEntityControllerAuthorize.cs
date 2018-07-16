@@ -1,23 +1,19 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using DND.Common.Alerts;
+using DND.Common.DomainEvents;
 using DND.Common.Email;
-using DND.Common.Helpers;
-using DND.Common.Interfaces.ApplicationServices;
-using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Services;
-using System;
-using System.Threading.Tasks;
-using DND.Common.Interfaces.Dtos;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authorization;
 using DND.Common.Extensions;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using System.Dynamic;
-using System.Collections.Generic;
+using DND.Common.Helpers;
 using DND.Common.Implementation.DTOs;
-using DND.Common.DomainEvents.ActionEvent;
+using DND.Common.Interfaces.ApplicationServices;
+using DND.Common.Interfaces.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DND.Common.Controllers
 {

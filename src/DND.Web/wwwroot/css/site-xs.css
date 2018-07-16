@@ -216,23 +216,18 @@ footer.page-footer .social-section {
 footer.page-footer .social-section ul li {
   display: inline-block;
 }
-.btn-primary,
-.btn-success {
+.btn-primary {
   background-color: #0da1d0 !important;
 }
-.btn-success:hover,
-.btn-success:focus,
 .btn-primary:hover,
 .btn-primary:focus {
   background-color: #0db9f0 !important;
 }
-.btn-outline-primary,
-.btn-outline-success {
+.btn-outline-primary {
   color: #0da1d0 !important;
   border-color: #0da1d0 !important;
 }
-.btn-outline-primary:hover,
-.btn-outline-success:hover {
+.btn-outline-primary:hover {
   color: white !important;
   background-color: #0da1d0 !important;
 }

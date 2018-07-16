@@ -1,23 +1,21 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
 using DND.Common.Alerts;
+using DND.Common.DomainEvents;
 using DND.Common.Email;
 using DND.Common.Helpers;
-using DND.Common.Interfaces.ApplicationServices;
-using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Services;
-using System.Threading.Tasks;
-using DND.Common.Interfaces.Dtos;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.JsonPatch.Operations;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using DND.Common.Extensions;
 using DND.Common.Implementation.DTOs;
-using DND.Common.DomainEvents.ActionEvent;
+using DND.Common.Interfaces.ApplicationServices;
+using DND.Common.Interfaces.Dtos;
+using DND.Common.Interfaces.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DND.Common.Controllers.Api
 {

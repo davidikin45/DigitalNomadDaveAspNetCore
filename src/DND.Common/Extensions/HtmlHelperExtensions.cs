@@ -1,4 +1,11 @@
-﻿using HtmlTags;
+﻿using DND.Common.APIs;
+using DND.Common.DomainEvents;
+using DND.Common.Extensions;
+using DND.Common.Infrastructure;
+using DND.Common.Interfaces.Data;
+using DND.Common.Interfaces.Repository;
+using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using HtmlTags;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -8,12 +15,6 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Routing;
-using DND.Common.APIs;
-using DND.Common.Infrastructure;
-using DND.Common.Extensions;
-using DND.Common.Interfaces.Data;
-using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -23,11 +24,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using AutoMapper;
-using DND.Common.Interfaces.Models;
-using DND.Common.DomainEvents.ActionEvent;
 
 namespace DND.Common.Extensions
 {
@@ -90,7 +86,8 @@ namespace DND.Common.Extensions
             { 
 
                 var actionEvents = new ActionEvents();
-                actions = actionEvents.GetActionsForDto(html.ViewData.ModelMetadata().ModelType);     
+                actions = actionEvents.GetActionsForDto(html.ViewData.ModelMetadata().ModelType);
+                entityActions = actions.Count > 0;
             }
 
             Boolean hasActions = (details || edit || delete || entityActions);
@@ -207,10 +204,10 @@ namespace DND.Common.Extensions
                     {
                         var postUrl = html.Url().Action("TriggerAction", new { id = item.Id });
 
-                        tdActions.InnerHtml.AppendHtml("<form action ='"+ postUrl + "' method='POST' />");
-                        tdActions.InnerHtml.AppendHtml("<div class='btn-group'>");
+                        tdActions.InnerHtml.AppendHtml("<div class='btn-group mr-2'>");
+                        tdActions.InnerHtml.AppendHtml("<form action ='" + postUrl + "' method='POST' />");
 
-                        tdActions.InnerHtml.AppendHtml("<button type='button' class='btn btn-info dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
+                        tdActions.InnerHtml.AppendHtml("<button type='button' class='btn btn-secondary btn-sm dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
                         tdActions.InnerHtml.AppendHtml("Actions");
                         tdActions.InnerHtml.AppendHtml("</button>");
 
@@ -226,23 +223,23 @@ namespace DND.Common.Extensions
                         }
 
                         tdActions.InnerHtml.AppendHtml(@"</div>");
-                        tdActions.InnerHtml.AppendHtml(@"</div>");
                         tdActions.InnerHtml.AppendHtml(@"</form>");
+                        tdActions.InnerHtml.AppendHtml(@"</div>");
                     }
 
                     if (details)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" }));
+                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-sm mr-2" }));
                     }
 
                     if (edit)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-success btn-sm" }));
+                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-sm mr-2" }));
                     }
 
                     if (delete)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-warning btn-sm" }));
+                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm mr-2" }));
                     }
 
                     tbodytr.InnerHtml.AppendHtml(tdActions);

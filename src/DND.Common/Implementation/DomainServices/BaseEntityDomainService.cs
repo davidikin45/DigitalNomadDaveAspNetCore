@@ -1,7 +1,10 @@
-﻿using DND.Common.Implementation.Validation;
+﻿using DND.Common.DomainEvents;
+using DND.Common.Enums;
+using DND.Common.Extensions;
+using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.UnitOfWork;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,10 +12,6 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DND.Common.Extensions;
-using DND.Common.Enums;
-using DND.Common.DomainEvents.ActionEvent;
-using DND.Common.DomainEvents;
 
 namespace DND.Common.Implementation.DomainServices
 {

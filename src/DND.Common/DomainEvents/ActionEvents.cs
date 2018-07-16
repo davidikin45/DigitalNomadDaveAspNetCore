@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DND.Common.DomainEvents.ActionEvent
+namespace DND.Common.DomainEvents
 {
     public class ActionEvents
     {
@@ -36,7 +36,7 @@ namespace DND.Common.DomainEvents.ActionEvent
 
             IDomainActionEvent actionEvent = null;
 
-            if (entityType is IBaseEntity)
+            if (typeof(IBaseEntity).IsAssignableFrom(entityType))
             {
                 Type genericType = typeof(EntityActionEvent<>);
                 Type[] typeArgs = { entityType };
