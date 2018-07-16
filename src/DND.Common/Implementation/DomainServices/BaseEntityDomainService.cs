@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DND.Common.Extensions;
 using DND.Common.Enums;
+using DND.Common.DomainEvents.ActionEvent;
+using DND.Common.DomainEvents;
 
 namespace DND.Common.Implementation.DomainServices
 {
@@ -240,6 +242,72 @@ namespace DND.Common.Implementation.DomainServices
             {
                 return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().ValidateAsync(entity, mode);
             }
+        }
+
+        public Result TriggerAction(object id, string action, dynamic args, string triggeredBy)
+        {
+            var actionEvents = new ActionEvents();
+
+            using (var unitOfWork = UnitOfWorkFactory.Create())
+            {
+                try
+                {
+                    var entity = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id);
+
+                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, args, entity, triggeredBy);
+                    if(actionEvent != null)
+                    {
+                        entity.AddActionEvent(actionEvent);
+
+                        var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, triggeredBy);
+                        if (validationResult.IsFailure)
+                        {
+                            return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                        }
+
+                        unitOfWork.Complete();
+                    }
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return HandleEF6UpdateConcurrency(ex);
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public async Task<Result> TriggerActionAsync(object id, string action, dynamic args, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var actionEvents = new ActionEvents();
+
+            using (var unitOfWork = UnitOfWorkFactory.Create())
+            {
+                try
+                {
+                    var entity = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id);
+
+                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, args, entity, triggeredBy);
+                    if (actionEvent != null)
+                    {
+                        entity.AddActionEvent(actionEvent);
+
+                        var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, triggeredBy);
+                        if (validationResult.IsFailure)
+                        {
+                            return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                        }
+
+                        await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                    }
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return HandleEF6UpdateConcurrency(ex);
+                }
+            }
+
+            return Result.Ok();
         }
     }
 }

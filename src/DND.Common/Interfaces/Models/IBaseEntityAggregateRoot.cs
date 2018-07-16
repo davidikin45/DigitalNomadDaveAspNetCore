@@ -10,6 +10,7 @@ namespace DND.Common.Interfaces.Models
 {
     public interface IBaseEntityAggregateRoot : IBaseEntity
     {
+        void AddActionEvent(IDomainActionEvent actionEvent);
         IReadOnlyList<IDomainEvent> DomainEvents { get;  }
         void ClearEvents();
 

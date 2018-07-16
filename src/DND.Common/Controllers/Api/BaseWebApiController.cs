@@ -62,6 +62,26 @@ namespace DND.Common.Controllers.Api
             }
         }
 
+        protected IActionResult BulkTriggerActionResponse(IEnumerable<Result> results)
+        {
+            var webApiMessages = new List<WebApiMessage>();
+
+            foreach (var result in results)
+            {
+                if (result.IsSuccess)
+                {
+                    webApiMessages.Add(WebApiMessage.CreateWebApiMessage(Messages.ActionSuccessful, new List<string>()));
+                }
+                else
+                {
+                    webApiMessages.Add((WebApiMessage)((ObjectResult)ValidationErrors(result)).Value);
+                }
+            }
+
+            //For bulk return 200 regardless
+            return Success(webApiMessages);
+        }
+
         protected IActionResult BulkUpdateResponse(IEnumerable<Result> results)
         {
             var webApiMessages = new List<WebApiMessage>();

@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using DND.Common.Implementation.DTOs;
 
 namespace DND.Common.Implementation.ApplicationServices
 {
@@ -237,6 +238,70 @@ namespace DND.Common.Implementation.ApplicationServices
         {
             var bo = Mapper.Map<TEntity>(dto);
             var result = await DomainService.DeleteAsync(bo, deletedBy, cancellationToken).ConfigureAwait(false);
+            if (result.IsFailure)
+            {
+                switch (result.ErrorType)
+                {
+                    case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.ObjectDoesNotExist:
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
+                    default:
+                        throw new ArgumentException();
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public virtual List<Result> TriggerActions(BulkActionDto[] actions, string triggeredBy)
+        {
+            var results = new List<Result>();
+            foreach (var action in actions)
+            {
+                var result = TriggerAction(action.Id, action, triggeredBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public virtual Result TriggerAction(object id, ActionDto action, string triggeredBy)
+        {
+            var result = DomainService.TriggerAction(id, action.Action, action.Args, triggeredBy);
+            if (result.IsFailure)
+            {
+                switch (result.ErrorType)
+                {
+                    case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.ObjectDoesNotExist:
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
+                    default:
+                        throw new ArgumentException();
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public async virtual Task<List<Result>> TriggerActionsAsync(BulkActionDto[] actions, string triggeredBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var action in actions)
+            {
+                var result = await TriggerActionAsync(action.Id, action, triggeredBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public async virtual Task<Result> TriggerActionAsync(object id, ActionDto action, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var result = await DomainService.TriggerActionAsync(id, action.Action, action.Args, triggeredBy).ConfigureAwait(false);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)

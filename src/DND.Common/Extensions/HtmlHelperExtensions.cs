@@ -25,6 +25,9 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using AutoMapper;
+using DND.Common.Interfaces.Models;
+using DND.Common.DomainEvents.ActionEvent;
 
 namespace DND.Common.Extensions
 {
@@ -33,6 +36,11 @@ namespace DND.Common.Extensions
         public static T GetInstance<T>(this IHtmlHelper html)
         {
             return (T)html.ViewContext.HttpContext.RequestServices.GetService(typeof(T));
+        }
+
+        public static object GetInstance(this IHtmlHelper html, Type type)
+        {
+            return html.ViewContext.HttpContext.RequestServices.GetService(type);
         }
 
         public static IFileSystemGenericRepositoryFactory FileSystemGenericRepositoryFactory(this IHtmlHelper html)
@@ -66,7 +74,7 @@ namespace DND.Common.Extensions
             return writer.ToString();
         }
 
-        public static HtmlString Grid(this IHtmlHelper<dynamic> html, Boolean details, Boolean edit, Boolean delete, Boolean sorting)
+        public static HtmlString Grid(this IHtmlHelper<dynamic> html, Boolean details, Boolean edit, Boolean delete, Boolean sorting, Boolean entityActions)
         {
             var table = new TagBuilder("table");
             table.AddCssClass("table");
@@ -76,7 +84,16 @@ namespace DND.Common.Extensions
 
             var theadTr = new TagBuilder("tr");
 
-            Boolean hasActions = (details || edit || delete);
+            Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
+
+            if(entityActions)
+            { 
+
+                var actionEvents = new ActionEvents();
+                actions = actionEvents.GetActionsForDto(html.ViewData.ModelMetadata().ModelType);     
+            }
+
+            Boolean hasActions = (details || edit || delete || entityActions);
 
             foreach (var prop in html.ViewData.ModelMetadata().Properties
             .Where(p => (p.ShowForDisplay && !(p.AdditionalValues.ContainsKey("ShowForGrid")) || (p.AdditionalValues.ContainsKey("ShowForGrid") && (Boolean)p.AdditionalValues["ShowForGrid"]))))
@@ -185,6 +202,28 @@ namespace DND.Common.Extensions
                 if (hasActions)
                 {
                     var tdActions = new TagBuilder("td");
+
+                    if (entityActions)
+                    {
+                        bool first = true;
+                        foreach (var action in actions)
+                        {
+                            foreach (var actionDescription in action.Value)
+                            {
+                                if(!first)
+                                {
+                                    tdActions.InnerHtml.Append(" | ");
+                                }
+                                first = false;
+                                tdActions.InnerHtml.AppendHtml(html.ActionLink(actionDescription, "TriggerAction", new { id = item.Id, action = action.Key }));
+                            }
+                        }
+
+                        if (edit || delete || details)
+                        {
+                            tdActions.InnerHtml.Append(" | ");
+                        }
+                    }
 
                     if (details)
                     {

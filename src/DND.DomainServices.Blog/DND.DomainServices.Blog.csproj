@@ -56,6 +56,7 @@
     <Compile Include="Locations\Services\LocationDomainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BlogDomainService.cs" />
+    <Compile Include="Tags\DomainEventHandlers\TagEmailAdminEventHandler.cs" />
     <Compile Include="Tags\DomainEventHandlers\TagInsertedEventHandler.cs" />
     <Compile Include="Tags\Services\TagDomainService.cs" />
   </ItemGroup>

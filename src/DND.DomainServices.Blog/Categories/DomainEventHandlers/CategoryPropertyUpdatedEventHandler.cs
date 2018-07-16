@@ -2,6 +2,7 @@
 using DND.Common.Implementation.Validation;
 using DND.Domain.Blog.Categories;
 using DND.Interfaces.Blog.DomainServices;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
@@ -13,6 +14,8 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
         {
             _tagService = tagService;
         }
+
+        public IDictionary<string, string> HandleActions => new Dictionary<string, string>() {  };
 
         public bool HandlePreCommitCondition(EntityPropertyUpdatedEvent<Category> domainEvent)
         {

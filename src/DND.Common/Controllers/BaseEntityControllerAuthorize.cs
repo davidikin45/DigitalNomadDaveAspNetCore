@@ -13,6 +13,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using DND.Common.Extensions;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using System.Dynamic;
+using System.Collections.Generic;
+using DND.Common.Implementation.DTOs;
+using DND.Common.DomainEvents.ActionEvent;
 
 namespace DND.Common.Controllers
 {
@@ -35,9 +40,11 @@ namespace DND.Common.Controllers
         where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
+        private ActionEvents actionEvents;
         public BaseEntityControllerAuthorize(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
         : base(admin, service, mapper, emailService, configuration)
         {
+            actionEvents = new ActionEvents();
         }
 
         // GET: Default/Create
@@ -160,7 +167,7 @@ namespace DND.Common.Controllers
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
             TDeleteDto data = null;
             try
-            {             
+            {
                 data = await Service.GetDeleteDtoByIdAsync(id, cts.Token);
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = Admin;
@@ -169,7 +176,7 @@ namespace DND.Common.Controllers
             catch (Exception ex)
             {
                 return HandleReadException();
-            }           
+            }
         }
 
         // POST: Default/Delete/5
@@ -205,6 +212,47 @@ namespace DND.Common.Controllers
             return View("Delete", data);
         }
 
+        [HttpGet]
+        //[HttpPost]
+        [Route("{id}/trigger-action/{action}")]
+        public virtual async Task<ActionResult> TriggerAction(string id, string action, FormCollection collection)
+        {
+            if (string.IsNullOrWhiteSpace(action) || !actionEvents.IsValidAction<TUpdateDto>(action))
+            {
+                return HandleReadException();
+            }
+
+            dynamic args = null;
+            if (collection != null)
+            {
+                args = collection.ToDynamic();
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            try
+            {
+                var eventDto = new ActionDto()
+                {
+                    Action = action,
+                    Args = args
+                };
+
+                var result = await Service.TriggerActionAsync(id, eventDto, Username, cts.Token);
+                if (result.IsFailure)
+                {
+                    return HandleReadException();
+                }
+                else
+                {
+                    return RedirectToControllerDefault().WithSuccess(this, Messages.ActionSuccessful);
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleReadException();
+            }
+        }
     }
 }
 

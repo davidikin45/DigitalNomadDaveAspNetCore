@@ -20,6 +20,11 @@ namespace DND.Common.Infrastructure
             return (T)Current.RequestServices.GetService(typeof(T));
         }
 
+        public static object GetInstance(Type t)
+        {
+            return Current.RequestServices.GetService(t);
+        }
+
         public static string MapPath(string path)
         {
             return Server.MapWwwPath(path);

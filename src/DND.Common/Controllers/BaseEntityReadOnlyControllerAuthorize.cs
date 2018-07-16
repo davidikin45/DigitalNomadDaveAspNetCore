@@ -157,6 +157,7 @@ namespace DND.Common.Controllers
                 ViewBag.DisableEdit = true;
                 ViewBag.DisableDelete = true;
                 ViewBag.DisableSorting = true;
+                ViewBag.DisableEntityEvents = true;
 
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = Admin;

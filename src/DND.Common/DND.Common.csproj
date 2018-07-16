@@ -765,12 +765,12 @@
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacTasksModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacAutomapperModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsDependencyInjectionModule.cs" />
+    <Compile Include="DomainEvents\ActionEvent\ActionEvents.cs" />
     <Compile Include="DomainEvents\DbContext\DbContextDomainEvents.cs" />
     <Compile Include="DomainEvents\DbContext\DbContextDomainEventsInMemoryAdapter.cs" />
     <Compile Include="DomainEvents\DbContext\DbContextDomainEventsEFCoreAdapter.cs" />
     <Compile Include="DomainEvents\DbContext\DbContextDomainEventsEF6Adapter.cs" />
     <Compile Include="DomainEvents\EntityEvents.cs" />
-    <Compile Include="DomainEvents\EventListener.cs" />
     <Compile Include="DomainEvents\DbContext\IDbContextDomainEvents.cs" />
     <Compile Include="DomainEvents\IDomainEvents.cs" />
     <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
@@ -857,6 +857,7 @@
     <Compile Include="Implementation\Data\DesignTimeDbContextFactoryBase.cs" />
     <Compile Include="Implementation\DTOs\BaseDtoAggregateRoot.cs" />
     <Compile Include="Implementation\DTOs\BaseDto.cs" />
+    <Compile Include="Implementation\DTOs\ActionDto.cs" />
     <Compile Include="Implementation\DTOs\FolderMetadataDto.cs" />
     <Compile Include="Implementation\DTOs\FileMetadataDto.cs" />
     <Compile Include="Implementation\DTOs\JpegMetadataDto.cs" />

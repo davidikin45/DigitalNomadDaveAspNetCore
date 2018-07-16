@@ -1,4 +1,5 @@
-﻿using DND.Common.Implementation.Validation;
+﻿using DND.Common.Implementation.DTOs;
+using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
 using System.Collections.Generic;
@@ -47,5 +48,13 @@ namespace DND.Common.Interfaces.ApplicationServices
         Task<TDeleteDto> GetDeleteDtoByIdAsync(object id,
              CancellationToken cancellationToken)
             ;
+
+        Result TriggerAction(object id, ActionDto action, string triggeredBy);
+
+        Task<Result> TriggerActionAsync(object id, ActionDto action, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken));
+
+        List<Result> TriggerActions(BulkActionDto[] actions, string triggeredBy);
+
+        Task<List<Result>> TriggerActionsAsync(BulkActionDto[] actions, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

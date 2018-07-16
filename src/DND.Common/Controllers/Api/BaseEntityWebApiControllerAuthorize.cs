@@ -15,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DND.Common.Extensions;
+using DND.Common.Implementation.DTOs;
+using DND.Common.DomainEvents.ActionEvent;
+using System.Linq;
 
 namespace DND.Common.Controllers.Api
 {
@@ -36,11 +39,11 @@ namespace DND.Common.Controllers.Api
          where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
-
+        private ActionEvents actionEvents;
         public BaseEntityWebApiControllerAuthorize(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, IConfiguration configuration = null)
         : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
-
+            actionEvents = new ActionEvents();
         }
 
         //[Route("create")]
@@ -67,7 +70,7 @@ namespace DND.Common.Controllers.Api
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var result = await Service.CreateAsync(dto, User.Identity.Name, cts.Token);
-            if(result.IsFailure)
+            if (result.IsFailure)
             {
                 return ValidationErrors(result);
             }
@@ -94,7 +97,7 @@ namespace DND.Common.Controllers.Api
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> Update(string id, [FromBody] TUpdateDto dto)
         {
-            if(dto is IBaseDtoWithId)
+            if (dto is IBaseDtoWithId)
             {
                 IBaseDtoWithId dtoWithId = dto as IBaseDtoWithId;
                 if (dto == null || id.ToString() != dtoWithId.Id.ToString())
@@ -177,7 +180,7 @@ namespace DND.Common.Controllers.Api
             {
                 ops.Add(new Operation<TUpdateDto>(op.op, op.path, op.from, op.value));
             }
-       
+
             var dtoPatchTypes = new JsonPatchDocument<TUpdateDto>(ops, dtoPatch.ContractResolver);
 
             dtoPatchTypes.ApplyTo(dto, ModelState);
@@ -201,33 +204,6 @@ namespace DND.Common.Controllers.Api
         }
 
         /// <summary>
-        /// Deletes the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        //[Route("{id}")]
-        //[HttpDelete]
-        //////[HttpPost]
-        //[ProducesResponseType(typeof(WebApiMessage), 200)]
-        //public virtual async Task<IActionResult> Delete(string id)
-        //{
-        //    var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
-        //    //if (!(await Service.ExistsAsync(cts.Token, id)))
-        //    //{
-        //    //    return ApiNotFoundErrorMessage(Messages.NotFound);
-        //    //}
-
-        //    var result = await Service.DeleteAsync(id, cts.Token);
-        //    if (result.IsFailure)
-        //    {
-        //        return ValidationErrors(result);
-        //    }
-        //    //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
-        //    return NoContent();
-        //}
-
-        /// <summary>
         /// Deletes the specified dto.
         /// </summary>
         /// <param name="dto">The dto.</param>
@@ -241,10 +217,6 @@ namespace DND.Common.Controllers.Api
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            //if (!(await Service.ExistsAsync(cts.Token, dto.Id)))
-            //{
-            //    return ApiNotFoundErrorMessage(Messages.NotFound);
-            //}
 
             if (dto == null || id.ToString() != dto.Id.ToString())
             {
@@ -257,10 +229,70 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(result);
             }
 
-            //return ApiSuccessMessage(Messages.DeleteSuccessful, id);
             return NoContent();
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
+        [Route("{id}/trigger-action")]
+        [HttpPost]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> TriggerAction(string id, [FromBody] ActionDto action)
+        {
+            if (action == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
+            if (string.IsNullOrWhiteSpace(action.Action) || !actionEvents.IsValidAction<TUpdateDto>(action.Action))
+            {
+                return ApiErrorMessage(Messages.ActionInvalid);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationErrors(ModelState);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var result = await Service.TriggerActionAsync(id, action, Username, cts.Token);
+            if (result.IsFailure)
+            {
+                return ValidationErrors(result);
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Triggers the actions.
+        /// </summary>
+        /// <param name="actions">The actions.</param>
+        /// <returns></returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
+        [HttpPost]
+        [Route("trigger-actions")]
+        public virtual async Task<IActionResult> TriggerActions([FromBody] BulkActionDto[] actions)
+        {
+            if (actions == null || actions.Any(a => a.Id is null || string.IsNullOrWhiteSpace(a.Id.ToString())))
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
+            foreach (var action in actions)
+            {
+                if (action == null || string.IsNullOrWhiteSpace(action.Action) || !actionEvents.IsValidAction<TUpdateDto>(action.Action))
+                {
+                    return ApiErrorMessage(Messages.ActionsInvalid);
+                }
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var results = await Service.TriggerActionsAsync(actions, Username, cts.Token);
+
+            return BulkTriggerActionResponse(results);
+        }
     }
 }
 

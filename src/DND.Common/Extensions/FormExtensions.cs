@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -43,6 +45,19 @@ namespace DND.Common.Extensions
             tagBuilder.WriteTo(helper.ViewContext.Writer, HtmlEncoder.Default);
 
             return new MvcForm(helper.ViewContext, HtmlEncoder.Default);
+        }
+
+        public static dynamic ToDynamic(this FormCollection collection)
+        {
+            dynamic expando = new ExpandoObject();
+            var dictionary = (IDictionary<string, object>)expando;
+
+            foreach (var item in collection.Keys.ToDictionary(key => key, value => collection[value]))
+            {
+                dictionary.Add(item.Key, item.Value);
+            }
+
+            return expando;
         }
     }
 }

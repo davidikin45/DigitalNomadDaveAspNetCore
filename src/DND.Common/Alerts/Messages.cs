@@ -17,10 +17,14 @@ namespace DND.Common.Alerts
         public const string UpdateSuccessful = "Changes saved successfully.";
         public const string DeleteSuccessful = "Delete successful.";
 
+        public const string ActionSuccessful = "Action triggered successfully.";
+
         public const string NotFound = "Object not found.";
 
         public const string CollectionInvalid = "Collection invalid.";
         public const string FieldsInvalid = "One or more of the fields are invalid.";
+        public const string ActionInvalid = "Action invalid.";
+        public const string ActionsInvalid = "One or more of the actions are invalid.";
 
         public const string MessageSentSuccessfully = "Thankyou, your message was sent successfully.";
 

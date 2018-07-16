@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
+    public interface IDomainActionEvent : IDomainEvent
+    {
+    }
+
     public interface IDomainEvent
     {
     }

@@ -27,6 +27,11 @@ namespace DND.Common.Implementation.Models
             _domainEvents.Clear();
         }
 
+        public void AddActionEvent(IDomainActionEvent actionEvent)
+        {
+            _domainEvents.Add(actionEvent);
+        }
+
         //Optimistic Concurrency. Potentially ETags serve the same purpose
         public byte[] RowVersion { get; set; }
     }
