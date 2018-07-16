@@ -205,47 +205,44 @@ namespace DND.Common.Extensions
 
                     if (entityActions)
                     {
-                        bool first = true;
+                        var postUrl = html.Url().Action("TriggerAction", new { id = item.Id });
+
+                        tdActions.InnerHtml.AppendHtml("<form action ='"+ postUrl + "' method='POST' />");
+                        tdActions.InnerHtml.AppendHtml("<div class='btn-group'>");
+
+                        tdActions.InnerHtml.AppendHtml("<button type='button' class='btn btn-info dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
+                        tdActions.InnerHtml.AppendHtml("Actions");
+                        tdActions.InnerHtml.AppendHtml("</button>");
+
+                        tdActions.InnerHtml.AppendHtml("<div class='dropdown-menu'>");
+
                         foreach (var action in actions)
                         {
                             foreach (var actionDescription in action.Value)
                             {
-                                if(!first)
-                                {
-                                    tdActions.InnerHtml.Append(" | ");
-                                }
-                                first = false;
-                                tdActions.InnerHtml.AppendHtml(html.ActionLink(actionDescription, "TriggerAction", new { id = item.Id, action = action.Key }));
+                                var button = "<button type='submit' class='dropdown-item' name='action' value='" + action.Key + "'>" + actionDescription + "</button>";
+                                tdActions.InnerHtml.AppendHtml(button);
                             }
                         }
 
-                        if (edit || delete || details)
-                        {
-                            tdActions.InnerHtml.Append(" | ");
-                        }
+                        tdActions.InnerHtml.AppendHtml(@"</div>");
+                        tdActions.InnerHtml.AppendHtml(@"</div>");
+                        tdActions.InnerHtml.AppendHtml(@"</form>");
                     }
 
                     if (details)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Details", "Details", new { id = item.Id }));
-                        if (edit || delete)
-                        {
-                            tdActions.InnerHtml.Append(" | ");
-                        }
+                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" }));
                     }
 
                     if (edit)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Edit", "Edit", new { id = item.Id }));
-                        if (delete)
-                        {
-                            tdActions.InnerHtml.Append(" | ");
-                        }
+                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-success btn-sm" }));
                     }
 
                     if (delete)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Delete", "Delete", new { id = item.Id }));
+                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-warning btn-sm" }));
                     }
 
                     tbodytr.InnerHtml.AppendHtml(tdActions);

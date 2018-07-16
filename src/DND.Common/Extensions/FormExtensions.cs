@@ -42,6 +42,7 @@ namespace DND.Common.Extensions
             tagBuilder.MergeAttribute("action", formAction);
             tagBuilder.MergeAttribute("method", HtmlHelper.GetFormMethodString(method));
 
+
             tagBuilder.WriteTo(helper.ViewContext.Writer, HtmlEncoder.Default);
 
             return new MvcForm(helper.ViewContext, HtmlEncoder.Default);

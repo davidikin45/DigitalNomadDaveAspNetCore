@@ -212,9 +212,8 @@ namespace DND.Common.Controllers
             return View("Delete", data);
         }
 
-        [HttpGet]
-        //[HttpPost]
-        [Route("{id}/trigger-action/{action}")]
+        [HttpPost]
+        [Route("{id}/trigger-action")]
         public virtual async Task<ActionResult> TriggerAction(string id, string action, FormCollection collection)
         {
             if (string.IsNullOrWhiteSpace(action) || !actionEvents.IsValidAction<TUpdateDto>(action))
