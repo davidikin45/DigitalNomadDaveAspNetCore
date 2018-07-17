@@ -161,13 +161,13 @@ Todo
 
 ## Whats Next
 
-* Make generic UI compatible with any complex Dto datastructure. Convention first, configured by model data attributes where necessary.
+Make generic UI compatible with any complex Dto datastructure. Convention first, configured by model data attributes where necessary.
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericList.png "Generic List")
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericCreateUpdate.png "Generic Create Update")
 
-* Make generic RESTful API compatible with any complex Dto datastructure. Convention first, configured by model data attributes where necessary.
+Make generic RESTful API compatible with any complex Dto datastructure. Convention first, configured by model data attributes where necessary.
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericAPI.png "Generic API")
 
