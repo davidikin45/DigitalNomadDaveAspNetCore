@@ -388,6 +388,11 @@ namespace DND.Web
                     policyBuilder.RequireScope(ApiScopes.Full);
                 });
 
+                options.AddPolicy(ApiScopes.Write, policyBuilder =>
+                {
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Write, ApiScopes.Create, ApiScopes.Update);
+                });
+
                 options.AddPolicy(ApiScopes.Create, policyBuilder =>
                 {
                     policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Write, ApiScopes.Create);

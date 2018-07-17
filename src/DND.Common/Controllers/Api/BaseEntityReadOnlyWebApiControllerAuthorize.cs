@@ -77,7 +77,8 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = await Service.GetByIdAsync(id, cts.Token);
+            //By passing true we get the full graph
+            var response = await Service.GetByIdAsync(id, cts.Token, true, false);
 
             if (response == null)
             {
@@ -85,6 +86,39 @@ namespace DND.Common.Controllers.Api
             }
 
             var links = CreateLinks(id, fields);
+
+            var linkedResourceToReturn = response.ShapeData(fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+
+            // Success(shapedData);
+        }
+
+        [FormatFilter]
+        [Route("full-graph/{id}"), Route("full-graph/{id}.{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(object), 200)]
+        public virtual async Task<IActionResult> GetFullGraph(string id, [FromQuery] string fields)
+        {
+            if (!TypeHelperService.TypeHasProperties<TDto>(fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            //By passing true we get the full graph
+            var response = await Service.GetByIdAsync(id, cts.Token, false, true);
+
+            if (response == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var links = CreateLinks(id, fields, true);
 
             var linkedResourceToReturn = response.ShapeData(fields)
                 as IDictionary<string, object>;
@@ -238,12 +272,12 @@ namespace DND.Common.Controllers.Api
         [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
         public virtual async Task<IActionResult> GetCollectionProperty(string id, string collection, WebApiPagedRequestDto resourceParameters)
         {
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).GetProperty(collection).PropertyType.IsCollection())
+            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
             {
                 return ApiErrorMessage(Messages.CollectionInvalid);
             }
 
-            var collectionItemType = typeof(TDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
+            var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
             if (!TypeHelperService.TypeHasProperties(collectionItemType, resourceParameters.Fields))
             {
                 return ApiErrorMessage(Messages.FieldsInvalid);
@@ -312,12 +346,12 @@ namespace DND.Common.Controllers.Api
         [ProducesResponseType(typeof(object), 200)]
         public virtual async Task<IActionResult> GetCollectionItem(string id, string collection, string collectionItemId, [FromQuery] string fields)
         {
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).GetProperty(collection).PropertyType.IsCollection())
+            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
             {
                 return ApiErrorMessage(Messages.CollectionInvalid);
             }
 
-            var collectionItemType = typeof(TDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
+            var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
             if (!TypeHelperService.TypeHasProperties(collectionItemType, fields))
             {
                 return ApiErrorMessage(Messages.FieldsInvalid);
@@ -524,21 +558,27 @@ ResourceUriType type)
             }
         }
 
-        private IEnumerable<LinkDto> CreateLinks(string id, string fields)
+        private IEnumerable<LinkDto> CreateLinks(string id, string fields, bool fullGraph = false)
         {
             var links = new List<LinkDto>();
+
+            string action = nameof(Get);
+            if(fullGraph)
+            {
+                action = nameof(GetFullGraph);
+            }
 
             if (string.IsNullOrWhiteSpace(fields))
             {
                 links.Add(
-                  new LinkDto(UrlHelper.Action(nameof(Get), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  new LinkDto(UrlHelper.Action(action, UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                   "self",
                   HttpMethod.Get.Method));
             }
             else
             {
                 links.Add(
-                  new LinkDto(UrlHelper.Action(nameof(Get), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id, fields = fields }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  new LinkDto(UrlHelper.Action(action, UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id, fields = fields }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                   "self",
                   HttpMethod.Get.Method));
             }

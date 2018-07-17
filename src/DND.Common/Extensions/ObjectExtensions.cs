@@ -177,24 +177,42 @@ namespace DND.Common.Extensions
         {
             if (HasProperty(obj, propName))
             {
-                return obj.GetType().GetProperty(propName).GetValue(obj, null);
+                return obj.GetType().GetProperties().First(p => p.Name.ToUpper() == propName.ToUpper()).GetValue(obj, null);
             }
             return null;
         }
 
         public static void SetPropValue(this object obj, string propName, object value)
         {
-            obj.GetType().GetProperty(propName).SetValue(obj, value);
+            obj.GetType().GetProperties().First(p => p.Name.ToUpper() == propName.ToUpper()).SetValue(obj, value);
+        }
+
+        public static bool IsCollectionProperty(this Type type, string propName)
+        {
+            if (HasProperty(type, propName))
+            {
+                return type.GetProperties().First(p => p.Name.ToUpper() == propName.ToUpper()).PropertyType.IsCollection();
+            }
+            return false;
+        }
+
+        public static Type[] GetGenericArguments(this Type type, string propName)
+        {
+            if (HasProperty(type, propName))
+            {
+                return type.GetProperties().First(p => p.Name.ToUpper() == propName.ToUpper()).PropertyType.GenericTypeArguments;
+            }
+            return null;
         }
 
         public static bool HasProperty(this Type type, string propName)
         {
-            return type.GetProperty(propName) != null;
+            return type.GetProperties().Any(p => p.Name.ToUpper() == propName.ToUpper());
         }
 
         public static bool HasProperty(this object obj, string propName)
         {
-            return obj.GetType().GetProperty(propName) != null;
+            return obj.GetType().GetProperties().Any(p => p.Name.ToUpper() == propName.ToUpper());
         }
 
         public static PropertyInfo[] GetProperties(this object obj)

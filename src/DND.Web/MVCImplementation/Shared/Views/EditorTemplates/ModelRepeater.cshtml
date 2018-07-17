@@ -3,18 +3,18 @@
 
 @model dynamic;
 
+<div class="form-group row">
+    <div class="col-md-12">
+        <button type="button" class="btn btn-success btn-sm mt-2" onclick="create@(Html.ViewData.ModelMetadata.Name)()"><span class="fa fa-plus" aria-hidden="true"></span> Create New</button>
+    </div>
+</div>
+
 <div id="@(Html.ViewData.ModelMetadata.Name)">
     @for (int i = 0; i < Model.Count; i++)
     {
         var htmlHelper = HtmlHelperExtensions.For(Html, Model[i]);
-        @(((IHtmlHelper)htmlHelper).EditorForModel("ModelRepeaterItem", new  { Collection = Html.ViewData.ModelMetadata.Name, CollectionIndex = i.ToString(), EditMode = true, CreateMode = false }));
+    @(((IHtmlHelper)htmlHelper).EditorForModel("ModelRepeaterItem", new  { Collection = (string)ViewBag.Collection, CollectionIndex = i.ToString(), EditMode = true, CreateMode = false }));
     }
-</div>
-
-<div class="form-group row">
-    <div class="offset-md-2 col-md-10">    
-        <button type="button" class="btn btn-primary" onclick="create@(Html.ViewData.ModelMetadata.Name)()">Add New</button>
-    </div>
 </div>
 
 <script>
@@ -26,7 +26,7 @@
           document.getElementById("@(Html.ViewData.ModelMetadata.Name)").innerHTML += this.responseText;
         }
         };
-      xhttp.open("GET", "@(Url.Action("CreateCollectionItem", Url.ActionContext.RouteData.Values["controller"].ToString(), new { collection = Html.ViewData.ModelMetadata.Name }, Url.ActionContext.HttpContext.Request.Scheme))", true);
+      xhttp.open("GET", "@(Url.Action("CreateCollectionItem", Url.ActionContext.RouteData.Values["controller"].ToString(), new { collection = (string)ViewBag.Collection }, Url.ActionContext.HttpContext.Request.Scheme))", true);
       xhttp.send();
     }
 </script>

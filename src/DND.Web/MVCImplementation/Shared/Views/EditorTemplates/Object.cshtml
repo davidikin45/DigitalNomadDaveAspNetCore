@@ -1,4 +1,17 @@
 ﻿@model dynamic
+@{
+    string guid = Guid.NewGuid().ToString();
+    var collections = ViewData.ModelMetadata.Properties.Where(p => p.DataTypeName == "ModelRepeater" && (((bool)ViewBag.EditMode && p.ShowForEdit) || ((bool)ViewBag.CreateMode && (!p.AdditionalValues.ContainsKey("ShowForCreate") || (bool)p.AdditionalValues["ShowForCreate"]))));
+    var hasCollections = collections.Count() > 0;
+
+    Dictionary<object, string> guids = new Dictionary<object, string>();
+    foreach (var collection in collections)
+    {
+        guids.Add(collection, Guid.NewGuid().ToString());
+    }
+
+    var htmlFieldPrefix = Html.ViewContext.ViewData.TemplateInfo.HtmlFieldPrefix;
+}
 
 @if (!ViewData.ContainsKey("EditMode"))
 {
@@ -6,7 +19,27 @@
     ViewBag.CreateMode = true;
 }
 
-@foreach (var prop in ViewData.ModelMetadata.Properties.Where(p => ((bool)ViewBag.EditMode && p.ShowForEdit) || ((bool)ViewBag.CreateMode && (!p.AdditionalValues.ContainsKey("ShowForCreate") || (bool)p.AdditionalValues["ShowForCreate"]))))
+@if (hasCollections)
+{
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-@guid-tab" data-toggle="tab" href="#nav-@guid" role="tab" aria-controls="nav-@guid" aria-selected="true">Details</a>
+            @foreach (var prop in collections)
+            {
+                <a class="nav-item nav-link" id="nav-@guids[prop]-tab" data-toggle="tab" href="#nav-@guids[prop]" role="tab" aria-controls="nav-@guids[prop]" aria-selected="false">@Html.DisplayName(prop.PropertyName)</a>
+            }
+        </div>
+    </nav>
+}
+
+@if (hasCollections)
+{
+
+    @Html.Raw("<div class=\"tab-content\" id=\"nav-tabContent\">")
+    @Html.Raw("<div class=\"tab-pane fade show active\" id=\"nav-" + guid + "\" role=\"tabpanel\" aria-labelledby=\"nav-" + guid + "-tab\">")
+}
+
+@foreach (var prop in ViewData.ModelMetadata.Properties.Where(p => p.DataTypeName != "ModelRepeater" && (((bool)ViewBag.EditMode && p.ShowForEdit) || ((bool)ViewBag.CreateMode && (!p.AdditionalValues.ContainsKey("ShowForCreate") || (bool)p.AdditionalValues["ShowForCreate"])))))
 {
     var readOnlyHiddenInput = false;
 
@@ -49,4 +82,62 @@
             </div>
         </div>
     }
+}
+
+@if (hasCollections)
+{
+    @Html.Raw("</div>")
+}
+
+@foreach (var prop in collections)
+{
+    @Html.Raw("<div class=\"tab-pane fade\" id=\"nav-" + @guids[prop] + "\" role=\"tabpanel\" aria-labelledby=\"nav-" + @guids[prop] + "-tab\">")
+
+    var readOnlyHiddenInput = false;
+
+    if (((bool)ViewBag.CreateMode && prop.AdditionalValues.ContainsKey("ReadOnlyHiddenInputCreate") && (bool)prop.AdditionalValues["ReadOnlyHiddenInputCreate"]) || ((bool)ViewBag.EditMode && prop.AdditionalValues.ContainsKey("ReadOnlyHiddenInputEdit") && (bool)prop.AdditionalValues["ReadOnlyHiddenInputEdit"]))
+    {
+        readOnlyHiddenInput = true;
+    }
+
+    var hiddenInput = false;
+
+    if (prop.TemplateHint == "HiddenInput" || readOnlyHiddenInput)
+    {
+        hiddenInput = true;
+        if (prop.ModelType.FullName == "System.Byte[]")
+        {
+
+            @Html.Editor(prop.PropertyName, "ByteArray")
+        }
+        else
+        {
+            @Html.Hidden(prop.PropertyName)
+        }
+    }
+
+    if (!hiddenInput || (prop.IsReadOnly) || readOnlyHiddenInput)
+    {
+        //Display to user
+        <div class="form-group row">
+            <div class="col-md-12">
+                @if (readOnlyHiddenInput)
+                {
+                    @Html.Editor(prop.PropertyName, "ReadOnly")
+                }
+                else
+                {
+                    @Html.Editor(prop.PropertyName, new { Collection = !string.IsNullOrWhiteSpace(htmlFieldPrefix) ? htmlFieldPrefix + "." + prop.PropertyName : prop.PropertyName })
+                }
+                @Html.ValidationMessage(prop.PropertyName)
+            </div>
+        </div>
+    }
+
+    @Html.Raw("</div>")
+}
+
+@if (hasCollections)
+{
+    @Html.Raw("</div>")
 }

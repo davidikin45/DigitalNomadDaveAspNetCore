@@ -243,7 +243,7 @@ namespace DND.Common.Implementation.DomainServices
             }
         }
 
-        public Result TriggerAction(object id, string action, dynamic args, string triggeredBy)
+        public Result TriggerAction(object id, string action, string triggeredBy)
         {
             var actionEvents = new ActionEvents();
 
@@ -253,7 +253,7 @@ namespace DND.Common.Implementation.DomainServices
                 {
                     var entity = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id);
 
-                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, args, entity, triggeredBy);
+                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, null, entity, triggeredBy);
                     if(actionEvent != null)
                     {
                         entity.AddActionEvent(actionEvent);
@@ -276,7 +276,7 @@ namespace DND.Common.Implementation.DomainServices
             return Result.Ok();
         }
 
-        public async Task<Result> TriggerActionAsync(object id, string action, dynamic args, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Result> TriggerActionAsync(object id, string action, string triggeredBy, CancellationToken cancellationToken)
         {
             var actionEvents = new ActionEvents();
 
@@ -286,7 +286,7 @@ namespace DND.Common.Implementation.DomainServices
                 {
                     var entity = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id);
 
-                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, args, entity, triggeredBy);
+                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, null, entity, triggeredBy);
                     if (actionEvent != null)
                     {
                         entity.AddActionEvent(actionEvent);

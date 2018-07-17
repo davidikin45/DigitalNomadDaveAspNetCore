@@ -120,10 +120,15 @@ namespace DND.Common.Extensions
                 {
 
                     var pi = modelType.GetProperty(orderByProperty);
-                    IEnumerable<Object> query = (db.Queryable(modelType)).ToList().OrderByDescending(x => pi.GetValue(x, null));
+                    IEnumerable<Object> query = null;
+
                     if (orderByType == "asc")
                     {
                         query = (db.Queryable(modelType)).ToList().OrderBy(x => pi.GetValue(x, null));
+                    }
+                    else
+                    {
+                        query = (db.Queryable(modelType)).ToList().OrderByDescending(x => pi.GetValue(x, null));
                     }
 
                     query.ToList().ForEach(item =>

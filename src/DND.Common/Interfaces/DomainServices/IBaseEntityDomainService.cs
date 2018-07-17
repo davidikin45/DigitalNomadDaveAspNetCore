@@ -29,8 +29,8 @@ namespace DND.Common.Interfaces.DomainServices
 
         Task<Result> ValidateAsync(TEntity entity, ValidationMode mode, CancellationToken cancellationToken = default(CancellationToken));
 
-        Result TriggerAction(object id, string action, dynamic args, string triggeredBy);
+        Result TriggerAction(object id, string action, string triggeredBy);
 
-        Task<Result> TriggerActionAsync(object id, string action, dynamic args, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Result> TriggerActionAsync(object id, string action, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

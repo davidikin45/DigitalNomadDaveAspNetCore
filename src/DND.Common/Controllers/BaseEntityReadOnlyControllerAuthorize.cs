@@ -16,10 +16,10 @@ using DND.Common.Interfaces.Dtos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using DND.Common.Extensions;
+using DND.Common.Controllers.Api;
 
 namespace DND.Common.Controllers
 {
-
     //Edit returns a view of the resource being edited, the Update updates the resource it self
 
     //C - Create - POST
@@ -30,7 +30,7 @@ namespace DND.Common.Controllers
     //If there is an attribute applied(via[HttpGet], [HttpPost], [HttpPut], [AcceptVerbs], etc), the action will accept the specified HTTP method(s).
     //If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
     //Otherwise, the action supports the POST method.
-    [Authorize(Roles = "admin")]
+    [Authorize(Policy = ApiScopes.Read)]
     public abstract class BaseEntityReadOnlyControllerAuthorize<TDto, IEntityService> : BaseController
         where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
@@ -114,7 +114,7 @@ namespace DND.Common.Controllers
         [Route("details/{id}/{collection}")]
         public virtual async Task<ActionResult> Collection(string id, string collection, int page = 1, int pageSize = 10, string orderColumn = nameof(IBaseDtoWithId.Id), string orderType = OrderByType.Descending, string search = "")
         {
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).GetProperty(collection).PropertyType.IsCollection())
+            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
             {
                 return HandleReadException();
             }
@@ -123,7 +123,7 @@ namespace DND.Common.Controllers
 
             try
             {
-                var collectionItemType = typeof(TDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
+                var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
 
                 var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, page - 1, pageSize);
 
@@ -172,7 +172,7 @@ namespace DND.Common.Controllers
         [Route("details/{id}/{collection}/{collectionItemId}")]
         public virtual async Task<ActionResult> CollectionItemDetails(string id, string collection, string collectionItemId)
         {
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).GetProperty(collection).PropertyType.IsCollection())
+            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
             {
                 return HandleReadException();
             }
@@ -181,7 +181,7 @@ namespace DND.Common.Controllers
             Object data = null;
             try
             {
-                var collectionItemType = typeof(TDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
+                var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
 
                 var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, null, null, collectionItemId);
 

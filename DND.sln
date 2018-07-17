@@ -129,6 +129,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{F0C97453-A
 		docs\CI.png = docs\CI.png
 		docs\Domain Events Diagram.png = docs\Domain Events Diagram.png
 		docs\Domain Events Diagram.xml = docs\Domain Events Diagram.xml
+		docs\GenericAPI.png = docs\GenericAPI.png
+		docs\GenericCreateUpdate.png = docs\GenericCreateUpdate.png
+		docs\GenericList.png = docs\GenericList.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.IntegrationTestsNUnit", "tests\DND.IntegrationTestsNUnit\DND.IntegrationTestsNUnit.csproj", "{CB9CD0EA-14D2-4D17-A7B0-A306DC7DC885}"

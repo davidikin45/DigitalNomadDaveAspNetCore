@@ -2,7 +2,7 @@
 @if (ViewBag.DisableCreate == null ? true : !ViewBag.DisableCreate)
 {
     <p>
-        @Html.ActionLink("Create New", "Create")
+        @Html.IconLink("Create New", "Create",new { }, "fa fa-plus", new {@class="btn btn-success btn-sm" })
     </p>
 }
 @using (Html.BeginForm(Html.Action(), Html.Controller(), FormMethod.Get, new {@class="form-inline"}))

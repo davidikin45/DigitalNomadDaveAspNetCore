@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Alerts;
+using DND.Common.Controllers.Api;
 using DND.Common.DomainEvents;
 using DND.Common.Email;
 using DND.Common.Extensions;
@@ -12,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,7 +31,7 @@ namespace DND.Common.Controllers
     //If there is an attribute applied(via[HttpGet], [HttpPost], [HttpPut], [AcceptVerbs], etc), the action will accept the specified HTTP method(s).
     //If the name of the controller action starts the words "Get", "Post", "Put", "Delete", "Patch", "Options", or "Head", use the corresponding HTTP method.
     //Otherwise, the action supports the POST method.
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     public abstract class BaseEntityControllerAuthorize<TCreateDto, TReadDto, TUpdateDto, TDeleteDto, IEntityService> : BaseEntityReadOnlyControllerAuthorize<TReadDto, IEntityService>
         where TCreateDto : class, IBaseDto
         where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
@@ -43,7 +46,7 @@ namespace DND.Common.Controllers
             actionEvents = new ActionEvents();
         }
 
-        // GET: Default/Create
+        [Authorize(Policy = ApiScopes.Create)]
         [Route("create")]
         public virtual ActionResult Create()
         {
@@ -53,7 +56,7 @@ namespace DND.Common.Controllers
             return View("Create", instance);
         }
 
-        // POST: Default/Create
+        [Authorize(Policy = ApiScopes.Create)]
         [HttpPost]
         [Route("create")]
         public virtual async Task<ActionResult> Create(TCreateDto dto)
@@ -85,7 +88,7 @@ namespace DND.Common.Controllers
             return View("Create", dto);
         }
 
-        // GET: Default/Edit/5
+        [Authorize(Policy = ApiScopes.Update)]
         [Route("edit/{id}")]
         public virtual async Task<ActionResult> Edit(string id)
         {
@@ -104,7 +107,7 @@ namespace DND.Common.Controllers
             }
         }
 
-        // POST: Default/Edit/5
+        [Authorize(Policy = ApiScopes.Update)]
         [HttpPost]
         [Route("edit/{id}")]
         public virtual async Task<ActionResult> Edit(string id, TUpdateDto dto)
@@ -137,26 +140,34 @@ namespace DND.Common.Controllers
             return View("Edit", dto);
         }
 
+        [Authorize(Policy = ApiScopes.Write)]
         [HttpGet]
         [Route("{collection}/create")]
         public virtual ActionResult CreateCollectionItem(string collection)
         {
-            if (!typeof(TUpdateDto).HasProperty(collection) || !typeof(TUpdateDto).GetProperty(collection).PropertyType.IsCollection())
+            var properties = new Queue<String>(collection.Split('.').Select(p => p.Split('[')[0]).ToList());
+
+            var type = typeof(TUpdateDto);
+            while (properties.Count > 0)
             {
-                return HandleReadException();
+                string property = properties.Dequeue();
+                if (!type.HasProperty(property) || !type.IsCollectionProperty(property))
+                {
+                    return HandleReadException();
+                }
+
+                type = type.GetGenericArguments(property).First();
             }
 
             ViewBag.Collection = collection;
             ViewBag.CollectionIndex = Guid.NewGuid().ToString();
 
-            var collectionItemType = typeof(TUpdateDto).GetProperty(collection).PropertyType.GetGenericArguments().Single();
-
-            var instance = Activator.CreateInstance(collectionItemType);
+            var instance = Activator.CreateInstance(type);
 
             return PartialView("_CreateCollectionItem", instance);
         }
 
-        // GET: Default/Delete/5
+        [Authorize(Policy = ApiScopes.Delete)]
         [Route("delete/{id}")]
         public virtual async Task<ActionResult> Delete(string id)
         {
@@ -175,7 +186,7 @@ namespace DND.Common.Controllers
             }
         }
 
-        // POST: Default/Delete/5
+        [Authorize(Policy = ApiScopes.Delete)]
         [HttpPost, ActionName("Delete"), Route("delete/{id}")]
         public virtual async Task<ActionResult> DeleteConfirmed(string id, TDeleteDto dto)
         {
@@ -208,9 +219,10 @@ namespace DND.Common.Controllers
             return View("Delete", data);
         }
 
+        [Authorize(Policy = ApiScopes.Update)]
         [HttpPost]
         [Route("{id}/trigger-action")]
-        public virtual async Task<ActionResult> TriggerAction(string id, string action, FormCollection collection)
+        public virtual async Task<ActionResult> TriggerAction(string id, string action, IFormCollection collection)
         {
             if (string.IsNullOrWhiteSpace(action) || !actionEvents.IsValidAction<TUpdateDto>(action))
             {

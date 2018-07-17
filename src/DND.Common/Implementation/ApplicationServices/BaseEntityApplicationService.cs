@@ -269,7 +269,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
         public virtual Result TriggerAction(object id, ActionDto action, string triggeredBy)
         {
-            var result = DomainService.TriggerAction(id, action.Action, action.Args, triggeredBy);
+            var result = DomainService.TriggerAction(id, action.Action, triggeredBy);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)
@@ -301,7 +301,7 @@ namespace DND.Common.Implementation.ApplicationServices
 
         public async virtual Task<Result> TriggerActionAsync(object id, ActionDto action, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var result = await DomainService.TriggerActionAsync(id, action.Action, action.Args, triggeredBy).ConfigureAwait(false);
+            var result = await DomainService.TriggerActionAsync(id, action.Action, triggeredBy, cancellationToken).ConfigureAwait(false);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)

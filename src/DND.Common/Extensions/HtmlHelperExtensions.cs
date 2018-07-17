@@ -70,11 +70,22 @@ namespace DND.Common.Extensions
             return writer.ToString();
         }
 
+        public static HtmlString IconLink(this IHtmlHelper htmlHelper, string linkText, string actionName, object routeValues, String iconName, object htmlAttributes = null)
+        {
+            var linkMarkup = htmlHelper.ActionLink(linkText, actionName, routeValues, htmlAttributes).Render();
+            var iconMarkup = String.Format("<span class=\"{0}\" aria-hidden=\"true\"></span> ", iconName);
+            return new HtmlString(linkMarkup.Insert(linkMarkup.IndexOf(@">") + 1, iconMarkup));
+        }
+
         public static HtmlString Grid(this IHtmlHelper<dynamic> html, Boolean details, Boolean edit, Boolean delete, Boolean sorting, Boolean entityActions)
         {
+            var div = new TagBuilder("div");
+            div.AddCssClass("table-responsive");
+
             var table = new TagBuilder("table");
             table.AddCssClass("table");
             table.AddCssClass("table-striped");
+            table.AddCssClass("table-sm");
 
             var thead = new TagBuilder("thead");
 
@@ -204,7 +215,7 @@ namespace DND.Common.Extensions
                     {
                         var postUrl = html.Url().Action("TriggerAction", new { id = item.Id });
 
-                        tdActions.InnerHtml.AppendHtml("<div class='btn-group mr-2'>");
+                        tdActions.InnerHtml.AppendHtml("<div class='btn-group mr-2 mb-2'>");
                         tdActions.InnerHtml.AppendHtml("<form action ='" + postUrl + "' method='POST' />");
 
                         tdActions.InnerHtml.AppendHtml("<button type='button' class='btn btn-secondary btn-sm dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>");
@@ -229,17 +240,17 @@ namespace DND.Common.Extensions
 
                     if (details)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary btn-sm mr-2" }));
+                        tdActions.InnerHtml.AppendHtml(html.IconLink("Details", "Details", new { id = item.Id }, "fa fa-search", new { @class = "btn btn-primary btn-sm mr-2 mb-2" }));
                     }
 
                     if (edit)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning btn-sm mr-2" }));
+                        tdActions.InnerHtml.AppendHtml(html.IconLink("Edit", "Edit", new { id = item.Id }, "fa fa-pencil", new { @class = "btn btn-warning btn-sm mr-2 mb-2" }));
                     }
 
                     if (delete)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm mr-2" }));
+                        tdActions.InnerHtml.AppendHtml(html.IconLink("Delete", "Delete", new { id = item.Id }, "fa fa-trash", new { @class = "btn btn-danger btn-sm mr-2 mb-2" }));
                     }
 
                     tbodytr.InnerHtml.AppendHtml(tdActions);
@@ -250,7 +261,9 @@ namespace DND.Common.Extensions
 
             table.InnerHtml.AppendHtml(tbody);
 
-            return new HtmlString(table.Render());
+            div.InnerHtml.AppendHtml(table);
+
+            return new HtmlString(div.Render());
         }
 
         public static string Controller(this IHtmlHelper htmlHelper)

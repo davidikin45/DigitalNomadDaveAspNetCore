@@ -157,17 +157,17 @@ namespace DND.Common.Interfaces.Repository
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetById(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
+        TEntity GetById(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        Task<TEntity> GetByIdAsync(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
+        Task<TEntity> GetByIdAsync(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
 
-        TEntity GetByIdNoTracking(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
+        TEntity GetByIdNoTracking(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
           ;
 
-        Task<TEntity> GetByIdNoTrackingAsync(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
+        Task<TEntity> GetByIdNoTrackingAsync(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null);

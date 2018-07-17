@@ -87,11 +87,11 @@ namespace DND.Common.Interfaces.ApplicationServices
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
-        TDto GetById(object id, params Expression<Func<TDto, Object>>[] includeProperties)
+        TDto GetById(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
         Task<TDto> GetByIdAsync(object id, 
-             CancellationToken cancellationToken, params Expression<Func<TDto, Object>>[] includeProperties)
+             CancellationToken cancellationToken, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
         TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object colectionItemId = null);

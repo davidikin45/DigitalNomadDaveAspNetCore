@@ -11,7 +11,7 @@ namespace DND.Infrastructure
         public const string AdminRoleName = "admin";
 
         public const string AdminName = "admin";
-        public const string AdminUsername = "admin@admin.com";
+        public const string AdminUsername = "admin";
         public const string AdminEmail = "admin@admin.com";
         public const string AdminPassword = "password";
     }

@@ -341,7 +341,7 @@ namespace DND.Common.DomainEvents
                 {
                     var aggRootEntity = ((IBaseEntityAggregateRoot)entity);
                     var entityEvents = aggRootEntity.DomainEvents.ToArray();
-                    foreach (var domainEvent in events)
+                    foreach (var domainEvent in entityEvents)
                     {
                         events.Add(domainEvent);
                     }

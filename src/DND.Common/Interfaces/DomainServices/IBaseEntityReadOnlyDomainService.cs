@@ -86,7 +86,7 @@ namespace DND.Common.Interfaces.DomainServices
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetById(object id, params Expression<Func<TEntity, Object>>[] includeProperties)
+        TEntity GetById(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
 
@@ -94,8 +94,8 @@ namespace DND.Common.Interfaces.DomainServices
 
         int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
 
-        Task<TEntity> GetByIdAsync(object id, 
-             CancellationToken cancellationToken, params Expression<Func<TEntity, Object>>[] includeProperties)
+        Task<TEntity> GetByIdAsync(object id,
+             CancellationToken cancellationToken, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object collectionItemId = null);

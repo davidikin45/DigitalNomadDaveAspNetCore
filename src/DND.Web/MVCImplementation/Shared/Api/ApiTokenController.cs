@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,9 +46,9 @@ namespace DND.Web.MVCImplementation.Shared.Api
         }
 
         //[FromBody]
-        [HttpPost("FullAccessToken")]
+        [HttpPost("access-token")]
         [AllowAnonymous]
-        public async Task<IActionResult> FullAccessToken([FromBody] LoginViewModel model)
+        public async Task<IActionResult> AccessToken([FromBody] LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -58,159 +59,18 @@ namespace DND.Web.MVCImplementation.Shared.Api
 
                     if (result.Succeeded)
                     {
-
                         //Add roles
                         var roles = await _userManager.GetRolesAsync(user);
-
-
-                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
-
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Full);
-
-                        return Created("", results);
-                    }
-                }
-
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPost("WriteAccessToken")]
-        [AllowAnonymous]
-        public async Task<IActionResult> WriteAccessToken([FromBody] LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user != null)
-                {
-                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-
-                    if (result.Succeeded)
-                    {
-
-                        //Add roles
-                        var roles = await _userManager.GetRolesAsync(user);
-
+                        var scopes = (await _userManager.GetClaimsAsync(user)).Where(c => c.Type == "scope").Select(c => c.Value);
 
                         var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
 
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Write);
+                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", scopes.ToArray());
 
                         return Created("", results);
                     }
                 }
 
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPost("CreateAccessToken")]
-        [AllowAnonymous]
-        public async Task<IActionResult> CreateAccessToken([FromBody] LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user != null)
-                {
-                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-
-                    if (result.Succeeded)
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
-
-                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
-
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Create);
-
-                        return Created("", results);
-                    }
-                }
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPost("ReadAccessToken")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ReadAccessToken([FromBody] LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user != null)
-                {
-                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-
-                    if (result.Succeeded)
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
-
-                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
-
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Read);
-
-                        return Created("", results);
-                    }
-                }
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPost("UpdateAccessToken")]
-        [AllowAnonymous]
-        public async Task<IActionResult> UpdateAccessToken([FromBody] LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user != null)
-                {
-                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-
-                    if (result.Succeeded)
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
-
-                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
-
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Update);
-
-                        return Created("", results);
-                    }
-                }
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPost("DeleteAccessToken")]
-        [AllowAnonymous]
-        public async Task<IActionResult> DeleteAccessToken([FromBody] LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user != null)
-                {
-                    var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-
-                    if (result.Succeeded)
-                    {
-                        var roles = await _userManager.GetRolesAsync(user);
-
-                        //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
-                        var key =  SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
-
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", ApiScopes.Delete);
-
-                        return Created("", results);
-                    }
-                }
             }
 
             return BadRequest();
