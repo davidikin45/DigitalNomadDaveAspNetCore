@@ -233,26 +233,26 @@ namespace DND.Common.Implementation.ApplicationServices
             return Mapper.Map<TDto>(bo);
         }
 
-        public virtual TDto GetById(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
+        public virtual TDto GetById(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
         {
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
             var list = includesConverted.ToList();
             AddIncludes(list);
             includesConverted = list.ToArray();
 
-            var bo = DomainService.GetById(id, includeAllCollectionProperties, includeAllProperties, includesConverted);
+            var bo = DomainService.GetById(id, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includesConverted);
             return Mapper.Map<TDto>(bo);
         }
 
         public virtual async Task<TDto> GetByIdAsync(object id,
-            CancellationToken cancellationToken = default(CancellationToken), bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
+            CancellationToken cancellationToken = default(CancellationToken), bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
         {
             var includesConverted = GetMappedIncludes<TDto, TEntity>(includeProperties);
             var list = includesConverted.ToList();
             AddIncludes(list);
             includesConverted = list.ToArray();
 
-            var bo = await DomainService.GetByIdAsync(id, cancellationToken, includeAllCollectionProperties, includeAllProperties, includesConverted).ConfigureAwait(false);
+            var bo = await DomainService.GetByIdAsync(id, cancellationToken, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includesConverted).ConfigureAwait(false);
             return Mapper.Map<TDto>(bo);
         }
 

@@ -239,7 +239,7 @@ namespace DND.Common.Implementation.DomainServices
             }
         }
 
-        public virtual TEntity GetById(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        public virtual TEntity GetById(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
             AddIncludes(includes);
@@ -248,12 +248,12 @@ namespace DND.Common.Implementation.DomainServices
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly())
             {
 
-                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id, includeAllCollectionProperties, includeAllProperties, includeProperties);
+                return unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties);
             }
         }
 
         public virtual async Task<TEntity> GetByIdAsync(object id, 
-            CancellationToken cancellationToken = default(CancellationToken), bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+            CancellationToken cancellationToken = default(CancellationToken), bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             var includes = includeProperties != null ? includeProperties.ToList() : new List<Expression<Func<TEntity, Object>>>();
             AddIncludes(includes);
@@ -261,7 +261,7 @@ namespace DND.Common.Implementation.DomainServices
 
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
-                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id, includeAllCollectionProperties, includeAllProperties, includeProperties).ConfigureAwait(false);
+                return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ConfigureAwait(false);
             }
         }
 

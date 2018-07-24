@@ -18,6 +18,7 @@ using DND.Common.Enums;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Helpers;
 using DND.Common.Extensions;
+using System.Data.Entity.Spatial;
 
 namespace DND.Common.Implementation.Repository.EntityFramework
 {
@@ -44,8 +45,8 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
             int? take = null,
-            bool includeAllCollectionProperties = false,
-            bool includeAllProperties = false,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             //includeProperties = includeProperties ?? string.Empty;
@@ -65,16 +66,16 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 query = CreateSearchQuery(query, search);
             }
 
-            if (includeAllProperties)
+            if (includeAllCompositionAndAggregationRelationshipProperties)
             {
-                IncludeAllProperties(false, query);
+                IncludeAllCompositionAndAggregationRelationshipProperties(false, ref query);
             }
             else
             {
-                if (includeAllCollectionProperties)
+                if (includeAllCompositionRelationshipProperties)
                 {
                     //For Aggregate Roots
-                    IncludeAllProperties(true, query);
+                    IncludeAllCompositionAndAggregationRelationshipProperties(true, ref query);
                 }
 
                 if (includeProperties != null)
@@ -110,21 +111,33 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return query;
         }
 
-        //Useful for API Get
-        private void IncludeAllProperties(bool collectionsOnly, IQueryable<TEntity> query, Type type = null, string path = null)
+        //https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
+        //1. Never have Many-To-Many relationships. Create a join Entity so the relationship becomes 1-To-Many and Many-To-1.
+        //2. Never have 1-To-1 Composition ENTITY Relationships!!! For Composition relationships use Value types instead if required. In EF6 extend from BaseValueObject. In EF Core decorate value type with [OwnedAttribute]. Not sure if this attribute can be applied on base class. ValueTypes are included by default.
+        //3. Use collections only for Composition relationships(1-To-Many, child cannot exist independent of the parent, ) not Aggregation relationshiships(child can exist independently of the parent, reference relationship). Never use a Collection for Navigation purposes!!!!
+        //4. Use Complex properties for Aggregation relationships only (Many-To-1, child can exist independently of the parent, reference relationship). e.g Navigation purposes
+        private void IncludeAllCompositionAndAggregationRelationshipProperties(bool compositionRelationshipsOnly, ref IQueryable<TEntity> query, Type type = null, string path = null)
         {
             if (type == null)
             {
                 type = typeof(TEntity);
             }
-            
-            var properties = type.GetProperties().Where(p => !p.PropertyType.IsValueType && ((!collectionsOnly && !p.PropertyType.IsCollection()) || (p.PropertyType.IsCollection() && type != p.PropertyType.GetGenericArguments().First()))).ToList();
+
+            List<Type> excludeTypes = new List<Type>()
+            {
+                typeof(DateTime),
+                typeof(String),
+                typeof(byte[]),
+                typeof(DbGeography)
+           };
+
+            IEnumerable<PropertyInfo> properties = type.GetProperties().Where(p => p.CanWrite && !p.PropertyType.IsValueType && !excludeTypes.Contains(p.PropertyType) && ((!compositionRelationshipsOnly && !p.PropertyType.IsCollection()) || (p.PropertyType.IsCollection() && type != p.PropertyType.GetGenericArguments().First()))).ToList();
 
             foreach (var p in properties)
             {
                 var includePath = !string.IsNullOrWhiteSpace(path) ? path + "." + p.Name : p.Name;
 
-                query.Include(includePath);
+                query = query.Include(includePath);
 
                 Type propType = null;
                 if (p.PropertyType.IsCollection())
@@ -136,14 +149,13 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                     propType = p.PropertyType;
                 }
 
-                IncludeAllProperties(collectionsOnly, query, propType, includePath);
+                IncludeAllCompositionAndAggregationRelationshipProperties(compositionRelationshipsOnly, ref query, propType, includePath);
             }
         }
 
         private void DebugSQL(IQueryable<TEntity> query)
         {
             var sql = query.ToString();
-
         }
 
         protected virtual IQueryable<TEntity> CreateSearchQuery(IQueryable<TEntity> query, string values)
@@ -408,30 +420,30 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return await GetQueryable(false, null, filter, orderBy, null, null, false, false, includeProperties).FirstOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual TEntity GetById(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        public virtual TEntity GetById(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             //return _context.FindEntityById<TEntity>(id);
             Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
 
-            return GetQueryable(true, null, filter, null, null, null, includeAllCollectionProperties, includeAllProperties, includeProperties).SingleOrDefault();
+            return GetQueryable(true, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefault();
         }
 
-        public virtual TEntity GetByIdNoTracking(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        public virtual TEntity GetByIdNoTracking(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
-            return GetQueryable(false, null, filter, null, null, null, includeAllCollectionProperties, includeAllProperties, includeProperties).SingleOrDefault();
+            return GetQueryable(false, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefault();
         }
 
-        public async virtual Task<TEntity> GetByIdAsync(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        public async virtual Task<TEntity> GetByIdAsync(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
-            return await GetQueryable(true, null, filter, null, null, null, includeAllCollectionProperties, includeAllProperties, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(true, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        public async virtual Task<TEntity> GetByIdNoTrackingAsync(object id, bool includeAllCollectionProperties = false, bool includeAllProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        public async virtual Task<TEntity> GetByIdNoTrackingAsync(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
-            return await GetQueryable(false, null, filter, null, null, null, includeAllCollectionProperties, includeAllProperties, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(false, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)

@@ -19,7 +19,7 @@ namespace DND.Common.Extensions
         /// </returns>
         public static bool IsCollection(this Type type)
         {
-            return type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType).Any(x => x.GetGenericTypeDefinition() == typeof(ICollection<>));
+            return type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType).Any(x => x.GetGenericTypeDefinition() == typeof(ICollection<>) && !x.GetGenericArguments().Contains(typeof(Byte)));
         }
 
         /// <summary>

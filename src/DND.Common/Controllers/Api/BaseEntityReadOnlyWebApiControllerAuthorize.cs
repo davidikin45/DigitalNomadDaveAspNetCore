@@ -77,7 +77,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            //By passing true we get the full graph
+            //By passing true we include the Composition properties which should be any child or join entities.
             var response = await Service.GetByIdAsync(id, cts.Token, true, false);
 
             if (response == null)
@@ -110,7 +110,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            //By passing true we get the full graph
+            //By passing true we should get the full graph of Composition and Aggregation Properties
             var response = await Service.GetByIdAsync(id, cts.Token, false, true);
 
             if (response == null)

@@ -3,6 +3,7 @@ using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Domain.Blog.Locations;
 using DND.Domain.Blog.Locations.Dtos;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,6 +16,7 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
 
         public int BlogPostId { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public LocationDto Location { get; set; }
 
         public void CreateMappings(IMapperConfigurationExpression configuration)

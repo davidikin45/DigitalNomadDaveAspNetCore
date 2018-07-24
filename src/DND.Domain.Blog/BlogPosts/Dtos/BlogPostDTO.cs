@@ -66,10 +66,6 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Dropdown(typeof(Location), nameof(Location.Name), nameof(Location.Id), OrderByType.Descending, nameof(BlogPostLocationDto.LocationId))]
         public List<BlogPostLocationDto> Locations { get; set; }
 
-        [Render(ShowForGrid = true, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = true, ShowForCreate = true)]
-        [Repeater(nameof(TagDto.Name))]
-        public List<TagDto> BlogPostTags { get; set; }
-
         [Required]
         public bool ShowLocationDetail { get; set; }
 
@@ -123,24 +119,6 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
             TagIds = new List<int>();
             Tags = new List<BlogPostTagDto>();
             LocationIds = new List<int>();
-
-            BlogPostTags = new List<TagDto>()
-            {
-                new TagDto()
-                {
-                    Id = 1,
-                    Name = "Tag Name",
-                    UrlSlug = "Url Slug",
-                    Description = "Description"
-                },
-                new TagDto()
-                {
-                     Id = 2,
-                    Name = "Tag Name 2",
-                    UrlSlug = "Url Slug 2",
-                    Description = "Description 2"
-                }
-            };
         }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)

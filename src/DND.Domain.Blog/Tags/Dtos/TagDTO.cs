@@ -16,21 +16,6 @@ namespace DND.Domain.Blog.Tags.Dtos
     {
         public TagDto()
         {
-            Locations = new List<LocationDto>()
-            {
-                new LocationDto()
-                {
-                    Id = 1,
-                    Name = "Tag Name",
-                    UrlSlug = "Url Slug"
-                },
-                new LocationDto()
-                {
-                     Id = 2,
-                    Name = "Tag Name 2",
-                    UrlSlug = "Url Slug 2"
-                }
-            };
         }
 
         [Required, StringLength(50)]
@@ -47,10 +32,6 @@ namespace DND.Domain.Blog.Tags.Dtos
 
         [Render(ShowForCreate = false,ShowForEdit = false, ShowForGrid = false, ShowForDisplay = false)]
         public int Count { get; set; }
-
-        [Render(ShowForGrid = true, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = true, ShowForCreate = true)]
-        [Repeater(nameof(LocationDto.Name))]
-        public List<LocationDto> Locations { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {

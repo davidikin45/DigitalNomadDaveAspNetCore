@@ -4,6 +4,7 @@ using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Domain.Blog.Tags;
 using DND.Domain.Blog.Tags.Dtos;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -17,6 +18,7 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
 
         public int BlogPostId { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [Render(ShowForGrid = false, ShowForDisplay = false)]
         public TagDto Tag { get; set; }
 
