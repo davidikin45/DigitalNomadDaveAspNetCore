@@ -68,14 +68,24 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
             if (includeAllCompositionAndAggregationRelationshipProperties)
             {
-                IncludeAllCompositionAndAggregationRelationshipProperties(false, ref query);
+                var includesList = GetAllCompositionAndAggregationRelationshipPropertyIncludes(false);
+
+                foreach (var include in includesList)
+                {
+                    query = query.Include(include);
+                }
             }
             else
             {
                 if (includeAllCompositionRelationshipProperties)
                 {
                     //For Aggregate Roots
-                    IncludeAllCompositionAndAggregationRelationshipProperties(true, ref query);
+                    var includesList = GetAllCompositionAndAggregationRelationshipPropertyIncludes(true);
+
+                    foreach (var include in includesList)
+                    {
+                        query = query.Include(include);
+                    }
                 }
 
                 if (includeProperties != null)
@@ -116,8 +126,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         //2. Never have 1-To-1 Composition ENTITY Relationships!!! For Composition relationships use Value types instead if required. In EF6 extend from BaseValueObject. In EF Core decorate value type with [OwnedAttribute]. Not sure if this attribute can be applied on base class. ValueTypes are included by default.
         //3. Use collections only for Composition relationships(1-To-Many, child cannot exist independent of the parent, ) not Aggregation relationshiships(child can exist independently of the parent, reference relationship). Never use a Collection for Navigation purposes!!!!
         //4. Use Complex properties for Aggregation relationships only (Many-To-1, child can exist independently of the parent, reference relationship). e.g Navigation purposes
-        private void IncludeAllCompositionAndAggregationRelationshipProperties(bool compositionRelationshipsOnly, ref IQueryable<TEntity> query, Type type = null, string path = null)
+        private List<string>  GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type = null, string path = null)
         {
+            List<string> includesList = new List<string>();
+
             if (type == null)
             {
                 type = typeof(TEntity);
@@ -137,7 +149,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             {
                 var includePath = !string.IsNullOrWhiteSpace(path) ? path + "." + p.Name : p.Name;
 
-                query = query.Include(includePath);
+                includesList.Add(includePath);
 
                 Type propType = null;
                 if (p.PropertyType.IsCollection())
@@ -149,8 +161,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                     propType = p.PropertyType;
                 }
 
-                IncludeAllCompositionAndAggregationRelationshipProperties(compositionRelationshipsOnly, ref query, propType, includePath);
+                includesList.AddRange(GetAllCompositionAndAggregationRelationshipPropertyIncludes(compositionRelationshipsOnly, propType, includePath));
             }
+
+            return includesList;
         }
 
         private void DebugSQL(IQueryable<TEntity> query)

@@ -163,7 +163,8 @@ namespace DND.Common.Extensions
                     var linkToCollection = propertyType.IsCollection() && prop.AdditionalValues.ContainsKey("LinkToCollectionInGrid") && (Boolean)prop.AdditionalValues["LinkToCollectionInGrid"];
 
 
-                    if (prop.AdditionalValues.ContainsKey("ModelType"))
+                    //Folder, File, Dropdown, Repeater
+                    if (prop.AdditionalValues.ContainsKey("IsDatabound"))
                     {
                         if(linkToCollection)
                         {
@@ -191,6 +192,7 @@ namespace DND.Common.Extensions
                     }
                     else
                     {
+                        //String
                         if (linkToCollection)
                         {
                             string linkText = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();

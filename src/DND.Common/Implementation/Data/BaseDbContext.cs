@@ -26,67 +26,9 @@ using DND.Common.Helpers;
 
 namespace DND.Common.Implementation.Data
 {
-    public class EFTransactionInterceptor : IDbTransactionInterceptor
-    {
-        public void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
-        {
-            foreach (var dbContext in interceptionContext.DbContexts)
-            {
-                if (dbContext is IBaseDbContext)
-                {
-                    ((IBaseDbContext)dbContext).FirePostCommitEvents();
-                }
-            }
-        }
-
-        public void Committing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
-        {
-
-        }
-
-        public void ConnectionGetting(DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext)
-        {
-
-        }
-
-        public void ConnectionGot(DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext)
-        {
-
-        }
-
-        public void Disposed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
-        {
-
-        }
-
-        public void Disposing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
-        {
-
-        }
-
-        public void IsolationLevelGetting(DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext)
-        {
-
-        }
-
-        public void IsolationLevelGot(DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext)
-        {
-
-        }
-
-        public void RolledBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
-        {
-
-        }
-
-        public void RollingBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
-        {
-
-        }
-    }
-
     public abstract class BaseDbContext : DbContext, IBaseDbContext
     {
+        private DbContextTimestamps _dbContextTimestamps;
         private IDbContextDomainEvents _dbContextDomainEvents;
 
         public BaseDbContext(string nameOrConnectionString, bool logSql, IDomainEvents domainEvents = null)
@@ -115,8 +57,6 @@ namespace DND.Common.Implementation.Data
             init();
         }
 
-        private DbContextTimestamps _dbContextTimestamps;
-
         private void init()
         {
             DbInterception.Add(new EFTransactionInterceptor());
@@ -137,16 +77,32 @@ namespace DND.Common.Implementation.Data
             ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ReadAllDateTimeValuesAsUtc;
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.HasDefaultSchema("dbo");
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        }
+
+        #region Validation
+        IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
+        {
+            return base.GetValidationErrors().Select(x => new DbEntityValidationResultBetter(x.ValidationErrors));
+        }
+
+        IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrorsForNewChanges()
+        {
+            return base.GetValidationErrors().Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x)).Select(x => new DbEntityValidationResultBetter(x.ValidationErrors));
+        }
+        #endregion
+
+        #region Interface Methods and Properties
+
         public bool AutoDetectChanges
         {
             get { return this.Configuration.AutoDetectChangesEnabled; }
             set { this.Configuration.AutoDetectChangesEnabled = value; }
         }
-
-        //public abstract static BaseIdentityDbContext Create(string nameOrConnectionString);
-        //{
-        //return new BaseIdentityDbContext(nameOrConnectionString);
-        //}
 
         public new DbSet<T> Set<T>() where T : class
         {
@@ -264,18 +220,33 @@ namespace DND.Common.Implementation.Data
             return await base.Set<TResultType>().SqlQuery(query, paramaters).ToListAsync();
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        public void AddEntity<TEntity>(TEntity entity) where TEntity : class
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.HasDefaultSchema("dbo");
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            //modelBuilder.Entity<IdentityUser>().ToTable("User");
-            //modelBuilder.Entity<IdentityRole>().ToTable("Role");
-            //modelBuilder.Entity<IdentityUserRole>().ToTable("UserRole");
-            //modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogin");
-            //modelBuilder.Entity<IdentityUserClaim>().ToTable("UserClaim");
+            Set<TEntity>().Add(entity);
         }
 
+        public void AttachEntity<TEntity>(TEntity entity) where TEntity : class
+        {
+            Set<TEntity>().Attach(entity);
+        }
+
+        public void RemoveEntity<TEntity>(TEntity entity) where TEntity : class
+        {
+            Set<TEntity>().Remove(entity);
+        }
+
+        public IQueryable<TEntity> Queryable<TEntity>() where TEntity : class
+        {
+            return Set<TEntity>();
+        }
+
+        public IQueryable<Object> Queryable(Type type)
+        {
+            return (IQueryable<Object>)Set(type);
+        }
+        #endregion
+
+        #region Timestamps
         private void AddTimestamps()
         {
             var added = _dbContextDomainEvents.GetNewInsertedEntities();
@@ -284,29 +255,9 @@ namespace DND.Common.Implementation.Data
 
             _dbContextTimestamps.AddTimestamps(added, modified, deleted);
         }
+        #endregion
 
-        public void FirePreCommitEvents()
-        {
-            FirePreCommitEventsAsync().Wait();
-        }
-
-        public async Task FirePreCommitEventsAsync()
-        {
-            AddTimestamps();
-
-            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
-        }
-
-        public void FirePostCommitEvents()
-        {
-            FirePostCommitEventsAsync().Wait();
-        }
-
-        public async Task FirePostCommitEventsAsync()
-        {
-            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
-        }
-
+        #region Save Changes
         public new int SaveChanges()
         {
             int objectCount = 0;
@@ -333,41 +284,31 @@ namespace DND.Common.Implementation.Data
 
             return objectCount;
         }
+        #endregion
 
-        IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
+        #region Domain Events
+        public void FirePreCommitEvents()
         {
-            return base.GetValidationErrors().Select(x => new DbEntityValidationResultBetter(x.ValidationErrors));
+            FirePreCommitEventsAsync().Wait();
         }
 
-        IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrorsForNewChanges()
+        public async Task FirePreCommitEventsAsync()
         {
-            return base.GetValidationErrors().Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x)).Select(x => new DbEntityValidationResultBetter(x.ValidationErrors));
+            AddTimestamps();
+
+            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
         }
 
-        public void AddEntity<TEntity>(TEntity entity) where TEntity : class
+        public void FirePostCommitEvents()
         {
-            Set<TEntity>().Add(entity);
+            FirePostCommitEventsAsync().Wait();
         }
 
-        public void AttachEntity<TEntity>(TEntity entity) where TEntity : class
+        public async Task FirePostCommitEventsAsync()
         {
-            Set<TEntity>().Attach(entity);
+            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
         }
-
-        public void RemoveEntity<TEntity>(TEntity entity) where TEntity : class
-        {
-            Set<TEntity>().Remove(entity);
-        }
-
-        public IQueryable<TEntity> Queryable<TEntity>() where TEntity : class
-        {
-            return Set<TEntity>();
-        }
-
-        public IQueryable<Object> Queryable(Type type)
-        {
-            return (IQueryable<Object>)Set(type);
-        }
+        #endregion
 
         #region Collection Property
         public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
@@ -459,7 +400,7 @@ namespace DND.Common.Implementation.Data
         }
         #endregion
 
-        #region "UTC"
+        #region UTC
         private static void ReadAllDateTimeValuesAsUtc(object sender, ObjectMaterializedEventArgs evArg)
         {
             object entity = evArg.Entity;
@@ -774,5 +715,64 @@ namespace DND.Common.Implementation.Data
             return null;
         }
         #endregion
+    }
+
+    public class EFTransactionInterceptor : IDbTransactionInterceptor
+    {
+        public void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+            foreach (var dbContext in interceptionContext.DbContexts)
+            {
+                if (dbContext is IBaseDbContext)
+                {
+                    ((IBaseDbContext)dbContext).FirePostCommitEvents();
+                }
+            }
+        }
+
+        public void Committing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void ConnectionGetting(DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext)
+        {
+
+        }
+
+        public void ConnectionGot(DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext)
+        {
+
+        }
+
+        public void Disposed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void Disposing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void IsolationLevelGetting(DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext)
+        {
+
+        }
+
+        public void IsolationLevelGot(DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext)
+        {
+
+        }
+
+        public void RolledBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
+
+        public void RollingBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
+        {
+
+        }
     }
 }

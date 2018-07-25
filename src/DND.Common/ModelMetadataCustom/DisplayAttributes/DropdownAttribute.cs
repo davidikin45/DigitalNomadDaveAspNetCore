@@ -9,6 +9,17 @@ using DND.Common.Interfaces.Dtos;
 
 namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 {
+    //Composition Properties (1-To-Many, child cannot exist independent of the parent) 
+    public class RepeaterAttribute : DataboundAttribute
+    {
+        public RepeaterAttribute(string displayExpression)
+            : base(displayExpression)
+        {
+
+        }
+    }
+
+    //Aggregation relationshiships(child can exist independently of the parent, reference relationship)
     public class FolderDropdownAttribute : DataboundAttribute
     {
         public FolderDropdownAttribute(string folderId, Boolean nullable = false)
@@ -17,51 +28,45 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 
         }
 
-        public FolderDropdownAttribute(string folderId, string valueProperty, string orderByProperty, string orderByType, Boolean nullable = false)
-            : base(folderId, "", valueProperty, orderByProperty, orderByType, nullable)
+        public FolderDropdownAttribute(string folderId, string displayExpression, string orderByProperty, string orderByType, Boolean nullable = false)
+            : base(folderId, "", displayExpression, orderByProperty, orderByType, nullable)
         {
         }
     }
 
+    //Aggregation relationshiships(child can exist independently of the parent, reference relationship)
     public class FileDropdownAttribute : DataboundAttribute
     {
         public FileDropdownAttribute(string folderId, Boolean nullable = false)
-            : this(folderId, nameof(DirectoryInfo.Name), nameof(DirectoryInfo.LastWriteTime),DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, nullable)
+            : this(folderId, nameof(DirectoryInfo.Name), nameof(DirectoryInfo.LastWriteTime), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, nullable)
         {
 
         }
 
-        public FileDropdownAttribute(string folderId, string valueProperty, string orderByProperty, string orderByType, Boolean nullable = false)
-            : base("", folderId, valueProperty, orderByProperty, orderByType, nullable)
+        public FileDropdownAttribute(string folderId, string displayExpression, string orderByProperty, string orderByType, Boolean nullable = false)
+            : base("", folderId, displayExpression, orderByProperty, orderByType, nullable)
         {
-        }
-    }
-
-    public class RepeaterAttribute : DataboundAttribute
-    {
-        public RepeaterAttribute(string valueProperty)
-            :base(valueProperty)
-        {
-
         }
     }
 
-     public class DropdownAttribute : DataboundAttribute
+    //Aggregation relationshiships(child can exist independently of the parent, reference relationship)
+    public class DropdownAttribute : DataboundAttribute
     {
-        public DropdownAttribute(Type modelType, string valueProperty)
-            : base(modelType, nameof(IBaseEntity.Id), valueProperty, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
+
+        public DropdownAttribute(Type dropdownModelType, string displayExpression)
+            : base(dropdownModelType, nameof(IBaseEntity.Id), displayExpression, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
         {
 
         }
 
-        public DropdownAttribute(Type modelType, string valueProperty, string orderByProperty, string orderByType)
-           : base(modelType, nameof(IBaseEntity.Id), valueProperty, orderByProperty, orderByType, false, null)
+        public DropdownAttribute(Type dropdownModelType, string displayExpression, string orderByProperty, string orderByType)
+           : base(dropdownModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, null)
         {
 
         }
 
-        public DropdownAttribute(Type modelType, string valueProperty, string orderByProperty, string orderByType, string bindingProperty)
-          : base(modelType, nameof(IBaseEntity.Id), valueProperty, orderByProperty, orderByType, false, bindingProperty)
+        public DropdownAttribute(Type dropdownModelType, string displayExpression, string orderByProperty, string orderByType, string bindingProperty)
+          : base(dropdownModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, bindingProperty)
         {
 
         }
@@ -69,10 +74,10 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 
     public abstract class DataboundAttribute : Attribute, IMetadataAttribute
     {
-        public Type ModelType { get; set; }
+        public Type DropdownModelType { get; set; }
         public string KeyProperty { get; set; }
         public string BindingProperty { get; set; }
-        public string ValueProperty { get; set; }
+        public string DisplayExpression { get; set; }
         public string OrderByProperty { get; set; }
         public string OrderByType { get; set; }
 
@@ -86,14 +91,14 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 
         public string DataTypeName { get; set; }
 
-        public DataboundAttribute(string folderFolderId, string fileFolderId, string valueProperty, string orderByProperty, string orderByType, Boolean nullable = false)
+        public DataboundAttribute(string folderFolderId, string fileFolderId, string displayExpression, string orderByProperty, string orderByType, Boolean nullable = false)
         {
             DataTypeName = "ModelDropdown";
 
             FolderFolderId = folderFolderId;
             FileFolderId = fileFolderId;
 
-            ValueProperty = valueProperty;
+            DisplayExpression = displayExpression;
             OrderByProperty = orderByProperty;
             OrderByType = orderByType;
 
@@ -102,18 +107,18 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 
         //typeof
         //nameof
-        public DataboundAttribute(Type modelType, string keyProperty, string valueProperty, string orderByProperty, string orderByType, Boolean nullable = false, string bindingProperty = null)
+        public DataboundAttribute(Type dropdownModelType, string keyProperty, string displayExpression, string orderByProperty, string orderByType, Boolean nullable = false, string bindingProperty = null)
         {
-            if (!modelType.GetInterfaces().Contains(typeof(IBaseEntity)))
+            if (!dropdownModelType.GetInterfaces().Contains(typeof(IBaseEntity)))
             {
                 throw new ApplicationException("modelType must implement IBaseEntity");
             }
 
             DataTypeName = "ModelDropdown";
 
-            ModelType = modelType;
+            DropdownModelType = dropdownModelType;
             KeyProperty = keyProperty;
-            ValueProperty = valueProperty;
+            DisplayExpression = displayExpression;
 
             BindingProperty = bindingProperty;
 
@@ -122,11 +127,11 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
             Nullable = nullable;
         }
 
-        public DataboundAttribute(string valueProperty)
+        public DataboundAttribute(string displayExpression)
         {
             DataTypeName = "ModelRepeater";
 
-            ValueProperty = valueProperty;
+            DisplayExpression = displayExpression;
 
             KeyProperty = nameof(IBaseEntity.Id);
             BindingProperty = nameof(IBaseDtoWithId.Id);
@@ -140,14 +145,19 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 
             modelMetadata.DataTypeName = DataTypeName;
 
-            modelMetadata.AdditionalValues["ModelType"] = ModelType;
-            modelMetadata.AdditionalValues["KeyProperty"] = KeyProperty;
-            modelMetadata.AdditionalValues["ValueProperty"] = ValueProperty;
+            modelMetadata.AdditionalValues["IsDatabound"] = true;
+
+            //Select from Db
+            modelMetadata.AdditionalValues["DropdownModelType"] = DropdownModelType;
+            modelMetadata.AdditionalValues["OrderByProperty"] = OrderByProperty;
+            modelMetadata.AdditionalValues["OrderByType"] = OrderByType;
+
+            modelMetadata.AdditionalValues["KeyProperty"] = KeyProperty; //Used for dropdown 
+            modelMetadata.AdditionalValues["DisplayExpression"] = DisplayExpression; //Used for Dropdown and Display Text
 
             modelMetadata.AdditionalValues["BindingProperty"] = BindingProperty;
 
-            modelMetadata.AdditionalValues["OrderByProperty"] = OrderByProperty;
-            modelMetadata.AdditionalValues["OrderByType"] = OrderByType;
+            modelMetadata.AdditionalValues["Nullable"] = Nullable;
 
             if (!string.IsNullOrEmpty(FolderFolderId))
             {
@@ -162,7 +172,6 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
             }
 
             modelMetadata.AdditionalValues["PhysicalFilePath"] = PhysicalFilePath;
-            modelMetadata.AdditionalValues["Nullable"] = Nullable;
         }
     }
 

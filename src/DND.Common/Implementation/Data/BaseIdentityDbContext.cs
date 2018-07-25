@@ -92,17 +92,7 @@ namespace DND.Common.Implementation.Data
             builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
         }
 
-        public bool AutoDetectChanges
-        {
-            get { return this.ChangeTracker.AutoDetectChangesEnabled; }
-            set { this.ChangeTracker.AutoDetectChangesEnabled = value; }
-        }
-
-        public IBaseDbContextTransaction BeginTransaction(System.Data.IsolationLevel isolationLevel)
-        {
-            return new BaseDbContextTransactionAspNetcore(Database.BeginTransaction());
-        }
-
+        #region Validation
         //Validate on Save
         IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
         {
@@ -122,7 +112,7 @@ namespace DND.Common.Implementation.Data
             //var items = new Dictionary<object, object>();
 
             var entities = this.ChangeTracker.Entries().Where(e => ((e.State == EntityState.Added) || (e.State == EntityState.Modified)));
-            if(onlyNewChanges)
+            if (onlyNewChanges)
             {
                 entities = entities.Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x));
             }
@@ -167,6 +157,20 @@ namespace DND.Common.Implementation.Data
 
             return list;
         }
+        #endregion
+
+        #region Interface Methods and Properties
+
+        public bool AutoDetectChanges
+        {
+            get { return this.ChangeTracker.AutoDetectChangesEnabled; }
+            set { this.ChangeTracker.AutoDetectChangesEnabled = value; }
+        }
+
+        public IBaseDbContextTransaction BeginTransaction(System.Data.IsolationLevel isolationLevel)
+        {
+            return new BaseDbContextTransactionAspNetcore(Database.BeginTransaction());
+        }
 
         public int CachedEntityCount()
         {
@@ -196,64 +200,6 @@ namespace DND.Common.Implementation.Data
         public bool IsEntityStateUnchanged(object entity)
         {
             return Entry(entity).State == EntityState.Unchanged;
-        }
-
-        private void AddTimestamps()
-        {
-            var added = _dbContextDomainEvents.GetNewInsertedEntities();
-            var modified = _dbContextDomainEvents.GetNewUpdatedEntities();
-            var deleted = _dbContextDomainEvents.GetNewDeletedEntities();
-
-            _dbContextTimestamps.AddTimestamps(added, modified, deleted);
-       }
-
-        public void FirePreCommitEvents()
-        {
-            FirePreCommitEventsAsync().Wait();
-        }
-
-        public async Task FirePreCommitEventsAsync()
-        {
-            AddTimestamps();
-
-            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
-        }
-
-        public void FirePostCommitEvents()
-        {
-            FirePostCommitEventsAsync().Wait();
-        }
-
-        public async Task FirePostCommitEventsAsync()
-        {
-            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
-        }
-
-        public new int SaveChanges()
-        {
-            int objectCount = 0;
-
-            FirePreCommitEvents();
-
-            objectCount = base.SaveChanges();
-
-            return objectCount;
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await SaveChangesAsync(CancellationToken.None);
-        }
-
-        public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            int objectCount = 0;
-
-            await FirePreCommitEventsAsync();
-
-            objectCount = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            return objectCount;
         }
 
         public void SetEntityStateAdded(object entity)
@@ -345,6 +291,71 @@ namespace DND.Common.Implementation.Data
         {
             throw new NotImplementedException();
         }
+        #endregion
+
+        #region Timestamps
+        private void AddTimestamps()
+        {
+            var added = _dbContextDomainEvents.GetNewInsertedEntities();
+            var modified = _dbContextDomainEvents.GetNewUpdatedEntities();
+            var deleted = _dbContextDomainEvents.GetNewDeletedEntities();
+
+            _dbContextTimestamps.AddTimestamps(added, modified, deleted);
+        }
+        #endregion
+
+        #region Save Changes
+        public new int SaveChanges()
+        {
+            int objectCount = 0;
+
+            FirePreCommitEvents();
+
+            objectCount = base.SaveChanges();
+
+            return objectCount;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await SaveChangesAsync(CancellationToken.None);
+        }
+
+        public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int objectCount = 0;
+
+            await FirePreCommitEventsAsync();
+
+            objectCount = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+            return objectCount;
+        }
+        #endregion
+
+        #region Domain Events
+        public void FirePreCommitEvents()
+        {
+            FirePreCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePreCommitEventsAsync()
+        {
+            AddTimestamps();
+
+            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
+        }
+
+        public void FirePostCommitEvents()
+        {
+            FirePostCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePostCommitEventsAsync()
+        {
+            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
+        }
+        #endregion
 
         #region Collection Property
         public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)

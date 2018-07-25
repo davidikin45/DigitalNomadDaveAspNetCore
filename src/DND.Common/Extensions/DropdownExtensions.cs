@@ -21,9 +21,9 @@ namespace DND.Common.Extensions
             var modelExplorer = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider);
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = modelExplorer.Metadata;
 
-            var modelType = ((Type)metadata.AdditionalValues["ModelType"]);
+            var dropdownModelType = ((Type)metadata.AdditionalValues["DropdownModelType"]);
             var keyProperty = ((string)metadata.AdditionalValues["KeyProperty"]);
-            var valueProperty = ((string)metadata.AdditionalValues["ValueProperty"]);
+            var valueProperty = ((string)metadata.AdditionalValues["DisplayExpression"]);
             var bindingProperty = ((string)metadata.AdditionalValues["BindingProperty"]);
 
             var orderByProperty = ((string)metadata.AdditionalValues["OrderByProperty"]);
@@ -83,7 +83,7 @@ namespace DND.Common.Extensions
 
                items.Add(new SelectListItem()
                {
-                   Text = GetValueString(item, valueProperty).Replace(physicalFolderPath, ""),
+                   Text = GetDisplayString(item, valueProperty).Replace(physicalFolderPath, ""),
                    Value = item.GetPropValue(nameof(DirectoryInfo.FullName)) != null ? item.GetPropValue(nameof(DirectoryInfo.FullName)).ToString().Replace(physicalFolderPath, "") : "",
                    Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString().Replace(physicalFolderPath, ""))
                }));
@@ -98,7 +98,7 @@ namespace DND.Common.Extensions
 
                items.Add(new SelectListItem()
                {
-                   Text = GetValueString(item, valueProperty),
+                   Text = GetDisplayString(item, valueProperty),
                    Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString().Replace(physicalFilePath, "") : "",
                    Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString().Replace(physicalFilePath, ""))
                }));
@@ -109,7 +109,7 @@ namespace DND.Common.Extensions
 
                     items.Add(new SelectListItem()
                     {
-                        Text = GetValueString(item, valueProperty),
+                        Text = GetDisplayString(item, valueProperty),
                         Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
                         Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
                     }));
@@ -119,23 +119,23 @@ namespace DND.Common.Extensions
                 using (var db = htmlHelper.Database<TIDbContext>())
                 {
 
-                    var pi = modelType.GetProperty(orderByProperty);
+                    var pi = dropdownModelType.GetProperty(orderByProperty);
                     IEnumerable<Object> query = null;
 
                     if (orderByType == "asc")
                     {
-                        query = (db.Queryable(modelType)).ToList().OrderBy(x => pi.GetValue(x, null));
+                        query = (db.Queryable(dropdownModelType)).ToList().OrderBy(x => pi.GetValue(x, null));
                     }
                     else
                     {
-                        query = (db.Queryable(modelType)).ToList().OrderByDescending(x => pi.GetValue(x, null));
+                        query = (db.Queryable(dropdownModelType)).ToList().OrderByDescending(x => pi.GetValue(x, null));
                     }
 
                     query.ToList().ForEach(item =>
 
                     items.Add(new SelectListItem()
                     {
-                        Text = GetValueString(item, valueProperty),
+                        Text = GetDisplayString(item, valueProperty),
                         Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
                         Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
                     }));
@@ -150,9 +150,9 @@ namespace DND.Common.Extensions
             return items;
         }
 
-        private static string GetValueString(object obj, string format)
+        private static string GetDisplayString(object obj, string displayExpression)
         {
-            string value = format;
+            string value = displayExpression;
 
             if (!value.Contains("{") && !value.Contains(" "))
             {

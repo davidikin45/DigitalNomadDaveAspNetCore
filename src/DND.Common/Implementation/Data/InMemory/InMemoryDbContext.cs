@@ -128,64 +128,57 @@ namespace DND.Common.Implementation.Data.InMemory
             }
         }
 
-        private void AddTimestamps()
+        #region Validation
+        public IEnumerable<DbEntityValidationResultBetter> GetValidationErrors()
         {
-            var added = _dbContextDomainEvents.GetNewInsertedEntities();
-            var modified = _dbContextDomainEvents.GetNewUpdatedEntities();
-            var deleted = _dbContextDomainEvents.GetNewDeletedEntities();
-
-            _dbContextTimestamps.AddTimestamps(added, modified, deleted);
+            return GetValidationErrorsForNewChanges(false);
         }
 
-        public void FirePreCommitEvents()
+        public IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges()
         {
-            FirePreCommitEventsAsync().Wait();
+            return GetValidationErrorsForNewChanges(true);
         }
 
-        public async Task FirePreCommitEventsAsync()
+        private IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges(bool onlyNewChanges)
         {
-            AddTimestamps();
+            var allEntityErrors = new List<DbEntityValidationResultBetter>();
 
-            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
+            var entities = addQueue.Select(x => x.Entity).Concat(updateQueue.Select(x => x.Entity));
+            if (onlyNewChanges)
+            {
+                entities = entities.Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x));
+            }
+
+            foreach (var entity in entities)
+            {
+                var errors = ValidationHelper.ValidateObject(entity);
+                if (errors.Count() > 0)
+                {
+                    var result = new DbEntityValidationResultBetter();
+                    foreach (var err in errors)
+                    {
+                        if (err.MemberNames.Count() > 0)
+                        {
+                            foreach (var prop in err.MemberNames)
+                            {
+                                result.AddModelError(prop, err.ErrorMessage);
+                            }
+                        }
+                        else
+                        {
+                            result.AddModelError("", err.ErrorMessage);
+                        }
+                    }
+
+                    allEntityErrors.Add(result);
+                }
+            }
+
+            return allEntityErrors;
         }
+        #endregion
 
-        public void FirePostCommitEvents()
-        {
-            FirePostCommitEventsAsync().Wait();
-        }
-
-        public async Task FirePostCommitEventsAsync()
-        {
-            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
-        }
-
-        public int SaveChanges()
-        {
-            BeforeSave?.Invoke(this, new BeforeSave());
-
-            AddTimestamps();
-
-            ProcessCommitQueues();
-            repo.Commit();
-
-            AfterSave?.Invoke(this, new AfterSave());
-            return 0;
-        }
-
-        public Task<int> SaveChangesAsync()
-        {
-            var task = new Task<int>(SaveChanges);
-            task.Start();
-            return task;
-        }
-
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            var task = new Task<int>(SaveChanges);
-            task.Start();
-            return task;
-        }
-
+        #region Interface Methods and Properties
         public void TriggerTrackChanges(object newEntity)
         {
 
@@ -259,7 +252,7 @@ namespace DND.Common.Implementation.Data.InMemory
 
         public bool IsEntityStateDeleted(object entity)
         {
-            return removeQueue.Any(x => Equals(x.Entity,entity));
+            return removeQueue.Any(x => Equals(x.Entity, entity));
         }
 
         public void SetEntityStateDeleted(object entity)
@@ -318,54 +311,6 @@ namespace DND.Common.Implementation.Data.InMemory
             }
         }
 
-        public IEnumerable<DbEntityValidationResultBetter> GetValidationErrors()
-        {
-            return GetValidationErrorsForNewChanges(false);
-        }
-
-        public IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges()
-        {
-            return GetValidationErrorsForNewChanges(true);
-        }
-
-        private IEnumerable<DbEntityValidationResultBetter> GetValidationErrorsForNewChanges(bool onlyNewChanges)
-        {
-            var allEntityErrors = new List<DbEntityValidationResultBetter>();
-
-            var entities = addQueue.Select(x => x.Entity).Concat(updateQueue.Select(x => x.Entity));
-            if (onlyNewChanges)
-            {
-                entities = entities.Where(x => !_dbContextDomainEvents.GetPreCommittedDeletedEntities().Contains(x) && !_dbContextDomainEvents.GetPreCommittedInsertedEntities().Contains(x));
-            }
-
-            foreach (var entity in entities)
-            {
-                var errors = ValidationHelper.ValidateObject(entity);
-                if (errors.Count() > 0)
-                {
-                    var result = new DbEntityValidationResultBetter();
-                    foreach (var err in errors)
-                    {
-                        if (err.MemberNames.Count() > 0)
-                        {
-                            foreach (var prop in err.MemberNames)
-                            {
-                                result.AddModelError(prop, err.ErrorMessage);
-                            }
-                        }
-                        else
-                        {
-                            result.AddModelError("", err.ErrorMessage);
-                        }
-                    }
-
-                    allEntityErrors.Add(result);
-                }
-            }
-
-            return allEntityErrors;
-        }
-
         public IEnumerable<TResultType> SQLQueryNoTracking<TResultType>(string query, params object[] paramaters) where TResultType : class
         {
             throw new NotImplementedException();
@@ -385,6 +330,72 @@ namespace DND.Common.Implementation.Data.InMemory
         {
             throw new NotImplementedException();
         }
+        #endregion
+
+        #region Timestamps
+        private void AddTimestamps()
+        {
+            var added = _dbContextDomainEvents.GetNewInsertedEntities();
+            var modified = _dbContextDomainEvents.GetNewUpdatedEntities();
+            var deleted = _dbContextDomainEvents.GetNewDeletedEntities();
+
+            _dbContextTimestamps.AddTimestamps(added, modified, deleted);
+        }
+        #endregion
+
+        #region Save Changes
+        public int SaveChanges()
+        {
+            BeforeSave?.Invoke(this, new BeforeSave());
+
+            AddTimestamps();
+
+            ProcessCommitQueues();
+            repo.Commit();
+
+            AfterSave?.Invoke(this, new AfterSave());
+            return 0;
+        }
+
+        public Task<int> SaveChangesAsync()
+        {
+            var task = new Task<int>(SaveChanges);
+            task.Start();
+            return task;
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            var task = new Task<int>(SaveChanges);
+            task.Start();
+            return task;
+        }
+        #endregion
+
+        #region Domain Events
+
+        public void FirePreCommitEvents()
+        {
+            FirePreCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePreCommitEventsAsync()
+        {
+            AddTimestamps();
+
+            await _dbContextDomainEvents.FirePreCommitEventsAsync().ConfigureAwait(false);
+        }
+
+        public void FirePostCommitEvents()
+        {
+            FirePostCommitEventsAsync().Wait();
+        }
+
+        public async Task FirePostCommitEventsAsync()
+        {
+            await _dbContextDomainEvents.FirePostCommitEventsAsync().ConfigureAwait(false);
+        }
+        #endregion
 
         #region Collection Properties
         public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
