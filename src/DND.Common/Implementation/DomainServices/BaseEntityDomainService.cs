@@ -6,6 +6,7 @@ using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.DomainServices;
 using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.UnitOfWork;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Infrastructure;
@@ -27,6 +28,14 @@ namespace DND.Common.Implementation.DomainServices
 
         }
 
+        #region GetNewEntityInstance
+        public virtual TEntity GetNewEntityInstance()
+        {
+            return (TEntity)Activator.CreateInstance(typeof(TEntity));
+        }
+        #endregion
+
+        #region Create
         public virtual Result<TEntity> Create(TEntity entity, string createdBy)
         {
             using (var unitOfWork = UnitOfWorkFactory.Create())
@@ -58,7 +67,9 @@ namespace DND.Common.Implementation.DomainServices
                 return Result.Ok(entity);
             }
         }
+        #endregion
 
+        #region Update
         public virtual Result Update(TEntity entity, string updatedBy)
         {
             using (var unitOfWork = UnitOfWorkFactory.Create())
@@ -143,7 +154,9 @@ namespace DND.Common.Implementation.DomainServices
 
             return Result.ConcurrencyConflict(errors, databaseValues.RowVersion);
         }
+        #endregion
 
+        #region Delete
         public virtual Result Delete(object id, string deletedBy)
         {
             TEntity entity = GetById(id);
@@ -226,7 +239,9 @@ namespace DND.Common.Implementation.DomainServices
 
             return Result.ConcurrencyConflict(errors, databaseValues.RowVersion);
         }
+        #endregion
 
+        #region Validate
         public Result Validate(TEntity entity, ValidationMode mode)
         {
             using (var unitOfWork = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting))
@@ -242,7 +257,9 @@ namespace DND.Common.Implementation.DomainServices
                 return await unitOfWork.ReadOnlyRepository<TContext, TEntity>().ValidateAsync(entity, mode);
             }
         }
+        #endregion
 
+        #region TriggerActions
         public Result TriggerAction(object id, string action, string triggeredBy)
         {
             var actionEvents = new ActionEvents();
@@ -254,7 +271,7 @@ namespace DND.Common.Implementation.DomainServices
                     var entity = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id);
 
                     IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, null, entity, triggeredBy);
-                    if(actionEvent != null)
+                    if (actionEvent != null)
                     {
                         entity.AddActionEvent(actionEvent);
 
@@ -308,5 +325,6 @@ namespace DND.Common.Implementation.DomainServices
 
             return Result.Ok();
         }
+        #endregion
     }
 }

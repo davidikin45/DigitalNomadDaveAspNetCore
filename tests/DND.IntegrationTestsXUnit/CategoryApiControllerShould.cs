@@ -20,7 +20,7 @@ namespace DND.IntegrationTestsXUnit
         [Fact]
         public async Task AuthenticateAndCreateCategory()
         {
-            var tokenResponse = await _fixture.TestServer.Client.Post("/api/apitoken", new LoginViewModel() { Username = DNDSeedData.AdminUsername, Password = DNDSeedData.AdminPassword });
+            var tokenResponse = await _fixture.TestServer.Client.Post("/api/api-token/access-token", new LoginViewModel() { Username = DNDSeedData.AdminUsername, Password = DNDSeedData.AdminPassword });
 
             tokenResponse.EnsureSuccessStatusCode();
 

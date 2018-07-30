@@ -2,6 +2,7 @@
 using DND.Common.Alerts;
 using DND.Common.DomainEvents;
 using DND.Common.Email;
+using DND.Common.Extensions;
 using DND.Common.Helpers;
 using DND.Common.Implementation.DTOs;
 using DND.Common.Interfaces.ApplicationServices;
@@ -42,6 +43,24 @@ namespace DND.Common.Controllers.Api
         : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
         {
             actionEvents = new ActionEvents();
+        }
+
+        [Route("new")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Create)]
+        [HttpGet]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual IActionResult NewDefault()
+        {
+            var response = Service.GetCreateDefaultDto();
+
+            var links = CreateLinksForCreate();
+
+            var linkedResourceToReturn = response.ShapeData("")
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
         }
 
         //[Route("create")]

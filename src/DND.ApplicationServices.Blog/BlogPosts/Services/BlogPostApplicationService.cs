@@ -131,36 +131,9 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
         }
 
         #region "Admin"
-        public async override Task<IEnumerable<BlogPostDto>> GetAllAsync(CancellationToken cancellationToken, Expression<Func<IQueryable<BlogPostDto>, IOrderedQueryable<BlogPostDto>>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<BlogPostDto, object>>[] includeProperties)
-        {
-            return await GetPostsAsync(pageNo.Value, pageSize.Value, orderBy, cancellationToken);
-        }
-
-        public async Task<IEnumerable<BlogPostDto>> GetPostsAsync(int pageNo, int pageSize, Expression<Func<IQueryable<BlogPostDto>, IOrderedQueryable<BlogPostDto>>> orderBy, CancellationToken cancellationToken)
-        {
-            var mappedOrderBy = GetMappedOrderBy<BlogPostDto, BlogPost>(orderBy);
-
-            var posts = await DomainService.GetPostsAsync(pageNo, pageSize, mappedOrderBy, cancellationToken);
-
-            IEnumerable<BlogPostDto> list = posts.ToList().Select(Mapper.Map<BlogPost, BlogPostDto>);
-
-            return list;
-        }
-
-        public async Task<BlogPostDto> GetByIdAsync(object id, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await GetPostAsync(int.Parse(id.ToString()), cancellationToken);
-        }
-
-        public async Task<BlogPostDto> GetPostAsync(int id, CancellationToken cancellationToken)
-        {
-            var bo = await DomainService.GetPostAsync(id, cancellationToken);
-            return Mapper.Map<BlogPostDto>(bo);
-        }
-
         public async override Task<Result> UpdateAsync(Object id, BlogPostDto dto, string updatedBy, CancellationToken cancellationToken)
         {
-            var persistedPost = await DomainService.GetFirstAsync(cancellationToken, p => p.Id == dto.Id, null, p => p.Tags, p => p.Locations);
+            var persistedPost = await DomainService.GetFirstAsync(cancellationToken, p => p.Id == dto.Id, null, true);
             var persistedTags = persistedPost.Tags.ToList();
             var persistedLocations = persistedPost.Locations.ToList();
             Mapper.Map(dto, persistedPost);

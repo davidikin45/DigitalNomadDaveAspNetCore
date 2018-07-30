@@ -27,8 +27,7 @@ namespace DND.Web.MVCImplementation.Faq.ViewComponents
             IEnumerable<FaqDto> data = null;
             int total = 0;
 
-
-            var dataTask = Service.GetAllAsync(cts.Token, LamdaHelper.GetOrderBy<FaqDto>(nameof(FaqDto.DateCreated), OrderByType.Ascending), null, null, null);
+            var dataTask = Service.GetAllAsync(cts.Token, LamdaHelper.GetOrderBy<FaqDto>(nameof(FaqDto.DateCreated), OrderByType.Ascending), null, null, false, false, null);
             var totalTask = Service.GetCountAsync(cts.Token);
 
             await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);

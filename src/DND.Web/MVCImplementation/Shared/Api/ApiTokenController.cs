@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace DND.Web.MVCImplementation.Shared.Api
 {
     [ApiVersion("1.0")]
-    [Route("api/apitoken")]
+    [Route("api/api-token")]
     public class ApiTokenController : BaseWebApiController
     {
         private readonly UserManager<User> _userManager;

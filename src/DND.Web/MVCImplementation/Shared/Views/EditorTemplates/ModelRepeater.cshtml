@@ -22,8 +22,10 @@
     {
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          document.getElementById("@(Html.ViewData.ModelMetadata.Name)").innerHTML += this.responseText;
+          if (this.readyState == 4 && this.status == 200) {
+              var elem = document.createElement('div');
+              elem.innerHTML = this.responseText;
+              document.getElementById("@(Html.ViewData.ModelMetadata.Name)").appendChild(elem.firstElementChild);
         }
         };
       xhttp.open("GET", "@(Url.Action("CreateCollectionItem", Url.ActionContext.RouteData.Values["controller"].ToString(), new { collection = (string)ViewBag.Collection }, Url.ActionContext.HttpContext.Request.Scheme))", true);

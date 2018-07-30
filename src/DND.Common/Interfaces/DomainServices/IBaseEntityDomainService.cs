@@ -9,6 +9,8 @@ namespace DND.Common.Interfaces.DomainServices
     public interface IBaseEntityDomainService<TEntity> : IBaseEntityReadOnlyDomainService<TEntity>
           where TEntity : class, IBaseEntity
     {
+        TEntity GetNewEntityInstance();
+
         Result<TEntity> Create(TEntity entity, string createdBy);
 
         Task<Result<TEntity>> CreateAsync(TEntity entity, string createdBy,  CancellationToken cancellationToken = default(CancellationToken));

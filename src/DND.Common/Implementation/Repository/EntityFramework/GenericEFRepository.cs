@@ -28,6 +28,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         {
         }
 
+        #region InsertOrUpdate
         public virtual Result InsertOrUpdate(TEntity entity, string createdModifiedBy = null)
         {
             var existingEntity = _context.FindEntity<TEntity>(entity);
@@ -53,7 +54,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 return await InsertAsync(entity, createdModifiedBy, cancellationToken);
             }
         }
+        #endregion
 
+        #region Insert
         public virtual Result Insert(TEntity entity, string createdBy = null)
         {
             var validationResult = Validate(entity, ValidationMode.Insert);
@@ -85,7 +88,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
             return Result.Ok(entity);
         }
+        #endregion
 
+        #region Update
         public virtual Result Update(TEntity entity, string modifiedBy = null)
         {
             //This will attach the Entity and ensure it exists
@@ -165,14 +170,15 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //Note that if the entity being attached has references to other entities that are not yet tracked, then these new entities will attached to the context in the Unchanged state—they will not automatically be made Modified.If you have multiple entities that need to be marked Modified you should set the state for each of these entities individually.          
         }
 
-
         public virtual TEntity UpdateGraph(TEntity entity, Expression<Func<IUpdateConfiguration<TEntity>, object>> mapping = null, string modifiedBy = null)
         {
             entity.DateModified = DateTime.UtcNow;
             entity.UserModified = modifiedBy;
             return _context.UpdateGraph(entity, mapping);
         }
+        #endregion
 
+        #region Delete
         public virtual Result Delete(object id, string deletedBy = null)
         {
             //TEntity entity = _context.FindEntityLocal<TEntity>(id);
@@ -246,6 +252,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
             return Result.Ok();
         }
+        #endregion
     }
 
 }

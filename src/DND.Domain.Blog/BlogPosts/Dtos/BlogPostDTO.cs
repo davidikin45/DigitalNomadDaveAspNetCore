@@ -54,8 +54,12 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Dropdown(typeof(Tag), nameof(Tag.Name))]
         public List<int> TagIds { get; set; }
 
-        [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = false)]
-        [Dropdown(typeof(Tag), nameof(Tag.Name), nameof(Tag.Id), OrderByType.Descending, nameof(BlogPostTagDto.TagId))]
+        //[Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = false)]
+        //[Dropdown(typeof(Tag), nameof(Tag.Name), nameof(Tag.Id), OrderByType.Descending, nameof(BlogPostTagDto.TagId))]
+        //public List<BlogPostTagDto> Tags { get; set; }
+
+        [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
+        [Repeater("{" + nameof(BlogPostTagDto.TagId) + "}")]
         public List<BlogPostTagDto> Tags { get; set; }
 
         [Render(ShowForGrid = false, AllowSortForGrid = false)]
@@ -63,7 +67,7 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         public List<int> LocationIds { get; set; }
 
         [Render(ShowForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = false)]
-        [Dropdown(typeof(Location), nameof(Location.Name), nameof(Location.Id), OrderByType.Descending, nameof(BlogPostLocationDto.LocationId))]
+        [Dropdown(typeof(Location), "{" + nameof(Location.LocationTypeString) + "} - {" + nameof(Location.Name) + "}", nameof(Location.Id), OrderByType.Descending, nameof(BlogPostLocationDto.LocationId))]
         public List<BlogPostLocationDto> Locations { get; set; }
 
         [Required]

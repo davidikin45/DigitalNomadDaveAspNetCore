@@ -17,6 +17,8 @@ namespace DND.Common.Interfaces.ApplicationServices
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties);
 
         Task<IEnumerable<TDto>> GetAllAsync(
@@ -24,6 +26,8 @@ namespace DND.Common.Interfaces.ApplicationServices
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
@@ -33,6 +37,8 @@ namespace DND.Common.Interfaces.ApplicationServices
          Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
          int? pageNo = null,
          int? pageSize = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
          params Expression<Func<TDto, Object>>[] includeProperties)
          ;
 
@@ -43,6 +49,8 @@ namespace DND.Common.Interfaces.ApplicationServices
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
@@ -51,6 +59,8 @@ namespace DND.Common.Interfaces.ApplicationServices
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
@@ -60,23 +70,31 @@ namespace DND.Common.Interfaces.ApplicationServices
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
         TDto GetOne(
             Expression<Func<TDto, bool>> filter = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
         Task<TDto> GetOneAsync(
             CancellationToken cancellationToken,
             Expression<Func<TDto, bool>> filter = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
         TDto GetFirst(
             Expression<Func<TDto, bool>> filter = null,
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
@@ -84,6 +102,8 @@ namespace DND.Common.Interfaces.ApplicationServices
             CancellationToken cancellationToken,
             Expression<Func<TDto, bool>> filter = null,
             Expression<Func<IQueryable<TDto>, IOrderedQueryable<TDto>>> orderBy = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
@@ -102,11 +122,17 @@ namespace DND.Common.Interfaces.ApplicationServices
 
         Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, object id, string collectionProperty);
 
-        IEnumerable<TDto> GetByIds(IEnumerable<object> ids)
+        IEnumerable<TDto> GetByIds(IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TDto, Object>>[] includeProperties)
            ;
 
-        Task<IEnumerable<TDto>> GetByIdsAsync(IEnumerable<object> ids,
-             CancellationToken cancellationToken)
+        Task<IEnumerable<TDto>> GetByIdsAsync(CancellationToken cancellationToken,
+         IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
         int GetCount(Expression<Func<TDto, bool>> filter = null)

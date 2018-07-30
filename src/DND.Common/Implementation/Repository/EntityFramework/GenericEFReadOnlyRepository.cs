@@ -126,7 +126,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         //2. Never have 1-To-1 Composition ENTITY Relationships!!! For Composition relationships use Value types instead if required. In EF6 extend from BaseValueObject. In EF Core decorate value type with [OwnedAttribute]. Not sure if this attribute can be applied on base class. ValueTypes are included by default.
         //3. Use collections only for Composition relationships(1-To-Many, child cannot exist independent of the parent, ) not Aggregation relationshiships(child can exist independently of the parent, reference relationship). Never use a Collection for Navigation purposes!!!!
         //4. Use Complex properties for Aggregation relationships only (Many-To-1, child can exist independently of the parent, reference relationship). e.g Navigation purposes
-        private List<string>  GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type = null, string path = null)
+        private List<string> GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type = null, string path = null)
         {
             List<string> includesList = new List<string>();
 
@@ -226,44 +226,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return query.Where(expression);
         }
 
-        public virtual IEnumerable<TEntity> GetAll(
-          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-          int? skip = null,
-          int? take = null,
-          params Expression<Func<TEntity, Object>>[] includeProperties)
-        {
-            return GetQueryable(true, null, null, orderBy, skip, take, false, false, includeProperties).ToList();
-        }
-
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            // string includeProperties = null,
-            int? skip = null,
-            int? take = null,
-          params Expression<Func<TEntity, Object>>[] includeProperties)
-        {
-            return await GetQueryable(true, null, null, orderBy, skip, take, false, false, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
-        }
-
-        public virtual IEnumerable<TEntity> GetAllNoTracking(
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        int? skip = null,
-        int? take = null,
-        params Expression<Func<TEntity, Object>>[] includeProperties)
-        {
-            return GetQueryable(false, null, null, orderBy, skip, take, false, false, includeProperties).ToList();
-        }
-
-        public virtual async Task<IEnumerable<TEntity>> GetAllNoTrackingAsync(
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            // string includeProperties = null,
-            int? skip = null,
-            int? take = null,
-          params Expression<Func<TEntity, Object>>[] includeProperties)
-        {
-            return await GetQueryable(false, null, null, orderBy, skip, take, false, false, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
-        }
-
+        #region SQLQuery
         public virtual IEnumerable<TEntity> SQLQuery(string query, params object[] paramaters)
         {
             return _context.SQLQueryNoTracking<TEntity>(query, paramaters);
@@ -273,16 +236,68 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         {
             return await _context.SQLQueryNoTrackingAsync<TEntity>(query, paramaters).ConfigureAwait(false);
         }
+        #endregion
 
-        public virtual IEnumerable<TEntity> Get(
-            Expression<Func<TEntity, bool>> filter = null,
+        #region GetAll
+        public virtual IEnumerable<TEntity> GetAll(
+         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+         int? skip = null,
+         int? take = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return GetQueryable(true, null, null, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToList();
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            //  string includeProperties = null,
+            // string includeProperties = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return GetQueryable(true, null, filter, orderBy, skip, take, false, false, includeProperties).ToList();
+            return await GetQueryable(true, null, null, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
+        }
+
+        public virtual IEnumerable<TEntity> GetAllNoTracking(
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+        int? skip = null,
+        int? take = null,
+        bool includeAllCompositionRelationshipProperties = false,
+        bool includeAllCompositionAndAggregationRelationshipProperties = false,
+        params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return GetQueryable(false, null, null, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToList();
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAllNoTrackingAsync(
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            // string includeProperties = null,
+            int? skip = null,
+            int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
+          params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return await GetQueryable(false, null, null, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+
+        #region Get
+        public virtual IEnumerable<TEntity> Get(
+          Expression<Func<TEntity, bool>> filter = null,
+          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+          //  string includeProperties = null,
+          int? skip = null,
+          int? take = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
+        params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return GetQueryable(true, null, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToList();
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAsync(
@@ -291,9 +306,11 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //string includeProperties = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(true, null, filter, orderBy, skip, take, false, false, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(true, null, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual IEnumerable<TEntity> GetNoTracking(
@@ -302,9 +319,11 @@ namespace DND.Common.Implementation.Repository.EntityFramework
           //  string includeProperties = null,
           int? skip = null,
           int? take = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
         params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return GetQueryable(false, null, filter, orderBy, skip, take, false, false, includeProperties).ToList();
+            return GetQueryable(false, null, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToList();
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetNoTrackingAsync(
@@ -313,21 +332,37 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //string includeProperties = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(false, null, filter, orderBy, skip, take, false, false, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(false, null, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual IEnumerable<TEntity> Search(
-            string search = "",
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            //  string includeProperties = null,
-            int? skip = null,
-            int? take = null,
-          params Expression<Func<TEntity, Object>>[] includeProperties)
+        public virtual int GetCount(Expression<Func<TEntity, bool>> filter = null)
         {
-            return GetQueryable(true, search, filter, orderBy, skip, take, false, false, includeProperties).ToList();
+            return GetQueryable(false, null, filter).Count();
+        }
+
+        public virtual async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null)
+        {
+            return await GetQueryable(false, null, filter).CountAsync(_cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+
+        #region Search
+        public virtual IEnumerable<TEntity> Search(
+          string search = "",
+          Expression<Func<TEntity, bool>> filter = null,
+          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+          //  string includeProperties = null,
+          int? skip = null,
+          int? take = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+        params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return GetQueryable(true, search, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToList();
         }
 
         public virtual async Task<IEnumerable<TEntity>> SearchAsync(
@@ -337,9 +372,11 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //string includeProperties = null,
             int? skip = null,
             int? take = null,
+           bool includeAllCompositionRelationshipProperties = false,
+           bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(true, search, filter, orderBy, skip, take, false, false, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(true, search, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual IEnumerable<TEntity> SearchNoTracking(
@@ -349,9 +386,11 @@ namespace DND.Common.Implementation.Repository.EntityFramework
           //  string includeProperties = null,
           int? skip = null,
           int? take = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
         params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return GetQueryable(false, search, filter, orderBy, skip, take, false, false, includeProperties).ToList();
+            return GetQueryable(false, search, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToList();
         }
 
         public virtual async Task<IEnumerable<TEntity>> SearchNoTrackingAsync(
@@ -361,79 +400,105 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //string includeProperties = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(false, search, filter, orderBy, skip, take, false, false, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(false, search, filter, orderBy, skip, take, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual TEntity GetOne(
-            Expression<Func<TEntity, bool>> filter = null,
-          // string includeProperties = "",
-          params Expression<Func<TEntity, Object>>[] includeProperties)
+        public virtual int GetSearchCount(string search = "", Expression<Func<TEntity, bool>> filter = null)
         {
-            return GetQueryable(true, null, filter, null, null, null, false, false, includeProperties).SingleOrDefault();
+            return GetQueryable(false, search, filter).Count();
+        }
+
+        public virtual async Task<int> GetSearchCountAsync(string search = "", Expression<Func<TEntity, bool>> filter = null)
+        {
+            return await GetQueryable(false, search, filter).CountAsync(_cancellationToken).ConfigureAwait(false);
+        }
+        #endregion
+
+        #region GetOne
+        public virtual TEntity GetOne(
+         Expression<Func<TEntity, bool>> filter = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
+        {
+            return GetQueryable(true, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefault();
         }
 
         public virtual async Task<TEntity> GetOneAsync(
-            Expression<Func<TEntity, bool>> filter = null,
-          // string includeProperties = null,
+          Expression<Func<TEntity, bool>> filter = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(true, null, filter, null, null, null, false, false, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(true, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual TEntity GetOneNoTracking(
-           Expression<Func<TEntity, bool>> filter = null,
-         // string includeProperties = "",
+         Expression<Func<TEntity, bool>> filter = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
          params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return GetQueryable(false, null, filter, null, null, null, false, false, includeProperties).SingleOrDefault();
+            return GetQueryable(false, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefault();
         }
 
         public virtual async Task<TEntity> GetOneNoTrackingAsync(
-            Expression<Func<TEntity, bool>> filter = null,
-          // string includeProperties = null,
+          Expression<Func<TEntity, bool>> filter = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(false, null, filter, null, null, null, false, false, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(false, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
+        #endregion
 
+        #region GetFirst
         public virtual TEntity GetFirst(
            Expression<Func<TEntity, bool>> filter = null,
            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-          //string includeProperties = "",
+           bool includeAllCompositionRelationshipProperties = false,
+           bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return GetQueryable(true, null, filter, orderBy, null, null, false, false, includeProperties).FirstOrDefault();
+            return GetQueryable(true, null, filter, orderBy, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).FirstOrDefault();
         }
 
         public virtual async Task<TEntity> GetFirstAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-          // string includeProperties = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(true, null, filter, orderBy, null, null, false, false, includeProperties).FirstOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(true, null, filter, orderBy, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).FirstOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
 
         public virtual TEntity GetFirstNoTracking(
          Expression<Func<TEntity, bool>> filter = null,
          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        //string includeProperties = "",
+        bool includeAllCompositionRelationshipProperties = false,
+        bool includeAllCompositionAndAggregationRelationshipProperties = false,
         params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return GetQueryable(false, null, filter, orderBy, null, null, false, false, includeProperties).FirstOrDefault();
+            return GetQueryable(false, null, filter, orderBy, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).FirstOrDefault();
         }
 
         public virtual async Task<TEntity> GetFirstNoTrackingAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-          // string includeProperties = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
         {
-            return await GetQueryable(false, null, filter, orderBy, null, null, false, false, includeProperties).FirstOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
+            return await GetQueryable(false, null, filter, orderBy, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).FirstOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
+        #endregion
 
+        #region GetById
         public virtual TEntity GetById(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             //return _context.FindEntityById<TEntity>(id);
@@ -459,7 +524,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityById<TEntity>(id);
             return await GetQueryable(false, null, filter, null, null, null, includeAllCompositionRelationshipProperties, includeAllCompositionAndAggregationRelationshipProperties, includeProperties).SingleOrDefaultAsync(_cancellationToken).ConfigureAwait(false);
         }
+        #endregion
 
+        #region GetByIdWithPagedCollectionProperty
         public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
         {
             var entity = GetById(id);
@@ -480,7 +547,6 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return entity;
         }
 
-
         public virtual int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty)
         {
             var entity = GetById(id);
@@ -500,8 +566,13 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             }
             return 0;
         }
+        #endregion
 
-        public virtual IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
+        #region GetByIds
+        public virtual IEnumerable<TEntity> GetByIds(IEnumerable<object> ids,
+      bool includeAllCompositionRelationshipProperties = false,
+      bool includeAllCompositionAndAggregationRelationshipProperties = false,
+      params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             var list = new List<object>();
             foreach (object id in ids)
@@ -513,7 +584,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return GetQueryable(true, null, filter, null, null).ToList();
         }
 
-        public virtual IEnumerable<TEntity> GetByIdsNoTracking(IEnumerable<object> ids)
+        public virtual IEnumerable<TEntity> GetByIdsNoTracking(IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             var list = new List<object>();
             foreach (object id in ids)
@@ -525,7 +599,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return GetQueryable(false, null, filter, null, null).ToList();
         }
 
-        public async virtual Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids)
+        public async virtual Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             var list = new List<object>();
             foreach (object id in ids)
@@ -537,7 +614,10 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return await GetQueryable(false, null, filter, null, null).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
 
-        public async virtual Task<IEnumerable<TEntity>> GetByIdsNoTrackingAsync(IEnumerable<object> ids)
+        public async virtual Task<IEnumerable<TEntity>> GetByIdsNoTrackingAsync(IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
         {
             var list = new List<object>();
             foreach (object id in ids)
@@ -548,27 +628,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             Expression<Func<TEntity, bool>> filter = LamdaHelper.SearchForEntityByIds<TEntity>(list);
             return await GetQueryable(false, null, filter, null, null).ToListAsync(_cancellationToken).ConfigureAwait(false);
         }
+        #endregion
 
-        public virtual int GetCount(Expression<Func<TEntity, bool>> filter = null)
-        {
-            return GetQueryable(false, null, filter).Count();
-        }
-
-        public virtual async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null)
-        {
-            return await GetQueryable(false, null, filter).CountAsync(_cancellationToken).ConfigureAwait(false);
-        }
-
-        public virtual int GetSearchCount(string search = "", Expression<Func<TEntity, bool>> filter = null)
-        {
-            return GetQueryable(false, search, filter).Count();
-        }
-
-        public virtual async Task<int> GetSearchCountAsync(string search = "", Expression<Func<TEntity, bool>> filter = null)
-        {
-            return await GetQueryable(false, search, filter).CountAsync(_cancellationToken).ConfigureAwait(false);
-        }
-
+        #region Exists
         public virtual bool Exists(Expression<Func<TEntity, bool>> filter = null)
         {
             return GetQueryable(true, null, filter).ToList().Any();
@@ -628,6 +690,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         {
             return await _context.EntityExistsByIdNoTrackingAsync<TEntity>(id, _cancellationToken).ConfigureAwait(false);
         }
+        #endregion
+
+        #region Validate
 
         public Result Validate(TEntity entity, ValidationMode mode)
         {
@@ -658,5 +723,6 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
             return Result.Ok();
         }
+        #endregion
     }
 }

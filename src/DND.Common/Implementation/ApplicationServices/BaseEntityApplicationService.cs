@@ -23,7 +23,6 @@ namespace DND.Common.Implementation.ApplicationServices
           where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
           where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
           where TDomainService : IBaseEntityDomainService<TEntity>
-
     {
 
         public BaseEntityApplicationService(TDomainService domainService, IMapper mapper)
@@ -38,6 +37,15 @@ namespace DND.Common.Implementation.ApplicationServices
 
         }
 
+        #region GetCreateDefaultDto
+        public virtual TCreateDto GetCreateDefaultDto()
+        {
+            var bo = DomainService.GetNewEntityInstance();
+            return Mapper.Map<TCreateDto>(bo);
+        }
+        #endregion
+
+        #region Create
         public virtual Result<TReadDto> Create(TCreateDto dto, string createdBy)
         {
             var objectValidationErrors = dto.Validate().ToList();
@@ -89,20 +97,25 @@ namespace DND.Common.Implementation.ApplicationServices
 
             return Result.Ok(Mapper.Map<TReadDto>(bo));
         }
+        #endregion
 
+        #region GetUpdateDtoById
         public virtual TUpdateDto GetUpdateDtoById(object id)
         {
-            var bo = DomainService.GetById(id);
+            var bo = DomainService.GetById(id,true);
             return Mapper.Map<TUpdateDto>(bo);
         }
 
         public virtual async Task<TUpdateDto> GetUpdateDtoByIdAsync(object id,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var bo = await DomainService.GetByIdAsync(id, cancellationToken);
+            var bo = await DomainService.GetByIdAsync(id, cancellationToken, true);
             return Mapper.Map<TUpdateDto>(bo);
         }
 
+        #endregion
+
+        #region Update
         public virtual List<Result> BulkUpdate(TUpdateDto[] dtos, string updatedBy)
         {
             var results = new List<Result>();
@@ -186,7 +199,9 @@ namespace DND.Common.Implementation.ApplicationServices
 
             return Result.Ok();
         }
+        #endregion
 
+        #region GetDeleteDtoById
         public virtual TDeleteDto GetDeleteDtoById(object id)
         {
             var bo = DomainService.GetById(id);
@@ -199,7 +214,9 @@ namespace DND.Common.Implementation.ApplicationServices
             var bo = await DomainService.GetByIdAsync(id, cancellationToken);
             return Mapper.Map<TDeleteDto>(bo);
         }
+        #endregion
 
+        #region Delete
         public virtual Result Delete(object id, string deletedBy)
         {
             TDeleteDto deleteDto = GetDeleteDtoById(id);
@@ -256,6 +273,9 @@ namespace DND.Common.Implementation.ApplicationServices
             return Result.Ok();
         }
 
+        #endregion
+
+        #region TriggerActions
         public virtual List<Result> TriggerActions(BulkActionDto[] actions, string triggeredBy)
         {
             var results = new List<Result>();
@@ -319,5 +339,6 @@ namespace DND.Common.Implementation.ApplicationServices
 
             return Result.Ok();
         }
+        #endregion
     }
 }

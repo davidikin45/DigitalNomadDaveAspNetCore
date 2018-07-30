@@ -11,12 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace DND.Common.Extensions
 {
     public static class DropdownExtensions
     {
-        public static IList<SelectListItem> GetSelectListFromDatabase<TIDbContext>(this IHtmlHelper htmlHelper, string propertyName) where TIDbContext : IBaseDbContext
+        public static IList<SelectListItem> GetSelectListFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, bool selectedOnly = false) where TIDbContext : IBaseDbContext
         {
             var modelExplorer = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider);
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = modelExplorer.Metadata;
@@ -62,7 +63,7 @@ namespace DND.Common.Extensions
             {
                 if (modelExplorer.Model != null)
                 {
-                    if(!string.IsNullOrWhiteSpace(bindingProperty))
+                    if (!string.IsNullOrWhiteSpace(bindingProperty))
                     {
                         ids.Add(modelExplorer.Model.GetPropValue(bindingProperty).ToString());
                     }
@@ -83,7 +84,7 @@ namespace DND.Common.Extensions
 
                items.Add(new SelectListItem()
                {
-                   Text = GetDisplayString(item, valueProperty).Replace(physicalFolderPath, ""),
+                   Text = GetDisplayString(htmlHelper, item, valueProperty).Replace(physicalFolderPath, ""),
                    Value = item.GetPropValue(nameof(DirectoryInfo.FullName)) != null ? item.GetPropValue(nameof(DirectoryInfo.FullName)).ToString().Replace(physicalFolderPath, "") : "",
                    Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString().Replace(physicalFolderPath, ""))
                }));
@@ -98,21 +99,24 @@ namespace DND.Common.Extensions
 
                items.Add(new SelectListItem()
                {
-                   Text = GetDisplayString(item, valueProperty),
+                   Text = GetDisplayString(htmlHelper, item, valueProperty),
                    Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString().Replace(physicalFilePath, "") : "",
                    Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString().Replace(physicalFilePath, ""))
                }));
             }
-            else if(metadata.DataTypeName == "ModelRepeater")
+            else if (metadata.DataTypeName == "ModelRepeater")
             {
-                ((IEnumerable)modelExplorer.Model).Cast<Object>().ToList().ForEach(item =>
+                foreach (var item in htmlHelper.ViewData.Model)
+                {
+                    var itemObject = (Object)item;
 
                     items.Add(new SelectListItem()
                     {
-                        Text = GetDisplayString(item, valueProperty),
-                        Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
-                        Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
-                    }));
+                        Text = GetDisplayString(htmlHelper, item, valueProperty),
+                        Value = itemObject.GetPropValue(keyProperty) != null ? itemObject.GetPropValue(keyProperty).ToString() : "",
+                        Selected = itemObject.GetPropValue(keyProperty) != null && ids.Contains(itemObject.GetPropValue(keyProperty).ToString())
+                    });
+                }
             }
             else
             {
@@ -120,22 +124,31 @@ namespace DND.Common.Extensions
                 {
 
                     var pi = dropdownModelType.GetProperty(orderByProperty);
-                    IEnumerable<Object> query = null;
+
+                    Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { dropdownModelType });
+
+                    IEnumerable<Object> query = db.Queryable(dropdownModelType);
+           
+                    if (selectedOnly)
+                    {
+                        var whereClause = LamdaHelper.SearchForEntityByIds(dropdownModelType, ids.Cast<Object>());
+                        query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
+                    }
 
                     if (orderByType == "asc")
                     {
-                        query = (db.Queryable(dropdownModelType)).ToList().OrderBy(x => pi.GetValue(x, null));
+                        query = query.ToList().OrderBy(x => pi.GetValue(x, null));
                     }
                     else
                     {
-                        query = (db.Queryable(dropdownModelType)).ToList().OrderByDescending(x => pi.GetValue(x, null));
+                        query = query.ToList().OrderByDescending(x => pi.GetValue(x, null));
                     }
 
                     query.ToList().ForEach(item =>
 
                     items.Add(new SelectListItem()
                     {
-                        Text = GetDisplayString(item, valueProperty),
+                        Text = GetDisplayString(htmlHelper, item, valueProperty),
                         Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
                         Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
                     }));
@@ -150,7 +163,7 @@ namespace DND.Common.Extensions
             return items;
         }
 
-        private static string GetDisplayString(object obj, string displayExpression)
+        private static string GetDisplayString(IHtmlHelper htmlHelper, dynamic obj, string displayExpression)
         {
             string value = displayExpression;
 
@@ -159,26 +172,27 @@ namespace DND.Common.Extensions
                 value = "{" + value + "}";
             }
 
-            bool found = false;
-
-            foreach (var property in obj.GetProperties())
+            var replacementTokens = GetReplacementTokens(value);
+            foreach (var token in replacementTokens)
             {
-                if (value.Contains("{" + property.Name + "}"))
-                {
-                    found = true;
-                    value = value.Replace("{" + property.Name + "}", obj.GetPropValue(property.Name) != null ? obj.GetPropValue(property.Name).ToString() : "");
-                }
-            }
-
-            if (!found)
-            {
-                value = "";
+                var propertyName = token.Substring(1, token.Length - 2);
+                var displayString = HtmlHelperExtensions.ToString(ModelHelperExtensions.Display(htmlHelper, obj, propertyName));
+                value = value.Replace(token, displayString);
             }
 
             return value;
         }
 
-        public static IHtmlContent DropDownListFromDatabase<TIDbContext>(this IHtmlHelper htmlHelper, string propertyName, object htmlAttributes = null) where TIDbContext : IBaseDbContext
+        private static List<String> GetReplacementTokens(String str)
+        {
+            Regex regex = new Regex(@"{(.*?)}", RegexOptions.IgnoreCase);
+            MatchCollection matches = regex.Matches(str);
+
+            // Results include braces (undesirable)
+            return matches.Cast<Match>().Select(m => m.Value).Distinct().ToList();
+        }
+
+        public static IHtmlContent DropDownListFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, object htmlAttributes = null) where TIDbContext : IBaseDbContext
         {
             IList<SelectListItem> items = GetSelectListFromDatabase<TIDbContext>(htmlHelper, propertyName);
 

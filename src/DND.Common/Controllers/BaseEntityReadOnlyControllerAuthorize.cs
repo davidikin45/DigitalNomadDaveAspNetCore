@@ -54,7 +54,7 @@ namespace DND.Common.Controllers
                   
             try
             {
-                var dataTask = Service.SearchAsync(cts.Token, search, null, LamdaHelper.GetOrderBy<TDto>(orderColumn, orderType), page - 1, pageSize, null);
+                var dataTask = Service.SearchAsync(cts.Token, search, null, LamdaHelper.GetOrderBy<TDto>(orderColumn, orderType), page - 1, pageSize, true, false, null);
                 var totalTask = Service.GetSearchCountAsync(cts.Token,search);
 
                 await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
@@ -97,7 +97,7 @@ namespace DND.Common.Controllers
             TDto data = null;
             try
             {
-                data = await Service.GetByIdAsync(id, cts.Token);
+                data = await Service.GetByIdAsync(id, cts.Token, true);
                 if (data == null)
                     return HandleReadException();
             }

@@ -29,11 +29,5 @@ namespace DND.ApplicationServices.Blog.Categories.Services
             var bo = await CategoryDomainService.GetCategoryAsync(categorySlug, cancellationToken);
             return Mapper.Map<CategoryDto>(bo);
         }
-
-        public async override Task<IEnumerable<CategoryDto>> GetAllAsync(CancellationToken cancellationToken, Expression<Func<IQueryable<CategoryDto>, IOrderedQueryable<CategoryDto>>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<CategoryDto, object>>[] includeProperties)
-        {
-            var categories = await CategoryDomainService.GetAllAsync(cancellationToken);
-            return categories.ToList().Select(Mapper.Map<Category, CategoryDto>);
-        }
     }
 }

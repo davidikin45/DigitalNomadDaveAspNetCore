@@ -149,7 +149,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = await Service.GetByIdsAsync(ids, cts.Token);
+            var response = await Service.GetByIdsAsync(cts.Token, ids, true, false);
 
             var list = response.ToList();
 
@@ -174,7 +174,7 @@ namespace DND.Common.Controllers.Api
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = await Service.GetAllAsync(cts.Token);
+            var response = await Service.GetAllAsync(cts.Token, null, null, null, true);
 
             var list = response.ToList();
 
@@ -204,7 +204,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dataTask = Service.SearchAsync(cts.Token, resourceParameters.Search, null, LamdaHelper.GetOrderBy<TDto>(resourceParameters.OrderBy, resourceParameters.OrderType), resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize);
+            var dataTask = Service.SearchAsync(cts.Token, resourceParameters.Search, null, LamdaHelper.GetOrderBy<TDto>(resourceParameters.OrderBy, resourceParameters.OrderType), resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize, true);
 
             var totalTask = Service.GetSearchCountAsync(cts.Token, resourceParameters.Search, null);
 
@@ -399,7 +399,7 @@ namespace DND.Common.Controllers.Api
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dataTask = Service.GetAllAsync(cts.Token);
+            var dataTask = Service.GetAllAsync(cts.Token, null, null, null, true);
 
             var totalTask = Service.GetCountAsync(cts.Token);
 
@@ -437,7 +437,7 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var data = await Service.GetAllAsync(cts.Token);
+            var data = await Service.GetAllAsync(cts.Token, null, null, null, true);
 
             var select = new HtmlTag("select");
 
@@ -556,6 +556,18 @@ ResourceUriType type)
                     },
                       UrlHelper.ActionContext.HttpContext.Request.Scheme);
             }
+        }
+
+        protected IEnumerable<LinkDto> CreateLinksForCreate()
+        {
+            var links = new List<LinkDto>();
+
+            links.Add(
+           new LinkDto(UrlHelper.Action("Create", UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), UrlHelper.ActionContext.HttpContext.Request.Scheme),
+           "create",
+           HttpMethod.Post.Method));
+
+            return links;
         }
 
         private IEnumerable<LinkDto> CreateLinks(string id, string fields, bool fullGraph = false)

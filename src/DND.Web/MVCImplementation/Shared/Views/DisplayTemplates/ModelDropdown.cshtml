@@ -1,8 +1,7 @@
 ﻿@model dynamic
-
 @{
     string displayName = String.Empty;
-    foreach (SelectListItem item in Html.GetSelectListFromDatabase<IApplicationDbContext>(""))
+    foreach (SelectListItem item in Html.GetSelectListFromDatabase<IApplicationDbContext>("", true))
     {
         if (item.Selected)
         {

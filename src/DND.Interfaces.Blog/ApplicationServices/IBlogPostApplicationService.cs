@@ -35,7 +35,5 @@ namespace DND.Interfaces.Blog.ApplicationServices
         Task<int> GetTotalPostsForSearchAsync(string search, CancellationToken cancellationToken);
 
         //Admin
-        Task<IEnumerable<BlogPostDto>> GetPostsAsync(int pageNo, int pageSize, Expression<Func<IQueryable<BlogPostDto>, IOrderedQueryable<BlogPostDto>>> orderBy, CancellationToken cancellationToken);
-        Task<BlogPostDto> GetPostAsync(int id, CancellationToken cancellationToken);
     }
 }

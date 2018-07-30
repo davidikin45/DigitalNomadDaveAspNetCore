@@ -180,6 +180,31 @@ namespace DND.Common.Helpers
             return lamda;
         }
 
+        public static Object SearchForEntityByIds(Type type, IEnumerable<object> ids)
+        {
+            Type funcType = typeof(Func<,>).MakeGenericType(new[] { type, typeof(bool) });
+
+            var item = Expression.Parameter(type, "entity");
+            var prop = Expression.PropertyOrField(item, "Id");
+
+            var propType = type.GetProperty("Id").PropertyType;
+
+            var genericType = typeof(List<>).MakeGenericType(propType);
+            var idList = Activator.CreateInstance(genericType);
+
+            var add_method = idList.GetType().GetMethod("Add");
+            foreach (var id in ids)
+            {
+                add_method.Invoke(idList, new object[] { (dynamic)Convert.ChangeType(id, propType) });
+            }
+
+            var contains_method = idList.GetType().GetMethod("Contains");
+            var value_expression = Expression.Constant(idList);
+            var contains_expression = Expression.Call(value_expression, contains_method, prop);
+
+            return typeof(LamdaHelper).GetMethod(nameof(Lambda)).MakeGenericMethod(funcType).Invoke(null, new object[] { contains_expression, new ParameterExpression[] { item } });
+        }
+
         public static Expression<Func<TEntity, bool>> SearchForEntityById<TEntity>(object id)
         {
             var item = Expression.Parameter(typeof(TEntity), "entity");

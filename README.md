@@ -50,6 +50,13 @@ This can be achieved at an assembly level by creating an Assembly per Bounded Co
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/BC.png "Bounded Context Folder Structure")
 
+## Domain Driven Design
+When I started looking into making a UI and Api that could handle any data model a few rules became clear in order to do so:
+
+
+
+
+
 ## Domain Events
 * [Domain events: design and implementation](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/domain-events-design-implementation)
 

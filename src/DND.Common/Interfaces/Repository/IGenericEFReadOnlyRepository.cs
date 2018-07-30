@@ -23,25 +23,33 @@ namespace DND.Common.Interfaces.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties);
 
-    Task<IEnumerable<TEntity>> GetAllAsync(
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            int? skip = null,
-            int? take = null,
-            params Expression<Func<TEntity, Object>>[] includeProperties)
-            ;
+        Task<IEnumerable<TEntity>> GetAllAsync(
+                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                int? skip = null,
+                int? take = null,
+                bool includeAllCompositionRelationshipProperties = false,
+                bool includeAllCompositionAndAggregationRelationshipProperties = false,
+                params Expression<Func<TEntity, Object>>[] includeProperties)
+                ;
 
         IEnumerable<TEntity> GetAllNoTracking(
           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
           int? skip = null,
           int? take = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties);
 
         Task<IEnumerable<TEntity>> GetAllNoTrackingAsync(
                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                 int? skip = null,
                 int? take = null,
+                bool includeAllCompositionRelationshipProperties = false,
+                bool includeAllCompositionAndAggregationRelationshipProperties = false,
                 params Expression<Func<TEntity, Object>>[] includeProperties)
                 ;
 
@@ -51,6 +59,8 @@ namespace DND.Common.Interfaces.Repository
            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
            int? skip = null,
            int? take = null,
+           bool includeAllCompositionRelationshipProperties = false,
+           bool includeAllCompositionAndAggregationRelationshipProperties = false,
            params Expression<Func<TEntity, Object>>[] includeProperties)
            ;
 
@@ -60,6 +70,8 @@ namespace DND.Common.Interfaces.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -69,6 +81,8 @@ namespace DND.Common.Interfaces.Repository
        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
        int? skip = null,
        int? take = null,
+       bool includeAllCompositionRelationshipProperties = false,
+        bool includeAllCompositionAndAggregationRelationshipProperties = false,
        params Expression<Func<TEntity, Object>>[] includeProperties)
        ;
 
@@ -78,6 +92,8 @@ namespace DND.Common.Interfaces.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -86,6 +102,8 @@ namespace DND.Common.Interfaces.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -94,6 +112,8 @@ namespace DND.Common.Interfaces.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -102,6 +122,8 @@ namespace DND.Common.Interfaces.Repository
           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
           int? skip = null,
           int? take = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
           ;
 
@@ -110,84 +132,135 @@ namespace DND.Common.Interfaces.Repository
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? skip = null,
             int? take = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         TEntity GetOne(
             Expression<Func<TEntity, bool>> filter = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         Task<TEntity> GetOneAsync(
             Expression<Func<TEntity, bool>> filter = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         TEntity GetOneNoTracking(
         Expression<Func<TEntity, bool>> filter = null,
+        bool includeAllCompositionRelationshipProperties = false,
+        bool includeAllCompositionAndAggregationRelationshipProperties = false,
         params Expression<Func<TEntity, Object>>[] includeProperties)
         ;
 
         Task<TEntity> GetOneNoTrackingAsync(
             Expression<Func<TEntity, bool>> filter = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         TEntity GetFirst(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         Task<TEntity> GetFirstAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         TEntity GetFirstNoTracking(
           Expression<Func<TEntity, bool>> filter = null,
           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+          bool includeAllCompositionRelationshipProperties = false,
+          bool includeAllCompositionAndAggregationRelationshipProperties = false,
           params Expression<Func<TEntity, Object>>[] includeProperties)
           ;
 
         Task<TEntity> GetFirstNoTrackingAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetById(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        TEntity GetById(object id, bool includeAllCompositionRelationshipProperties = false, 
+            bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+            params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        Task<TEntity> GetByIdAsync(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        Task<TEntity> GetByIdAsync(object id, 
+            bool includeAllCompositionRelationshipProperties = false, 
+            bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+            params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
 
-        TEntity GetByIdNoTracking(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        TEntity GetByIdNoTracking(object id, 
+            bool includeAllCompositionRelationshipProperties = false, 
+            bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+            params Expression<Func<TEntity, Object>>[] includeProperties)
           ;
 
-        Task<TEntity> GetByIdNoTrackingAsync(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        Task<TEntity> GetByIdNoTrackingAsync(object id, 
+            bool includeAllCompositionRelationshipProperties = false, 
+            bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+            params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null);
+        TEntity GetByIdWithPagedCollectionProperty(object id, 
+            string collectionProperty, 
+            int? skip = null, 
+            int? take = null, 
+            object collectionItemId = null);
 
-        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null);
+        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, 
+            string collectionProperty, 
+            int? skip = null, 
+            int? take = null, 
+            object collectionItemId = null);
 
-        int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
+        int GetByIdWithPagedCollectionPropertyCount(object id, 
+            string collectionProperty);
 
-        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, string collectionProperty);
+        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, 
+            string collectionProperty);
 
-        IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
+        IEnumerable<TEntity> GetByIds(IEnumerable<object> ids, 
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
            ;
 
-        Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids)
+        Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        IEnumerable<TEntity> GetByIdsNoTracking(IEnumerable<object> ids)
+        IEnumerable<TEntity> GetByIdsNoTracking(IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
        ;
 
-        Task<IEnumerable<TEntity>> GetByIdsNoTrackingAsync(IEnumerable<object> ids)
+        Task<IEnumerable<TEntity>> GetByIdsNoTrackingAsync(IEnumerable<object> ids,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
+         params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         int GetCount(Expression<Func<TEntity, bool>> filter = null)

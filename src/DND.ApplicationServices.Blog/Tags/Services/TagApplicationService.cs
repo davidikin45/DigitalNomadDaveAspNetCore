@@ -15,7 +15,6 @@ namespace DND.ApplicationServices.Blog.Tags.Services
 {
     public class TagApplicationService : BaseEntityApplicationService<Tag, TagDto, TagDto, TagDto, TagDeleteDto, ITagDomainService>, ITagApplicationService
     {
-
         public TagApplicationService(ITagDomainService domainService, IMapper mapper)
         : base(domainService, mapper)
         {
@@ -26,12 +25,6 @@ namespace DND.ApplicationServices.Blog.Tags.Services
         {
             var bo = await DomainService.GetTagAsync(tagSlug, cancellationToken);
             return Mapper.Map<TagDto>(bo);
-        }
-
-        public async override Task<IEnumerable<TagDto>> GetAllAsync(CancellationToken cancellationToken, Expression<Func<IQueryable<TagDto>, IOrderedQueryable<TagDto>>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<TagDto, object>>[] includeProperties)
-        {
-            var tags = await DomainService.GetAllAsync(cancellationToken);
-            return tags.ToList().Select(Mapper.Map<Tag, TagDto>);
         }
     }
 }

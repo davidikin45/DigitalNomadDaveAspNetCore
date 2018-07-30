@@ -15,6 +15,10 @@ namespace DND.Common.Interfaces.ApplicationServices
           where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware
           where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
     {
+
+        TCreateDto GetCreateDefaultDto()
+           ;
+
         Result<TReadDto> Create(TCreateDto dto, string createdBy);
 
         Task<Result<TReadDto>> CreateAsync(TCreateDto dto, string createdBy, CancellationToken cancellationToken = default(CancellationToken));

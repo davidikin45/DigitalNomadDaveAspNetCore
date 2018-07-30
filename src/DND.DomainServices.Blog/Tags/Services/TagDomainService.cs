@@ -30,7 +30,7 @@ namespace DND.DomainServices.Tags.Services
             }
         }
 
-        public async override Task<IEnumerable<Tag>> GetAllAsync(CancellationToken cancellationToken, Func<IQueryable<Tag>, IOrderedQueryable<Tag>> orderBy = null, int? pageNo = default(int?), int? pageSize = default(int?), params Expression<Func<Tag, object>>[] includeProperties)
+        public async override Task<IEnumerable<Tag>> GetAsync(CancellationToken cancellationToken, Expression<Func<Tag, bool>> filter = null, Func<IQueryable<Tag>, IOrderedQueryable<Tag>> orderBy = null, int? pageNo = null, int? pageSize = null, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<Tag, object>>[] includeProperties)
         {
             using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {

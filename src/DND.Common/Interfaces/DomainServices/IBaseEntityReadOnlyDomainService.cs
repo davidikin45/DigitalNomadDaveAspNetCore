@@ -16,6 +16,8 @@ namespace DND.Common.Interfaces.DomainServices
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties);
 
         Task<IEnumerable<TEntity>> GetAllAsync(
@@ -23,6 +25,8 @@ namespace DND.Common.Interfaces.DomainServices
            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -32,6 +36,8 @@ namespace DND.Common.Interfaces.DomainServices
          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
          int? pageNo = null,
          int? pageSize = null,
+         bool includeAllCompositionRelationshipProperties = false,
+         bool includeAllCompositionAndAggregationRelationshipProperties = false,
          params Expression<Func<TEntity, Object>>[] includeProperties)
          ;
 
@@ -42,6 +48,8 @@ namespace DND.Common.Interfaces.DomainServices
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -50,6 +58,8 @@ namespace DND.Common.Interfaces.DomainServices
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -59,23 +69,31 @@ namespace DND.Common.Interfaces.DomainServices
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             int? pageNo = null,
             int? pageSize = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         TEntity GetOne(
             Expression<Func<TEntity, bool>> filter = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         Task<TEntity> GetOneAsync(
             CancellationToken cancellationToken,
             Expression<Func<TEntity, bool>> filter = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         TEntity GetFirst(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
@@ -83,30 +101,54 @@ namespace DND.Common.Interfaces.DomainServices
             CancellationToken cancellationToken,
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        TEntity GetById(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+        TEntity GetById(object id, 
+            bool includeAllCompositionRelationshipProperties = false, 
+            bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+            params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
+        TEntity GetByIdWithPagedCollectionProperty(object id, 
+            string collectionProperty, 
+            int? pageNo = null, 
+            int? pageSize = null, 
+            object collectionItemId = null);
 
-        TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object collectionItemId = null);
-
-        int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
+        int GetByIdWithPagedCollectionPropertyCount(object id, 
+            string collectionProperty);
 
         Task<TEntity> GetByIdAsync(object id,
-             CancellationToken cancellationToken, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TEntity, Object>>[] includeProperties)
+             CancellationToken cancellationToken, 
+             bool includeAllCompositionRelationshipProperties = false, 
+             bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+             params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
-        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object collectionItemId = null);
+        Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, 
+            object id, string collectionProperty, 
+            int? pageNo = null, 
+            int? pageSize = null, 
+            object collectionItemId = null);
 
-        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, object id, string collectionProperty);
+        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, 
+            object id, 
+            string collectionProperty);
 
-        IEnumerable<TEntity> GetByIds(IEnumerable<object> ids)
+        IEnumerable<TEntity> GetByIds(IEnumerable<object> ids,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
+            params Expression<Func<TEntity, Object>>[] includeProperties)
            ;
 
-        Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<object> ids,
-             CancellationToken cancellationToken)
+        Task<IEnumerable<TEntity>> GetByIdsAsync(CancellationToken cancellationToken,
+            IEnumerable<object> ids,
+            bool includeAllCompositionRelationshipProperties = false,
+            bool includeAllCompositionAndAggregationRelationshipProperties = false,
+            params Expression<Func<TEntity, Object>>[] includeProperties)
             ;
 
         int GetCount(Expression<Func<TEntity, bool>> filter = null)
@@ -117,7 +159,6 @@ namespace DND.Common.Interfaces.DomainServices
             Expression<Func<TEntity, bool>> filter = null
             )
             ;
-
 
         int GetSearchCount(string search = "", Expression<Func<TEntity, bool>> filter = null)
             ;
