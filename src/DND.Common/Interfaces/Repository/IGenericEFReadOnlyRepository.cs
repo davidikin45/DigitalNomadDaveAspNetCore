@@ -222,22 +222,30 @@ namespace DND.Common.Interfaces.Repository
             ;
 
         TEntity GetByIdWithPagedCollectionProperty(object id, 
-            string collectionProperty, 
+            string collectionProperty,
+            string search = "",
+            string orderBy = null,
+            bool ascending = false,
             int? skip = null, 
             int? take = null, 
             object collectionItemId = null);
 
         Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, 
-            string collectionProperty, 
+            string collectionProperty,
+            string search = "",
+            string orderBy = null,
+            bool ascending = false,
             int? skip = null, 
             int? take = null, 
             object collectionItemId = null);
 
         int GetByIdWithPagedCollectionPropertyCount(object id, 
-            string collectionProperty);
+            string collectionProperty,
+            string search = "");
 
         Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, 
-            string collectionProperty);
+            string collectionProperty,
+            string search = "");
 
         IEnumerable<TEntity> GetByIds(IEnumerable<object> ids, 
          bool includeAllCompositionRelationshipProperties = false,

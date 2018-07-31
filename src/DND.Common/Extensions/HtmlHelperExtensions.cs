@@ -125,7 +125,14 @@ namespace DND.Common.Extensions
 
                 if (enableSort)
                 {
-                    link = html.ActionLink(linkText, "Index", new { page = html.ViewBag.Page, pageSize = html.ViewBag.PageSize, search = html.ViewBag.Search, orderColumn = prop.PropertyName, orderType = orderType }).Render();
+                    if(html.ViewBag.Collection != null)
+                    {
+                        link = html.ActionLink(linkText, "Collection", new { id = html.ViewBag.Id, collection = html.ViewBag.Collection, page = html.ViewBag.Page, pageSize = html.ViewBag.PageSize, search = html.ViewBag.Search, orderColumn = prop.PropertyName, orderType = orderType }).Render();
+                    }
+                    else
+                    {
+                        link = html.ActionLink(linkText, "Index", new { page = html.ViewBag.Page, pageSize = html.ViewBag.PageSize, search = html.ViewBag.Search, orderColumn = prop.PropertyName, orderType = orderType }).Render();
+                    }
                 }
                 else
                 {
@@ -242,7 +249,14 @@ namespace DND.Common.Extensions
 
                     if (details)
                     {
-                        tdActions.InnerHtml.AppendHtml(html.IconLink("Details", "Details", new { id = item.Id }, "fa fa-search", new { @class = "btn btn-primary btn-sm mr-2 mb-2" }));
+                        if(html.ViewBag.Collection != null)
+                        {
+                            tdActions.InnerHtml.AppendHtml(html.IconLink("Details", "CollectionItemDetails", new { id = html.ViewBag.Id, collection = html.ViewBag.Collection, collectionItemId = item.Id }, "fa fa-search", new { @class = "btn btn-primary btn-sm mr-2 mb-2" }));
+                        }
+                        else
+                        {
+                            tdActions.InnerHtml.AppendHtml(html.IconLink("Details", "Details", new { id = item.Id }, "fa fa-search", new { @class = "btn btn-primary btn-sm mr-2 mb-2" }));
+                        }
                     }
 
                     if (edit)

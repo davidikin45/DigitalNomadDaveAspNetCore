@@ -19,6 +19,7 @@ using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Helpers;
 using DND.Common.Extensions;
 using System.Data.Entity.Spatial;
+using DND.Common.Implementation.Data;
 
 namespace DND.Common.Implementation.Repository.EntityFramework
 {
@@ -63,12 +64,12 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = CreateSearchQuery(query, search);
+                query = LamdaHelper.CreateSearchQuery(query, search);
             }
 
             if (includeAllCompositionAndAggregationRelationshipProperties)
             {
-                var includesList = GetAllCompositionAndAggregationRelationshipPropertyIncludes(false);
+                var includesList = RelationshipHelper.GetAllCompositionAndAggregationRelationshipPropertyIncludes(false, typeof(TEntity));
 
                 foreach (var include in includesList)
                 {
@@ -80,7 +81,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
                 if (includeAllCompositionRelationshipProperties)
                 {
                     //For Aggregate Roots
-                    var includesList = GetAllCompositionAndAggregationRelationshipPropertyIncludes(true);
+                    var includesList = RelationshipHelper.GetAllCompositionAndAggregationRelationshipPropertyIncludes(true, typeof(TEntity));
 
                     foreach (var include in includesList)
                     {
@@ -121,109 +122,9 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             return query;
         }
 
-        //https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
-        //1. Never have Many-To-Many relationships. Create a join Entity so the relationship becomes 1-To-Many and Many-To-1.
-        //2. Never have 1-To-1 Composition ENTITY Relationships!!! For Composition relationships use Value types instead if required. In EF6 extend from BaseValueObject. In EF Core decorate value type with [OwnedAttribute]. Not sure if this attribute can be applied on base class. ValueTypes are included by default.
-        //3. Use collections only for Composition relationships(1-To-Many, child cannot exist independent of the parent, ) not Aggregation relationshiships(child can exist independently of the parent, reference relationship). Never use a Collection for Navigation purposes!!!!
-        //4. Use Complex properties for Aggregation relationships only (Many-To-1, child can exist independently of the parent, reference relationship). e.g Navigation purposes
-        private List<string> GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type = null, string path = null)
-        {
-            List<string> includesList = new List<string>();
-
-            if (type == null)
-            {
-                type = typeof(TEntity);
-            }
-
-            List<Type> excludeTypes = new List<Type>()
-            {
-                typeof(DateTime),
-                typeof(String),
-                typeof(byte[]),
-                typeof(DbGeography)
-           };
-
-            IEnumerable<PropertyInfo> properties = type.GetProperties().Where(p => p.CanWrite && !p.PropertyType.IsValueType && !excludeTypes.Contains(p.PropertyType) && ((!compositionRelationshipsOnly && !p.PropertyType.IsCollection()) || (p.PropertyType.IsCollection() && type != p.PropertyType.GetGenericArguments().First()))).ToList();
-
-            foreach (var p in properties)
-            {
-                var includePath = !string.IsNullOrWhiteSpace(path) ? path + "." + p.Name : p.Name;
-
-                includesList.Add(includePath);
-
-                Type propType = null;
-                if (p.PropertyType.IsCollection())
-                {
-                    propType = type.GetGenericArguments(p.Name).First();
-                }
-                else
-                {
-                    propType = p.PropertyType;
-                }
-
-                includesList.AddRange(GetAllCompositionAndAggregationRelationshipPropertyIncludes(compositionRelationshipsOnly, propType, includePath));
-            }
-
-            return includesList;
-        }
-
         private void DebugSQL(IQueryable<TEntity> query)
         {
             var sql = query.ToString();
-        }
-
-        protected virtual IQueryable<TEntity> CreateSearchQuery(IQueryable<TEntity> query, string values)
-        {
-
-            List<Expression> andExpressions = new List<Expression>();
-
-            ParameterExpression parameter = Expression.Parameter(typeof(TEntity), "p");
-
-            MethodInfo contains_method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-
-
-            foreach (var value in values.Split('&'))
-            {
-                List<Expression> orExpressions = new List<Expression>();
-
-                foreach (PropertyInfo prop in typeof(TEntity).GetProperties().Where(x => x.PropertyType == typeof(string)))
-                {
-                    MemberExpression member_expression = Expression.PropertyOrField(parameter, prop.Name);
-
-                    ConstantExpression value_expression = Expression.Constant(value, typeof(string));
-
-                    MethodCallExpression contains_expression = Expression.Call(member_expression, contains_method, value_expression);
-
-                    orExpressions.Add(contains_expression);
-                }
-
-                if (orExpressions.Count == 0)
-                    return query;
-
-                Expression or_expression = orExpressions[0];
-
-                for (int i = 1; i < orExpressions.Count; i++)
-                {
-                    or_expression = Expression.OrElse(or_expression, orExpressions[i]);
-                }
-
-                andExpressions.Add(or_expression);
-            }
-
-            if (andExpressions.Count == 0)
-                return query;
-
-            Expression and_expression = andExpressions[0];
-
-            for (int i = 1; i < andExpressions.Count; i++)
-            {
-                and_expression = Expression.AndAlso(and_expression, andExpressions[i]);
-            }
-
-            Expression<Func<TEntity, bool>> expression = Expression.Lambda<Func<TEntity, bool>>(
-                and_expression, parameter);
-
-            return query.Where(expression);
         }
 
         #region SQLQuery
@@ -527,42 +428,56 @@ namespace DND.Common.Implementation.Repository.EntityFramework
         #endregion
 
         #region GetByIdWithPagedCollectionProperty
-        public virtual TEntity GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
+        public virtual TEntity GetByIdWithPagedCollectionProperty(object id, 
+            string collectionProperty,
+            string search = "",
+            string orderBy = null,
+            bool ascending = false,
+            int? skip = null, 
+            int? take = null, 
+            object collectionItemId = null)
         {
             var entity = GetById(id);
             if (entity != null)
             {
-                _context.LoadCollectionProperty(entity, collectionProperty, skip, take, collectionItemId);
+                _context.LoadCollectionProperty(entity, collectionProperty, search, orderBy, ascending, skip, take, collectionItemId);
             }
             return entity;
         }
 
-        public async virtual Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
+        public async virtual Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, 
+            string collectionProperty,
+            string search = "",
+            string orderBy = null,
+            bool ascending = false,
+            int? skip = null, 
+            int? take = null, 
+            object collectionItemId = null)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
             {
-                await _context.LoadCollectionPropertyAsync(entity, collectionProperty, skip, take, collectionItemId);
+                await _context.LoadCollectionPropertyAsync(entity, collectionProperty, search, orderBy, ascending, skip, take, collectionItemId);
             }
             return entity;
         }
 
-        public virtual int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty)
+        public virtual int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty, string search = "")
         {
             var entity = GetById(id);
             if (entity != null)
             {
-                return _context.CollectionPropertyCount(entity, collectionProperty);
+                return _context.CollectionPropertyCount(entity, collectionProperty, search);
             }
             return 0;
         }
 
-        public virtual async Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, string collectionProperty)
+        public virtual async Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, string collectionProperty, string search = "")
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
             {
-                return await _context.CollectionPropertyCountAsync(entity, collectionProperty, _cancellationToken);
+                return await _context.CollectionPropertyCountAsync(entity, collectionProperty, search, _cancellationToken);
             }
             return 0;
         }

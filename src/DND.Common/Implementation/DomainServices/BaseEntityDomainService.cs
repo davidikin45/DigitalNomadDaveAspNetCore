@@ -99,7 +99,53 @@ namespace DND.Common.Implementation.DomainServices
             {
                 try
                 {
-                    var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, updatedBy);
+                    var validationResult = await unitOfWork.Repository<TContext, TEntity>().UpdateAsync(entity, updatedBy, cancellationToken);
+                    if (validationResult.IsFailure)
+                    {
+                        return validationResult;
+                    }
+
+                    await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return HandleEF6UpdateConcurrency(ex);
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public virtual Result UpdateGraph(TEntity entity, string updatedBy)
+        {
+            using (var unitOfWork = UnitOfWorkFactory.Create())
+            {
+                try
+                {
+                    var validationResult = unitOfWork.Repository<TContext, TEntity>().UpdateGraph(entity, updatedBy);
+                    if (validationResult.IsFailure)
+                    {
+                        return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                    }
+
+                    unitOfWork.Complete();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    return HandleEF6UpdateConcurrency(ex);
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public virtual async Task<Result> UpdateGraphAsync(TEntity entity, string updatedBy, CancellationToken cancellationToken)
+        {
+            using (var unitOfWork = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
+            {
+                try
+                {
+                    var validationResult = await unitOfWork.Repository<TContext, TEntity>().UpdateGraphAsync(entity, updatedBy, cancellationToken);
                     if (validationResult.IsFailure)
                     {
                         return validationResult;

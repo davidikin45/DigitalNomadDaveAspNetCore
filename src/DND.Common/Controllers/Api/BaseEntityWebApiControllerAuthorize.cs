@@ -137,7 +137,7 @@ namespace DND.Common.Controllers.Api
             //    return ApiNotFoundErrorMessage(Messages.NotFound);
             //}
 
-            var result = await Service.UpdateAsync(id, dto, Username, cts.Token);
+            var result = await Service.UpdateGraphAsync(id, dto, Username, cts.Token);
             if (result.IsFailure)
             {
                 return ValidationErrors(result);
@@ -161,7 +161,7 @@ namespace DND.Common.Controllers.Api
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var results = await Service.BulkUpdateAsync(dtos, Username, cts.Token);
+            var results = await Service.BulkUpdateGraphAsync(dtos, Username, cts.Token);
 
             return BulkUpdateResponse(results);
         }
@@ -209,7 +209,7 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-            var result = await Service.UpdateAsync(id, dto, Username, cts.Token);
+            var result = await Service.UpdateGraphAsync(id, dto, Username, cts.Token);
             if (result.IsFailure)
             {
                 return ValidationErrors(result);

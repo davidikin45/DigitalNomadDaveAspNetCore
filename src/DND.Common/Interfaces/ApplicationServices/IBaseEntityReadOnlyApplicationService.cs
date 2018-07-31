@@ -107,68 +107,82 @@ namespace DND.Common.Interfaces.ApplicationServices
             params Expression<Func<TDto, Object>>[] includeProperties)
             ;
 
-        TDto GetById(object id, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
-            ;
+        TDto GetById(object id, 
+            bool includeAllCompositionRelationshipProperties = false, 
+            bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+            params Expression<Func<TDto, Object>>[] includeProperties);
 
         Task<TDto> GetByIdAsync(object id, 
-             CancellationToken cancellationToken, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<TDto, Object>>[] includeProperties)
-            ;
+             CancellationToken cancellationToken, 
+             bool includeAllCompositionRelationshipProperties = false, 
+             bool includeAllCompositionAndAggregationRelationshipProperties = false, 
+             params Expression<Func<TDto, Object>>[] includeProperties);
 
-        TDto GetByIdWithPagedCollectionProperty(object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object colectionItemId = null);
+        TDto GetByIdWithPagedCollectionProperty(object id, 
+            string collectionProperty,
+            string search = "",
+            string orderBy = null,
+            bool ascending = false,
+            int? pageNo = null, 
+            int? pageSize = null, 
+            object colectionItemId = null);
 
-        Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, object id, string collectionProperty, int? pageNo = null, int? pageSize = null, object colectionItemId = null);
+        Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, 
+            object id, 
+            string collectionProperty,
+            string search = "",
+            string orderBy = null,
+            bool ascending = false,
+            int? pageNo = null, 
+            int? pageSize = null, 
+            object colectionItemId = null);
 
-        int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty);
+        int GetByIdWithPagedCollectionPropertyCount(object id, 
+            string collectionProperty,
+             string search = "");
 
-        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, object id, string collectionProperty);
+        Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, 
+            object id, 
+            string collectionProperty,
+            string search = "");
 
         IEnumerable<TDto> GetByIds(IEnumerable<object> ids,
          bool includeAllCompositionRelationshipProperties = false,
          bool includeAllCompositionAndAggregationRelationshipProperties = false,
-         params Expression<Func<TDto, Object>>[] includeProperties)
-           ;
+         params Expression<Func<TDto, Object>>[] includeProperties);
 
         Task<IEnumerable<TDto>> GetByIdsAsync(CancellationToken cancellationToken,
          IEnumerable<object> ids,
          bool includeAllCompositionRelationshipProperties = false,
          bool includeAllCompositionAndAggregationRelationshipProperties = false,
-         params Expression<Func<TDto, Object>>[] includeProperties)
-            ;
+         params Expression<Func<TDto, Object>>[] includeProperties);
 
-        int GetCount(Expression<Func<TDto, bool>> filter = null)
-            ;
+        int GetCount(Expression<Func<TDto, bool>> filter = null);
 
         Task<int> GetCountAsync(
             CancellationToken cancellationToken,
             Expression<Func<TDto, bool>> filter = null
-            )
-            ;
+            );
 
-
-        int GetSearchCount(string search = "", Expression<Func<TDto, bool>> filter = null)
-            ;
+        int GetSearchCount(string search = "", 
+            Expression<Func<TDto, bool>> filter = null);
 
         Task<int> GetSearchCountAsync(
           CancellationToken cancellationToken,
           string search = "",
           Expression<Func<TDto, bool>> filter = null
-          )
-          ;
+          );
 
-        bool Exists(Expression<Func<TDto, bool>> filter = null)
-            ;
+        bool Exists(Expression<Func<TDto, bool>> filter = null);
 
         Task<bool> ExistsAsync(
             CancellationToken cancellationToken,
-            Expression<Func<TDto, bool>> filter = null)
-            ;
+            Expression<Func<TDto, bool>> filter = null);
 
-        bool Exists(object id)
-           ;
+        bool Exists(object id);
 
         Task<bool> ExistsAsync(
             CancellationToken cancellationToken,
-            object id)
-            ;
+            object id);
     }
 }

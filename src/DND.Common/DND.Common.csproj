@@ -55,6 +55,9 @@
     <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper.Collection, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e57c3f0a3d6646db, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.Collection.4.0.0\lib\net45\AutoMapper.Collection.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper.Extensions.ExpressionMapping, Version=1.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AutoMapper.Extensions.ExpressionMapping.1.0.2\lib\net45\AutoMapper.Extensions.ExpressionMapping.dll</HintPath>
     </Reference>
@@ -855,6 +858,7 @@
     <Compile Include="Implementation\ApplicationServices\BaseEntityApplicationService.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseEntityReadOnlyApplicationService.cs" />
     <Compile Include="Implementation\Data\DesignTimeDbContextFactoryBase.cs" />
+    <Compile Include="Implementation\Data\RelationshipHelper.cs" />
     <Compile Include="Implementation\DTOs\BaseDtoAggregateRoot.cs" />
     <Compile Include="Implementation\DTOs\BaseDto.cs" />
     <Compile Include="Implementation\DTOs\ActionDto.cs" />

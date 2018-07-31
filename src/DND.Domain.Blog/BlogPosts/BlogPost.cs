@@ -62,32 +62,8 @@ namespace DND.Domain.Blog.BlogPosts
         public virtual Category Category
         { get; set; }
 
-        public List<int> TagIds
-        {
-            get
-            {
-               if(Tags != null)
-                {
-                    return Tags.Select(t => t.TagId).ToList();
-                }
-                return new List<int>();
-            }
-        }
-
         public virtual IList<BlogPostTag> Tags
         { get; set; }
-
-        public List<int> LocationIds
-        {
-            get
-            {
-                if (Locations != null)
-                {
-                    return Locations.Select(l => l.LocationId).ToList();
-                }
-                return new List<int>();
-            }
-        }
 
         public virtual IList<BlogPostLocation> Locations
         { get; set; }

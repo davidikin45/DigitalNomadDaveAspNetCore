@@ -31,6 +31,14 @@ namespace DND.Common.Interfaces.ApplicationServices
 
         Task<List<Result>> BulkUpdateAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
+        Result UpdateGraph(object id, TUpdateDto dto, string updatedBy);
+
+        Task<Result> UpdateGraphAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
+
+        List<Result> BulkUpdateGraph(TUpdateDto[] dtos, string updatedBy);
+
+        Task<List<Result>> BulkUpdateGraphAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
+
         Result Delete(object id, string deletedBy);
 
         Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
@@ -39,19 +47,13 @@ namespace DND.Common.Interfaces.ApplicationServices
 
         Task<Result> DeleteAsync(TDeleteDto dto, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
 
-        TUpdateDto GetUpdateDtoById(object id)
-           ;
+        TUpdateDto GetUpdateDtoById(object id);
 
-        Task<TUpdateDto> GetUpdateDtoByIdAsync(object id,
-             CancellationToken cancellationToken)
-            ;
+        Task<TUpdateDto> GetUpdateDtoByIdAsync(object id, CancellationToken cancellationToken);
 
-        TDeleteDto GetDeleteDtoById(object id)
-           ;
+        TDeleteDto GetDeleteDtoById(object id);
 
-        Task<TDeleteDto> GetDeleteDtoByIdAsync(object id,
-             CancellationToken cancellationToken)
-            ;
+        Task<TDeleteDto> GetDeleteDtoByIdAsync(object id, CancellationToken cancellationToken);
 
         Result TriggerAction(object id, ActionDto action, string triggeredBy);
 

@@ -34,7 +34,7 @@ namespace DND.Common.Controllers
     public abstract class BaseEntityReadOnlyControllerAuthorize<TDto, IEntityService> : BaseController
         where TDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
         where IEntityService : IBaseEntityReadOnlyApplicationService<TDto>
-    {   
+    {
         public IEntityService Service { get; private set; }
         public Boolean Admin { get; set; }
 
@@ -51,11 +51,11 @@ namespace DND.Common.Controllers
         {
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-                  
+
             try
             {
                 var dataTask = Service.SearchAsync(cts.Token, search, null, LamdaHelper.GetOrderBy<TDto>(orderColumn, orderType), page - 1, pageSize, true, false, null);
-                var totalTask = Service.GetSearchCountAsync(cts.Token,search);
+                var totalTask = Service.GetSearchCountAsync(cts.Token, search);
 
                 await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
 
@@ -88,7 +88,7 @@ namespace DND.Common.Controllers
                 return HandleReadException();
             }
         }
- 
+
         // GET: Default/Details/5
         [Route("details/{id}")]
         public virtual async Task<ActionResult> Details(string id)
@@ -125,9 +125,9 @@ namespace DND.Common.Controllers
             {
                 var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
 
-                var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, page - 1, pageSize);
+                var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, search, orderColumn, orderType == OrderByType.Ascending ? true : false, page - 1, pageSize);
 
-                var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collection);
+                var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collection, search);
 
                 await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
 
@@ -153,11 +153,16 @@ namespace DND.Common.Controllers
                 ViewBag.OrderColumn = orderColumn;
                 ViewBag.OrderType = orderType;
 
+                ViewBag.Collection = collection;
+                ViewBag.Id = id;
+
                 //For the time being collection properties are read only. DDD states that only the Aggregate Root should get updated.
+                ViewBag.DisableCreate = true;
                 ViewBag.DisableEdit = true;
                 ViewBag.DisableDelete = true;
-                ViewBag.DisableSorting = true;
+                ViewBag.DisableSorting = false;
                 ViewBag.DisableEntityEvents = true;
+                ViewBag.DisableSearch = false;
 
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = Admin;
@@ -183,14 +188,14 @@ namespace DND.Common.Controllers
             {
                 var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
 
-                var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, null, null, collectionItemId);
+                var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, "", null, false, null, null, collectionItemId);
 
                 if (response == null || response.GetPropValue(collection) == null)
                 {
                     return HandleReadException();
                 }
 
-                var whereClause = LamdaHelper.SearchForEntityById(collectionItemType, collectionItemId);
+                var whereClause = LamdaHelper.SearchForEntityByIdCompile(collectionItemType, collectionItemId);
                 var collectionItem = typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.FirstOrDefault)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { response.GetPropValue(collection), whereClause });
 
                 if (collectionItem == null)
@@ -207,6 +212,11 @@ namespace DND.Common.Controllers
 
             ViewBag.PageTitle = Title;
             ViewBag.Admin = Admin;
+
+            ViewBag.DisableEdit = true;
+            ViewBag.Collection = collection;
+            ViewBag.Id = id;
+
             return View("Details", data);
         }
 

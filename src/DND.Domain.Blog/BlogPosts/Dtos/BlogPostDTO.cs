@@ -50,24 +50,12 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false)]
         public CategoryDto Category { get; set; }
 
-        [Render(ShowForGrid = false, AllowSortForGrid = false)]
-        [Dropdown(typeof(Tag), nameof(Tag.Name))]
-        public List<int> TagIds { get; set; }
-
-        //[Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = false)]
-        //[Dropdown(typeof(Tag), nameof(Tag.Name), nameof(Tag.Id), OrderByType.Descending, nameof(BlogPostTagDto.TagId))]
-        //public List<BlogPostTagDto> Tags { get; set; }
-
         [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
         [Repeater("{" + nameof(BlogPostTagDto.TagId) + "}")]
         public List<BlogPostTagDto> Tags { get; set; }
 
-        [Render(ShowForGrid = false, AllowSortForGrid = false)]
-        [Dropdown(typeof(Location), "{" + nameof(Location.LocationTypeString) + "} - {" + nameof(Location.Name) + "}", nameof(Location.Id), OrderByType.Descending)]
-        public List<int> LocationIds { get; set; }
-
         [Render(ShowForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = false)]
-        [Dropdown(typeof(Location), "{" + nameof(Location.LocationTypeString) + "} - {" + nameof(Location.Name) + "}", nameof(Location.Id), OrderByType.Descending, nameof(BlogPostLocationDto.LocationId))]
+        [Repeater("{" + nameof(BlogPostLocationDto.LocationId) + "}")]
         public List<BlogPostLocationDto> Locations { get; set; }
 
         [Required]
@@ -120,9 +108,7 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         {
             MapHeight = 300;
             MapZoom = 7;
-            TagIds = new List<int>();
             Tags = new List<BlogPostTagDto>();
-            LocationIds = new List<int>();
         }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
@@ -133,78 +119,10 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
             configuration.CreateMap<BlogPost, BlogPostDto>();
-               //.ForMember(dto => dto.Tags, bo => bo.MapFrom(s => s.Tags.Select(y => y.Tag).ToList()))
-               //.ForMember(dto => dto.TagIds, bo => bo.MapFrom(s => s.Tags.Select(y => y.Tag.Id).ToList()))
-               //.ForMember(dto => dto.TagIds, bo => bo.MapFrom(s => s.Tags))
-               //.ForMember(dto => dto.Locations, bo => bo.MapFrom(s => s.Locations.Select(y => y.Location).ToList()))
-               //.ForMember(dto => dto.LocationIds, bo => bo.MapFrom(s => s.Locations.Select(y => y.Location.Id).ToList()));
-               //.ForMember(dto => dto.LocationIds, bo => bo.MapFrom(s => s.Locations));
 
             configuration.CreateMap<BlogPostDto, BlogPost>()
                 .ForMember(bo => bo.DateModified, dto => dto.Ignore())
-                 .ForMember(bo => bo.DateCreated, dto => dto.Ignore())
-                 .ForMember(bo => bo.LocationIds, dto => dto.Ignore())
-                 .ForMember(bo => bo.TagIds, dto => dto.Ignore())
-                 .ForMember(bo => bo.Tags, dto => dto.ResolveUsing(new BlogPostTagResolver()))
-                .ForMember(bo => bo.Locations, dto => dto.ResolveUsing(new BlogPostLocationResolver()));
-        }
-
-        public class BlogPostLocationResolver : IValueResolver<BlogPostDto, BlogPost, IList<BlogPostLocation>>
-        {
-            public IList<BlogPostLocation> Resolve(BlogPostDto source, BlogPost destination, IList<BlogPostLocation> destMember, ResolutionContext context)
-            {
-                var updatedLocations = new List<BlogPostLocation>();
-                foreach (var locationId in source.LocationIds)
-                {
-                    var location = new BlogPostLocation();
-                    location.LocationId = locationId;
-                    location.BlogPostId = destination.Id;
-
-                    var existingTag = destination.Locations.SingleOrDefault(l => l.LocationId == locationId);
-
-                    // No existing with this id, so add a new one
-                    if (existingTag == null)
-                    {
-                        updatedLocations.Add(context.Mapper.Map<BlogPostLocation>(location));
-                    }
-                    // Existing found, so map to existing instance
-                    else
-                    {
-                        context.Mapper.Map(location, existingTag);
-                        updatedLocations.Add(existingTag);
-                    }
-                }
-                return updatedLocations;
-            }
-        }
-
-        public class BlogPostTagResolver : IValueResolver<BlogPostDto, BlogPost, IList<BlogPostTag>>
-        {
-            public IList<BlogPostTag> Resolve(BlogPostDto source, BlogPost destination, IList<BlogPostTag> destMember, ResolutionContext context)
-            {
-                var updatedTags = new List<BlogPostTag>();
-                foreach (var tagId in source.TagIds)
-                {
-                    var tag = new BlogPostTag();
-                    tag.TagId = tagId;
-                    tag.BlogPostId = destination.Id;
-
-                    var existingTag = destination.Tags.SingleOrDefault(t => t.TagId == tagId);
-
-                    // No existing with this id, so add a new one
-                    if (existingTag == null)
-                    {
-                        updatedTags.Add(context.Mapper.Map<BlogPostTag>(tag));
-                    }
-                    // Existing found, so map to existing instance
-                    else
-                    {
-                        context.Mapper.Map(tag, existingTag);
-                        updatedTags.Add(existingTag);
-                    }
-                }
-                return updatedTags;
-            }
+                 .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
         }
     }
 }

@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
+using DND.Common.Helpers;
 using DND.Common.Interfaces.Automapper;
+using DND.Common.Interfaces.Dtos;
+using DND.Common.Interfaces.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,7 +83,19 @@ namespace DND.Common.Automapper
 
             foreach (var map in maps)
             {
-                cfg.CreateMap(map.Source, map.Destination);
+                //var mappingExpression = cfg.CreateMap(map.Source, map.Destination);
+
+                var createMapMethod = typeof(IProfileExpression).GetMethod(nameof(IProfileExpression.CreateMap), new List<Type>() { }.ToArray()).MakeGenericMethod(map.Source, map.Destination);
+                var mappingExpression = createMapMethod.Invoke(cfg, new List<Object>() { }.ToArray());
+
+                if (typeof(IBaseEntity).IsAssignableFrom(map.Source) && typeof(IBaseDtoWithId).IsAssignableFrom(map.Destination))
+                {
+                    MapCollection(mappingExpression, map.Source, map.Destination);
+                }
+                else if (typeof(IBaseDtoWithId).IsAssignableFrom(map.Source) && typeof(IBaseEntity).IsAssignableFrom(map.Destination))
+                {
+                    MapCollection(mappingExpression, map.Source, map.Destination);
+                }
             }
         }
 
@@ -98,8 +114,26 @@ namespace DND.Common.Automapper
 
             foreach (var map in maps)
             {
-                cfg.CreateMap(map.Source, map.Destination);
+                // var mappingExpression = cfg.CreateMap(map.Source, map.Destination);
+                var createMapMethod = typeof(IProfileExpression).GetMethod(nameof(IProfileExpression.CreateMap), new List<Type>() { }.ToArray()).MakeGenericMethod(map.Source, map.Destination);
+                var mappingExpression = createMapMethod.Invoke(cfg, new List<Object>() { }.ToArray());
+
+                if (typeof(IBaseEntity).IsAssignableFrom(map.Source) && typeof(IBaseDtoWithId).IsAssignableFrom(map.Destination))
+                {
+                    MapCollection(mappingExpression, map.Source, map.Destination);
+                }
+                else if (typeof(IBaseDtoWithId).IsAssignableFrom(map.Source) && typeof(IBaseEntity).IsAssignableFrom(map.Destination))
+                {
+                    MapCollection(mappingExpression, map.Source, map.Destination);
+                }
             }
+        }
+
+        private static void MapCollection(object mappingExpression, Type sourceType, Type destinationType)
+        {
+            var equalityComparisonMethod = typeof(EquivalentExpressions).GetMethod(nameof(EquivalentExpressions.EqualityComparison)).MakeGenericMethod(sourceType, destinationType);
+            var equivalentExpression = LamdaHelper.SourceDestinationEquivalentExpressionById(sourceType, destinationType);
+            equalityComparisonMethod.Invoke(null, new List<object>() { mappingExpression, equivalentExpression }.ToArray());
         }
     }
 }

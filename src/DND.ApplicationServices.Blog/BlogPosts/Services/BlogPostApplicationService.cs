@@ -131,21 +131,21 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
         }
 
         #region "Admin"
-        public async override Task<Result> UpdateAsync(Object id, BlogPostDto dto, string updatedBy, CancellationToken cancellationToken)
-        {
-            var persistedPost = await DomainService.GetFirstAsync(cancellationToken, p => p.Id == dto.Id, null, true);
-            var persistedTags = persistedPost.Tags.ToList();
-            var persistedLocations = persistedPost.Locations.ToList();
-            Mapper.Map(dto, persistedPost);
+        //public async override Task<Result> UpdateAsync(Object id, BlogPostDto dto, string updatedBy, CancellationToken cancellationToken)
+        //{
+        //    var persistedPost = await DomainService.GetFirstAsync(cancellationToken, p => p.Id == dto.Id, null, true);
+        //    var persistedTags = persistedPost.Tags.ToList();
+        //    var persistedLocations = persistedPost.Locations.ToList();
+        //    Mapper.Map(dto, persistedPost);
 
-            var insertTags = persistedPost.Tags.Except(persistedTags);
-            var deleteTags = persistedTags.Except(persistedPost.Tags);
+        //    var insertTags = persistedPost.Tags.Except(persistedTags);
+        //    var deleteTags = persistedTags.Except(persistedPost.Tags);
 
-            var insertLocations = persistedPost.Locations.Except(persistedLocations);
-            var deleteLocations = persistedLocations.Except(persistedPost.Locations);
+        //    var insertLocations = persistedPost.Locations.Except(persistedLocations);
+        //    var deleteLocations = persistedLocations.Except(persistedPost.Locations);
 
-            return await DomainService.UpdateAsync(persistedPost, insertTags, deleteTags, insertLocations, deleteLocations, updatedBy, cancellationToken);
-        }
+        //    return await DomainService.UpdateAsync(persistedPost, insertTags, deleteTags, insertLocations, deleteLocations, updatedBy, cancellationToken);
+        //}
         #endregion
     }
 }

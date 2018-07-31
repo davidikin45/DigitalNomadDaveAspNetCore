@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Net.Http;
 using System.Net;
+using DND.Common.ModelMetadataCustom.DisplayAttributes;
 
 namespace DND.Common.Controllers.Api
 {
@@ -270,8 +271,11 @@ namespace DND.Common.Controllers.Api
         [HttpGet]
         [HttpHead]
         [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
-        public virtual async Task<IActionResult> GetCollectionProperty(string id, string collection, WebApiPagedRequestDto resourceParameters)
+        public virtual async Task<IActionResult> GetCollectionProperty(string id, string collection, WebApiPagedSearchOrderingRequestDto resourceParameters)
         {
+            if (string.IsNullOrEmpty(resourceParameters.OrderBy))
+                resourceParameters.OrderBy = nameof(IBaseDtoWithId.Id);
+
             if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
             {
                 return ApiErrorMessage(Messages.CollectionInvalid);
@@ -285,9 +289,9 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize);
+            var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, resourceParameters.Search, resourceParameters.OrderBy, resourceParameters.OrderType == OrderByType.Ascending ? true : false, resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize);
 
-            var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collection);
+            var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collection, resourceParameters.Search);
 
             await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
 
@@ -359,14 +363,14 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, null, null, collectionItemId);
+            var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, "", null, false, null, null, collectionItemId);
 
             if (response == null || response.GetPropValue(collection) == null)
             {
                 return ApiNotFoundErrorMessage(Messages.NotFound);
             }
 
-            var whereClause = LamdaHelper.SearchForEntityById(collectionItemType, collectionItemId);
+            var whereClause = LamdaHelper.SearchForEntityByIdCompile(collectionItemType, collectionItemId);
             var collectionItem = typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.FirstOrDefault)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { response.GetPropValue(collection), whereClause });
 
             if (collectionItem == null)

@@ -358,7 +358,7 @@ namespace DND.Common.Implementation.Data
         #endregion
 
         #region Collection Property
-        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
+        public void LoadCollectionProperty(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null)
         {
             var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
 
@@ -366,7 +366,17 @@ namespace DND.Common.Implementation.Data
 
             var query = Entry(entity)
             .Collection(collectionProperty)
-            .Query().Cast<Object>();
+            .Query();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
+            }
+
+            if (!string.IsNullOrWhiteSpace(orderBy))
+            {
+                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.QueryableOrderBy)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, orderBy, ascending });
+            }
 
             if (skip.HasValue)
             {
@@ -387,7 +397,7 @@ namespace DND.Common.Implementation.Data
             typeof(EntityFrameworkQueryableExtensions).GetMethod(nameof(EntityFrameworkQueryableExtensions.Load)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query });
         }
 
-        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
 
@@ -395,7 +405,17 @@ namespace DND.Common.Implementation.Data
 
             var query = Entry(entity)
             .Collection(collectionProperty)
-            .Query().Cast<Object>();
+            .Query();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
+            }
+
+            if (!string.IsNullOrWhiteSpace(orderBy))
+            {
+                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.QueryableOrderBy)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, orderBy, ascending });
+            }
 
             if (skip.HasValue)
             {
@@ -416,7 +436,7 @@ namespace DND.Common.Implementation.Data
            await ((Task)(typeof(EntityFrameworkQueryableExtensions).GetMethod(nameof(EntityFrameworkQueryableExtensions.LoadAsync)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, cancellationToken }))).ConfigureAwait(false);
         }
 
-        public int CollectionPropertyCount(object entity, string collectionProperty)
+        public int CollectionPropertyCount(object entity, string collectionProperty, string search = "")
         {
             var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
 
@@ -425,11 +445,16 @@ namespace DND.Common.Implementation.Data
             var query = Entry(entity)
             .Collection(collectionProperty)
             .Query();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
+            }
 
             return ((int)(typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Count)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query })));
         }
 
-        public async Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
+        public async Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, string search, CancellationToken cancellationToken)
         {
             var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
 
@@ -438,6 +463,11 @@ namespace DND.Common.Implementation.Data
             var query = Entry(entity)
             .Collection(collectionProperty)
             .Query();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
+            }
 
             return await ((Task<int>)(typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CountEFCoreAsync)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, cancellationToken }))).ConfigureAwait(false);
         }

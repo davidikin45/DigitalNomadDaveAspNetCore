@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.Models;
+using RefactorThis.GraphDiff;
 
 namespace DND.Common.Interfaces.Repository
 {
@@ -24,6 +26,12 @@ namespace DND.Common.Interfaces.Repository
         Result Update(TEntity entity, string modifiedBy = null);
 
         Task<Result> UpdateAsync(TEntity entity, string modifiedBy = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        //Update Graph is specifically for Disconnected. It should take care of insert, update, delete of child collections.
+        Result UpdateGraph(TEntity entity, string modifiedBy = null);
+
+        //Update Graph is specifically for Disconnected. It should take care of insert, update, delete of child collections.
+        Task<Result> UpdateGraphAsync(TEntity entity, string modifiedBy = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Result Delete(object id, string deletedBy = null);
 

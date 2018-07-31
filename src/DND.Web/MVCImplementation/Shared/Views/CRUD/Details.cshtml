@@ -3,6 +3,17 @@
 @Html.Partial("_Details")
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @if (ViewBag.DisableEdit == null ? true : !ViewBag.DisableEdit)
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })<text>|</text>
+    }
+
+    @if (ViewBag.Collection == null)
+    {
+        @Html.ActionLink("Back to List", "Index")
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Collection", new { id = ViewBag.Id, collection = ViewBag.Collection })
+    }
 </p>

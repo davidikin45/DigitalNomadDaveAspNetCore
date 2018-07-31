@@ -398,24 +398,24 @@ namespace DND.Common.Implementation.Data.InMemory
         #endregion
 
         #region Collection Properties
-        public void LoadCollectionProperty(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null)
+        public void LoadCollectionProperty(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null)
         {
 
         }
 
-        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
         {
 
         }
 
-        public int CollectionPropertyCount(object entity, string collectionProperty)
+        public int CollectionPropertyCount(object entity, string collectionProperty, string search = "")
         {
             return ((ICollection<Object>)entity.GetPropValue(collectionProperty)).Count();
         }
 
-        public Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, CancellationToken cancellationToken)
+        public Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, string search, CancellationToken cancellationToken)
         {
-            var task = new Task<int>(() => CollectionPropertyCount(entity, collectionProperty));
+            var task = new Task<int>(() => CollectionPropertyCount(entity, collectionProperty, search));
             task.Start();
             return task;
         }

@@ -1,14 +1,10 @@
 ﻿using Autofac;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
 using DND.Common.Automapper;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.DependencyInjection.Autofac.Modules
 {
@@ -22,15 +18,15 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
             var config = new MapperConfiguration(cfg => {
                 //!!!!!!IMPORTANT to map delegates with AutoMapper
                 cfg.AddExpressionMapping();
+                cfg.AddCollectionMappers();
+
                 new AutoMapperConfiguration(cfg, Filter);
             });
 
             builder.RegisterInstance(config).As<MapperConfiguration>();
             builder.Register(ctx => config).As<IConfigurationProvider>();
             builder.Register(ctx => new ExpressionBuilder(config)).As<IExpressionBuilder>();
-            builder.Register(c => config.CreateMapper()).As<IMapper>().SingleInstance();
-
-       
+            builder.Register(c => config.CreateMapper()).As<IMapper>().SingleInstance();      
         }
     }
 

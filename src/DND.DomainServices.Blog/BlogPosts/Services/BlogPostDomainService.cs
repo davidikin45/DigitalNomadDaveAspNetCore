@@ -162,27 +162,27 @@ namespace DND.DomainServices.Blog.BlogPosts.Services
             using (var UoW = UnitOfWorkFactory.Create(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
             {
 
-                foreach (BlogPostTag tag in insertTags)
-                {
-                    UoW.Repository<IBlogDbContext, BlogPostTag>().Insert(tag);
-                }
+                //foreach (BlogPostTag tag in insertTags)
+                //{
+                //    UoW.Repository<IBlogDbContext, BlogPostTag>().Insert(tag);
+                //}
 
-                foreach (BlogPostTag tag in deleteTags)
-                {
-                    UoW.Repository<IBlogDbContext, BlogPostTag>().Delete(tag.Id);
-                }
+                //foreach (BlogPostTag tag in deleteTags)
+                //{
+                //    UoW.Repository<IBlogDbContext, BlogPostTag>().Delete(tag.Id);
+                //}
 
-                foreach (BlogPostLocation location in insertLocations)
-                {
-                    UoW.Repository<IBlogDbContext, BlogPostLocation>().Insert(location);
-                }
+                //foreach (BlogPostLocation location in insertLocations)
+                //{
+                //    UoW.Repository<IBlogDbContext, BlogPostLocation>().Insert(location);
+                //}
 
-                foreach (BlogPostLocation location in deleteLocations)
-                {
-                    UoW.Repository<IBlogDbContext, BlogPostLocation>().Delete(location.Id);
-                }
+                //foreach (BlogPostLocation location in deleteLocations)
+                //{
+                //    UoW.Repository<IBlogDbContext, BlogPostLocation>().Delete(location.Id);
+                //}
 
-                UoW.Repository<IBlogDbContext, BlogPost>().Update(entity);
+                UoW.Repository<IBlogDbContext, BlogPost>().UpdateGraph(entity);
 
                 await UoW.CompleteAsync(cancellationToken).ConfigureAwait(false);
             }

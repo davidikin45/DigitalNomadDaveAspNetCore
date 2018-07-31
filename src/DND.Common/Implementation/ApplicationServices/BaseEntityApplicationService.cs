@@ -158,6 +158,48 @@ namespace DND.Common.Implementation.ApplicationServices
             return Result.Ok();
         }
 
+        public virtual List<Result> BulkUpdateGraph(TUpdateDto[] dtos, string updatedBy)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = UpdateGraph(((IBaseDtoWithId)dto).Id, dto, updatedBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public virtual Result UpdateGraph(object id, TUpdateDto dto, string updatedBy)
+        {
+            var objectValidationErrors = dto.Validate().ToList();
+            if (objectValidationErrors.Any())
+            {
+                return Result.ObjectValidationFail(objectValidationErrors);
+            }
+
+            var persistedBO = DomainService.GetById(id,true);
+
+            Mapper.Map(dto, persistedBO);
+
+            var result = DomainService.UpdateGraph(persistedBO, updatedBy);
+            if (result.IsFailure)
+            {
+                switch (result.ErrorType)
+                {
+                    case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.ObjectDoesNotExist:
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
+                    default:
+                        throw new ArgumentException();
+                }
+            }
+
+            return Result.Ok();
+        }
+
         public async virtual Task<List<Result>> BulkUpdateAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken)
         {
             var results = new List<Result>();
@@ -182,6 +224,48 @@ namespace DND.Common.Implementation.ApplicationServices
             Mapper.Map(dto, persistedBO);
 
             var result = await DomainService.UpdateAsync(persistedBO, updatedBy, cancellationToken).ConfigureAwait(false);
+            if (result.IsFailure)
+            {
+                switch (result.ErrorType)
+                {
+                    case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.ObjectDoesNotExist:
+                        return result;
+                    case ErrorType.ConcurrencyConflict:
+                        return result;
+                    default:
+                        throw new ArgumentException();
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public async virtual Task<List<Result>> BulkUpdateGraphAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = await UpdateGraphAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public virtual async Task<Result> UpdateGraphAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken)
+        {
+            var objectValidationErrors = dto.Validate().ToList();
+            if (objectValidationErrors.Any())
+            {
+                return Result.ObjectValidationFail(objectValidationErrors);
+            }
+
+            var persistedBO = await DomainService.GetByIdAsync(id, cancellationToken, true);
+
+            Mapper.Map(dto, persistedBO);
+
+            var result = await DomainService.UpdateGraphAsync(persistedBO, updatedBy, cancellationToken).ConfigureAwait(false);
             if (result.IsFailure)
             {
                 switch (result.ErrorType)

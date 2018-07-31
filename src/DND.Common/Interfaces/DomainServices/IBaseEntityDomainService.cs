@@ -19,6 +19,10 @@ namespace DND.Common.Interfaces.DomainServices
 
         Task<Result> UpdateAsync(TEntity entity, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
+        Result UpdateGraph(TEntity entity, string updatedBy);
+
+        Task<Result> UpdateGraphAsync(TEntity entity, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
+
         Result Delete(object id, string deletedBy);
 
         Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));

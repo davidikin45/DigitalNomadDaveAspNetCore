@@ -15,6 +15,10 @@ using System.Threading;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Enums;
 using DND.Common.Implementation.Validation;
+using DND.Common.Helpers;
+using DND.Common.Implementation.Data;
+using System.Collections;
+using DND.Common.Extensions;
 
 namespace DND.Common.Implementation.Repository.EntityFramework
 
@@ -170,15 +174,105 @@ namespace DND.Common.Implementation.Repository.EntityFramework
             //Note that if the entity being attached has references to other entities that are not yet tracked, then these new entities will attached to the context in the Unchanged state—they will not automatically be made Modified.If you have multiple entities that need to be marked Modified you should set the state for each of these entities individually.          
         }
 
-        public virtual TEntity UpdateGraph(TEntity entity, Expression<Func<IUpdateConfiguration<TEntity>, object>> mapping = null, string modifiedBy = null)
+        public virtual Result UpdateGraph(TEntity entity, string modifiedBy = null)
         {
+            if (!(ExistsNoTracking(entity)))
+            {
+                return Result.ObjectDoesNotExist();
+            }
+
+            var validationResult = Validate(entity, ValidationMode.Update);
+
+            if (validationResult.IsFailure)
+            {
+                return Result.ObjectValidationFail(validationResult.ObjectValidationErrors);
+            }
+
             entity.DateModified = DateTime.UtcNow;
             entity.UserModified = modifiedBy;
-            return _context.UpdateGraph(entity, mapping);
+
+            SetCompositionPropertyForeignKeysAndAudit(entity, entity.UserModified, entity.DateModified.Value);
+
+            Expression<Func<IUpdateConfiguration<TEntity>, object>> graphDiffConfiguration = (Expression<Func<IUpdateConfiguration<TEntity>, object>>)LamdaHelper.GraphDiffConfiguration(typeof(TEntity));
+
+            return Result.Ok(_context.UpdateGraph(entity, graphDiffConfiguration));
+        }
+
+        public async virtual Task<Result> UpdateGraphAsync(TEntity entity, string modifiedBy = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (!(await ExistsNoTrackingAsync(entity).ConfigureAwait(false)))
+            {
+                return Result.ObjectDoesNotExist();
+            }
+
+            var validationResult = await ValidateAsync(entity, ValidationMode.Update).ConfigureAwait(false);
+
+            if (validationResult.IsFailure)
+            {
+                return Result.ObjectValidationFail(validationResult.ObjectValidationErrors);
+            }
+
+            entity.DateModified = DateTime.UtcNow;
+            entity.UserModified = modifiedBy;
+
+            SetCompositionPropertyForeignKeysAndAudit(entity, entity.UserModified, entity.DateModified.Value);
+
+            Expression<Func<IUpdateConfiguration<TEntity>, object>> graphDiffConfiguration = (Expression<Func<IUpdateConfiguration<TEntity>, object>>)LamdaHelper.GraphDiffConfiguration(typeof(TEntity));
+
+            return Result.Ok(_context.UpdateGraph(entity, graphDiffConfiguration));
+        }
+
+        private void SetCompositionPropertyForeignKeysAndAudit(Object entity, string modifiedBy, DateTime dateModified)
+        {
+            if (entity.HasProperty(nameof(IBaseEntity.Id)))
+            {
+                var id = entity.GetPropValue(nameof(IBaseEntity.Id));
+                var idPropertyName = entity.GetType().Name + nameof(IBaseEntity.Id);
+                var compositionProperties = RelationshipHelper.GetAllCompositionAndAggregationRelationshipPropertyIncludes(true, entity.GetType()).Where(p => !p.Contains("."));
+                foreach (var compositionProperty in compositionProperties)
+                {
+                    var prop = typeof(TEntity).GetProperty(compositionProperty);
+                    var collection = prop.GetValue(entity) as IEnumerable;
+                    if (collection != null)
+                    {
+                        foreach (var item in collection)
+                        {
+                            if (item.HasProperty(idPropertyName))
+                            {
+                                item.SetPropValue(idPropertyName, id);
+
+                                var auditable = item as IBaseEntityAuditable;
+                                if (auditable != null)
+                                {
+                                    bool containsId = false;
+                                    string itemId = "";
+                                    if (item.HasProperty(nameof(IBaseEntity.Id)))
+                                    {
+                                        containsId = true;
+                                        itemId = item.GetPropValue(nameof(IBaseEntity.Id)).ToString();
+                                    }
+
+                                    if (!string.IsNullOrWhiteSpace(auditable.UserCreated) || (containsId && (string.IsNullOrWhiteSpace(itemId) || itemId == "0" || itemId == Guid.Empty.ToString())))
+                                    {
+                                        auditable.UserCreated = modifiedBy;
+                                        auditable.DateCreated = dateModified;
+                                    }
+                                    else
+                                    {
+                                        auditable.UserModified = modifiedBy;
+                                        auditable.DateModified = dateModified;
+                                    }
+                                }
+                                SetCompositionPropertyForeignKeysAndAudit(item, modifiedBy, dateModified);
+                            }
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
-        #region Delete
+            #region Delete
         public virtual Result Delete(object id, string deletedBy = null)
         {
             //TEntity entity = _context.FindEntityLocal<TEntity>(id);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
@@ -11,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.BlogPosts.Dtos
 {
-    public class BlogPostTagDto : BaseDto<int>, IMapFrom<BlogPostTag>, IMapTo<BlogPostTag>, IHaveCustomMappings
+    public class BlogPostTagDto : BaseDto<int>, IMapFrom<BlogPostTag>, IMapTo<BlogPostTag>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]
@@ -28,13 +29,9 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false, ShowForCreate = false)]
         public TagDto Tag { get; set; }
 
-        //public string Name { get; set; }
-        //public string UrlSlug { get; set; }
-
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
-            //configuration.CreateMap<BlogPostTag, int>()
-            //.ConstructUsing(s => s.Tag.Id);
+
         }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
