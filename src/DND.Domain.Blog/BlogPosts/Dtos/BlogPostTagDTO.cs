@@ -29,6 +29,10 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false, ShowForCreate = false)]
         public TagDto Tag { get; set; }
 
+        [Render(ShowForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = true)]
+        [Repeater("{" + nameof(BlogPostLocationDto.LocationId) + "}")]
+        public List<BlogPostLocationDto> Locations { get; set; } = new List<BlogPostLocationDto>();
+
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
 

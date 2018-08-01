@@ -29,6 +29,7 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false, ShowForCreate = false)]
         public LocationDto Location { get; set; }
 
+
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {
 

@@ -119,31 +119,29 @@ namespace DND.Common.Interfaces.ApplicationServices
              params Expression<Func<TDto, Object>>[] includeProperties);
 
         TDto GetByIdWithPagedCollectionProperty(object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "",
             string orderBy = null,
             bool ascending = false,
             int? pageNo = null, 
-            int? pageSize = null, 
-            object colectionItemId = null);
+            int? pageSize = null);
 
         Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, 
             object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "",
             string orderBy = null,
             bool ascending = false,
             int? pageNo = null, 
-            int? pageSize = null, 
-            object colectionItemId = null);
+            int? pageSize = null);
 
         int GetByIdWithPagedCollectionPropertyCount(object id, 
-            string collectionProperty,
+            string collectionExpression,
              string search = "");
 
         Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, 
             object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "");
 
         IEnumerable<TDto> GetByIds(IEnumerable<object> ids,

@@ -4,7 +4,9 @@ using DND.Common.DomainEvents;
 using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Helpers;
+using DND.Common.Implementation.Data;
 using DND.Common.Implementation.DTOs;
+using DND.Common.Infrastructure;
 using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Services;
@@ -45,6 +47,7 @@ namespace DND.Common.Controllers.Api
             actionEvents = new ActionEvents();
         }
 
+        #region New Instance
         [Route("new")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Create)]
         [HttpGet]
@@ -62,7 +65,9 @@ namespace DND.Common.Controllers.Api
 
             return Ok(linkedResourceToReturn);
         }
+        #endregion
 
+        #region Create
         //[Route("create")]
         /// <summary>
         /// Creates the specified dto.
@@ -100,7 +105,89 @@ namespace DND.Common.Controllers.Api
 
             return CreatedAtAction(nameof(Create), new { id = createdDto.Id }, createdDto);
         }
+        #endregion
 
+        #region Bulk Create
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Create)]
+        [Route("bulk")]
+        [HttpPost]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> BulkCreate([FromBody] TCreateDto[] dtos)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var results = await Service.BulkCreateAsync(dtos, Username, cts.Token);
+
+            return BulkCreateResponse(results);
+        }
+        #endregion
+
+        #region Get for Edit
+
+        /// <summary>
+        /// Ges for edit.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
+        [FormatFilter]
+        [Route("edit/{id}"), Route("edit/{id}.{format}")]
+        //[Route("get/{id}"), Route("get/{id}.{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(object), 200)]
+        public virtual async Task<IActionResult> GeForEdit(string id)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            //By passing true we include the Composition properties which should be any child or join entities.
+            var response = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
+
+            if (response == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var links = CreateLinks(id, "");
+
+            var linkedResourceToReturn = response.ShapeData("")
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+        }
+        #endregion
+
+        #region Bulk Get for Edit
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
+        [FormatFilter]
+        [Route("edit/({ids})"), Route("edit/({ids}).{format}")]
+        [Route("bulk/edit/({ids})"), Route("bulk/edit/({ids}).{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<object>), 200)]
+        public virtual async Task<IActionResult> GetUpdateCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<string> ids)
+        {
+            if (ids == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = await Service.GetUpdateDtosByIdsAsync(cts.Token, ids);
+
+            var list = response.ToList();
+
+            if (ids.Count() != list.Count())
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            return Success(list);
+        }
+        #endregion
+
+        #region Update
         /// <summary>
         /// Updates the specified identifier.
         /// </summary>
@@ -146,15 +233,16 @@ namespace DND.Common.Controllers.Api
             //return Success(dto);
             return NoContent();
         }
+        #endregion
 
-
+        #region Bulk Update
         /// <summary>
         /// Bulks the update.
         /// </summary>
         /// <param name="dto">The dto.</param>
         /// <returns></returns>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
-        [Route("")]
+        [Route("bulk")]
         [HttpPut]
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> BulkUpdate([FromBody] TUpdateDto[] dtos)
@@ -165,7 +253,9 @@ namespace DND.Common.Controllers.Api
 
             return BulkUpdateResponse(results);
         }
+        #endregion
 
+        #region Update Partial
         /// <summary>
         /// Updates the partial.
         /// </summary>
@@ -185,41 +275,95 @@ namespace DND.Common.Controllers.Api
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dto = await Service.GetUpdateDtoByIdAsync(id, cts.Token);
-
-            if (dto == null)
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
-
-            var ops = new List<Operation<TUpdateDto>>();
-            foreach (var op in dtoPatch.Operations)
-            {
-                ops.Add(new Operation<TUpdateDto>(op.op, op.path, op.from, op.value));
-            }
-
-            var dtoPatchTypes = new JsonPatchDocument<TUpdateDto>(ops, dtoPatch.ContractResolver);
-
-            dtoPatchTypes.ApplyTo(dto, ModelState);
-
-            TryValidateModel(dto);
-
-            if (!ModelState.IsValid)
-            {
-                return ValidationErrors(ModelState);
-            }
-
-            var result = await Service.UpdateGraphAsync(id, dto, Username, cts.Token);
+            var result = await Service.UpdatePartialAsync(id, dtoPatch, Username, cts.Token);
             if (result.IsFailure)
             {
                 return ValidationErrors(result);
             }
 
-            //return ApiSuccessMessage(Messages.UpdateSuccessful, dto.Id);
-            //return Success(dto);
             return NoContent();
         }
+        #endregion
 
+        #region Bulk Partial Update
+        /// <summary>
+        /// Bulks the update.
+        /// </summary>
+        /// <param name="dto">The dto.</param>
+        /// <returns></returns>
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
+        [Route("bulk")]
+        [HttpPatch]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> BulkPartialUpdate([FromBody] PatchDto[] dtos)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var results = await Service.BulkUpdatePartialAsync(dtos, Username, cts.Token);
+
+            return BulkUpdateResponse(results);
+        }
+        #endregion
+
+        #region Get for Delete
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Delete)]
+        [FormatFilter]
+        [Route("Delete/{id}"), Route("Delete/{id}.{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(object), 200)]
+        public virtual async Task<IActionResult> GetForDelete(string id)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            //By passing true we include the Composition properties which should be any child or join entities.
+            var response = await Service.GetDeleteDtoByIdAsync(id, cts.Token);
+
+            if (response == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var links = CreateLinks(id, "");
+
+            var linkedResourceToReturn = response.ShapeData("")
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+        }
+        #endregion
+
+        #region Bulk Get for Delete
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Delete)]
+        [FormatFilter]
+        [Route("delete/({ids})"), Route("delete/({ids}).{format}")]
+        [Route("bulk/delete/({ids})"), Route("bulk/delete/({ids}).{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<object>), 200)]
+        public virtual async Task<IActionResult> GetDeleteCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<string> ids)
+        {
+            if (ids == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = await Service.GetDeleteDtosByIdsAsync(cts.Token, ids);
+
+            var list = response.ToList();
+
+            if (ids.Count() != list.Count())
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            return Success(list);
+        }
+        #endregion
+
+        #region Delete
         /// <summary>
         /// Deletes the specified dto.
         /// </summary>
@@ -248,7 +392,42 @@ namespace DND.Common.Controllers.Api
 
             return NoContent();
         }
+        #endregion
 
+        #region Bulk Delete
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Delete)]
+        [Route("bulk")]
+        [HttpDelete]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual async Task<IActionResult> BulkDelete([FromBody] TDeleteDto[] dtos)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var results = await Service.BulkDeleteAsync(dtos, Username, cts.Token);
+
+            return BulkDeleteResponse(results);
+        }
+        #endregion
+
+        #region Create New Collection Item Instance
+        [Route("new/{*collection}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Create)]
+        [HttpGet]
+        [ProducesResponseType(typeof(WebApiMessage), 200)]
+        public virtual IActionResult NewCollectionItem(string collection)
+        {
+            if (!RelationshipHelper.IsValidCollectionItemCreateExpression(collection, typeof(TUpdateDto)))
+            {
+                return ApiErrorMessage(Messages.CollectionInvalid);
+            }
+
+            var response = Service.GetCreateDefaultCollectionItemDto(collection);
+
+            return Ok(response);
+        }
+        #endregion
+
+        #region Trigger Actions
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
         [Route("{id}/trigger-action")]
         [HttpPost]
@@ -280,7 +459,9 @@ namespace DND.Common.Controllers.Api
 
             return NoContent();
         }
+        #endregion
 
+        #region Bulk Trigger Action
         /// <summary>
         /// Triggers the actions.
         /// </summary>
@@ -288,7 +469,7 @@ namespace DND.Common.Controllers.Api
         /// <returns></returns>
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = ApiScopes.Update)]
         [HttpPost]
-        [Route("trigger-actions")]
+        [Route("bulk/trigger-actions")]
         public virtual async Task<IActionResult> TriggerActions([FromBody] BulkActionDto[] actions)
         {
             if (actions == null || actions.Any(a => a.Id is null || string.IsNullOrWhiteSpace(a.Id.ToString())))
@@ -310,6 +491,7 @@ namespace DND.Common.Controllers.Api
 
             return BulkTriggerActionResponse(results);
         }
+        #endregion
     }
 }
 

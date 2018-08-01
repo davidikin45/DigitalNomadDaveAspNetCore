@@ -14,6 +14,6 @@
     }
     else
     {
-        @Html.ActionLink("Back to List", "Collection", new { id = ViewBag.Id, collection = ViewBag.Collection })
+        @Html.Raw(Html.ActionLink("Back to List", "Collection", new { id = ViewBag.Id, collection = ViewBag.Collection }).Render().Replace("%2F", "/"))
     }
 </p>

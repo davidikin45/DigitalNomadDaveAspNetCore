@@ -54,7 +54,7 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Repeater("{" + nameof(BlogPostTagDto.TagId) + "}")]
         public List<BlogPostTagDto> Tags { get; set; }
 
-        [Render(ShowForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = false)]
+        [Render(ShowForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = true)]
         [Repeater("{" + nameof(BlogPostLocationDto.LocationId) + "}")]
         public List<BlogPostLocationDto> Locations { get; set; }
 

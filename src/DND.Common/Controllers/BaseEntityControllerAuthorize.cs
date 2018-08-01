@@ -5,6 +5,7 @@ using DND.Common.DomainEvents;
 using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Helpers;
+using DND.Common.Implementation.Data;
 using DND.Common.Implementation.DTOs;
 using DND.Common.Interfaces.ApplicationServices;
 using DND.Common.Interfaces.Dtos;
@@ -46,19 +47,22 @@ namespace DND.Common.Controllers
             actionEvents = new ActionEvents();
         }
 
+        #region New Instance
         [Authorize(Policy = ApiScopes.Create)]
-        [Route("create")]
+        [Route("new")]
         public virtual ActionResult Create()
         {
-            var instance = CreateNewDtoInstance();
+            var instance = Service.GetCreateDefaultDto();
             ViewBag.PageTitle = Title;
             ViewBag.Admin = Admin;
             return View("Create", instance);
         }
+        #endregion
 
+        #region Create
         [Authorize(Policy = ApiScopes.Create)]
         [HttpPost]
-        [Route("create")]
+        [Route("new")]
         public virtual async Task<ActionResult> Create(TCreateDto dto)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -87,7 +91,9 @@ namespace DND.Common.Controllers
             //error
             return View("Create", dto);
         }
+        #endregion
 
+        #region Get for Edit
         [Authorize(Policy = ApiScopes.Update)]
         [Route("edit/{id}")]
         public virtual async Task<ActionResult> Edit(string id)
@@ -106,7 +112,9 @@ namespace DND.Common.Controllers
                 return HandleReadException();
             }
         }
+        #endregion
 
+        #region Update
         [Authorize(Policy = ApiScopes.Update)]
         [HttpPost]
         [Route("edit/{id}")]
@@ -139,34 +147,9 @@ namespace DND.Common.Controllers
             ViewBag.Admin = Admin;
             return View("Edit", dto);
         }
+        #endregion
 
-        [Authorize(Policy = ApiScopes.Write)]
-        [HttpGet]
-        [Route("{collection}/create")]
-        public virtual ActionResult CreateCollectionItem(string collection)
-        {
-            var properties = new Queue<String>(collection.Split('.').Select(p => p.Split('[')[0]).ToList());
-
-            var type = typeof(TUpdateDto);
-            while (properties.Count > 0)
-            {
-                string property = properties.Dequeue();
-                if (!type.HasProperty(property) || !type.IsCollectionProperty(property))
-                {
-                    return HandleReadException();
-                }
-
-                type = type.GetGenericArguments(property).First();
-            }
-
-            ViewBag.Collection = collection;
-            ViewBag.CollectionIndex = Guid.NewGuid().ToString();
-
-            var instance = Activator.CreateInstance(type);
-
-            return PartialView("_CreateCollectionItem", instance);
-        }
-
+        #region Get for Delete
         [Authorize(Policy = ApiScopes.Delete)]
         [Route("delete/{id}")]
         public virtual async Task<ActionResult> Delete(string id)
@@ -185,7 +168,9 @@ namespace DND.Common.Controllers
                 return HandleReadException();
             }
         }
+        #endregion
 
+        #region Delete
         [Authorize(Policy = ApiScopes.Delete)]
         [HttpPost, ActionName("Delete"), Route("delete/{id}")]
         public virtual async Task<ActionResult> DeleteConfirmed(string id, TDeleteDto dto)
@@ -218,7 +203,29 @@ namespace DND.Common.Controllers
             var data = await Service.GetByIdAsync(id, cts.Token);
             return View("Delete", data);
         }
+        #endregion
 
+        #region Create New Collection Item Instance
+        [Authorize(Policy = ApiScopes.Write)]
+        [HttpGet]
+        [Route("new/{*collection}")]
+        public virtual ActionResult CreateCollectionItem(string collection)
+        {
+            if (!RelationshipHelper.IsValidCollectionItemCreateExpression(collection, typeof(TUpdateDto)))
+            {
+                return HandleReadException();
+            }
+
+            ViewBag.Collection = collection.Replace("/", ".");
+            ViewBag.CollectionIndex = Guid.NewGuid().ToString();
+
+            var instance = Service.GetCreateDefaultCollectionItemDto(collection);
+
+            return PartialView("_CreateCollectionItem", instance);
+        }
+        #endregion
+
+        #region Trigger Actions
         [Authorize(Policy = ApiScopes.Update)]
         [HttpPost]
         [Route("{id}/trigger-action")]
@@ -260,6 +267,7 @@ namespace DND.Common.Controllers
                 return HandleReadException();
             }
         }
+        #endregion
     }
 }
 

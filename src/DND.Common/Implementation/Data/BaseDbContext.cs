@@ -311,50 +311,70 @@ namespace DND.Common.Implementation.Data
         #endregion
 
         #region Collection Property
-        public void LoadCollectionProperty(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int ? skip = null, int? take = null, object collectionItemId = null)
+        public void LoadCollectionProperty(object entity, string collectionExpression, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null)
         {
-            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+            string collectionProperty = RelationshipHelper.GetCollectionExpressionCurrentCollection(collectionExpression, entity.GetType());
+            object collectionItemId = RelationshipHelper.GetCollectionExpressionCurrentCollectionItem(collectionExpression);
+
+            var collectionItemType = entity.GetType().GetGenericArguments(collectionProperty).Single();
 
             Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
 
             var query = Entry(entity)
             .Collection(collectionProperty)
             .Query();
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
-            }
-
-            if (!string.IsNullOrWhiteSpace(orderBy))
-            {
-                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.QueryableOrderBy)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, orderBy, ascending });
-            }
-
-            if (skip.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => skip.Value;
-                query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Skip)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-            }
-
-            if (take.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => take.Value;
-                query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Take)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-            }
 
             if (collectionItemId != null)
             {
                 var whereClause = LamdaHelper.SearchForEntityById(collectionItemType, collectionItemId);
                 query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, whereClause });
             }
+            else
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
+                }
+
+                if (!string.IsNullOrWhiteSpace(orderBy))
+                {
+                    query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.QueryableOrderBy)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, orderBy, ascending });
+                }
+
+                if (skip.HasValue)
+                {
+                    Expression<Func<int>> countAccessor = () => skip.Value;
+                    query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Skip)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                }
+
+                if (take.HasValue)
+                {
+                    Expression<Func<int>> countAccessor = () => take.Value;
+                    query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Take)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                }
+            }
 
             query.Load();
+
+            if (collectionItemId != null && RelationshipHelper.CollectionExpressionHasMoreCollections(collectionExpression))
+            {
+                var items = entity.GetPropValue(collectionProperty) as IEnumerable;
+                if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                        LoadCollectionProperty(item, RelationshipHelper.GetCollectionExpressionNextCollection(collectionExpression), search, orderBy, ascending, skip, take);
+                    }
+                }
+            }
         }
 
-        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionExpression, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+            string collectionProperty = RelationshipHelper.GetCollectionExpressionCurrentCollection(collectionExpression, entity.GetType());
+            object collectionItemId = RelationshipHelper.GetCollectionExpressionCurrentCollectionItem(collectionExpression);
+
+            var collectionItemType = entity.GetType().GetGenericArguments(collectionProperty).Single();
 
             Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
 
@@ -362,40 +382,56 @@ namespace DND.Common.Implementation.Data
             .Collection(collectionProperty)
             .Query();
 
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
-            }
-
-            if (!string.IsNullOrWhiteSpace(orderBy))
-            {
-                query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.QueryableOrderBy)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, orderBy, ascending });
-            }
-
-            if (skip.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => skip.Value;
-                query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Skip)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-            }
-
-            if (take.HasValue)
-            {
-                Expression<Func<int>> countAccessor = () => take.Value;
-                query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Take)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
-            }
-
-            if(collectionItemId != null)
+            if (collectionItemId != null)
             {
                 var whereClause = LamdaHelper.SearchForEntityById(collectionItemType, collectionItemId);
                 query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, whereClause });
             }
+            else
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.CreateSearchQuery)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, search });
+                }
+
+                if (!string.IsNullOrWhiteSpace(orderBy))
+                {
+                    query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.QueryableOrderBy)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, orderBy, ascending });
+                }
+
+                if (skip.HasValue)
+                {
+                    Expression<Func<int>> countAccessor = () => skip.Value;
+                    query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Skip)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                }
+
+                if (take.HasValue)
+                {
+                    Expression<Func<int>> countAccessor = () => take.Value;
+                    query = (IQueryable)typeof(QueryableExtensions).GetMethod(nameof(QueryableExtensions.Take)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query, countAccessor });
+                }
+            }
 
             await query.LoadAsync(cancellationToken).ConfigureAwait(false);
+
+            if (collectionItemId != null && RelationshipHelper.CollectionExpressionHasMoreCollections(collectionExpression))
+            {
+                var items = entity.GetPropValue(collectionProperty) as IEnumerable;
+                if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                       await LoadCollectionPropertyAsync(item, RelationshipHelper.GetCollectionExpressionNextCollection(collectionExpression), search, orderBy, ascending, skip, take);
+                    }
+                }
+            }
         }
 
-        public int CollectionPropertyCount(object entity, string collectionProperty, string search = "")
+        public int CollectionPropertyCount(object entity, string collectionExpression, string search = "")
         {
-            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+            string collectionProperty = RelationshipHelper.GetCollectionExpressionCurrentCollection(collectionExpression, entity.GetType());
+
+            var collectionItemType = entity.GetType().GetGenericArguments(collectionProperty).Single();
 
             Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
 
@@ -411,9 +447,11 @@ namespace DND.Common.Implementation.Data
             return ((int)(typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Count)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { query })));
         }
 
-        public async Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, string search, CancellationToken cancellationToken)
+        public async Task<int> CollectionPropertyCountAsync(object entity, string collectionExpression, string search, CancellationToken cancellationToken)
         {
-            var collectionItemType = entity.GetType().GetProperty(collectionProperty).PropertyType.GetGenericArguments().Single();
+            string collectionProperty = RelationshipHelper.GetCollectionExpressionCurrentCollection(collectionExpression, entity.GetType());
+
+            var collectionItemType = entity.GetType().GetGenericArguments(collectionProperty).Single();
 
             Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { collectionItemType });
 

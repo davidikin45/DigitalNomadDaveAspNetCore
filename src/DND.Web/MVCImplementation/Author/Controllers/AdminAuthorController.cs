@@ -8,10 +8,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.MVCImplementation.Author.Controllers
 {
-    [Route("admin/author")]
-    public class AdminAuthorController : BaseEntityControllerAuthorize<AuthorDto, AuthorDto, AuthorDto, AuthorDeleteDto, IAuthorApplicationService>
+    [Route("admin/authors")]
+    public class AdminAuthorsController : BaseEntityControllerAuthorize<AuthorDto, AuthorDto, AuthorDto, AuthorDeleteDto, IAuthorApplicationService>
     {
-        public AdminAuthorController(IAuthorApplicationService service, IMapper mapper,IEmailService emailService, IConfiguration configuration)
+        public AdminAuthorsController(IAuthorApplicationService service, IMapper mapper,IEmailService emailService, IConfiguration configuration)
              : base(true, service, mapper, emailService)
         {
         }

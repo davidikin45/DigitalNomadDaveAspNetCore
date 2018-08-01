@@ -50,12 +50,40 @@ This can be achieved at an assembly level by creating an Assembly per Bounded Co
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/BC.png "Bounded Context Folder Structure")
 
-## Domain Driven Design
-When I started looking into making a UI and Api that could handle any data model a few rules became clear in order to do so:
+## Domain Driven Design, Generic Admin MVC UI and Api
+When I started looking into building a generic admin UI and Api that could handle any data model it became clear that the following rules would need to be adhered to when creating the data model. Alot of the rules are the basis of Domain Driven Design.
+1. Never have Many-To-Many relationships. Create a join Entity so the relationship becomes 1-To-Many and Many-To-1.
+2. Never have 1-To-1 Composition/Owned ENTITY Relationships. For Composition relationships use Value types instead if required. In EF6 extend from BaseValueObject. In EF Core decorate value type with [OwnedAttribute]. Not sure if this attribute can be applied on base class. ValueTypes are included by default.
+3. Use collections only for Composition/Owned relationships(1-To-Many, child cannot exist independent of the parent). Don't use collections for Aggregation/Associated relationshiships(child can exist independently of the parent, reference relationship). Never use a Collection for Navigation purposes.
+4. All Aggregation/Associated Properties should have an associated Id property.
+5. Use Complex properties for Aggregation/Associated relationships only (Many-To-1, child can exist independently of the parent, reference relationship). These become Navigation properties.
 
+Once I adhered to the above rules I was able to expose the following actions in a generic way for both admin MVC UI and Api.
 
-
-
+| Action				          | Api Http Method | Api Route								|UI Http Method      | UI Route									   | Security Scope								 |
+| -------				          | --------		| --------								| ------			 | --------                                    | --------                                    |
+| GetList/Search				  | GET				| api/*items*							| GET				 | admin/*items*                               | api.read									 |
+| Details with Owned Collections  | GET				| api/*items*/*1*						| GET				 | admin/*items*/details/*1*                   | api.read									 |
+| Full Graph Details		      | GET				| api/*items*/full-graph/*1*			| GET				 |							                   | api.read                                    |
+| GetCreate				          | GET				| api/*items*/new						| GET				 | admin/*items*/new						   | api.create									 |
+| Create				          | POST			| api/*items*							| POST				 | admin/*items*/new						   | api.create									 |
+| BulkCreate				      | POST			| api/*items*/bulk						| 					 | 											   | api.create									 |
+| GetUpdate				          | GET				| api/*items*/edit/*1*					| GET				 | admin/*items*/edit/*1*					   | api.update									 |
+| Update				          |	PUT				| api/*items*/*1*						| POST				 | admin/*items*/edit/*1*	                   | api.update									 |
+| Update Partial				  |	PATCH			| api/*items*/*1*						|					 |											   | api.update									 |
+| GetBulkUpdate				      | GET				| api/*items*/bulk/edit/*1,2,3*			| 				     | 											   | api.update									 |
+| BulkUpdate				      |	PUT				| api/*items*/bulk						| 					 |											   | api.update								     |
+| BulkPatchUpdate				  |	PATCH			| api/*items*/bulk						| 					 |											   | api.update									 |
+| GetDelete				          | GET				| api/*items*/delete/*1*				| GET				 | admin/*items*/delete/*1*					   | api.delete									 |
+| Delete				          | DELETE			| api/*items*/*1*						| POST				 | admin/*items*/delete/*1*					   | api.delete									 |
+| GetBulkDelete				      | GET				| api/*items*/bulk/delete/*1,2,3*		| 				     | 											   | api.delete									 |
+| BulkDelete				      | DELETE			| api/*items*/bulk						| 				     | 											   | api.delete									 |
+| GetCollectionList		          | GET				| api/*items*/*1*/*collection*			| GET				 | admin/*items*/details/*1*/*collection*      | api.read									 |
+| GetCollectionListItem		      | GET				| api/*items*/*1*/*collection*/*10*		| GET				 | admin/*items*/details/*1*/*collection*/*10* | api.read									 |
+| GetCreateCollectionListItem     | GET				| api/*items*/new/*collection*			| GET				 | admin/*items*/new/*collection*			   | api.write									 |
+| TriggerAction					  | POST			| api/*items*/*1*/trigger-action		| GET				 | admin/*items*/*1*/trigger-action			   | api.update									 |
+| BulkTriggerAction				  | POST			| api/*items*/bulk/trigger-action		| GET				 | admin/*items*/*1*/trigger-action			   | api.update									 |
+| GetOptions					  | OPTIONS			| api/*items*							|					 |											   | api.read									 |
 
 ## Domain Events
 * [Domain events: design and implementation](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/domain-events-design-implementation)

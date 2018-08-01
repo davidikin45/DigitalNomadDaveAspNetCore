@@ -429,55 +429,53 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         #region GetByIdWithPagedCollectionProperty
         public virtual TEntity GetByIdWithPagedCollectionProperty(object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "",
             string orderBy = null,
             bool ascending = false,
             int? skip = null, 
-            int? take = null, 
-            object collectionItemId = null)
+            int? take = null)
         {
             var entity = GetById(id);
             if (entity != null)
             {
-                _context.LoadCollectionProperty(entity, collectionProperty, search, orderBy, ascending, skip, take, collectionItemId);
+                _context.LoadCollectionProperty(entity, collectionExpression, search, orderBy, ascending, skip, take);
             }
             return entity;
         }
 
         public async virtual Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "",
             string orderBy = null,
             bool ascending = false,
             int? skip = null, 
-            int? take = null, 
-            object collectionItemId = null)
+            int? take = null)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
             {
-                await _context.LoadCollectionPropertyAsync(entity, collectionProperty, search, orderBy, ascending, skip, take, collectionItemId);
+                await _context.LoadCollectionPropertyAsync(entity, collectionExpression, search, orderBy, ascending, skip, take);
             }
             return entity;
         }
 
-        public virtual int GetByIdWithPagedCollectionPropertyCount(object id, string collectionProperty, string search = "")
+        public virtual int GetByIdWithPagedCollectionPropertyCount(object id, string collectionExpression, string search = "")
         {
             var entity = GetById(id);
             if (entity != null)
             {
-                return _context.CollectionPropertyCount(entity, collectionProperty, search);
+                return _context.CollectionPropertyCount(entity, collectionExpression, search);
             }
             return 0;
         }
 
-        public virtual async Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, string collectionProperty, string search = "")
+        public virtual async Task<int> GetByIdWithPagedCollectionPropertyCountAsync(object id, string collectionExpression, string search = "")
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
             {
-                return await _context.CollectionPropertyCountAsync(entity, collectionProperty, search, _cancellationToken);
+                return await _context.CollectionPropertyCountAsync(entity, collectionExpression, search, _cancellationToken);
             }
             return 0;
         }

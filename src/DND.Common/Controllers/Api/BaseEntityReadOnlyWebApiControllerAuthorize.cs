@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Net.Http;
 using System.Net;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Implementation.Data;
 
 namespace DND.Common.Controllers.Api
 {
@@ -57,131 +58,7 @@ namespace DND.Common.Controllers.Api
             TypeHelperService = typeHelperService;
         }
 
-        //http://jakeydocs.readthedocs.io/en/latest/mvc/models/formatting.html
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="fields">The fields.</param>
-        /// <returns></returns>
-        [FormatFilter]
-        [Route("{id}"), Route("{id}.{format}")]
-        //[Route("get/{id}"), Route("get/{id}.{format}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(object), 200)]
-        public virtual async Task<IActionResult> Get(string id, [FromQuery] string fields)
-        {
-            if (!TypeHelperService.TypeHasProperties<TDto>(fields))
-            {
-                return ApiErrorMessage(Messages.FieldsInvalid);
-            }
-
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
-            //By passing true we include the Composition properties which should be any child or join entities.
-            var response = await Service.GetByIdAsync(id, cts.Token, true, false);
-
-            if (response == null)
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
-
-            var links = CreateLinks(id, fields);
-
-            var linkedResourceToReturn = response.ShapeData(fields)
-                as IDictionary<string, object>;
-
-            linkedResourceToReturn.Add("links", links);
-
-            return Ok(linkedResourceToReturn);
-
-            // Success(shapedData);
-        }
-
-        [FormatFilter]
-        [Route("full-graph/{id}"), Route("full-graph/{id}.{format}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(object), 200)]
-        public virtual async Task<IActionResult> GetFullGraph(string id, [FromQuery] string fields)
-        {
-            if (!TypeHelperService.TypeHasProperties<TDto>(fields))
-            {
-                return ApiErrorMessage(Messages.FieldsInvalid);
-            }
-
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
-            //By passing true we should get the full graph of Composition and Aggregation Properties
-            var response = await Service.GetByIdAsync(id, cts.Token, false, true);
-
-            if (response == null)
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
-
-            var links = CreateLinks(id, fields, true);
-
-            var linkedResourceToReturn = response.ShapeData(fields)
-                as IDictionary<string, object>;
-
-            linkedResourceToReturn.Add("links", links);
-
-            return Ok(linkedResourceToReturn);
-
-            // Success(shapedData);
-        }
-
-        /// <summary>
-        /// Gets the collection.
-        /// </summary>
-        /// <param name="ids">The ids.</param>
-        /// <returns></returns>
-        [FormatFilter]
-        [Route("({ids})"), Route("({ids}).{format}")]
-        //[Route("get/({ids})"), Route("get/({ids}).{format}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(List<object>), 200)]
-        public virtual async Task<IActionResult> GetCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<string> ids)
-        {
-            if (ids == null)
-            {
-                return ApiErrorMessage(Messages.RequestInvalid);
-            }
-
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
-            var response = await Service.GetByIdsAsync(cts.Token, ids, true, false);
-
-            var list = response.ToList();
-
-            if (ids.Count() != list.Count())
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
-
-            return Success(list);
-        }
-
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        [FormatFilter]
-        [Route("get-all")]
-        [Route("get-all.{format}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(List<object>), 200)]
-        public virtual async Task<IActionResult> GetAll()
-        {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
-            var response = await Service.GetAllAsync(cts.Token, null, null, null, true);
-
-            var list = response.ToList();
-
-            return Success(list);
-        }
-
+        #region List
         /// <summary>
         /// Gets the paged.
         /// </summary>
@@ -261,133 +138,23 @@ namespace DND.Common.Controllers.Api
         }
 
         /// <summary>
-        /// Gets the paged.
+        /// Gets all.
         /// </summary>
-        /// <param name="resourceParameters">The resource parameters.</param>
         /// <returns></returns>
         [FormatFilter]
-        [Route("{id}/{collection}")]
-        [Route("{id}/{collection}.{format}")]
+        [Route("get-all")]
+        [Route("get-all.{format}")]
         [HttpGet]
-        [HttpHead]
-        [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
-        public virtual async Task<IActionResult> GetCollectionProperty(string id, string collection, WebApiPagedSearchOrderingRequestDto resourceParameters)
+        [ProducesResponseType(typeof(List<object>), 200)]
+        public virtual async Task<IActionResult> GetAll()
         {
-            if (string.IsNullOrEmpty(resourceParameters.OrderBy))
-                resourceParameters.OrderBy = nameof(IBaseDtoWithId.Id);
-
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
-            {
-                return ApiErrorMessage(Messages.CollectionInvalid);
-            }
-
-            var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
-            if (!TypeHelperService.TypeHasProperties(collectionItemType, resourceParameters.Fields))
-            {
-                return ApiErrorMessage(Messages.FieldsInvalid);
-            }
-
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, resourceParameters.Search, resourceParameters.OrderBy, resourceParameters.OrderType == OrderByType.Ascending ? true : false, resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize);
+            var response = await Service.GetAllAsync(cts.Token, null, null, null, true);
 
-            var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collection, resourceParameters.Search);
+            var list = response.ToList();
 
-            await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
-
-            var data = dataTask.Result.GetPropValue(collection);
-            var total = totalTask.Result;
-
-            IEnumerable<Object> list = ((IEnumerable<Object>)(typeof(Enumerable).GetMethod(nameof(Enumerable.Cast)).MakeGenericMethod(typeof(Object)).Invoke(null, new object[] { data })));
-
-            var paginationMetadata = new WebApiPagedResponseDto<TDto>
-            {
-                Page = resourceParameters.Page.HasValue ? resourceParameters.Page.Value : 1,
-                PageSize = resourceParameters.PageSize.HasValue ? resourceParameters.PageSize.Value : list.Count(),
-                Records = total,
-                PreviousPageLink = null,
-                NextPageLink = null
-            };
-
-            if (paginationMetadata.HasPrevious)
-            {
-                paginationMetadata.PreviousPageLink = CreateCollectionPropertyResourceUri(collection, resourceParameters, ResourceUriType.PreviousPage);
-            }
-
-            if (paginationMetadata.HasNext)
-            {
-                paginationMetadata.NextPageLink = CreateCollectionPropertyResourceUri(collection, resourceParameters, ResourceUriType.NextPage);
-            }
-
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
-
-            var links = CreateLinksForCollectionProperty(collection, resourceParameters,paginationMetadata.HasNext, paginationMetadata.HasPrevious);
-
-            var shapedData = IEnumerableExtensions.ShapeData(list, collectionItemType, resourceParameters.Fields);
-
-            var shapedDataWithLinks = shapedData.Select(collectionPropertyDtoItem =>
-            {
-                var collectionPropertyDtoItemAsDictionary = collectionPropertyDtoItem as IDictionary<string, object>;
-                var collectionPropertyDtoItemLinks = CreateLinksForCollectionItem(id, collection, collectionPropertyDtoItemAsDictionary[nameof(IBaseDtoWithId.Id)].ToString(), resourceParameters.Fields);
-
-                collectionPropertyDtoItemAsDictionary.Add("links", collectionPropertyDtoItem);
-
-                return collectionPropertyDtoItemAsDictionary;
-            });
-
-            var linkedCollectionResource = new
-            {
-                value = shapedDataWithLinks
-                ,links = links
-            };
-
-            return Ok(linkedCollectionResource);
-        }
-
-        [FormatFilter]
-        [Route("{id}/{collection}/{collectionItemId}"), Route("{id}/{collection}/{collectionItemId}.{format}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(object), 200)]
-        public virtual async Task<IActionResult> GetCollectionItem(string id, string collection, string collectionItemId, [FromQuery] string fields)
-        {
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
-            {
-                return ApiErrorMessage(Messages.CollectionInvalid);
-            }
-
-            var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
-            if (!TypeHelperService.TypeHasProperties(collectionItemType, fields))
-            {
-                return ApiErrorMessage(Messages.FieldsInvalid);
-            }
-
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
-            var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, "", null, false, null, null, collectionItemId);
-
-            if (response == null || response.GetPropValue(collection) == null)
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
-
-            var whereClause = LamdaHelper.SearchForEntityByIdCompile(collectionItemType, collectionItemId);
-            var collectionItem = typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.FirstOrDefault)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { response.GetPropValue(collection), whereClause });
-
-            if (collectionItem == null)
-            {
-                return ApiNotFoundErrorMessage(Messages.NotFound);
-            }
-
-            var links = CreateLinksForCollectionItem(id, collection, collectionItemId,  fields);
-
-            var linkedResourceToReturn = collectionItem.ShapeData(collectionItemType, fields)
-                as IDictionary<string, object>;
-
-            linkedResourceToReturn.Add("links", links);
-
-            return Ok(linkedResourceToReturn);
-
-            // Success(shapedData);
+            return Success(list);
         }
 
         /// <summary>
@@ -426,7 +193,6 @@ namespace DND.Common.Controllers.Api
             return Success(data.ToList());
         }
 
-
         /// <summary>
         /// Gets all HTML.
         /// </summary>
@@ -459,7 +225,250 @@ namespace DND.Common.Controllers.Api
 
             return Html(select.ToString());
         }
+        #endregion
 
+        #region Details with Composition Properties
+        //http://jakeydocs.readthedocs.io/en/latest/mvc/models/formatting.html
+        /// <summary>
+        /// Gets the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="fields">The fields.</param>
+        /// <returns></returns>
+        [FormatFilter]
+        [Route("{id}"), Route("{id}.{format}")]
+        //[Route("get/{id}"), Route("get/{id}.{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(object), 200)]
+        public virtual async Task<IActionResult> Get(string id, [FromQuery] string fields)
+        {
+            if (!TypeHelperService.TypeHasProperties<TDto>(fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            //By passing true we include the Composition properties which should be any child or join entities.
+            var response = await Service.GetByIdAsync(id, cts.Token, true, false);
+
+            if (response == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var links = CreateLinks(id, fields);
+
+            var linkedResourceToReturn = response.ShapeData(fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+
+            // Success(shapedData);
+        }
+
+        /// <summary>
+        /// Gets the collection.
+        /// </summary>
+        /// <param name="ids">The ids.</param>
+        /// <returns></returns>
+        [FormatFilter]
+        [Route("({ids})"), Route("({ids}).{format}")]
+        //[Route("get/({ids})"), Route("get/({ids}).{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(List<object>), 200)]
+        public virtual async Task<IActionResult> GetCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<string> ids)
+        {
+            if (ids == null)
+            {
+                return ApiErrorMessage(Messages.RequestInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = await Service.GetByIdsAsync(cts.Token, ids, true, false);
+
+            var list = response.ToList();
+
+            if (ids.Count() != list.Count())
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            return Success(list);
+        }
+        #endregion
+
+        #region Details Full Graph
+        [FormatFilter]
+        [Route("full-graph/{id}"), Route("full-graph/{id}.{format}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(object), 200)]
+        public virtual async Task<IActionResult> GetFullGraph(string id, [FromQuery] string fields)
+        {
+            if (!TypeHelperService.TypeHasProperties<TDto>(fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            //By passing true we should get the full graph of Composition and Aggregation Properties
+            var response = await Service.GetByIdAsync(id, cts.Token, false, true);
+
+            if (response == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var links = CreateLinks(id, fields, true);
+
+            var linkedResourceToReturn = response.ShapeData(fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+
+            // Success(shapedData);
+        }
+        #endregion
+
+        #region Collection List and Details
+        /// <summary>
+        /// Gets the paged.
+        /// </summary>
+        /// <param name="resourceParameters">The resource parameters.</param>
+        /// <returns></returns>
+        [FormatFilter]
+        [Route("{id}/{*collection}")]
+        //[Route("{id}/{*collection}.{format}")]
+        [HttpGet]
+        [HttpHead]
+        [ProducesResponseType(typeof(WebApiPagedResponseDto<object>), 200)]
+        public virtual async Task<IActionResult> GetCollectionProperty(string id, string collection, WebApiPagedSearchOrderingRequestDto resourceParameters)
+        {
+            if (string.IsNullOrEmpty(resourceParameters.OrderBy))
+                resourceParameters.OrderBy = nameof(IBaseDtoWithId.Id);
+
+            if (!RelationshipHelper.IsValidCollectionExpression(collection, typeof(TDto)))
+            {
+                return ApiErrorMessage(Messages.CollectionInvalid);
+            }
+
+            if (RelationshipHelper.IsCollectionExpressionCollectionItem(collection))
+            {
+                return await GetCollectionItem(id, collection, resourceParameters.Fields);
+            }
+
+            var collectionItemType = RelationshipHelper.GetCollectionExpressionType(collection, typeof(TDto));
+            if (!TypeHelperService.TypeHasProperties(collectionItemType, resourceParameters.Fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, resourceParameters.Search, resourceParameters.OrderBy, resourceParameters.OrderType == OrderByType.Ascending ? true : false, resourceParameters.Page.HasValue ? resourceParameters.Page - 1 : null, resourceParameters.PageSize);
+
+            var totalTask = Service.GetByIdWithPagedCollectionPropertyCountAsync(cts.Token, id, collection, resourceParameters.Search);
+
+            await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
+
+            var result = dataTask.Result;
+
+            var total = totalTask.Result;
+
+            IEnumerable<Object> list = ((IEnumerable<Object>)RelationshipHelper.GetCollectionExpressionData(collection, typeof(TDto), result));
+
+            var paginationMetadata = new WebApiPagedResponseDto<TDto>
+            {
+                Page = resourceParameters.Page.HasValue ? resourceParameters.Page.Value : 1,
+                PageSize = resourceParameters.PageSize.HasValue ? resourceParameters.PageSize.Value : list.Count(),
+                Records = total,
+                PreviousPageLink = null,
+                NextPageLink = null
+            };
+
+            if (paginationMetadata.HasPrevious)
+            {
+                paginationMetadata.PreviousPageLink = CreateCollectionPropertyResourceUri(collection, resourceParameters, ResourceUriType.PreviousPage);
+            }
+
+            if (paginationMetadata.HasNext)
+            {
+                paginationMetadata.NextPageLink = CreateCollectionPropertyResourceUri(collection, resourceParameters, ResourceUriType.NextPage);
+            }
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
+
+            var links = CreateLinksForCollectionProperty(collection, resourceParameters, paginationMetadata.HasNext, paginationMetadata.HasPrevious);
+
+            var shapedData = IEnumerableExtensions.ShapeData(list, collectionItemType, resourceParameters.Fields);
+
+            var shapedDataWithLinks = shapedData.Select(collectionPropertyDtoItem =>
+            {
+                var collectionPropertyDtoItemAsDictionary = collectionPropertyDtoItem as IDictionary<string, object>;
+                var collectionPropertyDtoItemLinks = CreateLinksForCollectionItem(id, collection + "/" + collectionPropertyDtoItemAsDictionary[nameof(IBaseDtoWithId.Id)].ToString(), resourceParameters.Fields);
+
+                collectionPropertyDtoItemAsDictionary.Add("links", collectionPropertyDtoItem);
+
+                return collectionPropertyDtoItemAsDictionary;
+            });
+
+            var linkedCollectionResource = new
+            {
+                value = shapedDataWithLinks
+                ,
+                links = links
+            };
+
+            return Ok(linkedCollectionResource);
+        }
+
+        private async Task<IActionResult> GetCollectionItem(string id, string collection, [FromQuery] string fields)
+        {
+            if (!RelationshipHelper.IsValidCollectionExpression(collection, typeof(TDto)))
+            {
+                return ApiErrorMessage(Messages.CollectionInvalid);
+            }
+
+            if (!RelationshipHelper.IsCollectionExpressionCollectionItem(collection))
+            {
+                return ApiErrorMessage(Messages.CollectionInvalid);
+            }
+
+            var collectionItemType = RelationshipHelper.GetCollectionExpressionType(collection, typeof(TDto));
+            if (!TypeHelperService.TypeHasProperties(collectionItemType, fields))
+            {
+                return ApiErrorMessage(Messages.FieldsInvalid);
+            }
+
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, "", null, false, null, null);
+
+            var collectionItem = RelationshipHelper.GetCollectionExpressionData(collection, typeof(TDto), response);
+
+            if (collectionItem == null)
+            {
+                return ApiNotFoundErrorMessage(Messages.NotFound);
+            }
+
+            var links = CreateLinksForCollectionItem(id, collection, fields);
+
+            var linkedResourceToReturn = collectionItem.ShapeData(collectionItemType, fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+        }
+        #endregion
+
+        #region HttpOptions
         /// <summary>
         /// Gets the options.
         /// </summary>
@@ -470,6 +479,7 @@ namespace DND.Common.Controllers.Api
             Response.Headers.Add("Allow", "GET, OPTIONS, POST, PUT, PATCH");
             return Ok();
         }
+        #endregion
 
         #region HATEOAS
         private string CreateResourceUri(
@@ -574,7 +584,7 @@ ResourceUriType type)
             return links;
         }
 
-        private IEnumerable<LinkDto> CreateLinks(string id, string fields, bool fullGraph = false)
+        protected IEnumerable<LinkDto> CreateLinks(string id, string fields, bool fullGraph = false)
         {
             var links = new List<LinkDto>();
 
@@ -619,7 +629,7 @@ ResourceUriType type)
             return links;
         }
 
-        private IEnumerable<LinkDto> CreateLinksForCollectionItem(string id, string collection, string collectionItemId, string fields)
+        private IEnumerable<LinkDto> CreateLinksForCollectionItem(string id, string collection, string fields)
         {
             var links = new List<LinkDto>();
 
@@ -628,14 +638,14 @@ ResourceUriType type)
             if (string.IsNullOrWhiteSpace(fields))
             {
                 links.Add(
-                  new LinkDto(UrlHelper.Action(nameof(GetCollectionItem), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new {  id = id, collection = collection, collectionItemId = collectionItemId }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  new LinkDto(UrlHelper.Action(nameof(GetCollection), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new {  id = id, collection = collection }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                   "self",
                   HttpMethod.Get.Method));
             }
             else
             {
                 links.Add(
-                  new LinkDto(UrlHelper.Action(nameof(GetCollectionItem), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id, collection = collection, collectionItemId = collectionItemId, fields = fields }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
+                  new LinkDto(UrlHelper.Action(nameof(GetCollection), UrlHelper.ActionContext.RouteData.Values["controller"].ToString(), new { id = id, collection = collection, fields = fields }, UrlHelper.ActionContext.HttpContext.Request.Scheme),
                   "self",
                   HttpMethod.Get.Method));
             }
@@ -741,7 +751,6 @@ ResourceUriType type)
             return links;
         }
         #endregion
-
     }
 }
 

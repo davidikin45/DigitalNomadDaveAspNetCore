@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using DND.Common.Implementation.DTOs;
+using DND.Common.Implementation.Data;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 
 namespace DND.Common.Implementation.ApplicationServices
 {
@@ -46,6 +49,7 @@ namespace DND.Common.Implementation.ApplicationServices
         #endregion
 
         #region Create
+
         public virtual Result<TReadDto> Create(TCreateDto dto, string createdBy)
         {
             var objectValidationErrors = dto.Validate().ToList();
@@ -99,10 +103,34 @@ namespace DND.Common.Implementation.ApplicationServices
         }
         #endregion
 
+        #region Bulk Create
+        public virtual List<Result> BulkCreate(TCreateDto[] dtos, string createdBy)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = Create(dto, createdBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public async virtual Task<List<Result>> BulkCreateAsync(TCreateDto[] dtos, string createdBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = await CreateAsync(dto, createdBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
+        }
+        #endregion
+
         #region GetUpdateDtoById
         public virtual TUpdateDto GetUpdateDtoById(object id)
         {
-            var bo = DomainService.GetById(id,true);
+            var bo = DomainService.GetById(id, true);
             return Mapper.Map<TUpdateDto>(bo);
         }
 
@@ -115,17 +143,22 @@ namespace DND.Common.Implementation.ApplicationServices
 
         #endregion
 
-        #region Update
-        public virtual List<Result> BulkUpdate(TUpdateDto[] dtos, string updatedBy)
+        #region GetUpdateDtosByIds
+        public virtual IEnumerable<TUpdateDto> GetUpdateDtosByIds(IEnumerable<object> ids)
         {
-            var results = new List<Result>();
-            foreach (var dto in dtos)
-            {
-                var result = Update(((IBaseDtoWithId)dto).Id, dto, updatedBy);
-                results.Add(result);
-            }
-            return results;
+            var result = DomainService.GetByIds(ids);
+            return Mapper.Map<IEnumerable<TUpdateDto>>(result);
         }
+
+        public virtual async Task<IEnumerable<TUpdateDto>> GetUpdateDtosByIdsAsync(CancellationToken cancellationToken,
+       IEnumerable<object> ids)
+        {
+            var result = await DomainService.GetByIdsAsync(cancellationToken, ids).ConfigureAwait(false);
+            return Mapper.Map<IEnumerable<TUpdateDto>>(result);
+        }
+        #endregion
+
+        #region Update
 
         public virtual Result Update(object id, TUpdateDto dto, string updatedBy)
         {
@@ -158,17 +191,6 @@ namespace DND.Common.Implementation.ApplicationServices
             return Result.Ok();
         }
 
-        public virtual List<Result> BulkUpdateGraph(TUpdateDto[] dtos, string updatedBy)
-        {
-            var results = new List<Result>();
-            foreach (var dto in dtos)
-            {
-                var result = UpdateGraph(((IBaseDtoWithId)dto).Id, dto, updatedBy);
-                results.Add(result);
-            }
-            return results;
-        }
-
         public virtual Result UpdateGraph(object id, TUpdateDto dto, string updatedBy)
         {
             var objectValidationErrors = dto.Validate().ToList();
@@ -177,7 +199,7 @@ namespace DND.Common.Implementation.ApplicationServices
                 return Result.ObjectValidationFail(objectValidationErrors);
             }
 
-            var persistedBO = DomainService.GetById(id,true);
+            var persistedBO = DomainService.GetById(id, true);
 
             Mapper.Map(dto, persistedBO);
 
@@ -198,17 +220,6 @@ namespace DND.Common.Implementation.ApplicationServices
             }
 
             return Result.Ok();
-        }
-
-        public async virtual Task<List<Result>> BulkUpdateAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken)
-        {
-            var results = new List<Result>();
-            foreach (var dto in dtos)
-            {
-                var result = await UpdateAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
-                results.Add(result);
-            }
-            return results;
         }
 
         public virtual async Task<Result> UpdateAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken)
@@ -240,17 +251,6 @@ namespace DND.Common.Implementation.ApplicationServices
             }
 
             return Result.Ok();
-        }
-
-        public async virtual Task<List<Result>> BulkUpdateGraphAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken)
-        {
-            var results = new List<Result>();
-            foreach (var dto in dtos)
-            {
-                var result = await UpdateGraphAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
-                results.Add(result);
-            }
-            return results;
         }
 
         public virtual async Task<Result> UpdateGraphAsync(object id, TUpdateDto dto, string updatedBy, CancellationToken cancellationToken)
@@ -285,6 +285,127 @@ namespace DND.Common.Implementation.ApplicationServices
         }
         #endregion
 
+        #region Bulk Update
+        public virtual List<Result> BulkUpdate(TUpdateDto[] dtos, string updatedBy)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = Update(((IBaseDtoWithId)dto).Id, dto, updatedBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public virtual List<Result> BulkUpdateGraph(TUpdateDto[] dtos, string updatedBy)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = UpdateGraph(((IBaseDtoWithId)dto).Id, dto, updatedBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public async virtual Task<List<Result>> BulkUpdateAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = await UpdateAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public async virtual Task<List<Result>> BulkUpdateGraphAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = await UpdateGraphAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
+        }
+        #endregion
+
+        #region Update Partial
+
+        public virtual Result UpdatePartial(object id, JsonPatchDocument dtoPatch, string updatedBy)
+        {
+            var dto = GetUpdateDtoById(id);
+
+            if (dto == null)
+            {
+                return Result.ObjectDoesNotExist();
+            }
+
+            var ops = new List<Operation<TUpdateDto>>();
+            foreach (var op in dtoPatch.Operations)
+            {
+                ops.Add(new Operation<TUpdateDto>(op.op, op.path, op.from, op.value));
+            }
+
+            var dtoPatchTypes = new JsonPatchDocument<TUpdateDto>(ops, dtoPatch.ContractResolver);
+
+            dtoPatchTypes.ApplyTo(dto);
+
+            var result = UpdateGraph(id, dto, updatedBy);
+
+            return Result.Ok();
+        }
+
+        public virtual async Task<Result> UpdatePartialAsync(object id, JsonPatchDocument dtoPatch, string updatedBy, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var dto = await GetUpdateDtoByIdAsync(id, cancellationToken);
+
+            if (dto == null)
+            {
+                return Result.ObjectDoesNotExist();
+            }
+
+            var ops = new List<Operation<TUpdateDto>>();
+            foreach (var op in dtoPatch.Operations)
+            {
+                ops.Add(new Operation<TUpdateDto>(op.op, op.path, op.from, op.value));
+            }
+
+            var dtoPatchTypes = new JsonPatchDocument<TUpdateDto>(ops, dtoPatch.ContractResolver);
+
+            dtoPatchTypes.ApplyTo(dto);
+
+            var result = await UpdateGraphAsync(id, dto, updatedBy, cancellationToken);
+
+            return Result.Ok();
+        }
+        #endregion
+
+        #region Bulk Partial Update
+        public virtual List<Result> BulkUpdatePartial(PatchDto[] dtoPatches, string updatedBy)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtoPatches)
+            {
+                var result = UpdatePartial(dto.Id, dto.Commands, updatedBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
+        public virtual async Task<List<Result>> BulkUpdatePartialAsync(PatchDto[] dtoPatches, string updatedBy, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtoPatches)
+            {
+                var result = await UpdatePartialAsync(dto.Id, dto.Commands, updatedBy);
+                results.Add(result);
+            }
+            return results;
+        }
+        #endregion
+
         #region GetDeleteDtoById
         public virtual TDeleteDto GetDeleteDtoById(object id)
         {
@@ -300,7 +421,23 @@ namespace DND.Common.Implementation.ApplicationServices
         }
         #endregion
 
+        #region GetDeleteDtosByIds
+        public virtual IEnumerable<TDeleteDto> GetDeleteDtosByIds(IEnumerable<object> ids)
+        {
+            var result = DomainService.GetByIds(ids);
+            return Mapper.Map<IEnumerable<TDeleteDto>>(result);
+        }
+
+        public virtual async Task<IEnumerable<TDeleteDto>> GetDeleteDtosByIdsAsync(CancellationToken cancellationToken,
+       IEnumerable<object> ids)
+        {
+            var result = await DomainService.GetByIdsAsync(cancellationToken, ids).ConfigureAwait(false);
+            return Mapper.Map<IEnumerable<TDeleteDto>>(result);
+        }
+        #endregion
+
         #region Delete
+
         public virtual Result Delete(object id, string deletedBy)
         {
             TDeleteDto deleteDto = GetDeleteDtoById(id);
@@ -359,17 +496,39 @@ namespace DND.Common.Implementation.ApplicationServices
 
         #endregion
 
-        #region TriggerActions
-        public virtual List<Result> TriggerActions(BulkActionDto[] actions, string triggeredBy)
+        #region Bulk Delete
+        public virtual List<Result> BulkDelete(TDeleteDto[] dtos, string deletedBy)
         {
             var results = new List<Result>();
-            foreach (var action in actions)
+            foreach (var dto in dtos)
             {
-                var result = TriggerAction(action.Id, action, triggeredBy);
+                var result = Delete(dto, deletedBy);
                 results.Add(result);
             }
             return results;
         }
+
+        public async virtual Task<List<Result>> BulkDeleteAsync(TDeleteDto[] dtos, string deletedBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var dto in dtos)
+            {
+                var result = await DeleteAsync(dto, deletedBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
+        }
+        #endregion
+
+        #region GetCreateDefaultCollectionItemDto
+        public virtual object GetCreateDefaultCollectionItemDto(string collectionExpression)
+        {
+            var type = RelationshipHelper.GetCollectionExpressionCreateType(collectionExpression, typeof(TUpdateDto));
+            return Activator.CreateInstance(type);
+        }
+        #endregion
+
+        #region TriggerActions
 
         public virtual Result TriggerAction(object id, ActionDto action, string triggeredBy)
         {
@@ -392,17 +551,6 @@ namespace DND.Common.Implementation.ApplicationServices
             return Result.Ok();
         }
 
-        public async virtual Task<List<Result>> TriggerActionsAsync(BulkActionDto[] actions, string triggeredBy, CancellationToken cancellationToken)
-        {
-            var results = new List<Result>();
-            foreach (var action in actions)
-            {
-                var result = await TriggerActionAsync(action.Id, action, triggeredBy, cancellationToken);
-                results.Add(result);
-            }
-            return results;
-        }
-
         public async virtual Task<Result> TriggerActionAsync(object id, ActionDto action, string triggeredBy, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = await DomainService.TriggerActionAsync(id, action.Action, triggeredBy, cancellationToken).ConfigureAwait(false);
@@ -423,6 +571,32 @@ namespace DND.Common.Implementation.ApplicationServices
 
             return Result.Ok();
         }
+        #endregion
+
+        #region Bulk Trigger Actions
+        public virtual List<Result> TriggerActions(BulkActionDto[] actions, string triggeredBy)
+        {
+            var results = new List<Result>();
+            foreach (var action in actions)
+            {
+                var result = TriggerAction(action.Id, action, triggeredBy);
+                results.Add(result);
+            }
+            return results;
+        }
+
+
+        public async virtual Task<List<Result>> TriggerActionsAsync(BulkActionDto[] actions, string triggeredBy, CancellationToken cancellationToken)
+        {
+            var results = new List<Result>();
+            foreach (var action in actions)
+            {
+                var result = await TriggerActionAsync(action.Id, action, triggeredBy, cancellationToken);
+                results.Add(result);
+            }
+            return results;
+        }
+
         #endregion
     }
 }

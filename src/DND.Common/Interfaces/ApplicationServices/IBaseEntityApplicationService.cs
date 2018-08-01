@@ -2,6 +2,7 @@
 using DND.Common.Implementation.Validation;
 using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
@@ -16,12 +17,17 @@ namespace DND.Common.Interfaces.ApplicationServices
           where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
     {
 
-        TCreateDto GetCreateDefaultDto()
-           ;
+        TCreateDto GetCreateDefaultDto();
+
+        object GetCreateDefaultCollectionItemDto(string collectionExpression);
 
         Result<TReadDto> Create(TCreateDto dto, string createdBy);
 
         Task<Result<TReadDto>> CreateAsync(TCreateDto dto, string createdBy, CancellationToken cancellationToken = default(CancellationToken));
+
+        List<Result> BulkCreate(TCreateDto[] dtos, string createdBy);
+
+        Task<List<Result>> BulkCreateAsync(TCreateDto[] dtos, string createdBy, CancellationToken cancellationToken = default(CancellationToken));
 
         Result Update(object id, TUpdateDto dto, string updatedBy);
 
@@ -39,6 +45,14 @@ namespace DND.Common.Interfaces.ApplicationServices
 
         Task<List<Result>> BulkUpdateGraphAsync(TUpdateDto[] dtos, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
 
+        Result UpdatePartial(object id, JsonPatchDocument dtoPatch, string updatedBy);
+
+        List<Result> BulkUpdatePartial(PatchDto[] dtoPatches, string updatedBy);
+
+        Task<Result> UpdatePartialAsync(object id, JsonPatchDocument dtoPatch, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<List<Result>> BulkUpdatePartialAsync(PatchDto[] dtoPatches, string updatedBy, CancellationToken cancellationToken = default(CancellationToken));
+
         Result Delete(object id, string deletedBy);
 
         Task<Result> DeleteAsync(object id, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
@@ -47,13 +61,25 @@ namespace DND.Common.Interfaces.ApplicationServices
 
         Task<Result> DeleteAsync(TDeleteDto dto, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
 
+        List<Result> BulkDelete(TDeleteDto[] dtos, string deletedBy);
+
+        Task<List<Result>> BulkDeleteAsync(TDeleteDto[] dtos, string deletedBy, CancellationToken cancellationToken = default(CancellationToken));
+
         TUpdateDto GetUpdateDtoById(object id);
+
+        IEnumerable<TUpdateDto> GetUpdateDtosByIds(IEnumerable<object> ids);
 
         Task<TUpdateDto> GetUpdateDtoByIdAsync(object id, CancellationToken cancellationToken);
 
+        Task<IEnumerable<TUpdateDto>> GetUpdateDtosByIdsAsync(CancellationToken cancellationToken, IEnumerable<object> ids);
+
         TDeleteDto GetDeleteDtoById(object id);
 
+        IEnumerable<TDeleteDto> GetDeleteDtosByIds(IEnumerable<object> ids);
+
         Task<TDeleteDto> GetDeleteDtoByIdAsync(object id, CancellationToken cancellationToken);
+
+        Task<IEnumerable<TDeleteDto>> GetDeleteDtosByIdsAsync(CancellationToken cancellationToken, IEnumerable<object> ids);
 
         Result TriggerAction(object id, ActionDto action, string triggeredBy);
 

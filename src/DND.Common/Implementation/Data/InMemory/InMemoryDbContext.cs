@@ -398,24 +398,24 @@ namespace DND.Common.Implementation.Data.InMemory
         #endregion
 
         #region Collection Properties
-        public void LoadCollectionProperty(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null)
+        public void LoadCollectionProperty(object entity, string collectionExpression, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null)
         {
 
         }
 
-        public async Task LoadCollectionPropertyAsync(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task LoadCollectionPropertyAsync(object entity, string collectionExpression, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, CancellationToken cancellationToken = default(CancellationToken))
         {
 
         }
 
-        public int CollectionPropertyCount(object entity, string collectionProperty, string search = "")
+        public int CollectionPropertyCount(object entity, string collectionExpression, string search = "")
         {
-            return ((ICollection<Object>)entity.GetPropValue(collectionProperty)).Count();
+            return ((ICollection<Object>)entity.GetPropValue(collectionExpression)).Count();
         }
 
-        public Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, string search, CancellationToken cancellationToken)
+        public Task<int> CollectionPropertyCountAsync(object entity, string collectionExpression, string search, CancellationToken cancellationToken)
         {
-            var task = new Task<int>(() => CollectionPropertyCount(entity, collectionProperty, search));
+            var task = new Task<int>(() => CollectionPropertyCount(entity, collectionExpression, search));
             task.Start();
             return task;
         }

@@ -72,7 +72,7 @@ namespace DND.Common.Extensions
 
         public static HtmlString IconLink(this IHtmlHelper htmlHelper, string linkText, string actionName, object routeValues, String iconName, object htmlAttributes = null)
         {
-            var linkMarkup = htmlHelper.ActionLink(linkText, actionName, routeValues, htmlAttributes).Render();
+            var linkMarkup = htmlHelper.ActionLink(linkText, actionName, routeValues, htmlAttributes).Render().Replace("%2F", "/");
             var iconMarkup = String.Format("<span class=\"{0}\" aria-hidden=\"true\"></span> ", iconName);
             return new HtmlString(linkMarkup.Insert(linkMarkup.IndexOf(@">") + 1, iconMarkup));
         }
@@ -127,7 +127,7 @@ namespace DND.Common.Extensions
                 {
                     if(html.ViewBag.Collection != null)
                     {
-                        link = html.ActionLink(linkText, "Collection", new { id = html.ViewBag.Id, collection = html.ViewBag.Collection, page = html.ViewBag.Page, pageSize = html.ViewBag.PageSize, search = html.ViewBag.Search, orderColumn = prop.PropertyName, orderType = orderType }).Render();
+                        link = html.ActionLink(linkText, "Collection", new { id = html.ViewBag.Id, collection = html.ViewBag.Collection, page = html.ViewBag.Page, pageSize = html.ViewBag.PageSize, search = html.ViewBag.Search, orderColumn = prop.PropertyName, orderType = orderType }).Render().Replace("%2F", "/");
                     }
                     else
                     {
@@ -176,7 +176,7 @@ namespace DND.Common.Extensions
                         if(linkToCollection)
                         {
                             string linkText = HtmlHelperExtensions.ToString(ModelHelperExtensions.Display(html, item, prop.PropertyName));
-                            var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = prop.PropertyName.ToLower() });
+                            var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = html.ViewBag.Collection != null ? html.ViewBag.Collection +"/" + prop.PropertyName.ToLower() : prop.PropertyName.ToLower() }).Render().Replace("%2F", "/");
                             HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, collectionLink);
                         }
                         else
@@ -203,7 +203,7 @@ namespace DND.Common.Extensions
                         if (linkToCollection)
                         {
                             string linkText = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();
-                            var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = prop.PropertyName });
+                            var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = html.ViewBag.Collection != null ? html.ViewBag.Collection + "/" + prop.PropertyName.ToLower() : prop.PropertyName.ToLower() }).Render().Replace("%2F", "/");
                             HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, collectionLink);
                         }
                         else
@@ -251,7 +251,7 @@ namespace DND.Common.Extensions
                     {
                         if(html.ViewBag.Collection != null)
                         {
-                            tdActions.InnerHtml.AppendHtml(html.IconLink("Details", "CollectionItemDetails", new { id = html.ViewBag.Id, collection = html.ViewBag.Collection, collectionItemId = item.Id }, "fa fa-search", new { @class = "btn btn-primary btn-sm mr-2 mb-2" }));
+                            tdActions.InnerHtml.AppendHtml(html.IconLink("Details", "Collection", new { id = html.ViewBag.Id, collection = html.ViewBag.Collection + "/" + item.Id }, "fa fa-search", new { @class = "btn btn-primary btn-sm mr-2 mb-2" }));
                         }
                         else
                         {

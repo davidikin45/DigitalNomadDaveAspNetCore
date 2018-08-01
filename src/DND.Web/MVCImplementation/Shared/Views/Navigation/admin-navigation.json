@@ -10,17 +10,17 @@
     "LinkText": "Manage"
   },
   {
-    "Controller": "AdminCarouselItem",
+    "Controller": "AdminCarouselItems",
     "Action": "Index",
     "LinkText": "Carousel"
   },
   {
-    "Controller": "AdminContentHtml",
+    "Controller": "AdminContentHtmls",
     "Action": "Index",
     "LinkText": "Content Html"
   },
   {
-    "Controller": "AdminContentText",
+    "Controller": "AdminContentTexts",
     "Action": "Index",
     "LinkText": "Content Text"
   },
@@ -45,22 +45,22 @@
     "LinkText": "Image Metadata"
   },
   {
-    "Controller": "AdminAuthor",
+    "Controller": "AdminAuthors",
     "Action": "Index",
     "LinkText": "Authors"
   },
   {
-    "Controller": "AdminBlogPost",
+    "Controller": "AdminBlogPosts",
     "Action": "Index",
     "LinkText": "Posts"
   },
   {
-    "Controller": "AdminCategory",
+    "Controller": "AdminCategories",
     "Action": "Index",
     "LinkText": "Categories"
   },
   {
-    "Controller": "AdminTag",
+    "Controller": "AdminTags",
     "Action": "Index",
     "LinkText": "Tags"
   },
@@ -70,12 +70,12 @@
     "LinkText": "Locations"
   },
   {
-    "Controller": "AdminProject",
+    "Controller": "AdminProjects",
     "Action": "Index",
     "LinkText": "Projects"
   },
   {
-    "Controller": "AdminTestimonial",
+    "Controller": "AdminTestimonials",
     "Action": "Index",
     "LinkText": "Testimonials"
   },
@@ -90,7 +90,7 @@
     "LinkText": "Email Mailing List"
   },
   {
-    "Controller": "AdminFaq",
+    "Controller": "AdminFaqs",
     "Action": "Index",
     "LinkText": "FAQ"
   },

@@ -8,10 +8,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace DND.Web.MVCImplementation.Blog.Controllers
 {
-    [Route("admin/blog-post")]
-    public class AdminBlogPostController : BaseEntityControllerAuthorize<BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto, IBlogPostApplicationService>
+    [Route("admin/blog-posts")]
+    public class AdminBlogPostsController : BaseEntityControllerAuthorize<BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto, IBlogPostApplicationService>
     {
-        public AdminBlogPostController(IBlogPostApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)
+        public AdminBlogPostsController(IBlogPostApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)
              : base(true, service, mapper, emailService, configuration)
         {
         }

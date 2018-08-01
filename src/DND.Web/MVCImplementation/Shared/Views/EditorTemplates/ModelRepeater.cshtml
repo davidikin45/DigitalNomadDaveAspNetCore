@@ -2,14 +2,18 @@
 @using DND.Common.Extensions;
 
 @model dynamic;
+@{ 
+    var id = Guid.NewGuid().ToString().Replace("-", "");
+    var collectionItemUrl = (Url.Action("CreateCollectionItem", Url.ActionContext.RouteData.Values["controller"].ToString(), new { collection = (string)ViewBag.Collection.Replace(".", "/") }, Url.ActionContext.HttpContext.Request.Scheme).Replace("%2F", "/"));
+}
 
 <div class="form-group row">
     <div class="col-md-12">
-        <button type="button" class="btn btn-success btn-sm mt-2" onclick="create@(Html.ViewData.ModelMetadata.Name)()"><span class="fa fa-plus" aria-hidden="true"></span> Create New</button>
+        <button type="button" class="btn btn-success btn-sm mt-2" onclick="createCollectionItem('@(id)','@(collectionItemUrl)')"><span class="fa fa-plus" aria-hidden="true"></span> Create New</button>
     </div>
 </div>
 
-<div id="@(Html.ViewData.ModelMetadata.Name)">
+<div id="@(id)">
     @for (int i = 0; i < Model.Count; i++)
     {
         var htmlHelper = HtmlHelperExtensions.For(Html, Model[i]);
@@ -17,18 +21,18 @@
     }
 </div>
 
-<script>
-    function create@(Html.ViewData.ModelMetadata.Name)()
+@*<script>
+    function create@(id)()
     {
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
               var elem = document.createElement('div');
               elem.innerHTML = this.responseText;
-              document.getElementById("@(Html.ViewData.ModelMetadata.Name)").appendChild(elem.firstElementChild);
+              document.getElementById("@(id)").appendChild(elem.firstElementChild);
         }
         };
-      xhttp.open("GET", "@(Url.Action("CreateCollectionItem", Url.ActionContext.RouteData.Values["controller"].ToString(), new { collection = (string)ViewBag.Collection }, Url.ActionContext.HttpContext.Request.Scheme))", true);
+      xhttp.open("GET", "@(Url.Action("CreateCollectionItem", Url.ActionContext.RouteData.Values["controller"].ToString(), new { collection = (string)ViewBag.Collection.Replace(".", "/") }, Url.ActionContext.HttpContext.Request.Scheme).Replace("%2F", "/"))", true);
       xhttp.send();
     }
-</script>
+</script>*@

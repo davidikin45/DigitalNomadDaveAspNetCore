@@ -336,51 +336,46 @@ namespace DND.Common.Implementation.ApplicationServices
 
         #region GetByIdWithPagedCollectionProperty
         public virtual TDto GetByIdWithPagedCollectionProperty(object id,
-           string collectionProperty,
+           string collectionExpression,
            string search = "",
            string orderBy = null,
            bool ascending = false,
            int? pageNo = null,
-           int? pageSize = null,
-           object collectionItemId = null)
+           int? pageSize = null)
         {
-            var mappedCollectionProperty = Mapper.GetDestinationMappedProperty<TDto, TEntity>(collectionProperty).Name;
-
-            var bo = DomainService.GetByIdWithPagedCollectionProperty(id, mappedCollectionProperty, search, orderBy, ascending, pageNo, pageSize, collectionItemId);
+            var bo = DomainService.GetByIdWithPagedCollectionProperty(id, collectionExpression, search, orderBy, ascending, pageNo, pageSize);
             return Mapper.Map<TDto>(bo);
         }
 
         public virtual async Task<TDto> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken,
             object id,
-            string collectionProperty,
+            string collectionExpression,
             string search = "",
             string orderBy = null,
             bool ascending = false,
             int? pageNo = null,
-            int? pageSize = null,
-            object collectionItemId = null)
+            int? pageSize = null)
         {
-            var mappedCollectionProperty = Mapper.GetDestinationMappedProperty<TDto, TEntity>(collectionProperty).Name;
 
-            var bo = await DomainService.GetByIdWithPagedCollectionPropertyAsync(cancellationToken, id, mappedCollectionProperty, search, orderBy, ascending, pageNo, pageSize, collectionItemId);
+            var bo = await DomainService.GetByIdWithPagedCollectionPropertyAsync(cancellationToken, id, collectionExpression, search, orderBy, ascending, pageNo, pageSize);
             return Mapper.Map<TDto>(bo);
         }
 
         public int GetByIdWithPagedCollectionPropertyCount(object id,
-            string collectionProperty,
+            string collectionExpression,
             string search = "")
         {
-            var mappedCollectionProperty = Mapper.GetDestinationMappedProperty<TDto, TEntity>(collectionProperty).Name;
-            return DomainService.GetByIdWithPagedCollectionPropertyCount(id, mappedCollectionProperty, search);
+            //var mappedCollectionProperty = Mapper.GetDestinationMappedProperty<TDto, TEntity>(collectionProperty).Name;
+            return DomainService.GetByIdWithPagedCollectionPropertyCount(id, collectionExpression, search);
         }
 
         public virtual async Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken,
             object id,
-            string collectionProperty,
+            string collectionExpression,
             string search = "")
         {
-            var mappedCollectionProperty = Mapper.GetDestinationMappedProperty<TDto, TEntity>(collectionProperty).Name;
-            return await DomainService.GetByIdWithPagedCollectionPropertyCountAsync(cancellationToken, id, mappedCollectionProperty, search);
+           // var mappedCollectionProperty = Mapper.GetDestinationMappedProperty<TDto, TEntity>(collectionProperty).Name;
+            return await DomainService.GetByIdWithPagedCollectionPropertyCountAsync(cancellationToken, id, collectionExpression, search);
         }
         #endregion
 

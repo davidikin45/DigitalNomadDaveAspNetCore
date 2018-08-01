@@ -113,16 +113,15 @@ namespace DND.Common.Interfaces.DomainServices
             ;
 
         TEntity GetByIdWithPagedCollectionProperty(object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "",
             string orderBy = null,
             bool ascending = false,
             int? pageNo = null, 
-            int? pageSize = null, 
-            object collectionItemId = null);
+            int? pageSize = null);
 
         int GetByIdWithPagedCollectionPropertyCount(object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "");
 
         Task<TEntity> GetByIdAsync(object id,
@@ -134,17 +133,16 @@ namespace DND.Common.Interfaces.DomainServices
 
         Task<TEntity> GetByIdWithPagedCollectionPropertyAsync(CancellationToken cancellationToken, 
             object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "",
             string orderBy = null,
             bool ascending = false,
             int? pageNo = null, 
-            int? pageSize = null, 
-            object collectionItemId = null);
+            int? pageSize = null);
 
         Task<int> GetByIdWithPagedCollectionPropertyCountAsync(CancellationToken cancellationToken, 
             object id, 
-            string collectionProperty,
+            string collectionExpression,
             string search = "");
 
         IEnumerable<TEntity> GetByIds(IEnumerable<object> ids,

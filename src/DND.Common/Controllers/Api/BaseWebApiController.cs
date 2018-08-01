@@ -82,6 +82,26 @@ namespace DND.Common.Controllers.Api
             return Success(webApiMessages);
         }
 
+        protected IActionResult BulkCreateResponse(IEnumerable<Result> results)
+        {
+            var webApiMessages = new List<WebApiMessage>();
+
+            foreach (var result in results)
+            {
+                if (result.IsSuccess)
+                {
+                    webApiMessages.Add(WebApiMessage.CreateWebApiMessage(Messages.AddSuccessful, new List<string>()));
+                }
+                else
+                {
+                    webApiMessages.Add((WebApiMessage)((ObjectResult)ValidationErrors(result)).Value);
+                }
+            }
+
+            //For bulk return 200 regardless
+            return Success(webApiMessages);
+        }
+
         protected IActionResult BulkUpdateResponse(IEnumerable<Result> results)
         {
             var webApiMessages = new List<WebApiMessage>();
@@ -102,7 +122,27 @@ namespace DND.Common.Controllers.Api
             return Success(webApiMessages);
         }
 
-         protected IActionResult ValidationErrors(Result failure)
+        protected IActionResult BulkDeleteResponse(IEnumerable<Result> results)
+        {
+            var webApiMessages = new List<WebApiMessage>();
+
+            foreach (var result in results)
+            {
+                if (result.IsSuccess)
+                {
+                    webApiMessages.Add(WebApiMessage.CreateWebApiMessage(Messages.DeleteSuccessful, new List<string>()));
+                }
+                else
+                {
+                    webApiMessages.Add((WebApiMessage)((ObjectResult)ValidationErrors(result)).Value);
+                }
+            }
+
+            //For bulk return 200 regardless
+            return Success(webApiMessages);
+        }
+
+        protected IActionResult ValidationErrors(Result failure)
         {
             var newModelState = new ModelStateDictionary();
             switch (failure.ErrorType)

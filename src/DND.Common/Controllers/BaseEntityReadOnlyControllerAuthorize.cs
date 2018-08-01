@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using DND.Common.Extensions;
 using DND.Common.Controllers.Api;
+using DND.Common.Implementation.Data;
 
 namespace DND.Common.Controllers
 {
@@ -45,6 +46,7 @@ namespace DND.Common.Controllers
             Service = service;
         }
 
+        #region List
         // GET: Default
         [Route("")]
         public virtual async Task<ActionResult> Index(int page = 1, int pageSize = 10, string orderColumn = nameof(IBaseDtoWithId.Id), string orderType = OrderByType.Descending, string search = "")
@@ -88,7 +90,9 @@ namespace DND.Common.Controllers
                 return HandleReadException();
             }
         }
+        #endregion
 
+        #region Details
         // GET: Default/Details/5
         [Route("details/{id}")]
         public virtual async Task<ActionResult> Details(string id)
@@ -110,20 +114,27 @@ namespace DND.Common.Controllers
             ViewBag.Admin = Admin;
             return View("Details", data);
         }
+        #endregion
 
-        [Route("details/{id}/{collection}")]
+        #region Collection List and Details
+
+        [Route("details/{id}/{*collection}")]
         public virtual async Task<ActionResult> Collection(string id, string collection, int page = 1, int pageSize = 10, string orderColumn = nameof(IBaseDtoWithId.Id), string orderType = OrderByType.Descending, string search = "")
         {
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
+            if (!RelationshipHelper.IsValidCollectionExpression(collection, typeof(TDto)))
             {
                 return HandleReadException();
+            }
+
+            if (RelationshipHelper.IsCollectionExpressionCollectionItem(collection))
+            {
+                return await CollectionItemDetails(id, collection);
             }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             try
             {
-                var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
 
                 var dataTask = Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, search, orderColumn, orderType == OrderByType.Ascending ? true : false, page - 1, pageSize);
 
@@ -131,10 +142,12 @@ namespace DND.Common.Controllers
 
                 await TaskHelper.WhenAllOrException(cts, dataTask, totalTask);
 
-                var data = dataTask.Result.GetPropValue(collection);
-                var total = totalTask.Result;
+                var result = dataTask.Result;
 
-                var list = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { data });
+                Type collectionItemType = RelationshipHelper.GetCollectionExpressionType(collection, typeof(TDto));
+                object list = RelationshipHelper.GetCollectionExpressionData(collection, typeof(TDto), result);
+
+                var total = totalTask.Result;
 
                 var webApiPagedResponseDtoType = typeof(WebApiPagedResponseDto<>).MakeGenericType(collectionItemType);
                 var response = Activator.CreateInstance(webApiPagedResponseDtoType);
@@ -174,10 +187,14 @@ namespace DND.Common.Controllers
             }
         }
 
-        [Route("details/{id}/{collection}/{collectionItemId}")]
-        public virtual async Task<ActionResult> CollectionItemDetails(string id, string collection, string collectionItemId)
+        private async Task<ActionResult> CollectionItemDetails(string id, string collection)
         {
-            if (!typeof(TDto).HasProperty(collection) || !typeof(TDto).IsCollectionProperty(collection))
+            if (!RelationshipHelper.IsValidCollectionExpression(collection, typeof(TDto)))
+            {
+                return HandleReadException();
+            }
+
+            if (!RelationshipHelper.IsCollectionExpressionCollectionItem(collection))
             {
                 return HandleReadException();
             }
@@ -186,17 +203,9 @@ namespace DND.Common.Controllers
             Object data = null;
             try
             {
-                var collectionItemType = typeof(TDto).GetGenericArguments(collection).Single();
+                var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, "", null, false, null, null);
 
-                var response = await Service.GetByIdWithPagedCollectionPropertyAsync(cts.Token, id, collection, "", null, false, null, null, collectionItemId);
-
-                if (response == null || response.GetPropValue(collection) == null)
-                {
-                    return HandleReadException();
-                }
-
-                var whereClause = LamdaHelper.SearchForEntityByIdCompile(collectionItemType, collectionItemId);
-                var collectionItem = typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.FirstOrDefault)).MakeGenericMethod(collectionItemType).Invoke(null, new object[] { response.GetPropValue(collection), whereClause });
+                var collectionItem = RelationshipHelper.GetCollectionExpressionData(collection, typeof(TDto), response);
 
                 if (collectionItem == null)
                 {
@@ -214,16 +223,12 @@ namespace DND.Common.Controllers
             ViewBag.Admin = Admin;
 
             ViewBag.DisableEdit = true;
-            ViewBag.Collection = collection;
+            ViewBag.Collection = RelationshipHelper.GetCollectionExpressionWithoutCurrentCollectionItem(collection);
             ViewBag.Id = id;
 
             return View("Details", data);
         }
-
-        protected virtual TDto CreateNewDtoInstance()
-        {
-            return (TDto)Activator.CreateInstance(typeof(TDto));
-        }
+        #endregion
 
     }
 }

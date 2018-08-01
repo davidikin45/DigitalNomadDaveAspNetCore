@@ -32,10 +32,10 @@ namespace DND.Common.Interfaces.Data
         IBaseDbContextTransaction BeginTransaction(IsolationLevel isolationLevel);
         bool AutoDetectChanges { get; set; }
 
-        void LoadCollectionProperty(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null);
-        Task LoadCollectionPropertyAsync(object entity, string collectionProperty, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, object collectionItemId = null, CancellationToken cancellationToken = default(CancellationToken));
-        int  CollectionPropertyCount(object entity, string collectionProperty, string search = "");
-        Task<int> CollectionPropertyCountAsync(object entity, string collectionProperty, string search, CancellationToken cancellationToken);
+        void LoadCollectionProperty(object entity, string collectionExpression, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null);
+        Task LoadCollectionPropertyAsync(object entity, string collectionExpression, string search = "", string orderBy = null, bool ascending = false, int? skip = null, int? take = null, CancellationToken cancellationToken = default(CancellationToken));
+        int  CollectionPropertyCount(object entity, string collectionExpression, string search = "");
+        Task<int> CollectionPropertyCountAsync(object entity, string collectionExpression, string search, CancellationToken cancellationToken);
 
         void AddEntity<TEntity>(TEntity entity) where TEntity : class;
         void AttachEntity<TEntity>(TEntity entity) where TEntity : class;
