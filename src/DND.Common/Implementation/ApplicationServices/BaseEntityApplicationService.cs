@@ -32,6 +32,12 @@ namespace DND.Common.Implementation.ApplicationServices
 
         private readonly IHubContext<ApiNotificationHub<TReadDto>> HubContext;
 
+        public BaseEntityApplicationService(TDomainService domainService, IMapper mapper, IHubContext<ApiNotificationHub<TReadDto>> hubContext)
+          : this(domainService, mapper)
+        {
+            HubContext = hubContext;
+        }
+
         public BaseEntityApplicationService(TDomainService domainService, IMapper mapper)
            : base(domainService, mapper)
         {
@@ -78,7 +84,10 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var readDto = Mapper.Map<TReadDto>(bo);
 
-            //await HubContext.Created(readDto);
+            if (HubContext != null)
+            {
+                HubContext.Created(readDto).Wait();
+            }
 
             return Result.Ok(readDto);
         }
@@ -109,7 +118,10 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var readDto = Mapper.Map<TReadDto>(bo);
 
-            //await HubContext.Created(readDto);
+            if (HubContext != null)
+            {
+                await HubContext.Created(readDto);
+            }
 
             return Result.Ok(readDto);
         }
@@ -209,7 +221,10 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var readDto = Mapper.Map<TReadDto>(persistedBO);
 
-            //await HubContext.Updated(readDto);
+            if (HubContext != null)
+            {
+                HubContext.Updated(readDto).Wait();
+            }
 
             return Result.Ok();
         }
@@ -244,7 +259,10 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var readDto = Mapper.Map<TReadDto>(persistedBO);
 
-            //await HubContext.Updated(readDto);
+            if (HubContext != null)
+            {
+                HubContext.Updated(readDto).Wait();
+            }
 
             return Result.Ok();
         }
@@ -279,7 +297,10 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var readDto = Mapper.Map<TReadDto>(persistedBO);
 
-            //await HubContext.Updated(readDto);
+            if (HubContext != null)
+            {
+                await HubContext.Updated(readDto);
+            }
 
             return Result.Ok();
         }
@@ -314,7 +335,11 @@ namespace DND.Common.Implementation.ApplicationServices
 
             var readDto = Mapper.Map<TReadDto>(persistedBO);
 
-            //await HubContext.Updated(readDto);
+            if (HubContext != null)
+            {
+                await HubContext.Updated(readDto);
+            }
+
 
             return Result.Ok();
         }
@@ -547,7 +572,10 @@ namespace DND.Common.Implementation.ApplicationServices
                 }
             }
 
-           //HubContext.Deleted(dto.Id).Wait();
+            if (HubContext != null)
+            {
+                HubContext.Deleted(dto.Id).Wait();
+            }
 
             return Result.Ok();
         }
@@ -571,7 +599,10 @@ namespace DND.Common.Implementation.ApplicationServices
                 }
             }
 
-            //await HubContext.Deleted(dto.Id);
+            if (HubContext != null)
+            {
+                HubContext.Deleted(dto.Id);
+            }
 
             return Result.Ok();
         }

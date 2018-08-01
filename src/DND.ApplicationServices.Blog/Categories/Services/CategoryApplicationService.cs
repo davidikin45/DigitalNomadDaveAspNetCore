@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.SignalRHubs;
 using DND.Domain.Blog.Categories;
 using DND.Domain.Blog.Categories.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
 using DND.Interfaces.Blog.DomainServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+using Microsoft.AspNetCore.SignalR;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,8 +16,8 @@ namespace DND.ApplicationServices.Blog.Categories.Services
 
         protected virtual ICategoryDomainService CategoryDomainService { get; }
 
-        public CategoryApplicationService(ICategoryDomainService domainService, IMapper mapper)
-        : base(domainService, mapper)
+        public CategoryApplicationService(ICategoryDomainService domainService, IMapper mapper, IHubContext<ApiNotificationHub<CategoryDto>> hubContext)
+        : base(domainService, mapper, hubContext)
         {
             CategoryDomainService = domainService;
         }

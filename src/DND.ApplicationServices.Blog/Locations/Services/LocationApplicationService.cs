@@ -2,10 +2,12 @@
 using DND.Common.Implementation.ApplicationServices;
 using DND.Common.Implementation.Validation;
 using DND.Common.Infrastructure;
+using DND.Common.SignalRHubs;
 using DND.Domain.Blog.Locations;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
 using DND.Interfaces.Blog.DomainServices;
+using Microsoft.AspNetCore.SignalR;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +15,7 @@ namespace DND.ApplicationServices.Blog.Locations.Services
 {
     public class LocationApplicationService : BaseEntityApplicationService<Location, LocationDto, LocationDto, LocationDto, LocationDeleteDto, ILocationDomainService>, ILocationApplicationService
     {
-        public LocationApplicationService(ILocationDomainService domainService, IMapper mapper)
+        public LocationApplicationService(ILocationDomainService domainService, IMapper mapper, IHubContext<ApiNotificationHub<LocationDto>> hubContext)
         : base(domainService, mapper)
         {
 
