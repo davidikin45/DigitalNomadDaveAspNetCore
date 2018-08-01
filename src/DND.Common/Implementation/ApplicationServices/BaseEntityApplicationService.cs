@@ -109,8 +109,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtos)
             {
-                var result = Create(dto, createdBy);
-                results.Add(result);
+                try
+                {
+                    var result = Create(dto, createdBy);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -291,8 +298,16 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtos)
             {
-                var result = Update(((IBaseDtoWithId)dto).Id, dto, updatedBy);
-                results.Add(result);
+                try
+                {
+                    var result = Update(((IBaseDtoWithId)dto).Id, dto, updatedBy);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
+
             }
             return results;
         }
@@ -302,8 +317,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtos)
             {
-                var result = UpdateGraph(((IBaseDtoWithId)dto).Id, dto, updatedBy);
-                results.Add(result);
+                try
+                {
+                    var result = UpdateGraph(((IBaseDtoWithId)dto).Id, dto, updatedBy);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -313,8 +335,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtos)
             {
-                var result = await UpdateAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
-                results.Add(result);
+                try
+                {
+                    var result = await UpdateAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -324,8 +353,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtos)
             {
-                var result = await UpdateGraphAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
-                results.Add(result);
+                try
+                {
+                    var result = await UpdateGraphAsync(((IBaseDtoWithId)dto).Id, dto, updatedBy, cancellationToken);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -388,8 +424,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtoPatches)
             {
-                var result = UpdatePartial(dto.Id, dto.Commands, updatedBy);
-                results.Add(result);
+                try
+                {
+                    var result = UpdatePartial(dto.Id, dto.Commands, updatedBy);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -399,8 +442,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtoPatches)
             {
-                var result = await UpdatePartialAsync(dto.Id, dto.Commands, updatedBy);
-                results.Add(result);
+                try
+                {
+                    var result = await UpdatePartialAsync(dto.Id, dto.Commands, updatedBy);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -502,8 +552,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtos)
             {
-                var result = Delete(dto, deletedBy);
-                results.Add(result);
+                try
+                {
+                    var result = Delete(dto, deletedBy);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -513,8 +570,15 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var dto in dtos)
             {
-                var result = await DeleteAsync(dto, deletedBy, cancellationToken);
-                results.Add(result);
+                try
+                {
+                    var result = await DeleteAsync(dto, deletedBy, cancellationToken);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
@@ -579,20 +643,33 @@ namespace DND.Common.Implementation.ApplicationServices
             var results = new List<Result>();
             foreach (var action in actions)
             {
-                var result = TriggerAction(action.Id, action, triggeredBy);
-                results.Add(result);
+                try
+                {
+                    var result = TriggerAction(action.Id, action, triggeredBy);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
-
 
         public async virtual Task<List<Result>> TriggerActionsAsync(BulkActionDto[] actions, string triggeredBy, CancellationToken cancellationToken)
         {
             var results = new List<Result>();
             foreach (var action in actions)
             {
-                var result = await TriggerActionAsync(action.Id, action, triggeredBy, cancellationToken);
-                results.Add(result);
+                try
+                {
+                    var result = await TriggerActionAsync(action.Id, action, triggeredBy, cancellationToken);
+                    results.Add(result);
+                }
+                catch (Exception ex)
+                {
+                    results.Add(Result.Fail(ErrorType.UnknownError));
+                }
             }
             return results;
         }
