@@ -84,6 +84,7 @@ Once I adhered to the above rules I was able to expose the following actions in 
 | TriggerAction					  | POST			| api/*items*/*1*/trigger-action		| GET				 | admin/*items*/*1*/trigger-action			   | api.update									 |
 | BulkTriggerAction				  | POST			| api/*items*/bulk/trigger-action		| GET				 | admin/*items*/*1*/trigger-action			   | api.update									 |
 | GetOptions					  | OPTIONS			| api/*items*							|					 |											   | api.read									 |
+| Notifications					  | WebSocket		| api/*items*/notifications				| 					 |											   | api.notifications							 |
 
 ## Domain Events
 * [Domain events: design and implementation](https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/domain-events-design-implementation)

@@ -13,5 +13,7 @@ namespace DND.IDP
         public const string Read = "api.read";
         public const string Update = "api.update";
         public const string Delete = "api.delete";
+
+        public const string Notifications = "api.notifications";
     }
 }

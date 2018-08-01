@@ -62,6 +62,7 @@ using DND.Common.Controllers.Api;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Serialization;
+using DND.Domain.Blog.BlogPosts.Dtos;
 
 namespace DND.Web
 {
@@ -411,6 +412,11 @@ namespace DND.Web
                 options.AddPolicy(ApiScopes.Delete, policyBuilder =>
                 {
                     policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Write, ApiScopes.Delete);
+                });
+
+                options.AddPolicy(ApiScopes.Notifications, policyBuilder =>
+                {
+                    policyBuilder.RequireScope(ApiScopes.Full, ApiScopes.Notifications);
                 });
             });
 
@@ -919,8 +925,7 @@ namespace DND.Web
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<NotificationHub>("/api/signalR/notifications");
-                routes.MapHub<FlightSearchHub>("/api/signalR/flight-search");
+                NoticationsConfig.MapHubs(routes);
             });
 
             //Cache-Control:max-age=0

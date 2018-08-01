@@ -492,6 +492,7 @@ namespace DND.Common.Controllers.Api
             return BulkTriggerActionResponse(results);
         }
         #endregion
+
     }
 }
 

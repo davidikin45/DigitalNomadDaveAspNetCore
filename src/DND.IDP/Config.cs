@@ -114,6 +114,12 @@ namespace DND.IDP
                             Name = ApiScopes.Delete,
                             DisplayName = "Delete only access to API"
                         }
+                        ,
+                        new Scope
+                        {
+                            Name = ApiScopes.Notifications,
+                            DisplayName = "Notifications access to API"
+                        }
                     }
                 }
             };

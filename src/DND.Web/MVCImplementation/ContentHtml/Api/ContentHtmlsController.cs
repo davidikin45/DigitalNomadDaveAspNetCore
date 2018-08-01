@@ -7,7 +7,7 @@ using DND.Interfaces.CMS.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
-namespace DND.Web.MVCImplementation.Category.Api
+namespace DND.Web.MVCImplementation.ContentHtml.Api
 {
     [ApiVersion("1.0")]
     [Route("api/content-htmls")]
