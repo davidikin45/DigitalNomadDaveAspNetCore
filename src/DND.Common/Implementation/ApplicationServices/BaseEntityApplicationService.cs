@@ -16,6 +16,8 @@ using DND.Common.Implementation.DTOs;
 using DND.Common.Implementation.Data;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.SignalR;
+using DND.Common.SignalRHubs;
 
 namespace DND.Common.Implementation.ApplicationServices
 {
@@ -27,6 +29,8 @@ namespace DND.Common.Implementation.ApplicationServices
           where TDeleteDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
           where TDomainService : IBaseEntityDomainService<TEntity>
     {
+
+        private readonly IHubContext<ApiNotificationHub<TReadDto>> HubContext;
 
         public BaseEntityApplicationService(TDomainService domainService, IMapper mapper)
            : base(domainService, mapper)
@@ -72,7 +76,11 @@ namespace DND.Common.Implementation.ApplicationServices
                 }
             }
 
-            return Result.Ok(Mapper.Map<TReadDto>(bo));
+            var readDto = Mapper.Map<TReadDto>(bo);
+
+            //await HubContext.Created(readDto);
+
+            return Result.Ok(readDto);
         }
 
         public virtual async Task<Result<TReadDto>> CreateAsync(TCreateDto dto, string createdBy, CancellationToken cancellationToken)
@@ -99,7 +107,11 @@ namespace DND.Common.Implementation.ApplicationServices
                 }
             }
 
-            return Result.Ok(Mapper.Map<TReadDto>(bo));
+            var readDto = Mapper.Map<TReadDto>(bo);
+
+            //await HubContext.Created(readDto);
+
+            return Result.Ok(readDto);
         }
         #endregion
 
@@ -195,6 +207,10 @@ namespace DND.Common.Implementation.ApplicationServices
                 }
             }
 
+            var readDto = Mapper.Map<TReadDto>(persistedBO);
+
+            //await HubContext.Updated(readDto);
+
             return Result.Ok();
         }
 
@@ -225,6 +241,10 @@ namespace DND.Common.Implementation.ApplicationServices
                         throw new ArgumentException();
                 }
             }
+
+            var readDto = Mapper.Map<TReadDto>(persistedBO);
+
+            //await HubContext.Updated(readDto);
 
             return Result.Ok();
         }
@@ -257,6 +277,10 @@ namespace DND.Common.Implementation.ApplicationServices
                 }
             }
 
+            var readDto = Mapper.Map<TReadDto>(persistedBO);
+
+            //await HubContext.Updated(readDto);
+
             return Result.Ok();
         }
 
@@ -287,6 +311,10 @@ namespace DND.Common.Implementation.ApplicationServices
                         throw new ArgumentException();
                 }
             }
+
+            var readDto = Mapper.Map<TReadDto>(persistedBO);
+
+            //await HubContext.Updated(readDto);
 
             return Result.Ok();
         }
@@ -519,6 +547,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 }
             }
 
+           //HubContext.Deleted(dto.Id).Wait();
+
             return Result.Ok();
         }
 
@@ -540,6 +570,8 @@ namespace DND.Common.Implementation.ApplicationServices
                         throw new ArgumentException();
                 }
             }
+
+            //await HubContext.Deleted(dto.Id);
 
             return Result.Ok();
         }
