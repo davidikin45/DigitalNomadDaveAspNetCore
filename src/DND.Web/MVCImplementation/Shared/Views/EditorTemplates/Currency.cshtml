@@ -1,7 +1,7 @@
 ﻿@model string
 <div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text">£</span>
+        <span class="input-group-text">@System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencySymbol</span>
     </div>
     @Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue,
          new { @class = "form-control", placeholder = ViewData.ModelMetadata.Placeholder })
