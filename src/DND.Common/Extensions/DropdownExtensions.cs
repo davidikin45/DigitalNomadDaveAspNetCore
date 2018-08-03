@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Globalization;
+using HtmlTags;
 
 namespace DND.Common.Extensions
 {
@@ -149,8 +151,10 @@ namespace DND.Common.Extensions
                     items.Add(new SelectListItem()
                     {
                         Text = GetDisplayString(htmlHelper, item, valueProperty),
-                        Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
-                        Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
+                        //Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
+                        //Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
+                        Value = GetDisplayString(htmlHelper, item, keyProperty),
+                        Selected = ids.Contains(GetDisplayString(htmlHelper, item, keyProperty))
                     }));
                 }
             }
@@ -206,6 +210,24 @@ namespace DND.Common.Extensions
             else
             {
                 return htmlHelper.DropDownList(propertyName, items, htmlAttributes);
+            }
+        }
+
+        public static IHtmlContent CheckboxFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, object htmlAttributes = null) where TIDbContext : IBaseDbContext
+        {
+            IList<SelectListItem> items = GetSelectListFromDatabase<TIDbContext>(htmlHelper, propertyName);
+
+            Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider).Metadata;
+            Type propertyType = GetNonNullableModelType(metadata);
+
+            var sb = new StringBuilder();
+            if (propertyType != typeof(string) && (propertyType.GetInterfaces().Contains(typeof(IEnumerable))))
+            {
+                return htmlHelper.ValueCheckboxList(propertyName, items);
+            }
+            else
+            {
+                return htmlHelper.ValueRadioButtonList(propertyName, items);
             }
         }
 

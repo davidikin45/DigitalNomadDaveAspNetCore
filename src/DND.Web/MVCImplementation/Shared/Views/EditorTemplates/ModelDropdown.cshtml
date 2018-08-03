@@ -1,7 +1,4 @@
 ﻿@using DND.Common;
 @using DND.Common.Extensions;
-
-
 @model dynamic
-
 @(Html.DropDownListFromDatabase<IApplicationDbContext>("", new { @class = "form-control" }))

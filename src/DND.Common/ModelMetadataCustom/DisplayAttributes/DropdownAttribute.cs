@@ -54,19 +54,40 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
     {
 
         public DropdownAttribute(Type dropdownModelType, string displayExpression)
-            : base(dropdownModelType, nameof(IBaseEntity.Id), displayExpression, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
+            : base("ModelDropdown", dropdownModelType, nameof(IBaseEntity.Id), displayExpression, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
         {
 
         }
 
         public DropdownAttribute(Type dropdownModelType, string displayExpression, string orderByProperty, string orderByType)
-           : base(dropdownModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, null)
+           : base("ModelDropdown", dropdownModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, null)
         {
 
         }
 
         public DropdownAttribute(Type dropdownModelType, string displayExpression, string orderByProperty, string orderByType, string bindingProperty)
-          : base(dropdownModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, bindingProperty)
+          : base("ModelDropdown", dropdownModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, bindingProperty)
+        {
+
+        }
+    }
+
+    public class CheckboxOrRadioAttribute : DataboundAttribute
+    {
+        public CheckboxOrRadioAttribute(Type selectorModelType, string displayExpression)
+            : base("ModelCheckboxOrRadio", selectorModelType, nameof(IBaseEntity.Id), displayExpression, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
+        {
+
+        }
+
+        public CheckboxOrRadioAttribute(Type selectorModelType, string displayExpression, string orderByProperty, string orderByType)
+           : base("ModelCheckboxOrRadio", selectorModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, null)
+        {
+
+        }
+
+        public CheckboxOrRadioAttribute(Type selectorModelType, string displayExpression, string valueExpression, string orderByProperty, string orderByType, string bindingProperty)
+          : base("ModelCheckboxOrRadio", selectorModelType, valueExpression, displayExpression, orderByProperty, orderByType, false, bindingProperty)
         {
 
         }
@@ -107,14 +128,14 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 
         //typeof
         //nameof
-        public DataboundAttribute(Type dropdownModelType, string keyProperty, string displayExpression, string orderByProperty, string orderByType, Boolean nullable = false, string bindingProperty = null)
+        public DataboundAttribute(string dataTypeName, Type dropdownModelType, string keyProperty, string displayExpression, string orderByProperty, string orderByType, Boolean nullable = false, string bindingProperty = null)
         {
             if (!dropdownModelType.GetInterfaces().Contains(typeof(IBaseEntity)))
             {
                 throw new ApplicationException("modelType must implement IBaseEntity");
             }
 
-            DataTypeName = "ModelDropdown";
+            DataTypeName = dataTypeName;
 
             DropdownModelType = dropdownModelType;
             KeyProperty = keyProperty;

@@ -1,0 +1,4 @@
+﻿@using DND.Common;
+@using DND.Common.Extensions;
+@model dynamic
+@(Html.CheckboxFromDatabase<IApplicationDbContext>("", new { @class = "form-control" }))
