@@ -1063,6 +1063,7 @@
     <Compile Include="TagHelpers\ActiveTagHelper.cs" />
     <Compile Include="TagHelpers\BannerTagHelper.cs" />
     <Compile Include="TagHelpers\BodyTagHelper.cs" />
+    <Compile Include="TagHelpers\ProgressTagHelper.cs" />
     <Compile Include="TagHelpers\YouTubeEmbedTagHelper.cs" />
     <Compile Include="Tasks\IRunAfterEachRequest.cs" />
     <Compile Include="Tasks\IRunAtStartup.cs" />

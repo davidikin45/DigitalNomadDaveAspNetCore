@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.TagHelpers
 {
+    [HtmlTargetElement("button", Attributes = "active-url")]
     [HtmlTargetElement("a", Attributes = "active-url")]
     public class ActiveTagHelper : TagHelper
     {
