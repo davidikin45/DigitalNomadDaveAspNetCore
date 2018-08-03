@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Videos.Controllers
 {
+    [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Videos" })]
     [Route("videos")]
     public class VideosController : BaseController
 	{

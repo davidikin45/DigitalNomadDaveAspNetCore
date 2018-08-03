@@ -10,6 +10,7 @@ namespace DND.Common.Alerts
     {
         public const string RequestInvalid = "The request is invalid.";
         public const string RequestCancelled = "The request was cancelled.";
+        public const string RequestTimedOut = "The request timed out.";
         public const string UnknownError = "An error has occured.";
         public const string Unauthorised = "Unauthorised.";
 

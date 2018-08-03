@@ -3,6 +3,7 @@ using DND.Common.Alerts;
 using DND.Common.Controllers;
 using DND.Common.Email;
 using DND.Common.Extensions;
+using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Repository;
@@ -93,6 +94,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View("Index",dto);
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Contact" })]
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("contact")]
         public override ActionResult Contact()
@@ -100,6 +102,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return base.Contact();
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "WorkWithMe" })]
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("work-with-me")]
         public ActionResult WorkWithMe()
@@ -110,6 +113,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View();
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "MyWebsite" })]
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("my-website")]
         public ActionResult MyWebsite()
@@ -119,6 +123,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View();
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "About" })]
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("about")]
         public ActionResult About()
@@ -129,6 +134,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View();
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Resume" })]
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("resume")]
         public ActionResult Resume()
@@ -138,6 +144,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View();
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "HelpFAQ" })]
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("help-faq")]
         public ActionResult HelpFAQ()
@@ -147,6 +154,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View();
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "PrivacyPolicy" })]
         [ResponseCache(CacheProfileName = "Cache24HourNoParams")]
         [Route("privacy-policy")]
         public ActionResult PrivacyPolicy()
@@ -154,6 +162,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             return View();
         }
 
+        [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Contact" })]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("contact")]

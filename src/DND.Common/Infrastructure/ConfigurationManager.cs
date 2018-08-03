@@ -17,7 +17,7 @@ namespace DND.Common.Infrastructure
 
         public static string AppSettings(IConfiguration configuration, string key)
         {
-            return configuration.GetValue<string>("Settings:" + key);
+            return configuration.GetValue<string>("AppSettings:" + key);
         }
     }
 }

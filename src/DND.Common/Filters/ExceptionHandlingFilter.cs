@@ -38,6 +38,10 @@ namespace DND.Common.Filters
             {
 
             }
+            if (context.Exception is TimeoutException)
+            {
+
+            }
             else if (context.Exception is OperationCanceledException)
             {
                
@@ -78,6 +82,15 @@ namespace DND.Common.Filters
 
                 messageObject = WebApiMessage.CreateWebApiMessage(Messages.RequestCancelled, errorList);
                 statusCode = (int)HttpStatusCode.BadRequest;
+            }
+            else if (context.Exception is TimeoutException)
+            {
+                var errorList = new List<string>();
+                errorList.Add(Messages.RequestTimedOut);
+                _logger.LogInformation(Messages.RequestTimedOut);
+
+                messageObject = WebApiMessage.CreateWebApiMessage(Messages.RequestTimedOut, errorList);
+                statusCode = (int)HttpStatusCode.GatewayTimeout;
             }
             else
             {

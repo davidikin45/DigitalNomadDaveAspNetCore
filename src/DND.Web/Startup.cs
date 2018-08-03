@@ -63,6 +63,8 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Serialization;
 using DND.Domain.Blog.BlogPosts.Dtos;
+using Microsoft.AspNetCore.Routing;
+using DND.Common.Constraints;
 
 namespace DND.Web
 {
@@ -92,71 +94,71 @@ namespace DND.Web
         public void ConfigureServices(IServiceCollection services)
         {
             //Settings
-            bool enableMVCModelValidation = Configuration.GetValue<bool>("Settings:Switches:EnableMVCModelValidation");
+            bool enableMVCModelValidation = Configuration.GetValue<bool>("AppSettings:Switches:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite"));
-            string cookieConsentName = Configuration.GetValue<string>("Settings:CookieConsentName");
-            string cookieAuthName = Configuration.GetValue<string>("Settings:CookieAuthName"); //OpenID Connect
-            string cookieApplicationAuthName = Configuration.GetValue<string>("Settings:CookieApplicationAuthName");
-            string cookieExternalAuthName = Configuration.GetValue<string>("Settings:CookieExternalAuthName");
-            string cookieTempDataName = Configuration.GetValue<string>("Settings:CookieTempDataName");
-            string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
-            string domain = Configuration.GetValue<string>("Settings:Domain");
-            string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
+            string cookieConsentName = Configuration.GetValue<string>("AppSettings:CookieConsentName");
+            string cookieAuthName = Configuration.GetValue<string>("AppSettings:CookieAuthName"); //OpenID Connect
+            string cookieApplicationAuthName = Configuration.GetValue<string>("AppSettings:CookieApplicationAuthName");
+            string cookieExternalAuthName = Configuration.GetValue<string>("AppSettings:CookieExternalAuthName");
+            string cookieTempDataName = Configuration.GetValue<string>("AppSettings:CookieTempDataName");
+            string mvcImplementationFolder = Configuration.GetValue<string>("AppSettings:MVCImplementationFolder");
+            string domain = Configuration.GetValue<string>("AppSettings:Domain");
+            string assemblyPrefix = Configuration.GetValue<string>("AppSettings:AssemblyPrefix");
             string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             string xmlDocumentationFileName = assemblyName + ".xml";
-            int responseCacheSizeMB = Configuration.GetValue<int>("Settings:ResponseCacheSizeMB");
+            int responseCacheSizeMB = Configuration.GetValue<int>("AppSettings:ResponseCacheSizeMB");
 
             string SQLiteConnectionString = DNDConnectionStrings.GetConnectionString("SQLite");
             string SQLServerConnectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
 
             //password
-            bool requireDigit = Configuration.GetValue<bool>("Settings:Password:RequireDigit");
-            int requiredLength = Configuration.GetValue<int>("Settings:Password:RequiredLength");
-            int requiredUniqueChars = Configuration.GetValue<int>("Settings:Password:RequiredUniqueChars");
-            bool requireLowercase = Configuration.GetValue<bool>("Settings:Password:RequireLowercase");
-            bool requireNonAlphanumeric = Configuration.GetValue<bool>("Settings:Password:RequireNonAlphanumeric");
-            bool requireUppercase = Configuration.GetValue<bool>("Settings:Password:RequireUppercase");
+            bool requireDigit = Configuration.GetValue<bool>("AppSettings:Password:RequireDigit");
+            int requiredLength = Configuration.GetValue<int>("AppSettings:Password:RequiredLength");
+            int requiredUniqueChars = Configuration.GetValue<int>("AppSettings:Password:RequiredUniqueChars");
+            bool requireLowercase = Configuration.GetValue<bool>("AppSettings:Password:RequireLowercase");
+            bool requireNonAlphanumeric = Configuration.GetValue<bool>("AppSettings:Password:RequireNonAlphanumeric");
+            bool requireUppercase = Configuration.GetValue<bool>("AppSettings:Password:RequireUppercase");
 
             //user
-            bool requireConfirmedEmail = Configuration.GetValue<bool>("Settings:User:RequireConfirmedEmail");
-            int registrationEmailConfirmationExprireDays = Configuration.GetValue<int>("Settings:User:RegistrationEmailConfirmationExprireDays");
-            int forgotPasswordEmailConfirmationExpireHours = Configuration.GetValue<int>("Settings:User:ForgotPasswordEmailConfirmationExpireHours");
-            int userDetailsChangeLogoutMinutes = Configuration.GetValue<int>("Settings:User:UserDetailsChangeLogoutMinutes");
+            bool requireConfirmedEmail = Configuration.GetValue<bool>("AppSettings:User:RequireConfirmedEmail");
+            int registrationEmailConfirmationExprireDays = Configuration.GetValue<int>("AppSettings:User:RegistrationEmailConfirmationExprireDays");
+            int forgotPasswordEmailConfirmationExpireHours = Configuration.GetValue<int>("AppSettings:User:ForgotPasswordEmailConfirmationExpireHours");
+            int userDetailsChangeLogoutMinutes = Configuration.GetValue<int>("AppSettings:User:UserDetailsChangeLogoutMinutes");
 
             //External Logins
-            bool enableApplicationLogin = Configuration.GetValue<bool>("Settings:Login:Application:Enable");
-            bool enableJwtTokenLogin = Configuration.GetValue<bool>("Settings:Login:JwtToken:Enable");
-            bool enableOpenIdConnectLogin = Configuration.GetValue<bool>("Settings:Login:OpenIdConnect:Enable");
-            bool enableOpenIdConnectJwtTokenLogin = Configuration.GetValue<bool>("Settings:Login:OpenIdConnectJwtToken:Enable");
+            bool enableApplicationLogin = Configuration.GetValue<bool>("AppSettings:Login:Application:Enable");
+            bool enableJwtTokenLogin = Configuration.GetValue<bool>("AppSettings:Login:JwtToken:Enable");
+            bool enableOpenIdConnectLogin = Configuration.GetValue<bool>("AppSettings:Login:OpenIdConnect:Enable");
+            bool enableOpenIdConnectJwtTokenLogin = Configuration.GetValue<bool>("AppSettings:Login:OpenIdConnectJwtToken:Enable");
 
-            bool enableGoogleLogin = Configuration.GetValue<bool>("Settings:Login:Google:Enable");
-            string googleClientId = Configuration.GetValue<string>("Settings:Login:Google:ClientId");
-            string googleClientSecret = Configuration.GetValue<string>("Settings:Login:Google:ClientSecret");
+            bool enableGoogleLogin = Configuration.GetValue<bool>("AppSettings:Login:Google:Enable");
+            string googleClientId = Configuration.GetValue<string>("AppSettings:Login:Google:ClientId");
+            string googleClientSecret = Configuration.GetValue<string>("AppSettings:Login:Google:ClientSecret");
 
-            bool enableFacebookLogin = Configuration.GetValue<bool>("Settings:Login:Facebook:Enable");
-            string facebookClientId = Configuration.GetValue<string>("Settings:Login:Facebook:ClientId");
-            string facebookClientSecret = Configuration.GetValue<string>("Settings:Login:Facebook:ClientSecret");
+            bool enableFacebookLogin = Configuration.GetValue<bool>("AppSettings:Login:Facebook:Enable");
+            string facebookClientId = Configuration.GetValue<string>("AppSettings:Login:Facebook:ClientId");
+            string facebookClientSecret = Configuration.GetValue<string>("AppSettings:Login:Facebook:ClientSecret");
 
             var bin = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
 
             //Email
-            var fromDisplayName = Configuration.GetValue<string>("Settings:Email:FromDisplayName");
-            var fromEmail = Configuration.GetValue<string>("Settings:Email:FromEmail");
+            var fromDisplayName = Configuration.GetValue<string>("AppSettings:Email:FromDisplayName");
+            var fromEmail = Configuration.GetValue<string>("AppSettings:Email:FromEmail");
 
-            var toEmail = Configuration.GetValue<string>("Settings:Email:ToEmail");
-            var toDisplayName = Configuration.GetValue<string>("Settings:Email:ToDisplayName");
+            var toEmail = Configuration.GetValue<string>("AppSettings:Email:ToEmail");
+            var toDisplayName = Configuration.GetValue<string>("AppSettings:Email:ToDisplayName");
 
             //Smtp
-            bool sendEmailsViaSmtp = Configuration.GetValue<bool>("Settings:Email:SendEmailsViaSmtp");
-            var username = Configuration.GetValue<string>("Settings:Email:Username");
-            var password = Configuration.GetValue<string>("Settings:Email:Password");
-            var host = Configuration.GetValue<string>("Settings:Email:Host");
-            int port = Configuration.GetValue<int>("Settings:Email:Port");
-            bool ssl = Configuration.GetValue<bool>("Settings:Email:Ssl");
+            bool sendEmailsViaSmtp = Configuration.GetValue<bool>("AppSettings:Email:SendEmailsViaSmtp");
+            var username = Configuration.GetValue<string>("AppSettings:Email:Username");
+            var password = Configuration.GetValue<string>("AppSettings:Email:Password");
+            var host = Configuration.GetValue<string>("AppSettings:Email:Host");
+            int port = Configuration.GetValue<int>("AppSettings:Email:Port");
+            bool ssl = Configuration.GetValue<bool>("AppSettings:Email:Ssl");
 
             //Write to disk
-            bool writeEmailsToFileSystem = Configuration.GetValue<bool>("Settings:Email:WriteEmailsToFileSystem");
-            string fileSystemFolder = Configuration.GetValue<string>("Settings:Email:FileSystemFolder");
+            bool writeEmailsToFileSystem = Configuration.GetValue<bool>("AppSettings:Email:WriteEmailsToFileSystem");
+            string fileSystemFolder = Configuration.GetValue<string>("AppSettings:Email:FileSystemFolder");
 
             //Token Signing Keys
             string bearerTokenLocalIssuer = Configuration["Tokens:LocalIssuer"];
@@ -456,6 +458,12 @@ namespace DND.Web
                 options.ViewLocationExpanders.Add(new CustomViewLocator(mvcImplementationFolder));
             });
 
+            services.Configure<RouteOptions>(options =>
+            {
+                options.ConstraintMap.Add("tokenCheck", typeof(TokenConstraint));
+                options.ConstraintMap.Add("versionCheck", typeof(RouteVersionConstraint));
+            });
+
             services.AddResponseCaching(options =>
             {
                 options.SizeLimit = responseCacheSizeMB * 1024 * 1024; //100Mb
@@ -492,6 +500,7 @@ namespace DND.Web
                 options.Filters.Add<ExceptionHandlingFilter>();
                 options.Filters.Add<OperationCancelledExceptionFilter>();
 
+                //options.Filters.Add(typeof(ModelValidationFilter));
 
                 //Accept = Response MIME type client is able to understand.
                 //Accept-Language = Response Language client is able to understand.
@@ -717,7 +726,7 @@ namespace DND.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             //Settings
-            var assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
+            var assemblyPrefix = Configuration.GetValue<string>("AppSettings:AssemblyPrefix");
             string pluginsFolder = @"plugins\";
             string commonAssembly = "DND.Common";
 
@@ -762,35 +771,35 @@ namespace DND.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner, ISignalRHubMapper signalRHubMapper)
         {
             //settings
-            bool enableCookieConsent = Configuration.GetValue<bool>("Settings:Switches:EnableCookieConsent");
-            bool enableRedirectNonWwwToWww = Configuration.GetValue<bool>("Settings:Switches:EnableRedirectNonWwwToWww");
-            bool enableRedirectHttpToHttps = Configuration.GetValue<bool>("Settings:Switches:EnableRedirectHttpToHttps");
-            bool enableHsts = Configuration.GetValue<bool>("Settings:Switches:EnableHsts");
-            bool enableHelloWord = Configuration.GetValue<bool>("Settings:Switches:EnableHelloWorld");
-            bool enableSwagger = Configuration.GetValue<bool>("Settings:Switches:EnableSwagger");
-            bool enableResponseCompression = Configuration.GetValue<bool>("Settings:Switches:EnableResponseCompression");
-            bool enableIpRateLimiting = Configuration.GetValue<bool>("Settings:Switches:EnableIpRateLimiting");
-            bool enableCors = Configuration.GetValue<bool>("Settings:Switches:EnableCors");
-            bool enableResponseCaching = Configuration.GetValue<bool>("Settings:Switches:EnableResponseCaching");
-            bool enableETags = Configuration.GetValue<bool>("Settings:Switches:EnableETags");
-            bool enableHangfire = Configuration.GetValue<bool>("Settings:Switches:EnableHangfire");
+            bool enableCookieConsent = Configuration.GetValue<bool>("AppSettings:Switches:EnableCookieConsent");
+            bool enableRedirectNonWwwToWww = Configuration.GetValue<bool>("AppSettings:Switches:EnableRedirectNonWwwToWww");
+            bool enableRedirectHttpToHttps = Configuration.GetValue<bool>("AppSettings:Switches:EnableRedirectHttpToHttps");
+            bool enableHsts = Configuration.GetValue<bool>("AppSettings:Switches:EnableHsts");
+            bool enableHelloWord = Configuration.GetValue<bool>("AppSettings:Switches:EnableHelloWorld");
+            bool enableSwagger = Configuration.GetValue<bool>("AppSettings:Switches:EnableSwagger");
+            bool enableResponseCompression = Configuration.GetValue<bool>("AppSettings:Switches:EnableResponseCompression");
+            bool enableIpRateLimiting = Configuration.GetValue<bool>("AppSettings:Switches:EnableIpRateLimiting");
+            bool enableCors = Configuration.GetValue<bool>("AppSettings:Switches:EnableCors");
+            bool enableResponseCaching = Configuration.GetValue<bool>("AppSettings:Switches:EnableResponseCaching");
+            bool enableETags = Configuration.GetValue<bool>("AppSettings:Switches:EnableETags");
+            bool enableHangfire = Configuration.GetValue<bool>("AppSettings:Switches:EnableHangfire");
 
-            string cookieConsentName = Configuration.GetValue<string>("Settings:CookieConsentName");
-            string publicUploadFoldersString = Configuration.GetValue<string>("Settings:PublicUploadFolders");
-            string assemblyPrefix = Configuration.GetValue<string>("Settings:AssemblyPrefix");
-            string mvcImplementationFolder = Configuration.GetValue<string>("Settings:MVCImplementationFolder");
-            string defaultCulture = Configuration.GetValue<string>("Settings:DefaultCulture");
+            string cookieConsentName = Configuration.GetValue<string>("AppSettings:CookieConsentName");
+            string publicUploadFoldersString = Configuration.GetValue<string>("AppSettings:PublicUploadFolders");
+            string assemblyPrefix = Configuration.GetValue<string>("AppSettings:AssemblyPrefix");
+            string mvcImplementationFolder = Configuration.GetValue<string>("AppSettings:MVCImplementationFolder");
+            string defaultCulture = Configuration.GetValue<string>("AppSettings:DefaultCulture");
 
             string uploadsFolder = "/uploads";
             string commonAssembly = "DND.Common";
 
             //cache
-            int uploadFilesDays = Configuration.GetValue<int>("Settings:Cache:UploadFilesDays");
-            int versionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:VersionedStaticFilesDays");
-            int nonVersionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:NonVersionedStaticFilesDays");
+            int uploadFilesDays = Configuration.GetValue<int>("AppSettings:Cache:UploadFilesDays");
+            int versionedStaticFilesDays = Configuration.GetValue<int>("AppSettings:Cache:VersionedStaticFilesDays");
+            int nonVersionedStaticFilesDays = Configuration.GetValue<int>("AppSettings:Cache:NonVersionedStaticFilesDays");
 
             //signalr
-            string signalRUrlPrefix = Configuration.GetValue<string>("Settings:SignalRUrlPrefix");
+            string signalRUrlPrefix = Configuration.GetValue<string>("AppSettings:SignalRUrlPrefix");
 
             foreach (var publicUploadFolder in publicUploadFoldersString.Split(','))
             {

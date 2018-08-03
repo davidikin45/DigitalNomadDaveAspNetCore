@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Gallery.Controllers
 {
+    [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Gallery" })]
     [Route("gallery")]
     public class GalleryController : BaseController
 	{

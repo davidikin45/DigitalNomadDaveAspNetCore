@@ -726,7 +726,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionResults\BetterObjectResult.cs" />
-    <Compile Include="ActionResults\BetterJsonResultcs.cs" />
+    <Compile Include="ActionResults\BetterJsonResult.cs" />
+    <Compile Include="ActionResults\CsvResult.cs" />
     <Compile Include="ActionResults\HTMLActionResult.cs" />
     <Compile Include="ActionResults\RSSActionResult.cs" />
     <Compile Include="ActionResults\UnprocessableEntityObjectResult.cs" />
@@ -743,6 +744,10 @@
     <Compile Include="AutoMapper\AutoMapperConfiguration.cs" />
     <Compile Include="Constants\CMS.cs" />
     <Compile Include="Constants\Folders.cs" />
+    <Compile Include="Constraints\ActionVersionConstraint.cs" />
+    <Compile Include="Constraints\MobileSelector.cs" />
+    <Compile Include="Constraints\RouteVersionConstraint.cs" />
+    <Compile Include="Constraints\TokenConstraint.cs" />
     <Compile Include="Controllers\Admin\AdminFileManagerController.cs" />
     <Compile Include="Controllers\Admin\BaseAdminController.cs" />
     <Compile Include="Controllers\Api\ApiScopes.cs" />
@@ -767,6 +772,8 @@
     <Compile Include="Controllers\File\BaseJpegMetadataReadOnlyControllerAuthorize.cs" />
     <Compile Include="Controllers\Folder\BaseFolderMetadataControllerAuthorize.cs" />
     <Compile Include="Controllers\Folder\BaseFolderMetadataReadOnlyControllerAuthorize.cs" />
+    <Compile Include="Conventions\BindName.cs" />
+    <Compile Include="Conventions\ControllerVersion.cs" />
     <Compile Include="Cryptography\AsnKeyBuilder.cs" />
     <Compile Include="Cryptography\AsnKeyParser.cs" />
     <Compile Include="Cryptography\BerDecodeError.cs" />
@@ -832,6 +839,8 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\AjaxRequestAttribute.cs" />
     <Compile Include="Filters\ExceptionHandlingFilter.cs" />
+    <Compile Include="Filters\FeatureAuthFilter.cs" />
+    <Compile Include="Filters\ModelValidationFilter.cs" />
     <Compile Include="Filters\OperationCancelledExceptionFilter.cs" />
     <Compile Include="Filters\RequestHeaderMatchesMediaTypeAttribute.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationfilter.cs" />
@@ -932,6 +941,7 @@
     <Compile Include="Implementation\DomainServices\BaseDomainService.cs" />
     <Compile Include="Implementation\DomainServices\BaseEntityDomainService.cs" />
     <Compile Include="Implementation\DomainServices\BaseEntityReadOnlyDomainService.cs" />
+    <Compile Include="Implementation\Services\FeatureService.cs" />
     <Compile Include="Implementation\Services\HelperGeneratorService.cs" />
     <Compile Include="Implementation\Services\TypeHelperService.cs" />
     <Compile Include="Implementation\UnitOfWork\AmbientDbContextLocator.cs" />
@@ -999,6 +1009,7 @@
     <Compile Include="Interfaces\ApplicationServices\IBaseEntityReadOnlyApplicationService.cs" />
     <Compile Include="Interfaces\DomainServices\IBaseEntityDomainService.cs" />
     <Compile Include="Interfaces\DomainServices\IBaseEntityReadOnlyDomainService.cs" />
+    <Compile Include="Interfaces\Services\IFeatureService.cs" />
     <Compile Include="Interfaces\Services\IHelperGeneratorService.cs" />
     <Compile Include="Interfaces\Services\ITypeHelperService.cs" />
     <Compile Include="Interfaces\UnitOfWork\BaseUnitOfWorkScopeOption.cs" />
@@ -1013,6 +1024,7 @@
     <Compile Include="JwtTokens\JwtTokenHelper.cs" />
     <Compile Include="Middleware\BaseRangeRequestHandler.cs" />
     <Compile Include="Middleware\ApiErrorHandlingMiddleware.cs" />
+    <Compile Include="Middleware\BasicAuthMiddleware.cs" />
     <Compile Include="Middleware\ContentHandlerMiddleware.cs" />
     <Compile Include="Middleware\MiddlewareExtensions.cs" />
     <Compile Include="Middleware\RedirectToWwwRule.cs" />
@@ -1048,6 +1060,8 @@
     <Compile Include="SignalRHubs\SignalRHubMapper.cs" />
     <Compile Include="Swagger\SwaggerModelExamples.cs" />
     <Compile Include="Swagger\SwaggerAssignSecurityRequirements.cs" />
+    <Compile Include="TagHelpers\ActiveTagHelper.cs" />
+    <Compile Include="TagHelpers\BannerTagHelper.cs" />
     <Compile Include="TagHelpers\BodyTagHelper.cs" />
     <Compile Include="TagHelpers\YouTubeEmbedTagHelper.cs" />
     <Compile Include="Tasks\IRunAfterEachRequest.cs" />
@@ -1064,6 +1078,7 @@
     <Compile Include="Testing\TestDbAsyncQueryProvider.cs" />
     <Compile Include="Testing\TestHelper.cs" />
     <Compile Include="Testing\TestServer\BaseTestServerFixture.cs" />
+    <Compile Include="Validation\AgeValidator.cs" />
     <Compile Include="ViewComponents\BaseViewComponent.cs" />
   </ItemGroup>
   <ItemGroup>

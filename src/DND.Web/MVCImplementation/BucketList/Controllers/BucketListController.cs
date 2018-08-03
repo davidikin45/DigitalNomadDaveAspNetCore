@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
 using DND.Common.Email;
+using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Dtos;
 using DND.Common.Infrastructure;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.BucketList.Controllers
 {
+    [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "BucketList" })]
     [Route("bucket-list")]
     public class BucketListController : BaseController
 	{

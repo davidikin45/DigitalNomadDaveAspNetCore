@@ -2,7 +2,7 @@
 @inject IConfiguration Configuration
 @inject IHttpContextAccessor HttpContext
 @{
-    var Settings = Configuration.GetSection("Settings");
+    var Settings = Configuration.GetSection("AppSettings");
 }
 <!DOCTYPE html>
 <html lang="en" ng-app="@(Settings.GetValue<string>("AssemblyPrefix"))" class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page")">

@@ -226,6 +226,9 @@
     <Content Update="appsettings.Production.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="MVCImplementation\Authorization\Views\AccessDenied.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

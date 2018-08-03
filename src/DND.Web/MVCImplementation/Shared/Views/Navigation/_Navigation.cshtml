@@ -1,7 +1,7 @@
 ﻿@inject IConfiguration Configuration
 @inject IHttpContextAccessor HttpContext
 @{
-    var Settings = Configuration.GetSection("Settings");
+    var Settings = Configuration.GetSection("AppSettings");
 }
 
 <nav class="navbar fixed-top navbar-dark navbar-expand-md scrolling-navbar @(ViewBag.NavBarTransparent == true ? "navbar-transparent" : "")">

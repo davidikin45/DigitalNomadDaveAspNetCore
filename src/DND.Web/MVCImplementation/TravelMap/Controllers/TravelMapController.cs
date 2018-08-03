@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
 using DND.Common.Email;
+using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Dtos;
 using DND.Domain.Blog.Locations.Dtos;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.TravelMap.Controllers
 {
+    [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "TravelMap" })]
     [Route("travel-map")]
     public class TravelMapController : BaseController
 	{

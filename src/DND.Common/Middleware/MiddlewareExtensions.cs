@@ -16,6 +16,12 @@ namespace DND.Common.Middleware
 {
     public static class MiddlewareExtensions
     {
+        public static IApplicationBuilder UseBasicAuth(
+           this IApplicationBuilder builder)
+        {
+           return builder.UseMiddleware<BasicAuthMiddleware>();
+        }
+
         public static IApplicationBuilder UseRequestTasks(
             this IApplicationBuilder builder)
         {

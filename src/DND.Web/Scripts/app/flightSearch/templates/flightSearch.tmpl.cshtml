@@ -1,6 +1,6 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
-    var Settings = Configuration.GetSection("Settings");
+    var Settings = Configuration.GetSection("AppSettings");
 }
 @Html.Partial("~/" + (Settings.GetValue<string>("MVCImplementationFolder")) + "FlightSearch/Views/_Search.cshtml")

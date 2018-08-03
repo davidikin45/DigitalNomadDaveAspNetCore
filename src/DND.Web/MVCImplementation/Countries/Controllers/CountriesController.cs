@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
 using DND.Common.Email;
+using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Repository;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Countries.Controllers
 {
+    [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Countries" })]
     [Route("countries")]
     public class CountriesController : BaseController
     {
