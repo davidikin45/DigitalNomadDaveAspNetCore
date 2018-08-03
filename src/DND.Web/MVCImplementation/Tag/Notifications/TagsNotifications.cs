@@ -16,11 +16,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Tags.Notifications
 {
-    public class TagsNotifications
+    public class TagsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<TagDto>>("/api/tags/notifications");
+            routes.MapHub<ApiNotificationHub<TagDto>>(signalRUrlPrefix + "/tags/notifications");
         }
     }
 }

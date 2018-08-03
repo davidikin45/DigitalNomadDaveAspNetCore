@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.ContentHtml.Notifications
 {
-    public class ContentHtmlsNotifications
+    public class ContentHtmlsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<ContentHtmlDto>>("/api/content-htmls/notifications");
+            routes.MapHub<ApiNotificationHub<ContentHtmlDto>>(signalRUrlPrefix + "/content-htmls/notifications");
         }
     }
 }

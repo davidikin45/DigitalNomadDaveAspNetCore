@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Locations.Notifications
 {
-    public class LocationsNotifications
+    public class LocationsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<LocationDto>>("/api/locations/notifications");
+            routes.MapHub<ApiNotificationHub<LocationDto>>(signalRUrlPrefix + "/locations/notifications");
         }
     }
 }

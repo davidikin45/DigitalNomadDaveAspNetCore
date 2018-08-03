@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Author.Notifications
 {
-    public class AuthorsNotifications
+    public class AuthorsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<AuthorDto>>("/api/authors/notifications");
+            routes.MapHub<ApiNotificationHub<AuthorDto>>(signalRUrlPrefix + "/authors/notifications");
         }
     }
 }

@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Category.Notifications
 {
-    public class CategoriesNotifications
+    public class CategoriesNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<CategoryDto>>("/api/categories/notifications");
+            routes.MapHub<ApiNotificationHub<CategoryDto>>(signalRUrlPrefix + "/categories/notifications");
         }
     }
 }

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Blog.Notifications
 {
-    public class BlogPostsNotifications
+    public class BlogPostsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<BlogPostDto>>("/api/blog-posts/notifications");
+            routes.MapHub<ApiNotificationHub<BlogPostDto>>(signalRUrlPrefix + "/blog-posts/notifications");
         }
     }
 }

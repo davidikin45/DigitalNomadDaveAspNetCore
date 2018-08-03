@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.MailingList.Notifications
 {
-    public class MailingListNotifications
+    public class MailingListNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<MailingListDto>>("/api/mailing-list/notifications");
+            routes.MapHub<ApiNotificationHub<MailingListDto>>(signalRUrlPrefix + "/mailing-list/notifications");
         }
     }
 }

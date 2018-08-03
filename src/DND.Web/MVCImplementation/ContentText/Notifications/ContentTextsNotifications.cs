@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.ContentText.Notifications
 {
-    public class ContentTextsNotifications
+    public class ContentTextsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<ContentTextDto>>("/api/content-texts/notifications");
+            routes.MapHub<ApiNotificationHub<ContentTextDto>>(signalRUrlPrefix + "/content-texts/notifications");
         }
     }
 }

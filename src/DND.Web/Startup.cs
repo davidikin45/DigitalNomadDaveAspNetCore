@@ -737,6 +737,7 @@ namespace DND.Web
             builder.RegisterModule(new AutofacTasksModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacDomainEventHandlerModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacConventionsMetadataModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
+            builder.RegisterModule(new AutofacConventionsSignalRHubModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacAutomapperModule() { Filter = filterFunc });
 
             builder.RegisterType<TaskRunner>().AsSelf().PropertiesAutowired();
@@ -758,7 +759,7 @@ namespace DND.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner, ISignalRHubMapper signalRHubMapper)
         {
             //settings
             bool enableCookieConsent = Configuration.GetValue<bool>("Settings:Switches:EnableCookieConsent");
@@ -787,6 +788,9 @@ namespace DND.Web
             int uploadFilesDays = Configuration.GetValue<int>("Settings:Cache:UploadFilesDays");
             int versionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:VersionedStaticFilesDays");
             int nonVersionedStaticFilesDays = Configuration.GetValue<int>("Settings:Cache:NonVersionedStaticFilesDays");
+
+            //signalr
+            string signalRUrlPrefix = Configuration.GetValue<string>("Settings:SignalRUrlPrefix");
 
             foreach (var publicUploadFolder in publicUploadFoldersString.Split(','))
             {
@@ -925,7 +929,7 @@ namespace DND.Web
 
             app.UseSignalR(routes =>
             {
-                NoticationsConfig.MapHubs(routes);
+                SignalRConfig.MapHubs(routes, signalRHubMapper, signalRUrlPrefix);
             });
 
             //Cache-Control:max-age=0

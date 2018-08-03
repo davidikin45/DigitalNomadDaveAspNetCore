@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Faq.Notifications
 {
-    public class FaqsNotifications
+    public class FaqsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<FaqDto>>("/api/faqs/notifications");
+            routes.MapHub<ApiNotificationHub<FaqDto>>(signalRUrlPrefix + "/faqs/notifications");
         }
     }
 }

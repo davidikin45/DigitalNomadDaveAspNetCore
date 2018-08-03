@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.CarouselItem.Notifications
 {
-    public class CarouselItemsNotifications
+    public class CarouselItemsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<CarouselItemDto>>("/api/carousel-items/notifications");
+            routes.MapHub<ApiNotificationHub<CarouselItemDto>>(signalRUrlPrefix + "/carousel-items/notifications");
         }
     }
 }

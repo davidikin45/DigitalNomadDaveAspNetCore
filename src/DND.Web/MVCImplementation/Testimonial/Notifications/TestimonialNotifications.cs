@@ -16,11 +16,11 @@ using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Testimonial.Notifications
 {
-    public class TestimonialsNotifications
+    public class TestimonialsNotifications : ISignalRHubMap
     {
-        public static void MapHub(HubRouteBuilder routes)
+        public void MapHub(HubRouteBuilder routes, string signalRUrlPrefix)
         {
-            routes.MapHub<ApiNotificationHub<TestimonialDto>>("/api/testimonials/notifications");
+            routes.MapHub<ApiNotificationHub<TestimonialDto>>(signalRUrlPrefix + "/testimonials/notifications");
         }
     }
 }

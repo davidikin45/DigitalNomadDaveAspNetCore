@@ -3,7 +3,7 @@ var signalRFlightSearchConnection = null;
 function setupSignalRFlightSearchConnection()
 {
     signalRFlightSearchConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/api/signalR/flight-search")
+        .withUrl("/api/signalr/flight-search")
         .build();
 
     signalRconnection.on("ReceiveResult", (result) => {
