@@ -182,6 +182,16 @@ namespace DND.Common.Extensions
             return null;
         }
 
+        public static object DynamicGetPropValue(dynamic obj, string propName)
+        {
+            if (DynamicHasProperty(obj, propName))
+            {
+                Type typeOfDynamic = obj.GetType();
+                return typeOfDynamic.GetProperties().First(p => p.Name.ToUpper() == propName.ToUpper()).GetValue(obj, null);
+            }
+            return null;
+        }
+
         public static void SetPropValue(this object obj, string propName, object value)
         {
             obj.GetType().GetProperties().First(p => p.Name.ToUpper() == propName.ToUpper()).SetValue(obj, value);
@@ -213,6 +223,12 @@ namespace DND.Common.Extensions
         public static bool HasProperty(this object obj, string propName)
         {
             return obj.GetType().GetProperties().Any(p => p.Name.ToUpper() == propName.ToUpper());
+        }
+
+        public static bool DynamicHasProperty(dynamic obj, string propName)
+        {
+            Type typeOfDynamic = obj.GetType();
+            return typeOfDynamic.GetProperties().Where(p => p.Name.ToUpper().Equals(propName.ToUpper())).Any();
         }
 
         public static PropertyInfo[] GetProperties(this object obj)

@@ -24,17 +24,18 @@ h5 {
   font-weight: bold !important;
 }
 .field-validation-error {
-  color: #e80c4d;
+  color: #dc3545;
   font-weight: bold;
 }
 .field-validation-valid {
   display: none;
 }
-input.input-validation-error {
-  border: 1px solid #e80c4d;
+input.input-validation-error,
+textarea.input-validation-error {
+  border: 1px solid #dc3545;
 }
 .validation-summary-errors {
-  color: #e80c4d;
+  color: #dc3545;
   font-weight: bold;
   font-size: 1.1em;
 }

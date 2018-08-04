@@ -2,6 +2,7 @@
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.ModelMetadataCustom.LinkAttributes;
 using DND.Common.Validation;
 using DND.Domain.Blog.Authors;
 using DND.Domain.Blog.Authors.Dtos;
@@ -37,6 +38,8 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [MultilineText(HTML = true, Rows = 40)]
         public string Description { get; set; }
 
+        [ActionLink("Details", "AdminAuthors")]
+        [ActionLinkRouteValue("id", nameof(AuthorId))]
         [Required]
         [Dropdown(typeof(Author), nameof(DND.Domain.Blog.Authors.Author.Name))]
         public int AuthorId { get; set; }
@@ -44,9 +47,12 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false)]
         public AuthorDto Author { get; set; }
 
+        [ActionLink("Details", "AdminCategories")]
+        [ActionLinkRouteValue("id", nameof(CategoryId))]
         [Required]
         [Dropdown(typeof(Category), nameof(DND.Domain.Blog.Categories.Category.Name))]
         public int CategoryId { get; set; }
+
 
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false)]
         public CategoryDto Category { get; set; }
@@ -59,14 +65,20 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Repeater("{" + nameof(BlogPostLocationDto.LocationId) + "}")]
         public List<BlogPostLocationDto> Locations { get; set; }
 
+
         [Required]
         [CheckboxOrRadio(typeof(Location), "{" + nameof(DND.Domain.Blog.Locations.Location.LocationTypeString) + "} - {" + nameof(DND.Domain.Blog.Locations.Location.Name) + "}")]
+        [DbWhereClauseEquals(nameof(Location.Id), 63)]
+        [DbWhereClauseEquals(nameof(Location.Id), 64)]
         public int LocationId { get; set; }
 
         [LimitCount(3,5)]
         [Required]
         [CheckboxOrRadio(typeof(Location), "{" + nameof(DND.Domain.Blog.Locations.Location.LocationTypeString) + "} - {" + nameof(DND.Domain.Blog.Locations.Location.Name) + "}")]
         public List<int> LocationIds { get; set; } = new List<int>();
+
+        [DataType(DataType.Currency)]
+        public decimal Currency { get; set; }
 
         [Required]
         public bool ShowLocationDetail { get; set; }

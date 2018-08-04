@@ -24,6 +24,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 
 namespace DND.Common.Extensions
 {
@@ -175,13 +176,55 @@ namespace DND.Common.Extensions
                     {
                         if(linkToCollection)
                         {
-                            string linkText = HtmlHelperExtensions.ToString(ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                            string linkText = "";
+                            if (prop.AdditionalValues.ContainsKey("LinkText"))
+                            {
+                                linkText = (string)prop.AdditionalValues["LinkText"];
+                            }
+
+                            if (string.IsNullOrWhiteSpace(linkText))
+                            {
+                                linkText = HtmlHelperExtensions.ToString(ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                            }
+
                             var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = html.ViewBag.Collection != null ? html.ViewBag.Collection +"/" + prop.PropertyName.ToLower() : prop.PropertyName.ToLower() }).Render().Replace("%2F", "/");
                             HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, collectionLink);
                         }
                         else
                         {
-                            HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                            if(prop.AdditionalValues.ContainsKey("ActionName"))
+                            {
+                                var linkText = (string)prop.AdditionalValues["LinkText"];
+                                if(string.IsNullOrWhiteSpace(linkText))
+                                {
+                                    linkText = HtmlHelperExtensions.ToString(ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                                }
+                                var actionName = (string)prop.AdditionalValues["ActionName"];
+                                var controllerName = (string)prop.AdditionalValues["ControllerName"];
+
+                                RouteValueDictionary routeValues = null;
+                                if(prop.AdditionalValues.ContainsKey("RouteValueDictionary"))
+                                {
+                                    routeValues = (RouteValueDictionary)prop.AdditionalValues["RouteValueDictionary"];
+                                    SetRouteValues(html, item, routeValues);
+                                }
+
+                                string collectionLink = "";
+                                if (routeValues == null)
+                                {
+                                    collectionLink = html.ActionLink(linkText, actionName, controllerName).Render().Replace("%2F", "/");
+                                }
+                                else
+                                {
+                                    collectionLink = html.ActionLink(linkText, actionName, controllerName, routeValues).Render().Replace("%2F", "/");
+                                }
+
+                                HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, collectionLink);
+                            }
+                            else
+                            {
+                                HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, ModelHelperExtensions.Display(html, item, prop.PropertyName));
+                            }
                         }
                     }
                     else if (prop.ModelType == typeof(FileInfo))
@@ -202,7 +245,16 @@ namespace DND.Common.Extensions
                         //String
                         if (linkToCollection)
                         {
-                            string linkText = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();
+                            string linkText = "";
+                            if (prop.AdditionalValues.ContainsKey("LinkText"))
+                            {
+                                linkText = (string)prop.AdditionalValues["LinkText"];
+                            }
+
+                            if (string.IsNullOrWhiteSpace(linkText))
+                            {
+                                linkText = ModelHelperExtensions.DisplayTextSimple(html, item, prop.PropertyName).ToString();
+                            }
                             var collectionLink = html.ActionLink(linkText, "Collection", new { id = item.Id, collection = html.ViewBag.Collection != null ? html.ViewBag.Collection + "/" + prop.PropertyName.ToLower() : prop.PropertyName.ToLower() }).Render().Replace("%2F", "/");
                             HtmlContentBuilderExtensions.SetHtmlContent(td.InnerHtml, collectionLink);
                         }
@@ -280,6 +332,54 @@ namespace DND.Common.Extensions
             div.InnerHtml.AppendHtml(table);
 
             return new HtmlString(div.Render());
+        }
+
+        private static void SetRouteValues(IHtmlHelper htmlHelper, dynamic obj, RouteValueDictionary routeValues)
+        {
+            if (routeValues == null)
+                return;
+
+            foreach (var kvp in routeValues.Where(kvp => kvp.Value.GetType() == typeof(string)))
+            {
+                string value = GetObjectProperty(htmlHelper, obj, kvp.Value.ToString());
+                routeValues[kvp.Key] = value;
+            }
+        }
+
+        private static string GetObjectProperty(IHtmlHelper htmlHelper, dynamic obj, string displayExpression)
+        {
+            string value = displayExpression;
+
+            if (!value.Contains("{") && !value.Contains(" "))
+            {
+                value = "{" + value + "}";
+            }
+
+            var replacementTokens = GetReplacementTokens(value);
+            foreach (var token in replacementTokens)
+            {
+                var propertyName = token.Substring(1, token.Length - 2);
+                if(ObjectExtensions.DynamicHasProperty(obj, propertyName))
+                {
+                    var displayString = ObjectExtensions.GetPropValue(obj, propertyName) != null ? ObjectExtensions.GetPropValue(obj, propertyName).ToString() : "";
+                    value = value.Replace(token, displayString);
+                }
+                else
+                {
+                    value = value.Replace(token, propertyName);
+                }
+            }
+
+            return value;
+        }
+
+        private static List<String> GetReplacementTokens(String str)
+        {
+            Regex regex = new Regex(@"{(.*?)}", RegexOptions.IgnoreCase);
+            MatchCollection matches = regex.Matches(str);
+
+            // Results include braces (undesirable)
+            return matches.Cast<Match>().Select(m => m.Value).Distinct().ToList();
         }
 
         public static string Controller(this IHtmlHelper htmlHelper)
@@ -869,6 +969,13 @@ namespace DND.Common.Extensions
         {
             var props = attributes.GetType().GetProperties();
             var pairs = props.ToDictionary(x => x.Name, x=> x.GetValue(attributes, null).ToString());
+            return pairs;
+        }
+
+        public static Dictionary<string, string> StringsToDictionary(this Object attributes)
+        {
+            var props = attributes.GetType().GetProperties();
+            var pairs = props.Where(x => x.PropertyType == typeof(string)).ToDictionary(x => x.Name, x => x.GetValue(attributes, null).ToString());
             return pairs;
         }
 

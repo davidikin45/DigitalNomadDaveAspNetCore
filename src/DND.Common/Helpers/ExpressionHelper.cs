@@ -14,6 +14,13 @@ namespace DND.Common.Helpers
 {
     public static class ExpressionHelper
     {
+
+        public static PropertyInfo GetPropertyInfo<TSource, TValue>(
+            this Expression<Func<TSource, TValue>> expression)
+        {
+            return (PropertyInfo)((MemberExpression)expression.Body).Member;
+        }
+
         public static RouteValueDictionary GetRouteValuesFromExpression<TController>(Expression<Action<TController>> action) where TController : Controller
         {
             if (action == null)
@@ -45,7 +52,7 @@ namespace DND.Common.Helpers
 
             var rvd = new RouteValueDictionary();
             rvd.Add("Controller", controllerName);
-            rvd.Add("Action", actionName);          
+            rvd.Add("Action", actionName);
 
             AddParameterValuesFromExpressionToDictionary(rvd, call);
             return rvd;

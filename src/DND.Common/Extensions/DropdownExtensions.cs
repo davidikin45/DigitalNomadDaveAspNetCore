@@ -136,6 +136,19 @@ namespace DND.Common.Extensions
                         var whereClause = LamdaHelper.SearchForEntityByIds(dropdownModelType, ids.Cast<Object>());
                         query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
                     }
+                    else
+                    {
+                        if(metadata.AdditionalValues.ContainsKey("WhereClauseEqualsDictionary"))
+                        {
+                            var whereClauseEqualsDictionary = (Dictionary<string, List<object>>)metadata.AdditionalValues["WhereClauseEqualsDictionary"];
+                            foreach (var where in whereClauseEqualsDictionary)
+                            {
+                                var whereClause = LamdaHelper.SearchForEntityByProperty(dropdownModelType, where.Key, where.Value);
+                                query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
+                            }
+
+                        }
+                    }
 
                     if (orderByType == "asc")
                     {
