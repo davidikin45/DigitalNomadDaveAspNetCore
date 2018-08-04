@@ -1082,6 +1082,7 @@
     <Compile Include="Testing\TestHelper.cs" />
     <Compile Include="Testing\TestServer\BaseTestServerFixture.cs" />
     <Compile Include="Validation\AgeValidator.cs" />
+    <Compile Include="Validation\LimitCount.cs" />
     <Compile Include="ViewComponents\BaseViewComponent.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,25 +13,13 @@
 </div>
 
 <div id="@(id)">
-    @for (int i = 0; i < Model.Count; i++)
+    @if (Model != null)
     {
-        var htmlHelper = HtmlHelperExtensions.For(Html, Model[i]);
-    @(((IHtmlHelper)htmlHelper).EditorForModel("ModelRepeaterItem", new  { Collection = (string)ViewBag.Collection, CollectionIndex = i.ToString(), EditMode = true, CreateMode = false }));
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var htmlHelper = HtmlHelperExtensions.For(Html, Model[i]);
+            @(((IHtmlHelper)htmlHelper).EditorForModel("ModelRepeaterItem", new { Collection = (string)ViewBag.Collection, CollectionIndex = i.ToString(), EditMode = true, CreateMode = false }));
+        }
+
     }
 </div>
-
-@*<script>
-    function create@(id)()
-    {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-              var elem = document.createElement('div');
-              elem.innerHTML = this.responseText;
-              document.getElementById("@(id)").appendChild(elem.firstElementChild);
-        }
-        };
-      xhttp.open("GET", "@(Url.Action("CreateCollectionItem", Url.ActionContext.RouteData.Values["controller"].ToString(), new { collection = (string)ViewBag.Collection.Replace(".", "/") }, Url.ActionContext.HttpContext.Request.Scheme).Replace("%2F", "/"))", true);
-      xhttp.send();
-    }
-</script>*@

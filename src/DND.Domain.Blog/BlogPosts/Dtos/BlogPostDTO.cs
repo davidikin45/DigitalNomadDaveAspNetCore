@@ -2,6 +2,7 @@
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Validation;
 using DND.Domain.Blog.Authors;
 using DND.Domain.Blog.Authors.Dtos;
 using DND.Domain.Blog.Categories;
@@ -57,6 +58,15 @@ namespace DND.Domain.Blog.BlogPosts.Dtos
         [Render(ShowForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = false, ShowForEdit = true)]
         [Repeater("{" + nameof(BlogPostLocationDto.LocationId) + "}")]
         public List<BlogPostLocationDto> Locations { get; set; }
+
+        [Required]
+        [CheckboxOrRadio(typeof(Location), "{" + nameof(DND.Domain.Blog.Locations.Location.LocationTypeString) + "} - {" + nameof(DND.Domain.Blog.Locations.Location.Name) + "}")]
+        public int LocationId { get; set; }
+
+        [LimitCount(3,5)]
+        [Required]
+        [CheckboxOrRadio(typeof(Location), "{" + nameof(DND.Domain.Blog.Locations.Location.LocationTypeString) + "} - {" + nameof(DND.Domain.Blog.Locations.Location.Name) + "}")]
+        public List<int> LocationIds { get; set; } = new List<int>();
 
         [Required]
         public bool ShowLocationDetail { get; set; }
