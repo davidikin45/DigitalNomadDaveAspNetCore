@@ -23,6 +23,11 @@
 }
 .sidebar .nav-item {
   width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+.sidebar .nav-link {
+  font-weight: 400 !important;
+  font-size: 1rem !important;
 }
 .sidebar .nav-item + .nav-item {
   margin-left: 0;
