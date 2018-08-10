@@ -2,6 +2,7 @@
 using DND.Common.Controllers.Api;
 using DND.Common.Email;
 using DND.Common.Extensions;
+using DND.Common.Helpers.Cryptography;
 using DND.Common.JwtTokens;
 using DND.Domain.Identity.Users;
 using DND.Web.MVCImplementation.Account.Models;

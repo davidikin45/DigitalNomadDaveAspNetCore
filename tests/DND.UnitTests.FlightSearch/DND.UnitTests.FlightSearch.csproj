@@ -312,7 +312,7 @@
       <Name>DND.Interfaces.FlightSearch</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DND.Web\DND.Web.csproj">
-      <Project>{239D9DCC-DFD7-40C9-9E0E-55F2331109AD}</Project>
+      <Project>{A3488736-BBDD-4688-8C78-B1B135D25A2A}</Project>
       <Name>DND.Web</Name>
     </ProjectReference>
   </ItemGroup>

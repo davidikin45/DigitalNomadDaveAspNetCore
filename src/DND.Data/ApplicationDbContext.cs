@@ -12,6 +12,7 @@ using DND.Data.Configurations.CMS.Faqs;
 using DND.Data.Configurations.CMS.MailingLists;
 using DND.Data.Configurations.CMS.Projects;
 using DND.Data.Configurations.CMS.Testimonials;
+using DND.Data.Initializers;
 using DND.Domain.Blog.Authors;
 using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Blog.Categories;
@@ -141,6 +142,11 @@ namespace DND.Data
             //modelBuilder.Entity<Airport>().ToTable("Airport");
             //modelBuilder.Entity<City>().ToTable("City");
             //modelBuilder.Entity<Country>().ToTable("Country");
+        }
+
+        public override void Seed()
+        {
+            DbSeed.Seed(this);
         }
     }
 }

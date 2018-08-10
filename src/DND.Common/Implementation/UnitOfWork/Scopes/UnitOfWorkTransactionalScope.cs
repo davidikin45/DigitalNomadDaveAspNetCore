@@ -42,15 +42,15 @@ namespace DND.Common.Implementation.UnitOfWork
         private bool _nested;
         private UnitOfWorkTransactionScope _parentScope;
 
-        public UnitOfWorkTransactionScope(IDbContextFactory dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken)) :
+        public UnitOfWorkTransactionScope(IDbContextFactoryProducerSingleton dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken)) :
             this(joiningOption: BaseUnitOfWorkScopeOption.JoinExisting, readOnly: false, isolationLevel: null, dbContextFactory: dbContextFactory, contextLocator : contextLocator, repositoryFactory : repositoryFactory, cancellationToken: cancellationToken)
         {}
 
-        public UnitOfWorkTransactionScope(bool readOnly, IDbContextFactory dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
+        public UnitOfWorkTransactionScope(bool readOnly, IDbContextFactoryProducerSingleton dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
             : this(joiningOption: BaseUnitOfWorkScopeOption.JoinExisting, readOnly: readOnly, isolationLevel: null, dbContextFactory: dbContextFactory, contextLocator: contextLocator, repositoryFactory: repositoryFactory, cancellationToken: cancellationToken)
         {}
 
-        public UnitOfWorkTransactionScope(BaseUnitOfWorkScopeOption joiningOption, bool readOnly, IsolationLevel? isolationLevel, IDbContextFactory dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
+        public UnitOfWorkTransactionScope(BaseUnitOfWorkScopeOption joiningOption, bool readOnly, IsolationLevel? isolationLevel, IDbContextFactoryProducerSingleton dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
              :base(contextLocator: contextLocator, repositoryFactory: repositoryFactory, cancellationToken: cancellationToken)
         {
             if (isolationLevel.HasValue && joiningOption == BaseUnitOfWorkScopeOption.JoinExisting)

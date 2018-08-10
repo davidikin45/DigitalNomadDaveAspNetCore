@@ -21,9 +21,6 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            var tasks = new List<Type>();
-            tasks.Add(typeof(IDomainEventHandler<>));
-
             foreach (string path in Paths)
             {
                 var assemblies = Directory.GetFiles(path, "*.dll", SearchOption.TopDirectoryOnly)

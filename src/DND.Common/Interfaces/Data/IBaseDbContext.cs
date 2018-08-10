@@ -19,6 +19,8 @@ namespace DND.Common.Interfaces.Data
 {
     public interface IBaseDbContext : IDisposable
     {
+        void Seed();
+
         void FirePreCommitEvents();
         Task FirePreCommitEventsAsync();
 

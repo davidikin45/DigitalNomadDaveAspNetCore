@@ -1,4 +1,6 @@
-﻿using DND.Common.Infrastructure;
+﻿using DND.Common.Implementation.Data;
+using DND.Common.Infrastructure;
+using DND.Common.Interfaces.Data;
 using DND.Common.Testing;
 using DND.Data;
 using DND.Data.Identity;
@@ -18,7 +20,7 @@ namespace DND.TestSetup
 
         public override void MigrateDatabaseAndSeed()
         {
-            DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactory(), new ApplicationDbInitializerMigrate(), true, true);
+            DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new ApplicationDbContextFactory()}), new ApplicationDbInitializerMigrate(), true, true);
 
             using (var context = CreateIdentityContext(false))
             {
@@ -30,7 +32,7 @@ namespace DND.TestSetup
 
         public static IdentityDbContext CreateIdentityContext(bool beginTransaction = true)
         {
-            var db = new IdentityDbContextFactory().CreateDbContext(null);
+            var db = new IdentityDbContextDesignTimeFactory().CreateDbContext(null);
             if (beginTransaction)
             {
                 db.Database.BeginTransaction(); //For EF Core need to use this instead of Isolated attribute.

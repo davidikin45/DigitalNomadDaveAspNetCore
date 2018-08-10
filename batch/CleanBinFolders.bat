@@ -2,6 +2,10 @@ set folder="..\src\DND.Web\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 
+set folder="..\..\DND.Web.Plugins\bin"
+cd /d %folder%
+for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
+
 set folder="..\..\DND.Bot\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)

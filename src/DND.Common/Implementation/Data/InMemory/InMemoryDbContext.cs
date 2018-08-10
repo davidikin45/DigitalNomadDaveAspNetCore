@@ -128,6 +128,13 @@ namespace DND.Common.Implementation.Data.InMemory
             }
         }
 
+        #region Seed
+        public void Seed()
+        {
+
+        }
+        #endregion
+
         #region Validation
         public IEnumerable<DbEntityValidationResultBetter> GetValidationErrors()
         {

@@ -2,14 +2,11 @@
 
 namespace DND.Common.ModelMetadataCustom.FluentMetadata
 {
-    public class TestConfig : ModelMetadataConfiguration<JpegMetadata>
+    public class DynamicConfig : ModelMetadataConfiguration<dynamic>
     {
-        public TestConfig()
-        {
-            Configure(a => a.FileInfo).Required().DisplayName("");
-            Configure(a => a.DateTaken).Required().DisplayName("");
-            Configure(a => a.Comments).DisplayName("");
-            Configure<string>("TenantName").Required();
+        public DynamicConfig()
+        { 
+            //Configure<string>("TenantName").Required();
         }
     }
 }

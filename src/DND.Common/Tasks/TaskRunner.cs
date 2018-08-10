@@ -5,21 +5,27 @@ namespace DND.Common.Tasks
     public class TaskRunner
     {
   
-        public IEnumerable<IRunAtStartup> RunAtStartup { get; set; }
-      
-        public IEnumerable<IRunOnEachRequest> RunOnEachRequest { get; set; }
-    
-        public IEnumerable<IRunAfterEachRequest> RunAfterEachRequest { get; set; }
-       
+        public IEnumerable<IRunAfterApplicationConfiguration> RunAfterApplicationConfiguration { get; set; }
+        public IEnumerable<IRunOnWebHostStartup> RunOnWebHostStartup { get; set; }
+        public IEnumerable<IRunOnEachRequest> RunOnEachRequest { get; set; }   
+        public IEnumerable<IRunAfterEachRequest> RunAfterEachRequest { get; set; }     
         public IEnumerable<IRunOnError> RunOnError { get; set; }
 
         public TaskRunner()
         {
         }
 
-        public void RunTasksAtStartup()
+        public void RunTasksAfterApplicationConfiguration()
         {
-            foreach (IRunAtStartup task in RunAtStartup)
+            foreach (IRunAfterApplicationConfiguration task in RunAfterApplicationConfiguration)
+            {
+                task.Execute();
+            }
+        }
+
+        public void RunTasksOnWebHostStartup()
+        {
+            foreach (IRunOnWebHostStartup task in RunOnWebHostStartup)
             {
                 task.Execute();
             }
@@ -48,6 +54,5 @@ namespace DND.Common.Tasks
                 task.Execute();
             }
         }
-
     }
 }

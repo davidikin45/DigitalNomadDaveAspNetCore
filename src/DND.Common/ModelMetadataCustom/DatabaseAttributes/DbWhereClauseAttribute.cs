@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DND.Common.ModelMetadataCustom.LinkAttributes
 {
     [AttributeUsage(System.AttributeTargets.Property, AllowMultiple = true,Inherited = true)]
-    public class DbWhereClauseEqualsAttribute : Attribute, IMetadataAttribute
+    public class DbWhereClauseEqualsAttribute : Attribute, IDisplayMetadataAttribute
     {
         public string Property { get; set; }
         public object Equals { get; set; }

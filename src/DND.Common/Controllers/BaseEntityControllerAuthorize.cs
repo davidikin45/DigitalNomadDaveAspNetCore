@@ -14,9 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DND.Common.Controllers
@@ -239,7 +236,7 @@ namespace DND.Common.Controllers
             dynamic args = null;
             if (collection != null)
             {
-                args = collection.ToDynamic();
+                args = collection.ToExpandoObject();
             }
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
@@ -267,6 +264,17 @@ namespace DND.Common.Controllers
                 return HandleReadException();
             }
         }
+        #endregion
+
+        #region Ajax Remote Validation
+        //[Remote(action: "CustomFieldValidation", controller: "Home")]
+        //public IActionResult CustomFieldValidation(string fieldValue)
+        //{
+        //    if (fieldValue == "007")
+        //        return Json(data: "007 is already assigned to James Bond!");
+
+        //    return Json(data: true);
+        //}
         #endregion
     }
 }

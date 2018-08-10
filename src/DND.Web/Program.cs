@@ -1,10 +1,7 @@
 ﻿using DND.Common.DependencyInjection.Autofac;
-using DND.Data.Identity;
-using DND.Data.Identity.Initializers;
-using DND.Domain.Identity.Users;
+using DND.Common.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -126,10 +123,13 @@ namespace DND.Web
 
         private static void MigrateDatabases(IServiceProvider services)
         {
-            var context = services.GetRequiredService<IdentityDbContext>();
+            //var context = services.GetRequiredService<IdentityDbContext>();
 
-            var initializer = new IdentityDbContextInitializer(context);
-            initializer.Initialize();
+            //var initializer = new IdentityDbContextInitializer(context);
+            //initializer.Initialize();
+
+            var taskRunner = services.GetRequiredService<TaskRunner>();
+            taskRunner.RunTasksOnWebHostStartup();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -141,6 +141,7 @@ namespace DND.Web
                 .UseConfiguration(Configuration)
                 .UseSerilog()
                 .UseStartup<Startup>();
+                //.UseStartup<StartupMvcBasic>();
 
         // Only used by EF Core Tooling if IDesignTimeDbContextFactory is not implemented
         // Generally its not good practice to DB in the MVC Project so best to use IDesignTimeDbContextFactory

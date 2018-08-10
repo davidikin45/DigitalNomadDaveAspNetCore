@@ -35,7 +35,7 @@ namespace DND.Data.Migrations
         protected override void Seed(ApplicationDbContext context)
         {
             context.Database.CommandTimeout = 180;
-            DBSeed.Seed(context);
+            context.Seed();
             base.Seed(context);
             //  This method will be called after migrating to the latest version.
 

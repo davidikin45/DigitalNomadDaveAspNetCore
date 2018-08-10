@@ -1,5 +1,8 @@
 ﻿@model dynamic
 @{
+    var properties = ((CustomModelMetadata)ViewData.ModelMetadata).PropertiesRuntime(ViewData.Model);
+    var propertyModelExplorers = Html.ModelExplorerPropertiesRuntime();
+
     string guid = Guid.NewGuid().ToString();
     var collections = ViewData.ModelMetadata.Properties.Where(p => p.DataTypeName == "ModelRepeater" && (((bool)ViewBag.EditMode && p.ShowForEdit) || ((bool)ViewBag.CreateMode && (!p.AdditionalValues.ContainsKey("ShowForCreate") || (bool)p.AdditionalValues["ShowForCreate"]))));
     var hasCollections = collections.Count() > 0;
@@ -66,20 +69,43 @@
 
     if (!hiddenInput || (prop.IsReadOnly) || readOnlyHiddenInput)
     {
+        bool showLabel = !(prop.AdditionalValues.ContainsKey("NoLabel") && (bool)prop.AdditionalValues["NoLabel"]);
+        bool showData = true;
+        int labelCols = showData ? 2 : 12;
+        int dataCols = showLabel ? 10 : 12;
+
+        string helpText = prop.AdditionalValues.ContainsKey("HelpText") ? (string)prop.AdditionalValues["HelpText"] : null;
         //Display to user
-        <div class="form-group row">
-            @Html.BootstrapLabel(prop.PropertyName)
-            <div class="col-md-10">
-                @if (readOnlyHiddenInput)
-                {
-                    @Html.Editor(prop.PropertyName, "ReadOnly")
-                }
-                else
-                {
-                    @Html.Editor(prop.PropertyName)
-                }
-                @Html.ValidationMessage(prop.PropertyName)
-            </div>
+        <div id="FormGroup_@(Html.Id(prop.PropertyName))" class="form-group row">
+            @if (showLabel)
+            {
+                @Html.BootstrapLabel(prop.PropertyName, labelCols)
+            }
+            @if (showData)
+            {
+                <div class="@(prop.AdditionalValues.ContainsKey("OffsetRight") && (int)prop.AdditionalValues["OffsetRight"] > 0 ? "offset-md-" + (dataCols - (int)prop.AdditionalValues["OffsetRight"]).ToString() + " col-md-" + prop.AdditionalValues["OffsetRight"].ToString() : "col-md-"+ dataCols.ToString()) @(prop.AdditionalValues.ContainsKey("AlignRight") && (bool)prop.AdditionalValues["AlignRight"] ? "text-right" : "")">
+                    @if (readOnlyHiddenInput)
+                    {
+                        @Html.Editor(prop.PropertyName, "ReadOnly")
+                    }
+                    else
+                    {
+                        @if (ViewData.ContainsKey("DetailsMode") && ViewBag.DetailsMode)
+                        {
+                            <p class="form-control-plaintext">@Html.Display(prop.PropertyName)</p>
+                        }
+                        else
+                        {
+                            @Html.Editor(prop.PropertyName)
+                            @if (!string.IsNullOrEmpty(helpText))
+                            {
+                                @Html.HelpText(helpText)
+                            }
+                        }
+                    }
+                    @Html.ValidationMessage(prop.PropertyName)
+                </div>
+            }
         </div>
     }
 }

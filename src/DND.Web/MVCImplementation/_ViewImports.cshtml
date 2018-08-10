@@ -1,29 +1,21 @@
 @using Microsoft.AspNetCore.Identity
 @using DND.Web
-@using DND.Web.Controllers
-
 @using DND.Web.MVCImplementation.Account.Controllers
 @using DND.Web.MVCImplementation.Admin.Controllers
-@using DND.Web.MVCImplementation.Author.Controllers
 @using DND.Web.MVCImplementation.Blog.Controllers
 @using DND.Web.MVCImplementation.Blog.ViewComponents
 @using DND.Web.MVCImplementation.BucketList.Controllers
 @using DND.Web.MVCImplementation.CarouselItem.ViewComponents
-@using DND.Web.MVCImplementation.Category.Controllers
 @using DND.Web.MVCImplementation.ContentHtml.ViewComponents
 @using DND.Web.MVCImplementation.ContentText.ViewComponents
-@using DND.Web.MVCImplementation.Faq.Controllers
 @using DND.Web.MVCImplementation.Faq.ViewComponents
 @using DND.Web.MVCImplementation.Gallery.Controllers
 @using DND.Web.MVCImplementation.Home.Controllers
 @using DND.Web.MVCImplementation.Locations.Controllers
 @using DND.Web.MVCImplementation.Manage.Controllers
 @using DND.Web.MVCImplementation.Project.ViewComponents
-@using DND.Web.MVCImplementation.Project.Controllers
 @using DND.Web.MVCImplementation.Shared.Controllers
 @using DND.Web.MVCImplementation.Sidebar.ViewComponents
-@using DND.Web.MVCImplementation.Tag.Controllers
-@using DND.Web.MVCImplementation.Testimonial.Controllers
 @using DND.Web.MVCImplementation.Testimonial.ViewComponents
 @using DND.Web.MVCImplementation.TravelMap.Controllers
 @using DND.Web.MVCImplementation.Videos.Controllers
@@ -32,7 +24,6 @@
 @using DND.Web.MVCImplementation.Blog.Models
 @using DND.Web.MVCImplementation.CarouselItem.Models
 @using DND.Web.MVCImplementation.Manage.Models
-@using DND.Web.MVCImplementation.MailingList.Models
 @using DND.Web.MVCImplementation.Contact.Models
 @using DND.Web.MVCImplementation.Sidebar.Models
 @using DND.Web.MVCImplementation.Sidebar.Models
@@ -58,6 +49,8 @@
 @using DND.Domain.FlightSearch.Enums
 
 @using DND.Interfaces.Data
+@using DND.Interfaces.Blog.Data
+@using DND.Interfaces.CMS.Data
 @using DND.Interfaces.Blog.ApplicationServices
 @using DND.Interfaces.CMS.ApplicationServices
 @using DND.Interfaces.FlightSearch.ApplicationServices
@@ -69,6 +62,7 @@
 @using DND.Common.Helpers
 @using DND.Common.Constants
 @using DND.Common.Infrastructure
+@using DND.Common.ModelMetadataCustom.Providers
 @using DND.Common.Implementation.Dtos
 @using DND.Common.ModelMetadataCustom.DisplayAttributes
 @using System.IO;

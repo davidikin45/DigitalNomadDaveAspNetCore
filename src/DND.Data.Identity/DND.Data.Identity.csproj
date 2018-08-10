@@ -221,10 +221,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbSeed.cs" />
+    <Compile Include="Factories\IdentityDbContextFactory.cs" />
     <Compile Include="IdentityDbContext.cs" />
-    <Compile Include="IdentityDbContextFactory.cs" />
+    <Compile Include="FactoriesDesignTime\IdentityDbContextDesignTimeFactory.cs" />
     <Compile Include="Configurations\UserConfiguration.cs" />
-    <Compile Include="Initializers\IdentityDbContextInitializer.cs" />
+    <Compile Include="IdentityDbInitializer.cs" />
+    <Compile Include="Initializers\IdentityDbContextInitializerMigrate.cs" />
     <Compile Include="Migrations\20171228025302_InitialMigration.cs" />
     <Compile Include="Migrations\20171228025302_InitialMigration.Designer.cs">
       <DependentUpon>20171228025302_InitialMigration.cs</DependentUpon>

@@ -95,6 +95,26 @@
     "LinkText": "FAQ"
   },
   {
+    "Controller": "AdminForms",
+    "Action": "Index",
+    "LinkText": "Forms"
+  },
+  {
+    "Controller": "AdminSections",
+    "Action": "Index",
+    "LinkText": "Sections"
+  },
+  {
+    "Controller": "AdminQuestions",
+    "Action": "Index",
+    "LinkText": "Questions"
+  },
+  {
+    "Controller": "AdminLookupTables",
+    "Action": "Index",
+    "LinkText": "Lookup Tables"
+  },
+  {
     "Controller": "Admin",
     "Action": "ClearCache",
     "LinkText": "Clear Cache"

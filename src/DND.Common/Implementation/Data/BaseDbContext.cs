@@ -84,6 +84,10 @@ namespace DND.Common.Implementation.Data
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
+        #region Seed
+        public abstract void Seed();
+        #endregion
+
         #region Validation
         IEnumerable<DbEntityValidationResultBetter> IBaseDbContext.GetValidationErrors()
         {

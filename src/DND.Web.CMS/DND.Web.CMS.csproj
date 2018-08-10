@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <DebugType>full</DebugType>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MVCImplementation\CarouselItem\Models\" />
+    <Folder Include="MVCImplementation\CarouselItem\ViewComponents\" />
+    <Folder Include="MVCImplementation\CarouselItem\Views\" />
+    <Folder Include="MVCImplementation\ContentHtml\Models\" />
+    <Folder Include="MVCImplementation\ContentHtml\ViewComponents\" />
+    <Folder Include="MVCImplementation\ContentHtml\Views\" />
+    <Folder Include="MVCImplementation\ContentText\ViewComponents\" />
+    <Folder Include="MVCImplementation\Faq\ViewComponents\" />
+    <Folder Include="MVCImplementation\Project\Models\" />
+    <Folder Include="MVCImplementation\Project\ViewComponents\" />
+    <Folder Include="MVCImplementation\Testimonial\Models\" />
+    <Folder Include="MVCImplementation\Testimonial\ViewComponents\" />
+    <Folder Include="MVCImplementation\Testimonial\Views\" />
+    <Folder Include="MVCImplementation\Project\Views\" />
+    <Folder Include="MVCImplementation\MailingList\ViewComponents\" />
+    <Folder Include="MVCImplementation\MailingList\Views\" />
+    <Folder Include="MVCImplementation\Faq\Models\" />
+    <Folder Include="MVCImplementation\Faq\Views\" />
+    <Folder Include="MVCImplementation\ContentText\Models\" />
+    <Folder Include="MVCImplementation\ContentText\Views\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DND.ApplicationServices.CMS\DND.ApplicationServices.CMS.csproj" />
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj" />
+    <ProjectReference Include="..\DND.Domain.CMS\DND.Domain.CMS.csproj" />
+    <ProjectReference Include="..\DND.Interfaces.CMS\DND.Interfaces.CMS.csproj" />
+    <ProjectReference Include="..\DND.Interfaces\DND.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="MVCImplementation\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>

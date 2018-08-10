@@ -22,7 +22,7 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
         protected override void Load(ContainerBuilder builder)
         {
             var filters = new List<Type>();
-            filters.Add(typeof(IMetadataFilter));
+            filters.Add(typeof(IDisplayMetadataFilter));
 
             foreach (string path in Paths)
             {

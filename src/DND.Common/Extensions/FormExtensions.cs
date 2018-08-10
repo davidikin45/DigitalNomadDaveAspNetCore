@@ -48,9 +48,9 @@ namespace DND.Common.Extensions
             return new MvcForm(helper.ViewContext, HtmlEncoder.Default);
         }
 
-        public static dynamic ToDynamic(this IFormCollection collection)
+        public static ExpandoObject ToExpandoObject(this IFormCollection collection)
         {
-            dynamic expando = new ExpandoObject();
+            ExpandoObject expando = new ExpandoObject();
             var dictionary = (IDictionary<string, object>)expando;
 
             foreach (var item in collection.Keys.ToDictionary(key => key, value => collection[value]))

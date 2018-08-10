@@ -1,27 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+﻿using DND.Common.ModelMetadataCustom.FluentMetadata;
 using DND.Common.ModelMetadataCustom.Interfaces;
 using DND.Common.ModelMetadataCustom.Providers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace DND.Web
 {
-
     //https://andrewlock.net/accessing-services-when-configuring-mvcoptions-in-asp-net-core/
     public class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
     {
-        private readonly IMetadataFilter[] _metadataFilters;
+        private readonly IDisplayMetadataFilter[] _metadataFilters;
+        private readonly IMetadataConfiguratorProviderSingleton _provider;
 
-        public ConfigureMvcOptions(IMetadataFilter[] metadataFilters)
+        public ConfigureMvcOptions(IDisplayMetadataFilter[] metadataFilters, IMetadataConfiguratorProviderSingleton provider)
         {
             _metadataFilters = metadataFilters;
+            _provider = provider;
         }
 
         public void Configure(MvcOptions options)
         {
+            options.ModelMetadataDetailsProviders.Add(new FluentMetadataProvider(_provider));
             options.ModelMetadataDetailsProviders.Add(new AttributeMetadataProvider());
             options.ModelMetadataDetailsProviders.Add(new ConventionsMetadataProvider(_metadataFilters));
         }

@@ -73,7 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
-    <Compile Include="ApplicationDbContextFactory.cs" />
+    <Compile Include="DbSeed.cs" />
+    <Compile Include="FactoriesDesignTime\ApplicationDbContextDesignTimeFactory.cs" />
     <Compile Include="ApplicationDbInitializer.cs" />
     <Compile Include="Configurations\Blog\Authors\AuthorConfiguration.cs" />
     <Compile Include="Configurations\Blog\BlogPosts\BlogPostConfiguration.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="Configurations\CMS\MailingLists\MailingListConfiguration.cs" />
     <Compile Include="Configurations\CMS\Projects\ProjectConfiguration.cs" />
     <Compile Include="Configurations\CMS\Testimonials\TestimonialConfiguration.cs" />
-    <Compile Include="Factories\DbContextFactory.cs" />
+    <Compile Include="Factories\ApplicationDbContextFactory.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerCreate.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerCreateSQLite.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerDropCreate.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="Initializers\ApplicationDbInitializerDropCreateSQLite.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerMigrate.cs" />
     <Compile Include="Initializers\ApplicationDbInitializerMigrateSQLite.cs" />
-    <Compile Include="Initializers\DBSeed.cs" />
     <Compile Include="Migrations\ApplicationDbMigrationConfiguration.cs" />
     <Compile Include="Migrations\ApplicationDbMigrationConfigurationSQLite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

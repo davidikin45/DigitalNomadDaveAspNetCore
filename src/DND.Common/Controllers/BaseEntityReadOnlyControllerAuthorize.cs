@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authorization;
 using DND.Common.Extensions;
 using DND.Common.Controllers.Api;
 using DND.Common.Implementation.Data;
+using System.Dynamic;
 
 namespace DND.Common.Controllers
 {
@@ -92,23 +93,12 @@ namespace DND.Common.Controllers
         }
         #endregion
 
-        #region Details
-        // GET: Default/Details/5
-        [Route("details/{id}")]
-        public virtual async Task<ActionResult> Details(string id)
+        #region Dynamic
+        [Route("dynamic/{id}")]
+        public virtual async Task<ActionResult> Dynamic(string id)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            TDto data = null;
-            try
-            {
-                data = await Service.GetByIdAsync(id, cts.Token, true);
-                if (data == null)
-                    return HandleReadException();
-            }
-            catch (Exception ex)
-            {
-                return HandleReadException();
-            }
+            dynamic data = new ExpandoObject();
+            data.Names = "Test";
 
             ViewBag.PageTitle = Title;
             ViewBag.Admin = Admin;

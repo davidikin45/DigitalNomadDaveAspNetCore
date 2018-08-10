@@ -39,7 +39,7 @@ namespace DND.Common.Implementation.Data
         }
     }
 
-    public class BaseIdentityDbContext<TUser> : IdentityDbContext<TUser>, IBaseDbContext where TUser : BaseApplicationUser
+    public abstract class BaseIdentityDbContext<TUser> : IdentityDbContext<TUser>, IBaseDbContext where TUser : BaseApplicationUser
     {
         private IDbContextDomainEvents _dbContextDomainEvents;
         private DbContextTimestamps _dbContextTimestamps;
@@ -92,6 +92,10 @@ namespace DND.Common.Implementation.Data
 
             builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
         }
+
+        #region Seed
+        public abstract void Seed();
+        #endregion
 
         #region Validation
         //Validate on Save

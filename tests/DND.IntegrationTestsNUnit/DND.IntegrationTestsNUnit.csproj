@@ -402,7 +402,7 @@
       <Name>DND.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DND.Web\DND.Web.csproj">
-      <Project>{16EDDC5F-CA90-492A-8C53-5777B0C206EE}</Project>
+      <Project>{A3488736-BBDD-4688-8C78-B1B135D25A2A}</Project>
       <Name>DND.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\DND.TestSetup\DND.TestSetup.csproj">

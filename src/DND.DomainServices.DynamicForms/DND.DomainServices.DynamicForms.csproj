@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C41A9862-9301-4548-B261-F49E7C3A7136}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DND.DomainServices.DynamicForms</RootNamespace>
+    <AssemblyName>DND.DomainServices.DynamicForms</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FormSectionSubmissions\Services\FormSectionSubmissionDomainService.cs" />
+    <Compile Include="FormSubmissions\Services\FormSubmissionDomainService.cs" />
+    <Compile Include="Forms\Services\FormDomainService.cs" />
+    <Compile Include="LookupTables\Services\LookupTableDomainService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Questions\Services\QuestionDomainService.cs" />
+    <Compile Include="Sections\Services\SectionDomainService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FormSectionSubmissions\DomainEventHandlers\" />
+    <Folder Include="FormSubmissions\DomainEventHandlers\" />
+    <Folder Include="Forms\DomainEventHandlers\" />
+    <Folder Include="LookupTables\DomainEventHandlers\" />
+    <Folder Include="Questions\DomainEventHandlers\" />
+    <Folder Include="Sections\DomainEventHandlers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DND.Common\DND.Common.csproj">
+      <Project>{632121C5-DB10-4F32-A239-D4FA4EE8C12E}</Project>
+      <Name>DND.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Domain.DynamicForms\DND.Domain.DynamicForms.csproj">
+      <Project>{400EDAB2-E036-4EFB-9006-BEA62A81B272}</Project>
+      <Name>DND.Domain.DynamicForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Interfaces.DynamicForms\DND.Interfaces.DynamicForms.csproj">
+      <Project>{3BEA5C90-F904-4D20-9406-A2615B588B3B}</Project>
+      <Name>DND.Interfaces.DynamicForms</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

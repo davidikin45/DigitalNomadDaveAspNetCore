@@ -5,7 +5,7 @@ using DND.Common.ModelMetadataCustom.Interfaces;
 namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 {
 
-    public class RenderAttribute : Attribute, IMetadataAttribute
+    public class RenderAttribute : Attribute, IDisplayMetadataAttribute
     {
         public bool ShowForGrid { get; set; }
         public bool LinkToCollectionInGrid { get; set; }

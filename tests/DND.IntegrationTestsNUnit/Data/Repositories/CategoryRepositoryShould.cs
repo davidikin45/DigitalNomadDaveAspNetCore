@@ -1,11 +1,14 @@
-﻿using DND.Common.Implementation.Repository;
+﻿using DND.Common.Implementation.Data;
+using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Implementation.UnitOfWork;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Testing;
 using DND.Data;
 using DND.Domain.Blog.Categories;
 using DND.Infrastructure;
+using DND.Interfaces.Blog.Data;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
@@ -24,7 +27,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             _context = new ApplicationDbContext(connectionString, true);
 
-            var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var uowFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(_context) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _ouw = uowFactory.CreateReadOnly();
             _repository = new GenericEFRepository<Category>(_context, _ouw);
         }
@@ -41,7 +44,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             using (var con = new ApplicationDbContext(connectionString, true))
             {
-                var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var uowFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(con) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
 
                 using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
                 {

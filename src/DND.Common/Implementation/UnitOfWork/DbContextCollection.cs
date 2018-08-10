@@ -34,14 +34,14 @@ namespace DND.Common.Implementation.UnitOfWork
         private Dictionary<Type, IBaseDbContext> _initializedDbContexts;
         private Dictionary<IBaseDbContext, IBaseDbContextTransaction> _transactions;
         private IsolationLevel? _isolationLevel;
-        private readonly IDbContextFactory _dbContextFactory;
+        private readonly IDbContextFactoryProducerSingleton _dbContextFactory;
         private bool _disposed;
         private bool _completed;
         private bool _readOnly;
 
         internal Dictionary<Type, IBaseDbContext> InitializedDbContexts { get { return _initializedDbContexts; } }
 
-        public DbContextCollection(bool readOnly = false, IsolationLevel? isolationLevel = null, IDbContextFactory dbContextFactory = null)
+        public DbContextCollection(bool readOnly = false, IsolationLevel? isolationLevel = null, IDbContextFactoryProducerSingleton dbContextFactory = null)
         {
             _disposed = false;
             _completed = false;
@@ -66,7 +66,7 @@ namespace DND.Common.Implementation.UnitOfWork
                 // First time we've been asked for this particular DbContext type.
                 // Create one, cache it and start its database transaction if needed.
                 var dbContext = _dbContextFactory != null
-                    ? _dbContextFactory.Create<TIBaseDbContext>()
+                    ? _dbContextFactory.GetFactory<TIBaseDbContext>().CreateDbContext()
                     : Activator.CreateInstance<TIBaseDbContext>();
 
                 _initializedDbContexts.Add(requestedType, dbContext);

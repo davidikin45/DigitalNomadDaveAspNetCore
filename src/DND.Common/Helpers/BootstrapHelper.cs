@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using DND.Common.Extensions;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,14 +41,25 @@ namespace DND.Common.Helpers
             }
         }
 
-        public static IHtmlContent BootstrapLabel(this IHtmlHelper helper, string propertyName)
+        public static IHtmlContent BootstrapLabel(this IHtmlHelper helper, string propertyName, int cololumns = 2)
         {
+            string @class = "col-md-"+ cololumns + " form-control-label col-form-label";
             var label = helper.Label(propertyName, null, new
             {
-                @class = "col-md-2 form-control-label col-form-label"
+                @class = @class
             });
 
             return label;
+        }
+
+        public static IHtmlContent HelpText(this IHtmlHelper helper, string helpText)
+        {
+            var small = new TagBuilder("small");
+            small.AddCssClass("form-text");
+            small.AddCssClass("text-muted");
+            small.InnerHtml.SetContent(helpText);
+
+            return small;
         }
     }
 }

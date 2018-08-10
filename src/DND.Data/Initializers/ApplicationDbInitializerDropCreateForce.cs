@@ -8,7 +8,7 @@ namespace DND.Data.Initializers
         protected override void Seed(ApplicationDbContext context)
         {
             context.Database.CommandTimeout = 180;
-            DBSeed.Seed(context);            
+            context.Seed();            
             base.Seed(context);
         }       
     }

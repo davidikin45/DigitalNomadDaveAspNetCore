@@ -5,7 +5,7 @@ using DND.Common.ModelMetadataCustom.Interfaces;
 namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 {
     //ReadOnly with Hidden Input or Normal
-    public class ReadOnlyHiddenInputAttribute : Attribute, IMetadataAttribute
+    public class ReadOnlyHiddenInputAttribute : Attribute, IDisplayMetadataAttribute
     {
         public bool ShowForEdit { get; set; }
         public bool ShowForCreate { get; set; }

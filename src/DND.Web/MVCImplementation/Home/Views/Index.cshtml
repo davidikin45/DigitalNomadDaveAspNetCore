@@ -34,7 +34,7 @@
     var nextLocationName = "";
     var nextLocationLatitude = "";
     var nextLocationLongitude = "";
-    using (var db = Html.Database<IApplicationDbContext>())
+    using (var db = Html.Database<IBlogDbContext>())
     {
         var currentLocation = db.Locations.Where(l => l.CurrentLocation).OrderByDescending(l => l.DateModified).FirstOrDefault();
         currentLocationName = currentLocation != null ? currentLocation.Name : "";

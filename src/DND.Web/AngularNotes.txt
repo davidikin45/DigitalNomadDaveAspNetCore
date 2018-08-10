@@ -1,1 +1,0 @@
-﻿ng new dnd-app --minimal --dry-run

@@ -37,6 +37,8 @@ namespace DND.Common.Extensions
 
             var nullable = ((bool)metadata.AdditionalValues["Nullable"]);
 
+            var options = ((IEnumerable<string>)metadata.AdditionalValues["Options"]);
+
             Type propertyType = GetNonNullableModelType(metadata);
             List<SelectListItem> items = new List<SelectListItem>();
             List<string> ids = new List<string>();
@@ -122,53 +124,68 @@ namespace DND.Common.Extensions
             }
             else
             {
-                using (var db = htmlHelper.Database<TIDbContext>())
+                //db
+                if(options == null)
                 {
 
-                    var pi = dropdownModelType.GetProperty(orderByProperty);
-
-                    Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { dropdownModelType });
-
-                    IEnumerable<Object> query = db.Queryable(dropdownModelType);
-           
-                    if (selectedOnly)
+                    using (var db = htmlHelper.Database<TIDbContext>())
                     {
-                        var whereClause = LamdaHelper.SearchForEntityByIds(dropdownModelType, ids.Cast<Object>());
-                        query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
-                    }
-                    else
-                    {
-                        if(metadata.AdditionalValues.ContainsKey("WhereClauseEqualsDictionary"))
+
+                        var pi = dropdownModelType.GetProperty(orderByProperty);
+
+                        Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { dropdownModelType });
+
+                        IEnumerable<Object> query = db.Queryable(dropdownModelType);
+
+                        if (selectedOnly)
                         {
-                            var whereClauseEqualsDictionary = (Dictionary<string, List<object>>)metadata.AdditionalValues["WhereClauseEqualsDictionary"];
-                            foreach (var where in whereClauseEqualsDictionary)
-                            {
-                                var whereClause = LamdaHelper.SearchForEntityByProperty(dropdownModelType, where.Key, where.Value);
-                                query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
-                            }
-
+                            var whereClause = LamdaHelper.SearchForEntityByIds(dropdownModelType, ids.Cast<Object>());
+                            query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
                         }
-                    }
+                        else
+                        {
+                            if (metadata.AdditionalValues.ContainsKey("WhereClauseEqualsDictionary"))
+                            {
+                                var whereClauseEqualsDictionary = (Dictionary<string, List<object>>)metadata.AdditionalValues["WhereClauseEqualsDictionary"];
+                                foreach (var where in whereClauseEqualsDictionary)
+                                {
+                                    var whereClause = LamdaHelper.SearchForEntityByProperty(dropdownModelType, where.Key, where.Value);
+                                    query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
+                                }
 
-                    if (orderByType == "asc")
-                    {
-                        query = query.ToList().OrderBy(x => pi.GetValue(x, null));
-                    }
-                    else
-                    {
-                        query = query.ToList().OrderByDescending(x => pi.GetValue(x, null));
-                    }
+                            }
+                        }
 
-                    query.ToList().ForEach(item =>
+                        if (orderByType == "asc")
+                        {
+                            query = query.ToList().OrderBy(x => pi.GetValue(x, null));
+                        }
+                        else
+                        {
+                            query = query.ToList().OrderByDescending(x => pi.GetValue(x, null));
+                        }
 
-                    items.Add(new SelectListItem()
-                    {
-                        Text = GetDisplayString(htmlHelper, item, valueProperty),
+                        query.ToList().ForEach(item =>
+
+                        items.Add(new SelectListItem()
+                        {
+                            Text = GetDisplayString(htmlHelper, item, valueProperty),
                         //Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
                         //Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
                         Value = GetDisplayString(htmlHelper, item, keyProperty),
-                        Selected = ids.Contains(GetDisplayString(htmlHelper, item, keyProperty))
-                    }));
+                            Selected = ids.Contains(GetDisplayString(htmlHelper, item, keyProperty))
+                        }));
+                    }
+                }
+                else
+                {
+                    options.ToList().ForEach(item =>
+                      items.Add(new SelectListItem()
+                      {
+                          Text = item,
+                          Value = item,
+                          Selected = ids.Contains(item)
+                      }));
                 }
             }
 
@@ -233,14 +250,20 @@ namespace DND.Common.Extensions
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider).Metadata;
             Type propertyType = GetNonNullableModelType(metadata);
 
+            bool inline = false;
+            if(metadata.AdditionalValues.ContainsKey("ModelCheckboxOrRadioInline"))
+            {
+                inline = ((bool)metadata.AdditionalValues["ModelCheckboxOrRadioInline"]);
+            }
+
             var sb = new StringBuilder();
             if (propertyType != typeof(string) && (propertyType.GetInterfaces().Contains(typeof(IEnumerable))))
             {
-                return htmlHelper.ValueCheckboxList(propertyName, items);
+                return htmlHelper.ValueCheckboxList(propertyName, items, inline);
             }
             else
             {
-                return htmlHelper.ValueRadioButtonList(propertyName, items);
+                return htmlHelper.ValueRadioButtonList(propertyName, items, inline);
             }
         }
 

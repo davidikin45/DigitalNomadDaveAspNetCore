@@ -90,6 +90,10 @@
       <Project>{A81C1F68-E64E-473F-B397-45F64FD5E188}</Project>
       <Name>DND.Domain.Blog</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DND.Interfaces.CMS\DND.Interfaces.CMS.csproj">
+      <Project>{FD348F97-EDD9-4E2D-AB0E-BDEC23F3CB5A}</Project>
+      <Name>DND.Interfaces.CMS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />

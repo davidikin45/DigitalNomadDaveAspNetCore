@@ -46,15 +46,9 @@ namespace DND.Common.Extensions
             return repos;
         }
 
-        public static IBaseDbContext Database(this IHtmlHelper html)
-        {
-            var dbContext = html.GetInstance<IDbContextFactory>().CreateDefault();
-            return dbContext;
-        }
-
         public static TIDbContext Database<TIDbContext>(this IHtmlHelper html) where TIDbContext : IBaseDbContext
         {
-            var dbContext = html.GetInstance<IDbContextFactory>().Create<TIDbContext>();
+            var dbContext = html.GetInstance<IDbContextFactoryProducerSingleton>().GetFactory<TIDbContext>().CreateDbContext();
             return dbContext;
         }
 
@@ -69,6 +63,13 @@ namespace DND.Common.Extensions
             var writer = new System.IO.StringWriter();
             content.WriteTo(writer, HtmlEncoder.Default);
             return writer.ToString();
+        }
+
+        public static HtmlString IconLink(this IHtmlHelper htmlHelper, string linkText, string actionName, string controllerName, object routeValues, String iconName, object htmlAttributes = null)
+        {
+            var linkMarkup = htmlHelper.ActionLink(linkText, actionName, controllerName, routeValues, htmlAttributes).Render().Replace("%2F", "/");
+            var iconMarkup = String.Format("<span class=\"{0}\" aria-hidden=\"true\"></span> ", iconName);
+            return new HtmlString(linkMarkup.Insert(linkMarkup.IndexOf(@">") + 1, iconMarkup));
         }
 
         public static HtmlString IconLink(this IHtmlHelper htmlHelper, string linkText, string actionName, object routeValues, String iconName, object htmlAttributes = null)
@@ -681,6 +682,26 @@ namespace DND.Common.Extensions
             return new HtmlString(script.ToString());
         }
 
+        public static HtmlString PostScrollHeight(this IHtmlHelper helper)
+        {
+            HtmlTag script = new HtmlTag("script");
+            script.Attr("type", "text/javascript");
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(" var oldHeight = 0; ");
+            sb.AppendLine(" window.setInterval(function() { ");
+            sb.AppendLine(" if(oldHeight != document.body.scrollHeight) ");
+            sb.AppendLine(" { ");
+            sb.AppendLine(" oldHeight = document.body.scrollHeight; ");
+            sb.AppendLine(" window.top.postMessage(document.body.scrollHeight, '*'); ");
+            sb.AppendLine(" } ");
+            sb.AppendLine(" }, 500);  ");
+
+            script.AppendHtml(sb.ToString());
+
+            return new HtmlString(script.ToString());
+        }
+
         public static HtmlString DeferredIFrameLoad(this IHtmlHelper helper)
         {
             HtmlTag script = new HtmlTag("script");
@@ -851,7 +872,6 @@ namespace DND.Common.Extensions
                 return new HtmlString(string.Format("<a href='{0}' itemprop='url' class='{1}'>{2}</a>", actionName, classNames, linkText));
             }
         }
-
         public static UrlHelper Url(this IHtmlHelper html)
         {
             return new UrlHelper(html.ViewContext);
@@ -979,17 +999,23 @@ namespace DND.Common.Extensions
             return pairs;
         }
 
-        public static HtmlString ValueCheckbox(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object htmlAttributes)
+        public static HtmlString ValueCheckbox(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes)
         {
             HtmlTag div = new HtmlTag("div");
-            div.AddClass("form-check");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
 
             var id = htmlHelper.Id(expression);
 
             HtmlTag input = new HtmlTag("input");
-            if(htmlAttributes != null)
+            if(inputHtmlAttributes != null)
             {
-                foreach (var kvp in htmlAttributes.ToDictionary())
+                foreach (var kvp in inputHtmlAttributes.ToDictionary())
                 {
                     input.Attr(kvp.Key, kvp.Value);
                 }
@@ -1015,14 +1041,20 @@ namespace DND.Common.Extensions
             return new HtmlString(div.ToString());
         }
 
-        public static HtmlString ValueRadio(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object htmlAttributes)
+        public static HtmlString ValueRadio(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes)
         {
             // var radioHtml = htmlHelper.RadioButton(expression, value, isChecked, htmlAttributes).Render();
 
             HtmlTag div = new HtmlTag("div");
-            div.AddClass("form-check");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
 
-            var input = htmlHelper.RadioButton(expression, value, isChecked, htmlAttributes).Render();
+            var input = htmlHelper.RadioButton(expression, value, isChecked, inputHtmlAttributes).Render();
 
             //var checkboxHtml = htmlHelper.CheckBox(expression, isChecked, htmlAttributes).Render().Replace("true", value);
 
@@ -1036,25 +1068,36 @@ namespace DND.Common.Extensions
             return new HtmlString(div.ToString());
         }
 
-        public static HtmlString ValueCheckboxList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items)
+        public static HtmlString ValueCheckboxList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items, bool inline)
         {
+            string divClass = "form-check";
+            if(inline)
+            {
+                divClass += " form-check-inline";
+            }
+
             var sb = new StringBuilder();
             foreach (var item in items)
             {
-                sb.AppendLine(htmlHelper.ValueCheckbox(expression, item.Value, item.Text, item.Selected, new { @class = "form-check-input" }).Render());
+                sb.AppendLine(htmlHelper.ValueCheckbox(expression, item.Value, item.Text, item.Selected, new { @class = divClass }, new { @class = "form-check-input" }).Render());
             }
             return new HtmlString(sb.ToString());
         }
 
-        public static HtmlString ValueRadioButtonList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items)
+        public static HtmlString ValueRadioButtonList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items, bool inline)
         {
+            string divClass = "form-check";
+            if (inline)
+            {
+                divClass += " form-check-inline";
+            }
+
             var sb = new StringBuilder();
             foreach (var item in items)
             {
-                sb.AppendLine(htmlHelper.ValueRadio(expression, item.Value, item.Text, item.Selected, new { @class= "form-check-input" }).Render());
+                sb.AppendLine(htmlHelper.ValueRadio(expression, item.Value, item.Text, item.Selected, new { @class = divClass }, new { @class= "form-check-input" }).Render());
             }
             return new HtmlString(sb.ToString());
         }
-
     }
 }

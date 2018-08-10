@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.ModelMetadataCustom.LinkAttributes
 {
-    public class ActionLinkAttribute : Attribute, IMetadataAttribute
+    public class ActionLinkAttribute : Attribute, IDisplayMetadataAttribute
     {
         public string LinkText { get; set; }
         public string ActionName { get; set; }
@@ -28,6 +28,11 @@ namespace DND.Common.ModelMetadataCustom.LinkAttributes
             ControllerName = controllerName;
         }
 
+        public ActionLinkAttribute(string linkText)
+        {
+            LinkText = linkText;
+        }
+
         public void TransformMetadata(DisplayMetadataProviderContext context)
         {
             var propertyAttributes = context.Attributes;
@@ -41,12 +46,12 @@ namespace DND.Common.ModelMetadataCustom.LinkAttributes
     }
 
     [AttributeUsage(System.AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
-    public class ActionLinkRouteValueAttribute : Attribute, IMetadataAttribute
+    public class LinkRouteValueAttribute : Attribute, IDisplayMetadataAttribute
     {
         public string Key { get; set; }
         public object Value { get; set; }
 
-        public ActionLinkRouteValueAttribute(string key, object value)
+        public LinkRouteValueAttribute(string key, object value)
         {
             Key = key;
             Value = value;

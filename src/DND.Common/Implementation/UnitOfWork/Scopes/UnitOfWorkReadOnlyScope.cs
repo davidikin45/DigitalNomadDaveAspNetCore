@@ -22,15 +22,15 @@ namespace DND.Common.Implementation.UnitOfWork
 
         public override IDbContextCollection DbContexts { get { return _internalScope.DbContexts; } }
 
-        public UnitOfWorkReadOnlyScope(IDbContextFactory dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
+        public UnitOfWorkReadOnlyScope(IDbContextFactoryProducerSingleton dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
             : this(joiningOption: BaseUnitOfWorkScopeOption.JoinExisting, isolationLevel: null, dbContextFactory: dbContextFactory, cancellationToken: cancellationToken)
         {}
 
-        public UnitOfWorkReadOnlyScope(IsolationLevel isolationLevel, IDbContextFactory dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
+        public UnitOfWorkReadOnlyScope(IsolationLevel isolationLevel, IDbContextFactoryProducerSingleton dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
             : this(joiningOption: BaseUnitOfWorkScopeOption.ForceCreateNew, isolationLevel: isolationLevel, dbContextFactory: dbContextFactory, cancellationToken: cancellationToken)
         { }
 
-        public UnitOfWorkReadOnlyScope(BaseUnitOfWorkScopeOption joiningOption, IsolationLevel? isolationLevel, IDbContextFactory dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
+        public UnitOfWorkReadOnlyScope(BaseUnitOfWorkScopeOption joiningOption, IsolationLevel? isolationLevel, IDbContextFactoryProducerSingleton dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null, CancellationToken cancellationToken = default(CancellationToken))
            : base(contextLocator: contextLocator, repositoryFactory: repositoryFactory, cancellationToken: cancellationToken)
         {
             _internalScope = new UnitOfWorkTransactionScope(joiningOption: joiningOption, readOnly: true, isolationLevel: isolationLevel, dbContextFactory: dbContextFactory, contextLocator: contextLocator, repositoryFactory: repositoryFactory );

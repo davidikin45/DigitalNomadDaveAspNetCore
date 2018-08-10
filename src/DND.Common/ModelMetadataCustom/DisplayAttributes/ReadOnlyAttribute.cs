@@ -4,7 +4,7 @@ using System;
 
 namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 {
-    public class ReadOnlyAttribute : Attribute, IMetadataAttribute
+    public class ReadOnlyAttribute : Attribute, IDisplayMetadataAttribute
     {
         public void TransformMetadata(DisplayMetadataProviderContext context)
         {

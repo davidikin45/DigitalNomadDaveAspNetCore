@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DND.Common.ModelMetadataCustom.Providers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace DND.Common.ModelMetadataCustom.FluentMetadata
@@ -14,7 +15,7 @@ namespace DND.Common.ModelMetadataCustom.FluentMetadata
 
         public void Configure(MvcOptions options)
         {
-            options.ModelMetadataDetailsProviders.Add(new FluentMetadataProvider(_provider));
+            options.ModelMetadataDetailsProviders.Insert(0, new FluentMetadataProvider(_provider));
         }
     }
 }

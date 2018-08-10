@@ -22,7 +22,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -94,8 +94,8 @@
     <Reference Include="Humanizer, Version=2.4.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Humanizer.Core.2.4.2\lib\netstandard2.0\Humanizer.dll</HintPath>
     </Reference>
-    <Reference Include="IdentityModel, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\IdentityModel.3.8.0\lib\net452\IdentityModel.dll</HintPath>
+    <Reference Include="IdentityModel, Version=3.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\IdentityModel.3.9.0\lib\net452\IdentityModel.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -741,6 +741,8 @@
     <Compile Include="APIs\Google.cs" />
     <Compile Include="APIs\Instagram.cs" />
     <Compile Include="APIs\IPLocator.cs" />
+    <Compile Include="AppSettings\AppSettings.cs" />
+    <Compile Include="AppSettings\DisplayConventionsDisableOptions.cs" />
     <Compile Include="AutoMapper\AutoMapperConfiguration.cs" />
     <Compile Include="Constants\CMS.cs" />
     <Compile Include="Constants\Folders.cs" />
@@ -787,6 +789,7 @@
     <Compile Include="DependencyInjection\Autofac\AutofacExtensions.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsSignalRHubModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsMetadataModule.cs" />
+    <Compile Include="DependencyInjection\Autofac\Modules\AutofacDbContextFactoryModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacDomainEventHandlerModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacTasksModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacAutomapperModule.cs" />
@@ -802,6 +805,12 @@
     <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
     <Compile Include="DomainEvents\IDomainEventHandler.cs" />
     <Compile Include="DomainEvents\IDomainEvent.cs" />
+    <Compile Include="Dynamic\DynamicHelper.cs" />
+    <Compile Include="Dynamic\DynamicPropertyDescriptor.cs" />
+    <Compile Include="Dynamic\DynamicTypeDescriptorWrapper.cs" />
+    <Compile Include="Dynamic\Expando.cs" />
+    <Compile Include="Dynamic\PropertyBag.cs" />
+    <Compile Include="Dynamic\TypeDescriptorDynamicWrapper.cs" />
     <Compile Include="Email\EmailMessage.cs" />
     <Compile Include="Email\EmailServiceFileSystem.cs" />
     <Compile Include="Email\EmailServiceOptions.cs" />
@@ -811,6 +820,7 @@
     <Compile Include="Enums\ResourceUriType.cs" />
     <Compile Include="Enums\CropType.cs" />
     <Compile Include="Extensions\AutomapperExtensions.cs" />
+    <Compile Include="Extensions\ExpandObjectExtensions.cs" />
     <Compile Include="Extensions\ExpandoObjectExtensions.cs" />
     <Compile Include="Extensions\HostingEnvironmentExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
@@ -826,6 +836,7 @@
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\LinkExtensions.cs" />
     <Compile Include="Extensions\ModelBuilderExtensions.cs" />
+    <Compile Include="Extensions\ModelExplorerExtensions.cs" />
     <Compile Include="Extensions\ModelHelperExtensions.cs" />
     <Compile Include="Extensions\MvcOptionsExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
@@ -854,6 +865,7 @@
     <Compile Include="Helpers\Cryptography\Hmac.cs" />
     <Compile Include="Helpers\Cryptography\HybridEncryptionHelper.cs" />
     <Compile Include="Helpers\Cryptography\RSADigitalSignature.cs" />
+    <Compile Include="Helpers\Cryptography\SigningKey.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
@@ -864,14 +876,18 @@
     <Compile Include="Helpers\LinqHelper.cs" />
     <Compile Include="Helpers\BundleConfigHelper.cs" />
     <Compile Include="Helpers\NavigationMenuHelper.cs" />
+    <Compile Include="Helpers\PropertyHelper.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\SymmetricEncryptionHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
+    <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="Helpers\WebHelper.cs" />
     <Compile Include="Helpers\WebRequestHelper.cs" />
     <Compile Include="Helpers\YouTubeHelper.cs" />
+    <Compile Include="HtmlGenerator\ConventionsHtmlGenerator.cs" />
+    <Compile Include="HtmlGenerator\ConventionsHtmlGeneratorExtension.cs" />
     <Compile Include="HttpClientREST\FileContent.cs" />
     <Compile Include="HttpClientREST\HttpClientExtensions.cs" />
     <Compile Include="HttpClientREST\HttpRequestBuilder.cs" />
@@ -882,6 +898,7 @@
     <Compile Include="Implementation\ApplicationServices\BaseApplicationService.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseEntityApplicationService.cs" />
     <Compile Include="Implementation\ApplicationServices\BaseEntityReadOnlyApplicationService.cs" />
+    <Compile Include="Implementation\Data\DbContextFactoryProducerSingleton.cs" />
     <Compile Include="Implementation\Data\DesignTimeDbContextFactoryBase.cs" />
     <Compile Include="Implementation\Data\RelationshipHelper.cs" />
     <Compile Include="Implementation\DTOs\BaseDtoAggregateRoot.cs" />
@@ -985,6 +1002,8 @@
     <Compile Include="Interfaces\Automapper\IHaveCustomMappings.cs" />
     <Compile Include="Interfaces\Automapper\IMapFrom.cs" />
     <Compile Include="Interfaces\Automapper\IMapTo.cs" />
+    <Compile Include="Interfaces\Data\IDbContextAbstractFactory.cs" />
+    <Compile Include="Interfaces\Data\IDbContextAbstractFactoryProducerSingleton.cs" />
     <Compile Include="Interfaces\Dtos\IBaseDto.cs" />
     <Compile Include="Interfaces\Dtos\IBaseDtoConcurrencyAware.cs" />
     <Compile Include="Interfaces\Models\IBaseEntity.cs" />
@@ -993,7 +1012,6 @@
     <Compile Include="Interfaces\Models\IBaseEntityAuditable.cs" />
     <Compile Include="Interfaces\Models\IBaseObjectValidatable.cs" />
     <Compile Include="Interfaces\Data\IBaseDbContext.cs" />
-    <Compile Include="Interfaces\Data\IBaseDbContextFactory.cs" />
     <Compile Include="Interfaces\Data\IBaseDbContextTransaction.cs" />
     <Compile Include="Interfaces\Repository\IBaseFileReadOnlyRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseFileRepository.cs" />
@@ -1012,7 +1030,7 @@
     <Compile Include="Interfaces\DomainServices\IBaseEntityReadOnlyDomainService.cs" />
     <Compile Include="Interfaces\Services\ICookieService.cs" />
     <Compile Include="Interfaces\Services\IFeatureService.cs" />
-    <Compile Include="Interfaces\Services\IHelperGeneratorService.cs" />
+    <Compile Include="Interfaces\Services\IHtmlHelperGeneratorService.cs" />
     <Compile Include="Interfaces\Services\ITypeHelperService.cs" />
     <Compile Include="Interfaces\UnitOfWork\BaseUnitOfWorkScopeOption.cs" />
     <Compile Include="Interfaces\UnitOfWork\IBaseAmbientDbContextLocator.cs" />
@@ -1033,20 +1051,29 @@
     <Compile Include="Middleware\RequestTasksMiddleware.cs" />
     <Compile Include="Middleware\ResponseCachingCustomMiddleware.cs" />
     <Compile Include="Middleware\RewriteOptionsExtensions.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\HtmlByNameFilter.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\LabelConventionFilter.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\TextAreaByNameFilter.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\UserIDDropDownByNameFilter.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\WatermarkConventionFilter.cs" />
+    <Compile Include="ModelMetadataCustom\ConventionFilters\HtmlByNameConventionFilter.cs" />
+    <Compile Include="ModelMetadataCustom\ConventionFilters\LabelTextConventionFilter.cs" />
+    <Compile Include="ModelMetadataCustom\ConventionFilters\TextAreaByNameConventionFilter.cs" />
+    <Compile Include="ModelMetadataCustom\ConventionFilters\TextboxPlaceholderConventionFilter.cs" />
     <Compile Include="ModelMetadataCustom\DatabaseAttributes\DbWhereClauseAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\DropdownAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\HelpTextAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\NoLabelAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\IconLinkAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\HeadingAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\OffsetRightAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\DataboundAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\AlignRightAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\SubmitButtonAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\MultilineTextAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\ReadOnlyAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\ReadOnlyHiddenInputAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\RenderAttribute.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\ConfigurationExtensions.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\Extension.cs" />
-    <Compile Include="ModelMetadataCustom\FluentMetadata\FluentMetadataProvider.cs" />
+    <Compile Include="ModelMetadataCustom\Providers\CustomModelMetadataProviderSingleton.cs" />
+    <Compile Include="ModelMetadataCustom\Providers\CustomModelMetadataProviderExtension.cs" />
+    <Compile Include="ModelMetadataCustom\Providers\CustomModelMetadata.cs" />
+    <Compile Include="ModelMetadataCustom\Providers\FluentMetadataProvider.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\IDisplayMetadataConfigurator.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\IMetadataConfigurator.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\IMetadataConfiguratorProvider.cs" />
@@ -1058,16 +1085,19 @@
     <Compile Include="ModelMetadataCustom\FluentMetadata\ModelMetadataConfiguration.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\MvcOptionsSetup.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\TestConfig.cs" />
-    <Compile Include="ModelMetadataCustom\Interfaces\IMetadataAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\Interfaces\IMetadataFilter.cs" />
+    <Compile Include="ModelMetadataCustom\Interfaces\IDisplayMetadataAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\Interfaces\IDisplayMetadataFilter.cs" />
     <Compile Include="ModelMetadataCustom\LinkAttributes\ActionLinkAttribute.cs" />
     <Compile Include="ModelMetadataCustom\Providers\ConventionsMetadataProvider.cs" />
     <Compile Include="ModelMetadataCustom\Providers\AttributeMetadataProvider.cs" />
+    <Compile Include="ModelMetadataCustom\Providers\ICustomModelMetadataProviderSingleton.cs" />
+    <Compile Include="ModelMetadataCustom\ValidationAttributes\NumberValidatorAttribute.cs" />
     <Compile Include="OpenIDConnect\OpenIDConnectClient.cs" />
     <Compile Include="Processes\SimpeProcess.cs" />
     <Compile Include="Processes\ChildProcessTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflection\AppTypeFinder.cs" />
+    <Compile Include="Reflection\AssemblyProviderOptions.cs" />
+    <Compile Include="Reflection\TypeFinder.cs" />
     <Compile Include="Reflection\AssemblyProvider.cs" />
     <Compile Include="Reflection\IAssemblyProvider.cs" />
     <Compile Include="Reflection\ITypeFinder.cs" />
@@ -1088,7 +1118,8 @@
     <Compile Include="TagHelpers\ProgressTagHelper.cs" />
     <Compile Include="TagHelpers\YouTubeEmbedTagHelper.cs" />
     <Compile Include="Tasks\IRunAfterEachRequest.cs" />
-    <Compile Include="Tasks\IRunAtStartup.cs" />
+    <Compile Include="Tasks\IRunAfterApplicationConfiguration.cs" />
+    <Compile Include="Tasks\IRunOnWebHostStartup.cs" />
     <Compile Include="Tasks\IRunOnEachRequest.cs" />
     <Compile Include="Tasks\IRunOnError.cs" />
     <Compile Include="Tasks\TaskRunner.cs" />
@@ -1101,8 +1132,14 @@
     <Compile Include="Testing\TestDbAsyncQueryProvider.cs" />
     <Compile Include="Testing\TestHelper.cs" />
     <Compile Include="Testing\TestServer\BaseTestServerFixture.cs" />
-    <Compile Include="Validation\AgeValidator.cs" />
-    <Compile Include="Validation\LimitCount.cs" />
+    <Compile Include="ModelMetadataCustom\ValidationAttributes\AgeValidatorAttribute.cs" />
+    <Compile Include="Validation\CustomComplexObjectValidatorExtension.cs" />
+    <Compile Include="Validation\CustomComplexObjectValidationStrategy.cs" />
+    <Compile Include="Validation\CustomObjectValidator.cs" />
+    <Compile Include="Validation\InheritanceValidationAttributeAdapterProvider.cs" />
+    <Compile Include="Validation\InheritanceValidationAttributeAdapterProviderExtension.cs" />
+    <Compile Include="Validation\CustomValidationVisitor.cs" />
+    <Compile Include="ModelMetadataCustom\ValidationAttributes\LimitCountAttribute.cs" />
     <Compile Include="ViewComponents\BaseViewComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1123,7 +1160,9 @@
       <Name>KeyCore.NET</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Startup\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

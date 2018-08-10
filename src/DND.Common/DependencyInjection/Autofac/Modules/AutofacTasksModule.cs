@@ -21,7 +21,8 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
         protected override void Load(ContainerBuilder builder)
         {
             var tasks = new List<Type>();
-            tasks.Add(typeof(IRunAtStartup));
+            tasks.Add(typeof(IRunAfterApplicationConfiguration));
+            tasks.Add(typeof(IRunOnWebHostStartup));
             tasks.Add(typeof(IRunOnEachRequest));
             tasks.Add(typeof(IRunOnError));
             tasks.Add(typeof(IRunAfterEachRequest));

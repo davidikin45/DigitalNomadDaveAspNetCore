@@ -319,6 +319,7 @@ This project is licensed under the MIT License
 * [Privacy Policies](https://privacypolicies.com)
 * [Jwt Tokens](https://jwt.io/)
 * [OpenID Connect](http://openid.net/connect/)
+* [Productivity Power Pack](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.ProductivityPowerPack2017)
 
 ## Pluralsight Courses for Builing a Web App with MVC and Angular
 * [Building a Web App with ASP.NET Core, MVC, Entity Framework Core, Bootstrap, and Angular](https://app.pluralsight.com/library/courses/aspnetcore-mvc-efcore-bootstrap-angular-web/table-of-contents)

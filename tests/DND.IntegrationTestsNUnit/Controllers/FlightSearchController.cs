@@ -11,14 +11,15 @@ using DND.DomainServices.FlightSearch.Search.Services;
 using DND.Infrastructure;
 using DND.Interfaces.Blog.Data;
 using DND.Interfaces.Data;
-using DND.Web.MVCImplementation.FlightSearch.Api;
 using Microsoft.AspNetCore.Identity;
 using Moq;
-using NUnit.Framework;
 using System.Linq;
 
 namespace DND.IntegrationTestsNUnit.Controllers
 {
+    using DND.Common.Implementation.Data;
+    using DND.Web.MVCImplementation.FlightSearch.Api;
+    using NUnit.Framework;
     [TestFixture]
     public class FlightSearchControllerTests
     {
@@ -40,12 +41,12 @@ namespace DND.IntegrationTestsNUnit.Controllers
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
 
             _context = new ApplicationDbContext(connectionString, true);
-            var mockDbContextFactory = new Mock<IDbContextFactory>();
-            mockDbContextFactory.Setup(c => c.CreateDefault()).Returns(_context);
+            var mockDbContextFactory = new Mock<IDbContextFactory<IBlogDbContext>>();
+            mockDbContextFactory.Setup(c => c.CreateBaseDbContext()).Returns(_context);
 
             _identityContext = GlobalDbSetupFixture.CreateIdentityContext(false);
 
-            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(mockDbContextFactory.Object, new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper), _mapper, null, null, null);
+            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { mockDbContextFactory.Object }), new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper), _mapper, null, null, null);
         }
 
         [TearDown]
@@ -64,7 +65,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
             var user = _identityContext.Users.First();
             _controller.MockCurrentUser(user.Id, user.UserName, IdentityConstants.ApplicationScheme);
 
-            var unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextFactory(), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
 
             var category = new Category()
             {

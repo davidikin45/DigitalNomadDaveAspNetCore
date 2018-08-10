@@ -1,13 +1,8 @@
-﻿using DND.Common.Controllers.Api;
-using DND.Common.DomainEvents;
+﻿using DND.Common.DomainEvents;
 using DND.Common.Implementation.Data;
 using DND.Data.Identity.Configurations;
 using DND.Domain.Identity.Users;
-using DND.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 
 namespace DND.Data.Identity
 {
@@ -31,32 +26,9 @@ namespace DND.Data.Identity
             builder.Entity<User>().ToTable("User");
         }
 
-        public void Seed()
+        public override void Seed()
         {
-            if (!Users.Any())
-            {
-                var adminRole = new IdentityRole() { Id = Guid.NewGuid().ToString(), Name = DNDSeedData.AdminRoleName };
-                adminRole.NormalizedName = adminRole.Name.ToUpper();
-                Roles.Add(adminRole);
-
-                var password = DNDSeedData.AdminPassword;
-
-                var passwordHasher = new PasswordHasher<User>();
-                var adminUser = new User { Id = Guid.NewGuid().ToString(), UserName = DNDSeedData.AdminUsername, Name = DNDSeedData.AdminName, Email = DNDSeedData.AdminEmail, EmailConfirmed = true, LockoutEnabled = true };
-                adminUser.NormalizedUserName = adminUser.UserName.ToUpper();
-                adminUser.NormalizedEmail = adminUser.Email.ToUpper();
-                adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, password);
-
-                Users.Add(adminUser);
-
-                UserRoles.Add(new IdentityUserRole<string>() { UserId = adminUser.Id, RoleId = adminRole.Id });
-            }
-
-            if(!UserClaims.Any())
-            {
-                var claim = new IdentityUserClaim<string>() { ClaimType = "scope", ClaimValue = ApiScopes.Full, UserId = Users.Where(u => u.UserName == DNDSeedData.AdminUsername).First().Id };
-                UserClaims.Add(claim);
-            }
+            DbSeed.Seed(this);
         }
     }
 }

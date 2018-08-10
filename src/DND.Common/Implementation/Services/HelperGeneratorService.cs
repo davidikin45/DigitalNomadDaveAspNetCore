@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Services
 {
-    public class HelperGeneratorService : IHelperGeneratorService
+    public class HtmlHelperGeneratorService : IHtmlHelperGeneratorService
     {
         private readonly IHtmlGenerator _htmlGenerator;
         private readonly ICompositeViewEngine _compositeViewEngine;
@@ -25,7 +25,7 @@ namespace DND.Common.Implementation.Services
         private readonly ITempDataProvider _tempDataProvider;
         private readonly HtmlHelperOptions _htmlHelperOptions;
 
-        public HelperGeneratorService(IHtmlGenerator htmlGenerator, ICompositeViewEngine compositeViewEngine, IModelMetadataProvider modelMetadataProvider, IViewBufferScope viewBufferScope, IActionContextAccessor actionContextAccessor, ITempDataProvider tempDataProvider, IOptions<MvcViewOptions> options)
+        public HtmlHelperGeneratorService(IHtmlGenerator htmlGenerator, ICompositeViewEngine compositeViewEngine, IModelMetadataProvider modelMetadataProvider, IViewBufferScope viewBufferScope, IActionContextAccessor actionContextAccessor, ITempDataProvider tempDataProvider, IOptions<MvcViewOptions> options)
         {
             _htmlGenerator = htmlGenerator;
             _compositeViewEngine = compositeViewEngine;

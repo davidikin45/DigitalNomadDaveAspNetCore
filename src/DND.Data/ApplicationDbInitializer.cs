@@ -6,18 +6,16 @@ using DND.Infrastructure;
 
 namespace DND.Data
 {
-    public class ApplicationDbInitializer : IRunAtStartup
+    public class ApplicationDbInitializer : IRunOnWebHostStartup
     {
-        private IDbContextFactory _dbContextFactory;
-        public ApplicationDbInitializer(IDbContextFactory dbContextFactory)
+        private IDbContextFactoryProducerSingleton _dbContextFactory;
+        public ApplicationDbInitializer(IDbContextFactoryProducerSingleton dbContextFactory)
         {
             _dbContextFactory = dbContextFactory;
         }
 
         public void Execute()
         {
-            //DbContextInitializer<ApplicationDbContext>.SetInitializer(new ApplicationDbInitializerDropCreate(), true, true);
-
             if(bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite")))
             {
                 DbContextInitializer<ApplicationDbContext>.SetInitializer(_dbContextFactory, new ApplicationDbInitializerMigrateSQLite(), true, true);

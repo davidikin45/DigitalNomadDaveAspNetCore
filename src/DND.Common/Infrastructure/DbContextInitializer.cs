@@ -18,7 +18,7 @@ namespace DND.Common.Infrastructure
         /// Method to allow running a DatabaseInitializer exactly once
         /// </summary>   
         /// <param name="initializer">A Database Initializer to run</param>
-        public static void SetInitializer(IDbContextFactory dbContextFactory, IDatabaseInitializer<TContext> initializer, Boolean initialize = false, Boolean forceInitialize = false)
+        public static void SetInitializer(IDbContextFactoryProducerSingleton dbContextFactory, IDatabaseInitializer<TContext> initializer, Boolean initialize = false, Boolean forceInitialize = false)
 
         {
             if (_InitializeLoaded)
@@ -37,7 +37,7 @@ namespace DND.Common.Infrastructure
                 System.Data.Entity.Database.SetInitializer<TContext>(initializer);
                 if (initialize)
                 {
-                    using (var context = dbContextFactory.Create<TContext>())
+                    using (var context = dbContextFactory.GetFactory<TContext>().CreateDbContext())
                     {
                         context.Database.Initialize(forceInitialize);
                     }

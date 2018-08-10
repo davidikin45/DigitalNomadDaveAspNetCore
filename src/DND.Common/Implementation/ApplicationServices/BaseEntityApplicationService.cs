@@ -22,7 +22,7 @@ using DND.Common.SignalRHubs;
 namespace DND.Common.Implementation.ApplicationServices
 {
     public abstract class BaseEntityApplicationService<TEntity, TCreateDto, TReadDto, TUpdateDto, TDeleteDto, TDomainService> : BaseEntityReadOnlyApplicationService<TEntity, TReadDto, TDomainService>, IBaseEntityApplicationService<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
-          where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, new()
+          where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
           where TCreateDto : class, IBaseDto
           where TReadDto : class, IBaseDtoWithId, IBaseDtoConcurrencyAware
           where TUpdateDto : class, IBaseDto, IBaseDtoConcurrencyAware

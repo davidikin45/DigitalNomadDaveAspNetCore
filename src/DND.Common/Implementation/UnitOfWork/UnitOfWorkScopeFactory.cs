@@ -17,11 +17,11 @@ namespace DND.Common.Implementation.UnitOfWork
 {
     public class UnitOfWorkScopeFactory : IUnitOfWorkScopeFactory
     {
-        private readonly IDbContextFactory _dbContextFactory;
+        private readonly IDbContextFactoryProducerSingleton _dbContextFactory;
         private readonly IAmbientDbContextLocator _contextLocator;
         private readonly IGenericRepositoryFactory _repositoryFactory;
 
-        public UnitOfWorkScopeFactory(IDbContextFactory dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null)
+        public UnitOfWorkScopeFactory(IDbContextFactoryProducerSingleton dbContextFactory = null, IAmbientDbContextLocator contextLocator = null, IGenericRepositoryFactory repositoryFactory = null)
         {
             _dbContextFactory = dbContextFactory;
             _contextLocator = contextLocator;

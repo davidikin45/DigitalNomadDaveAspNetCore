@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Testing
 {
-    public class FakeSingleDbContextFactory : IDbContextFactory
+    public class FakeSingleDbContextFactory<TIDbContext> : IDbContextFactory<TIDbContext> where TIDbContext : IBaseDbContext
     {
         private IBaseDbContext _dbContext;
         public FakeSingleDbContextFactory(IBaseDbContext dbContext)
@@ -16,14 +16,14 @@ namespace DND.Common.Testing
             _dbContext = dbContext;
         }
 
-        public TIDbContext Create<TIDbContext>() where TIDbContext : IBaseDbContext
-        {
-            return (TIDbContext)_dbContext;
-        }
-
-        public IBaseDbContext CreateDefault()
+        public IBaseDbContext CreateBaseDbContext()
         {
             return _dbContext;
+        }
+
+        public TIDbContext CreateDbContext()
+        {
+            return (TIDbContext)_dbContext;
         }
     }
 }

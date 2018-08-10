@@ -13,9 +13,9 @@ namespace DND.Common.ModelMetadataCustom.Providers
             {
                 foreach (object propAttr in context.PropertyAttributes)
                 {
-                    if(propAttr is IMetadataAttribute)
+                    if(propAttr is IDisplayMetadataAttribute)
                     {
-                        ((IMetadataAttribute)propAttr).TransformMetadata(context);
+                        ((IDisplayMetadataAttribute)propAttr).TransformMetadata(context);
                     }
                 }
             }

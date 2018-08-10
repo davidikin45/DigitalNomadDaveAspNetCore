@@ -19,7 +19,7 @@ namespace DND.Common.Implementation.DomainServices
     //Todo - Move validation down a level into repository
     public abstract class BaseEntityDomainService<TContext, TEntity> : BaseEntityReadOnlyDomainService<TContext, TEntity>, IBaseEntityDomainService<TEntity>
           where TContext : IBaseDbContext
-          where TEntity : class, IBaseEntityAggregateRoot, IBaseEntityAuditable, IBaseEntityConcurrencyAware, new()
+          where TEntity : class, IBaseEntity, IBaseEntityAuditable, new()
     {
 
         public BaseEntityDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
@@ -198,7 +198,7 @@ namespace DND.Common.Implementation.DomainServices
                 + "have been returned. If you still want to edit this record, save "
                 + "again."));
 
-            return Result.ConcurrencyConflict(errors, databaseValues.RowVersion);
+            return Result.ConcurrencyConflict(errors, ((IBaseEntityConcurrencyAware)databaseValues).RowVersion);
         }
         #endregion
 
@@ -283,7 +283,7 @@ namespace DND.Common.Implementation.DomainServices
             + "database have been returned. If you still want to delete this "
             + "record, Delete again."));
 
-            return Result.ConcurrencyConflict(errors, databaseValues.RowVersion);
+            return Result.ConcurrencyConflict(errors, ((IBaseEntityConcurrencyAware)databaseValues).RowVersion);
         }
         #endregion
 
@@ -316,18 +316,21 @@ namespace DND.Common.Implementation.DomainServices
                 {
                     var entity = unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetById(id);
 
-                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, null, entity, triggeredBy);
-                    if (actionEvent != null)
+                    if(entity is IBaseEntityAggregateRoot)
                     {
-                        entity.AddActionEvent(actionEvent);
-
-                        var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, triggeredBy);
-                        if (validationResult.IsFailure)
+                        IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, null, entity, triggeredBy);
+                        if (actionEvent != null)
                         {
-                            return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
-                        }
+                            ((IBaseEntityAggregateRoot)entity).AddActionEvent(actionEvent);
 
-                        unitOfWork.Complete();
+                            var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, triggeredBy);
+                            if (validationResult.IsFailure)
+                            {
+                                return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                            }
+
+                            unitOfWork.Complete();
+                        }
                     }
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -348,19 +351,21 @@ namespace DND.Common.Implementation.DomainServices
                 try
                 {
                     var entity = await unitOfWork.ReadOnlyRepository<TContext, TEntity>().GetByIdAsync(id);
-
-                    IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, null, entity, triggeredBy);
-                    if (actionEvent != null)
+                    if (entity is IBaseEntityAggregateRoot)
                     {
-                        entity.AddActionEvent(actionEvent);
-
-                        var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, triggeredBy);
-                        if (validationResult.IsFailure)
+                        IDomainActionEvent actionEvent = actionEvents.CreateEntityActionEvent(action, null, entity, triggeredBy);
+                        if (actionEvent != null)
                         {
-                            return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
-                        }
+                            ((IBaseEntityAggregateRoot)entity).AddActionEvent(actionEvent);
 
-                        await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                            var validationResult = unitOfWork.Repository<TContext, TEntity>().Update(entity, triggeredBy);
+                            if (validationResult.IsFailure)
+                            {
+                                return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
+                            }
+
+                            await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                        }
                     }
                 }
                 catch (DbUpdateConcurrencyException ex)

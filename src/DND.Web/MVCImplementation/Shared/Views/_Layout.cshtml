@@ -98,17 +98,18 @@
     <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
     <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
 
-    @await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent",""), new { id = DND.Common.Constants.CMS.ContentHtml.Head })
+    @await Component.InvokeAsync(nameof(ContentHTMLViewComponent).Replace("ViewComponent", ""), new { id = DND.Common.Constants.CMS.ContentHtml.Head })
 
     <base href="/">
-    <title>@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle @(Settings.GetValue<string>("TitleSeparator")) </text>}@(Settings.GetValue<String>("SiteTitle"))</title>
+    <title>@if (!string.IsNullOrEmpty(ViewBag.PageTitle))
+    {<text>@ViewBag.PageTitle @(Settings.GetValue<string>("TitleSeparator")) </text>}@(Settings.GetValue<String>("SiteTitle"))</title>
 
-    @Html.GoogleFontAsync(new List<string> { (Settings.GetValue<String>("BodyFont")), (Settings.GetValue<String>("NavBarFont")) },true, true, true,true,true,true,2000)
+    @Html.GoogleFontAsync(new List<string> { (Settings.GetValue<String>("BodyFont")), (Settings.GetValue<String>("NavBarFont")) }, true, true, true, true, true, true, 2000)
     @Html.GetFontBodyCSSAsync((Settings.GetValue<String>("BodyFont")))
     @Html.GetFontNavBarCSSAsync((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")))
 
     @*@Html.GoogleFont((Settings.GetValue<String>("BodyFont")),"", true, false, true, true, true, true)
-    @Html.GoogleFont((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")), false, true, true, true, true, true)*@
+        @Html.GoogleFont((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")), false, true, true, true, true, true)*@
 
     @Html.Partial("_CSS")
 
@@ -117,11 +118,14 @@
         @Html.Partial("_AdminCSS")
     }
     @RenderSection("styles", required: false)
-    @if ((ViewBag.Admin == null || !ViewBag.Admin))
+    @if ((ViewBag.Admin == null || !ViewBag.Admin) && !String.IsNullOrWhiteSpace(Settings.GetValue<String>("GoogleAnalyticsTrackingId")))
     {
         @(Html.GoogleAnalyticsScript((Settings.GetValue<String>("GoogleAnalyticsTrackingId"))))
+    }
+    @if ((ViewBag.Admin == null || !ViewBag.Admin) && !String.IsNullOrWhiteSpace(Settings.GetValue<String>("GoogleAdSenseId")))
+    {
         @(Html.GoogleAdSenseScript((Settings.GetValue<String>("GoogleAdSenseId"))))
-    }   
+    }
 </head>
 <body ng-cloak class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page") @(ViewBag.FullWidthPage == true ? "full-width-page" : "")">
     @if ((ViewBag.Admin == null || !ViewBag.Admin))
@@ -282,6 +286,7 @@
         });
     </script>
 
+    @Html.PostScrollHeight()
     @Html.DeferredIFrameLoad()
 
     @if (!String.IsNullOrEmpty((Settings.GetValue<String>("AddThisId"))) && (ViewBag.Admin == null || !ViewBag.Admin))

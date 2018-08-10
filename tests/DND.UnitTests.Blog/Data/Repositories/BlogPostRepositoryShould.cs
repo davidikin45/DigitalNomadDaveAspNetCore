@@ -1,10 +1,13 @@
-﻿using DND.Common.Implementation.Data.InMemory;
+﻿using DND.Common.Implementation.Data;
+using DND.Common.Implementation.Data.InMemory;
 using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Implementation.UnitOfWork;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Testing;
 using DND.Domain.Blog.BlogPosts;
+using DND.Interfaces.CMS.Data;
 using FluentAssertions;
 using System;
 using System.Threading.Tasks;
@@ -21,7 +24,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         public BlogPostRepositoryShould()
         {
             _context = new InMemoryDataContext();
-            var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(_context), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var uowFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<ICMSDbContext>(_context)}), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _uow = uowFactory.CreateReadOnly();
             _repository = new GenericEFRepository<BlogPost>(_context, _uow);
         }

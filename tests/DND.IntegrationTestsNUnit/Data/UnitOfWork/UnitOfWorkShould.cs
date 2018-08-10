@@ -1,11 +1,14 @@
-﻿using DND.Common.Implementation.Repository;
+﻿using DND.Common.Implementation.Data;
+using DND.Common.Implementation.Repository;
 using DND.Common.Implementation.Repository.EntityFramework;
 using DND.Common.Implementation.UnitOfWork;
+using DND.Common.Interfaces.Data;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Common.Testing;
 using DND.Data;
 using DND.Domain.Blog.Categories;
 using DND.Infrastructure;
+using DND.Interfaces.Blog.Data;
 using DND.Interfaces.Data;
 using FluentAssertions;
 using NUnit.Framework;
@@ -22,7 +25,7 @@ namespace DND.IntegrationTestsNUnit.Data.UnitOfWork
         [SetUp]
         public void SetUp()
         {
-            _unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextFactory(), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            _unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
         }
 
         [TearDown]
@@ -37,7 +40,7 @@ namespace DND.IntegrationTestsNUnit.Data.UnitOfWork
 
             using (var con = new ApplicationDbContext(connectionString, true))
             {
-                var uowFactory = new UnitOfWorkScopeFactory(new FakeSingleDbContextFactory(con), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var uowFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(con) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
                 using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
                 {
                     var repo = new GenericEFRepository<Category>(con, unitOfWork);

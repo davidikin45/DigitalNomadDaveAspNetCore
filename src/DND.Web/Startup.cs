@@ -1,24 +1,37 @@
 ﻿using AspNetCoreRateLimit;
 using Autofac;
 using DND.Common.Alerts;
+using DND.Common.AppSettings;
+using DND.Common.Constraints;
 using DND.Common.Controllers.Admin;
+using DND.Common.Controllers.Api;
 using DND.Common.DependencyInjection.Autofac.Modules;
 using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
 using DND.Common.Hangfire;
 using DND.Common.Helpers;
+using DND.Common.Helpers.Cryptography;
+using DND.Common.HtmlGenerator;
 using DND.Common.Infrastructure;
 using DND.Common.Middleware;
+using DND.Common.ModelMetadataCustom.Providers;
+using DND.Common.Reflection;
 using DND.Common.Routing;
+using DND.Common.SignalRHubs;
 using DND.Common.Swagger;
 using DND.Common.Tasks;
+using DND.Common.Validation;
 using DND.Data.Identity;
 using DND.Domain.Identity.Users;
 using DND.Infrastructure;
-using DND.Web.MVCImplementation.FlightSearch.Hubs;
 using Hangfire;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,37 +47,26 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using DND.Common.SignalRHubs;
-using static DND.Common.Helpers.NavigationMenuHelperExtension;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.IdentityModel.Tokens.Jwt;
-using IdentityServer4.AccessTokenValidation;
-using System.Security.Cryptography.X509Certificates;
-using DND.Common.Controllers.Api;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json.Serialization;
-using DND.Domain.Blog.BlogPosts.Dtos;
-using Microsoft.AspNetCore.Routing;
-using DND.Common.Constraints;
 
 namespace DND.Web
 {
@@ -94,6 +96,7 @@ namespace DND.Web
         public void ConfigureServices(IServiceCollection services)
         {
             //Settings
+            bool EnableIFramesGlobal = Configuration.GetValue<bool>("AppSettings:Switches:EnableIFramesGlobal");
             bool enableMVCModelValidation = Configuration.GetValue<bool>("AppSettings:Switches:EnableMVCModelValidation");
             bool useSQLite = bool.Parse(DNDConnectionStrings.GetConnectionString("UseSQLite"));
             string cookieConsentName = Configuration.GetValue<string>("AppSettings:CookieConsentName");
@@ -104,6 +107,7 @@ namespace DND.Web
             string mvcImplementationFolder = Configuration.GetValue<string>("AppSettings:MVCImplementationFolder");
             string domain = Configuration.GetValue<string>("AppSettings:Domain");
             string assemblyPrefix = Configuration.GetValue<string>("AppSettings:AssemblyPrefix");
+            string commonAssembly = "DND.Common";
             string assemblyName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
             string xmlDocumentationFileName = assemblyName + ".xml";
             int responseCacheSizeMB = Configuration.GetValue<int>("AppSettings:ResponseCacheSizeMB");
@@ -140,6 +144,10 @@ namespace DND.Web
             string facebookClientSecret = Configuration.GetValue<string>("AppSettings:Login:Facebook:ClientSecret");
 
             var bin = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            Func<string, Boolean> assemblyFilter = (s => (new FileInfo(s)).Name.Contains(assemblyPrefix) || (new FileInfo(s)).Name.Contains(commonAssembly));
+            string pluginsFolder = @"plugins\";
+            string pluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), pluginsFolder);
+            if (!Directory.Exists(pluginsPath)) Directory.CreateDirectory(pluginsPath);
 
             //Email
             var fromDisplayName = Configuration.GetValue<string>("AppSettings:Email:FromDisplayName");
@@ -174,6 +182,12 @@ namespace DND.Web
             {
                 emailsFileSystemPath = Path.Combine(bin, fileSystemFolder);
             }
+
+            services.Configure<DisplayConventionsDisableOptions>(Configuration.GetSection("AppSettings:DisplayConventionsDisable"));
+
+            //Load plugins into current AppDomain
+            var pluginAssemblies = Directory.GetFiles(pluginsPath, "*.dll", SearchOption.TopDirectoryOnly)
+                               .Select(System.Reflection.Assembly.LoadFile);
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
@@ -280,6 +294,11 @@ namespace DND.Web
                              IssuerSigningKeys = signingKeys
                          }
                      );
+            }
+
+            if(EnableIFramesGlobal)
+            {
+                services.AddAntiforgery(o => o.SuppressXFrameOptionsHeader = true);
             }
 
             if (enableOpenIdConnectJwtTokenLogin)
@@ -451,11 +470,23 @@ namespace DND.Web
                 services.AddTransient<IEmailService, EmailServiceFileSystem>();
             }
 
+            services.Configure<AssemblyProviderOptions>(options =>
+            {
+                options.BinPath = bin;
+                options.AssemblyFilter = assemblyFilter;
+            });
+
             //services.AddTransient<IEmailSender, EmailSender>();
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.ViewLocationExpanders.Add(new CustomViewLocator(mvcImplementationFolder));
+
+                //Add Embedded Views from other assemblies
+                foreach (var pluginAssembly in pluginAssemblies)
+                {
+                    options.FileProviders.Add(new EmbeddedFileProvider(pluginAssembly));
+                }
             });
 
             services.Configure<RouteOptions>(options =>
@@ -489,7 +520,7 @@ namespace DND.Web
             services.AddCookieConsentNeeded(cookieConsentName);
 
             // Add framework services.
-            services.AddMvc(options =>
+            var mvc = services.AddMvc(options =>
             {
                 options.UseCustomModelBinding();
 
@@ -567,7 +598,6 @@ namespace DND.Web
                 //options.Conventions.Add(new DashedRoutingConvention(defaultControllerName: "Home", defaultActionName: "Index"));
             })
             .AddXmlSerializerFormatters() //XML Opt out. Contract Serializer is Opt in
-            .AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices()
             .AddJsonOptions(opt =>
             {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -580,6 +610,13 @@ namespace DND.Web
                 options.Cookie.Name = cookieTempDataName;
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //Add Controllers from other assemblies
+            mvc.AddApplicationPart(typeof(AdminFileManagerController).GetTypeInfo().Assembly).AddControllersAsServices();
+            foreach (var pluginAssembly in pluginAssemblies)
+            {
+                mvc.AddApplicationPart(pluginAssembly).AddControllersAsServices();
+            }
 
             //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
             //https://stackoverflow.com/questions/46374994/correct-way-to-disable-model-validation-in-asp-net-core-2-mvc
@@ -669,11 +706,13 @@ namespace DND.Web
                   .AllowAnyHeader());
             });
 
-
-            //Used for returning only certain fields in API
-            //services.AddTransient<ITypeHelperService, TypeHelperService>();
+            services.AddCustomModelMetadataProvider();
+            services.AddCustomObjectValidator();
+            services.AddInheritanceValidationAttributeAdapterProvider();
+            services.AddConventionsHtmlGenerator();
 
             services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton(Configuration);
 
@@ -735,16 +774,13 @@ namespace DND.Web
             string pluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), pluginsFolder);
             if (!Directory.Exists(pluginsPath)) Directory.CreateDirectory(pluginsPath);
 
-            //Load plugins into current AppDomain
-            var assemblies = Directory.GetFiles(pluginsPath, "*.dll", SearchOption.TopDirectoryOnly)
-                               .Select(System.Reflection.Assembly.LoadFile);
-
             Func<Assembly, Boolean> filterFunc = (a => a.FullName.Contains(assemblyPrefix) || a.FullName.Contains(commonAssembly));
             Func<string, Boolean> stringFunc = (s => (new FileInfo(s)).Name.Contains(assemblyPrefix) || (new FileInfo(s)).Name.Contains(commonAssembly));
 
             builder.RegisterModule(new AutofacConventionsDependencyInjectionModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacTasksModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacDomainEventHandlerModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
+            builder.RegisterModule(new AutofacDbContextFactoryModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacConventionsMetadataModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacConventionsSignalRHubModule() { Paths = new string[] { binPath, pluginsPath }, Filter = stringFunc });
             builder.RegisterModule(new AutofacAutomapperModule() { Filter = filterFunc });
@@ -783,6 +819,7 @@ namespace DND.Web
             bool enableResponseCaching = Configuration.GetValue<bool>("AppSettings:Switches:EnableResponseCaching");
             bool enableETags = Configuration.GetValue<bool>("AppSettings:Switches:EnableETags");
             bool enableHangfire = Configuration.GetValue<bool>("AppSettings:Switches:EnableHangfire");
+            bool enableSignalR = Configuration.GetValue<bool>("AppSettings:Switches:EnableSignalR");
 
             string cookieConsentName = Configuration.GetValue<string>("AppSettings:CookieConsentName");
             string publicUploadFoldersString = Configuration.GetValue<string>("AppSettings:PublicUploadFolders");
@@ -936,10 +973,14 @@ namespace DND.Web
                 }
             }
 
-            app.UseSignalR(routes =>
+            if(enableSignalR)
             {
-                SignalRConfig.MapHubs(routes, signalRHubMapper, signalRUrlPrefix);
-            });
+                app.UseSignalR(routes =>
+                {
+                    routes.MapHub<NotificationHub>(signalRUrlPrefix + "/signalr/notifications");
+                    signalRHubMapper.MapHubs(routes, signalRUrlPrefix);
+                });
+            }
 
             //Cache-Control:max-age=0
             //This is equivalent to clicking Refresh, which means, give me the latest copy unless I already have the latest copy.
@@ -1117,9 +1158,9 @@ namespace DND.Web
             StaticProperties.HostingEnvironment = HostingEnvironment;
             StaticProperties.Configuration = Configuration;
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-            NavigationMenuHelper.MVCImplementationFolder = mvcImplementationFolder;
+            NavigationMenuHelperExtension.NavigationMenuHelper.MVCImplementationFolder = mvcImplementationFolder;
 
-            taskRunner.RunTasksAtStartup();
+            taskRunner.RunTasksAfterApplicationConfiguration();
         }
     }
 }

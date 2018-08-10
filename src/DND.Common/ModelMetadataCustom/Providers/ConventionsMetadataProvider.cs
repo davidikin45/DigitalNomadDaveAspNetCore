@@ -4,14 +4,14 @@ using System;
 
 namespace DND.Common.ModelMetadataCustom.Providers
 {
-    public class ConventionsMetadataProvider : IDisplayMetadataProvider
+    public class ConventionsMetadataProvider : IDisplayMetadataProvider, IValidationMetadataProvider
     {
         public ConventionsMetadataProvider() { }
 
-        private readonly IMetadataFilter[] _metadataFilters;
+        private readonly IDisplayMetadataFilter[] _metadataFilters;
 
         public ConventionsMetadataProvider(
-            IMetadataFilter[] metadataFilters)
+            IDisplayMetadataFilter[] metadataFilters)
         {
             _metadataFilters = metadataFilters;
         }
@@ -19,6 +19,11 @@ namespace DND.Common.ModelMetadataCustom.Providers
         public void CreateDisplayMetadata(DisplayMetadataProviderContext context)
         {
             Array.ForEach(_metadataFilters, m => m.TransformMetadata(context));
+        }
+
+        public void CreateValidationMetadata(ValidationMetadataProviderContext context)
+        {
+           
         }
     }
 }

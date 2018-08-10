@@ -4,7 +4,7 @@ using DND.Common.ModelMetadataCustom.Interfaces;
 
 namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 {
-    public class MultilineTextAttribute : Attribute, IMetadataAttribute
+    public class MultilineTextAttribute : Attribute, IDisplayMetadataAttribute
     {
         public int Rows { get; set; }
         public Boolean HTML { get; set; }
@@ -15,7 +15,11 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
             HTML = false;
         }
 
-        public void TransformMetadata(DisplayMetadataProviderContext context)
+        public MultilineTextAttribute(int rows)
+        {
+            Rows = rows;
+        }
+            public void TransformMetadata(DisplayMetadataProviderContext context)
         {
             var propertyAttributes = context.Attributes;
             var modelMetadata = context.DisplayMetadata;
