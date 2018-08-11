@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using DND.Common.Alerts;
 using DND.Common.Controllers;
 using DND.Common.Dynamic;
 using DND.Common.Email;
 using DND.Common.Extensions;
+using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Interfaces.Services;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -38,50 +39,79 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             _cookieService = cookieService;
         }
 
+        [NoAjaxRequest]
         [Route("{formId}")]
         [Route("{formId}/section/{sectionId}")]
-        public virtual async Task<ActionResult> Edit(string formId, string sectionId, IFormCollection queryString)
+        public virtual async Task<IActionResult> Edit(string formId, string sectionId)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            try
-            {
-                //1. Create Form - Each Form > Sections (Valid) > Questions (Valid)
-                //2. If submissionId populate form with Route and Querystring Data
-                //3. If submissionId populate form with saved data
-                //4. 
+            var response = GetEditFormResponse(this.RouteData.Values, Request.Query);
 
-
-                //Isvalid
-
-
-                //1. Setup Form definition and 2. Add Validation
-                var wrapper = SetupForm(false);
-
-                //3. Prepropulate from routeData and query string
-                PopulateFormRouteData(wrapper, this.RouteData.Values);
-                PopulateForm(wrapper, Request.Query);
-
-                ViewBag.DetailsMode = false;
-                ViewBag.PageTitle = Title;
-                ViewBag.Admin = false;
-                return View("DynamicFormEdit", wrapper);
-            }
-            catch (Exception ex)
-            {
-                return HandleReadException();
-            }
+            ViewBag.DetailsMode = false;
+            ViewBag.PageTitle = Title;
+            ViewBag.Admin = false;
+            return View("DynamicFormMenuAndFormPage", response);
         }
 
+        [AjaxRequest]
+        [Route("{formId}")]
+        [Route("{formId}/section/{sectionId}")]
+        public virtual async Task<IActionResult> EditAjax(string formId, string sectionId)
+        {
+            var response = GetEditFormResponse(this.RouteData.Values, Request.Query);
+
+            ViewBag.DetailsMode = false;
+            return View("_DynamicFormMenuAndForm", response);
+        }
+
+        private DynamicTypeDescriptorWrapper GetEditFormResponse(RouteValueDictionary routeData, IQueryCollection queryString)
+        {
+            //1. Setup Form definition and 2. Add Validation
+            var wrapper = SetupForm(false);
+
+            //3. Prepropulate from routeData and query string
+            PopulateFormRouteData(wrapper, this.RouteData.Values);
+            PopulateForm(wrapper, Request.Query);
+
+            return wrapper;
+        }
+
+        [NoAjaxRequest]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         [Route("{formId}")]
         [Route("{formId}/section/{sectionId}")]
-        public virtual ActionResult Update(string formId, string sectionId, IFormCollection formData)
+        public virtual IActionResult Update(string formId, string sectionId, IFormCollection formData)
         {
             //dto.Id = id;
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            //1. Setup Form definition and 2. Add Validation
+            var response = GetUpdateFormResponse(formData);
+
+            ViewBag.DetailsMode = false;
+            ViewBag.PageTitle = Title;
+            ViewBag.Admin = false;
+            return View("DynamicFormMenuAndFormPage", response);
+        }
+
+        [AjaxRequest]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [Route("{formId}")]
+        [Route("{formId}/section/{sectionId}")]
+        public virtual IActionResult UpdateAjax(string formId, string sectionId, IFormCollection formData)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = GetUpdateFormResponse(formData);
+
+            ViewBag.DetailsMode = false;
+            return PartialView("_DynamicFormMenuAndForm", response);
+        }
+
+        private DynamicTypeDescriptorWrapper GetUpdateFormResponse(IFormCollection formData)
+        {
             var wrapper = SetupForm(false);
 
             //3. Populate with formData
@@ -89,22 +119,9 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             PopulateFormFiles(wrapper, formData.Files);
 
             //4. Validate
-            if (TryValidateModel(wrapper))
-            {
-                try
-                {
-                    return RedirectToControllerDefault().WithSuccess(this, Messages.UpdateSuccessful);
-                }
-                catch (Exception ex)
-                {
-                    HandleUpdateException(ex);
-                }
-            }
+            TryValidateModel(wrapper);
 
-            ViewBag.DetailsMode = false;
-            ViewBag.PageTitle = Title;
-            ViewBag.Admin = false;
-            return View("DynamicFormEdit", wrapper);
+            return wrapper;
         }
 
         [HttpGet]
@@ -127,7 +144,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
                 ViewBag.DetailsMode = true;
                 ViewBag.PageTitle = Title;
                 ViewBag.Admin = false;
-                return View("DynamicFormEdit", wrapper);
+                return View("DynamicFormMenuAndFormPage", wrapper);
             }
             catch (Exception ex)
             {
@@ -137,6 +154,8 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
         private DynamicTypeDescriptorWrapper SetupForm(bool summary)
         {
+            string containerDiv = "#dynamicForm";
+
             //1. Setup Form definition
             ExpandoObject dto = new ExpandoObject();
             dto.Add("Text", "");
@@ -145,13 +164,14 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             dto.Add("PhoneNumber", "");
             dto.Add("TextArea", "");
             dto.Add("Number", 0);
+            dto.Add("Slider", 50);
 
-            if(summary)
+            if (summary)
             {
                 dto.Add("IconButton", "");
             }
 
-            var section2Link = Html.ActionLink("Section 2", "Edit", "DynamicForms", new { sectionId = "section2", formId = "insurance" }, new { @class="text-danger" }).Render();
+            var section2Link = Html.ActionLink("Section 2", "Edit", "DynamicForms", new { sectionId = "section2", formId = "insurance" }, new { @class="text-danger", data_ajax = "true", data_ajax_method = "GET", data_ajax_mode = "replace", data_ajax_update = containerDiv }).Render();
             dto.Add("SectionHeading", section2Link);
 
             decimal currency = 0;
@@ -171,7 +191,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             dto.Add("TrueFalseTrueDefault", "True");
             dto.Add("TrueFalseFalseDefault", "False");
             FormFile formFile = new FormFile(null, 0, 0, "", "");
-            //dto.Add("File", formFile);
+            dto.Add("File", formFile);
 
             //YesNoList
             var sections = new List<string>();
@@ -204,10 +224,12 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             wrapper.AddAttribute("Number", new NumberValidatorAttribute());
 
+            wrapper.AddAttribute("Slider", new SliderAttribute(0, 100));
+
             if (summary)
             {
                 wrapper.AddAttribute("IconButton", new OffsetRightAttribute(1));
-                wrapper.AddAttribute("IconButton", new EditLinkAttribute("Edit", "DynamicForms"));
+                wrapper.AddAttribute("IconButton", new EditLinkAttribute("Edit", "DynamicForms", containerDiv));
                 wrapper.AddAttribute("IconButton", new LinkRouteValueAttribute("formId", "insurance"));
                 wrapper.AddAttribute("IconButton", new LinkRouteValueAttribute("sectionId", "section2"));
             }
@@ -268,8 +290,9 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
                 wrapper.AddAttribute(section, new RequiredAttribute());
             }
 
-            wrapper.AddAttribute("Submit", new OffsetRightAttribute(1));
-            wrapper.AddAttribute("Submit", new SubmitButtonAttribute());
+            //wrapper.AddAttribute("Submit", new OffsetRightAttribute(1));
+            wrapper.AddAttribute("Submit", new NoLabelAttribute());
+            wrapper.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
 
             return wrapper;
         }

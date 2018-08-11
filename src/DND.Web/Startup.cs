@@ -34,7 +34,9 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -176,6 +178,9 @@ namespace DND.Web
             string bearerTokenKey = Configuration["Tokens:Key"];
             string bearerTokenPrivateSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PrivateKeyPath"));
             string bearerTokenPublicSigningKeyPath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PublicKeyPath"));
+            string bearerTokenPrivateSigningCertificatePath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PrivateCertificatePath"));
+            string bearerTokenPrivateSigningCertificatePassword = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PrivateCertificatePassword"));
+            string bearerTokenPublicSigningCertificatePath = HostingEnvironment.MapContentPath(Configuration.GetValue<string>("Tokens:PublicCertificatePath"));
 
             var emailsFileSystemPath = fileSystemFolder;
             if (!emailsFileSystemPath.Contains(@":\"))
@@ -255,6 +260,12 @@ namespace DND.Web
                     signingKeys.Add(SigningKey.LoadPublicRsaSigningKey(bearerTokenPublicSigningKeyPath));
                 }
 
+                if (!String.IsNullOrWhiteSpace(bearerTokenPublicSigningCertificatePath))
+                {
+                    //Assymetric
+                    signingKeys.Add(SigningKey.LoadPublicSigningCertificate(bearerTokenPublicSigningCertificatePath));
+                }
+
                 var validIssuers = new List<string>();
                 foreach (var externalIssuer in bearerTokenExternalIssuers.Split(','))
                 {
@@ -296,7 +307,7 @@ namespace DND.Web
                      );
             }
 
-            if(EnableIFramesGlobal)
+            if (EnableIFramesGlobal)
             {
                 services.AddAntiforgery(o => o.SuppressXFrameOptionsHeader = true);
             }
@@ -806,6 +817,8 @@ namespace DND.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, TaskRunner taskRunner, ISignalRHubMapper signalRHubMapper)
         {
+
+
             //settings
             bool enableCookieConsent = Configuration.GetValue<bool>("AppSettings:Switches:EnableCookieConsent");
             bool enableRedirectNonWwwToWww = Configuration.GetValue<bool>("AppSettings:Switches:EnableRedirectNonWwwToWww");
@@ -846,6 +859,32 @@ namespace DND.Web
                     Directory.CreateDirectory(path);
                 }
             }
+
+            //Pipeline
+            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
+            app.UseWhen(context => context.Request.Path.ToString().StartsWith("/ping"),
+               appBranch =>
+               {
+                   appBranch.Run(async (context) =>
+                   {
+                       context.Response.ContentType = "text/html";
+                       await context.Response
+                           .WriteAsync("<!DOCTYPE html><html lang=\"en\"><head>" +
+                               "<title></title></head><body><p>Hosted by Kestrel</p>");
+
+                       if (serverAddressesFeature != null)
+                       {
+                           await context.Response
+                               .WriteAsync("<p>Listening on the following addresses: " +
+                                   string.Join(", ", serverAddressesFeature.Addresses) +
+                                   "</p>");
+                       }
+
+                       await context.Response.WriteAsync("<p>Request URL: " +
+                           $"{context.Request.GetDisplayUrl()}<p>");
+                   });
+               }
+            );
 
             if (env.IsDevelopment() || env.EnvironmentName == "Integration")
             {
@@ -973,7 +1012,7 @@ namespace DND.Web
                 }
             }
 
-            if(enableSignalR)
+            if (enableSignalR)
             {
                 app.UseSignalR(routes =>
                 {

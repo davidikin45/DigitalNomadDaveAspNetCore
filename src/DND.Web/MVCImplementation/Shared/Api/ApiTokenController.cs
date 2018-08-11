@@ -11,9 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.Shared.Api
@@ -27,6 +25,8 @@ namespace DND.Web.MVCImplementation.Shared.Api
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly string _privateSigningKeyPath;
+        private readonly string _privateSigningCertificatePath;
+        private readonly string _privateSigningCertificatePassword;
 
         public ApiTokenController(
             UserManager<User> userManager,
@@ -44,6 +44,8 @@ namespace DND.Web.MVCImplementation.Shared.Api
             _configuration = configuration;
 
             _privateSigningKeyPath = _hostingEnvironment.MapContentPath(_configuration.GetValue<string>("Tokens:PrivateKeyPath"));
+            _privateSigningCertificatePath = _hostingEnvironment.MapContentPath(_configuration.GetValue<string>("Tokens:PrivateCertificatePath"));
+            _privateSigningCertificatePassword = _hostingEnvironment.MapContentPath(_configuration.GetValue<string>("Tokens:PrivateCertificatePassword"));
         }
 
         //[FromBody]
@@ -64,11 +66,18 @@ namespace DND.Web.MVCImplementation.Shared.Api
                         var roles = await _userManager.GetRolesAsync(user);
                         var scopes = (await _userManager.GetClaimsAsync(user)).Where(c => c.Type == "scope").Select(c => c.Value);
 
-                        var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
-
-                        var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", scopes.ToArray());
-
-                        return Created("", results);
+                        if(!string.IsNullOrWhiteSpace(_privateSigningKeyPath))
+                        {
+                            var key = SigningKey.LoadPrivateRsaSigningKey(_privateSigningKeyPath);
+                            var results = JwtTokenHelper.CreateJwtTokenSigningWithRsaSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", scopes.ToArray());
+                            return Created("", results);
+                        }
+                        else
+                        {
+                            var key = SigningKey.LoadPrivateSigningCertificate(_privateSigningCertificatePath, _privateSigningCertificatePassword);
+                            var results = JwtTokenHelper.CreateJwtTokenSigningWithCertificateSecurityKey(user.Email, user.UserName, roles, 20, key, _configuration["Tokens:LocalIssuer"], "api", scopes.ToArray());
+                            return Created("", results);
+                        }
                     }
                 }
 

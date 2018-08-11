@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Infrastructure
 {
@@ -26,7 +23,6 @@ namespace DND.Common.Infrastructure
                 "~/" + MVCImplementationFolder + "Shared/Views/Bundles/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Shared/Views/Sidebar/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Shared/Views/CRUD/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Shared/Views/DynamicFormsTemplates/{0}.cshtml",
                  "~/" + MVCImplementationFolder + "Shared/Views/Navigation/{0}.cshtml",
                  "~/" + MVCImplementationFolder + "Shared/Views/Footer/{0}.cshtml",
                  "~/" + MVCImplementationFolder + "Shared/Views/Alerts/{0}.cshtml",
@@ -35,7 +31,6 @@ namespace DND.Common.Infrastructure
                 "~/" + MVCImplementationFolder + "Views/Shared/Bundles/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/Sidebar/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/CRUD/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Views/Shared/DynamicFormsTemplates/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/Navigation/{0}.cshtml",
                 "~/" + MVCImplementationFolder + "Views/Shared/Footer/{0}.cshtml",
                  "~/" + MVCImplementationFolder + "Views/Shared/Alerts/{0}.cshtml",

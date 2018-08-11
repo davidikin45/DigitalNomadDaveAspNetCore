@@ -136,7 +136,11 @@ namespace DND.Web
                 WebHost.CreateDefaultBuilder(args)
                 .UseSetting("detailedErrors", "true")
                 .CaptureStartupErrors(true)
-                .UseKestrel(c => c.AddServerHeader = false)
+                .UseKestrel(options => 
+                {
+                    options.AddServerHeader = false;
+                }
+                )
                 .UseAutofac()
                 .UseConfiguration(Configuration)
                 .UseSerilog()

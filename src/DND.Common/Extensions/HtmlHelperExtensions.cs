@@ -999,7 +999,43 @@ namespace DND.Common.Extensions
             return pairs;
         }
 
-        public static HtmlString ValueCheckbox(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes)
+        public static HtmlString BooleanCheckbox(this IHtmlHelper htmlHelper, string expression, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes, object labelHtmlAttributes)
+        {
+            HtmlTag div = new HtmlTag("div");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
+
+            var id = htmlHelper.Id(expression);
+
+            var input = htmlHelper.CheckBox(expression, isChecked, inputHtmlAttributes).Render();
+
+            //var checkboxHtml = htmlHelper.CheckBox(expression, isChecked, htmlAttributes).Render().Replace("true", value);
+
+            HtmlTag label = new HtmlTag("label");
+            if (labelHtmlAttributes != null)
+            {
+                foreach (var kvp in labelHtmlAttributes.ToDictionary())
+                {
+                    label.Attr(kvp.Key, kvp.Value);
+                }
+            }
+            label.AppendHtml(text);
+
+            div.AppendHtml(input);
+            if (!string.IsNullOrEmpty(text))
+            {
+                div.Append(label);
+            }
+
+            return new HtmlString(div.ToString());
+        }
+
+        public static HtmlString ValueCheckbox(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes, object labelHtmlAttributes)
         {
             HtmlTag div = new HtmlTag("div");
             if (divHtmlAttributes != null)
@@ -1032,16 +1068,25 @@ namespace DND.Common.Extensions
             //var checkboxHtml = htmlHelper.CheckBox(expression, isChecked, htmlAttributes).Render().Replace("true", value);
 
             HtmlTag label = new HtmlTag("label");
-            label.AddClass("form-check-label");
+            if (labelHtmlAttributes != null)
+            {
+                foreach (var kvp in labelHtmlAttributes.ToDictionary())
+                {
+                    label.Attr(kvp.Key, kvp.Value);
+                }
+            }
             label.AppendHtml(text);
 
             div.Append(input);
-            div.Append(label);
+            if (!string.IsNullOrEmpty(text))
+            {
+                div.Append(label);
+            }
 
             return new HtmlString(div.ToString());
         }
 
-        public static HtmlString ValueRadio(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes)
+        public static HtmlString ValueRadio(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes, object labelHtmlAttributes)
         {
             // var radioHtml = htmlHelper.RadioButton(expression, value, isChecked, htmlAttributes).Render();
 
@@ -1059,11 +1104,21 @@ namespace DND.Common.Extensions
             //var checkboxHtml = htmlHelper.CheckBox(expression, isChecked, htmlAttributes).Render().Replace("true", value);
 
             HtmlTag label = new HtmlTag("label");
-            label.AddClass("form-check-label");
+            if (labelHtmlAttributes != null)
+            {
+                foreach (var kvp in labelHtmlAttributes.ToDictionary())
+                {
+                    label.Attr(kvp.Key, kvp.Value);
+                }
+            }
             label.AppendHtml(text);
 
             div.AppendHtml(input);
-            div.Append(label);
+
+            if(!string.IsNullOrEmpty(text))
+            {
+                div.Append(label);
+            }
 
             return new HtmlString(div.ToString());
         }
@@ -1079,7 +1134,7 @@ namespace DND.Common.Extensions
             var sb = new StringBuilder();
             foreach (var item in items)
             {
-                sb.AppendLine(htmlHelper.ValueCheckbox(expression, item.Value, item.Text, item.Selected, new { @class = divClass }, new { @class = "form-check-input" }).Render());
+                sb.AppendLine(htmlHelper.ValueCheckbox(expression, item.Value, item.Text, item.Selected, new { @class = divClass }, new { @class = "form-check-input" }, new { @class = "form-check-label" }).Render());
             }
             return new HtmlString(sb.ToString());
         }
@@ -1095,7 +1150,7 @@ namespace DND.Common.Extensions
             var sb = new StringBuilder();
             foreach (var item in items)
             {
-                sb.AppendLine(htmlHelper.ValueRadio(expression, item.Value, item.Text, item.Selected, new { @class = divClass }, new { @class= "form-check-input" }).Render());
+                sb.AppendLine(htmlHelper.ValueRadio(expression, item.Value, item.Text, item.Selected, new { @class = divClass }, new { @class= "form-check-input" }, new { @class = "form-check-label" }).Render());
             }
             return new HtmlString(sb.ToString());
         }

@@ -1,13 +1,21 @@
-﻿using System;
+﻿using DND.Common.ModelMetadataCustom.Interfaces;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using DND.Common.ModelMetadataCustom.Interfaces;
+using System;
 
 namespace DND.Common.ModelMetadataCustom.DynamicFormsAttributes
 {
     public class SubmitButtonAttribute : Attribute, IDisplayMetadataAttribute
     {
+        public string @Class { get; set; } = "btn btn-primary btn-sm";
+
         public SubmitButtonAttribute()
         {
+
+        }
+
+        public SubmitButtonAttribute(string @class)
+        {
+            @Class = @class;
         }
 
         public void TransformMetadata(DisplayMetadataProviderContext context)
@@ -18,6 +26,7 @@ namespace DND.Common.ModelMetadataCustom.DynamicFormsAttributes
 
             modelMetadata.DataTypeName = "SubmitButton";
             modelMetadata.DisplayName = () => "";
+            modelMetadata.AdditionalValues["SubmitButtonClass"] = Class;
         }
     }
 }

@@ -1058,6 +1058,7 @@
     <Compile Include="ModelMetadataCustom\DatabaseAttributes\DbWhereClauseAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\HelpTextAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\NoLabelAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\SliderAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\IconLinkAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\HeadingAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\OffsetRightAttribute.cs" />
@@ -1115,7 +1116,7 @@
     <Compile Include="TagHelpers\ActiveTagHelper.cs" />
     <Compile Include="TagHelpers\BannerTagHelper.cs" />
     <Compile Include="TagHelpers\BodyTagHelper.cs" />
-    <Compile Include="TagHelpers\ProgressTagHelper.cs" />
+    <Compile Include="TagHelpers\ProgressBarTagHelper.cs" />
     <Compile Include="TagHelpers\YouTubeEmbedTagHelper.cs" />
     <Compile Include="Tasks\IRunAfterEachRequest.cs" />
     <Compile Include="Tasks\IRunAfterApplicationConfiguration.cs" />

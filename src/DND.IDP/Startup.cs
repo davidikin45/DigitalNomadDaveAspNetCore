@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using DND.IDP.Cryptography;
-using DND.IDP.Entities;
+﻿using DND.IDP.Entities;
 using DND.IDP.Extensions;
-using DND.IDP.Services;
 using IdentityServer4;
-using IdentityServer4.Services;
-using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DND.IDP
 {

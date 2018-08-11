@@ -103,6 +103,7 @@
     "outputFileName": "wwwroot/js/third-party.min.js",
     "inputFiles": [
       "wwwroot/vendor/jquery/jquery.js",
+      "wwwroot/vendor/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js",
       "wwwroot/vendor/jquery-validation/jquery.validate.js",
       "wwwroot/vendor/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
       "wwwroot/vendor/bootstrap/js/bootstrap.bundle.js",

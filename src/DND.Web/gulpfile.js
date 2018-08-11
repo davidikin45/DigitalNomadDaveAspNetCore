@@ -135,6 +135,10 @@ var deps = {
     "jquery": {
         "dist/*": ""
     },
+    "jquery-ajax-unobtrusive": {
+        "jquery.unobtrusive-ajax.js": "",
+        "jquery.unobtrusive-ajax.min.js": ""
+    },
     "jquery-validation": {
         "dist/**/*": ""
     },
