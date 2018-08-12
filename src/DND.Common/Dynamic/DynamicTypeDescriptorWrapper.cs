@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http.Internal;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.ComponentModel;
 using System.Dynamic;
-using System.Collections;
-using DND.Common.Extensions;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 
 namespace DND.Common.Dynamic
 {
@@ -153,11 +149,14 @@ namespace DND.Common.Dynamic
 
                 if (IsCollection(property.PropertyType))
                 {
-                    var convertedValue = Convert.ChangeType(value, property.PropertyType.GetGenericArguments()[0]);
-                    var collection = property.GetValue(_dynamic);
-                    var genericCollectionType = typeof(ICollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
-                    var addMethod = genericCollectionType.GetMethod("Add");
-                    addMethod.Invoke(collection, new object[] { convertedValue });
+                    if(!(property.PropertyType.GetGenericArguments()[0] == typeof(FormFile) && !(value is FormFile)))
+                    {
+                        var convertedValue = Convert.ChangeType(value, property.PropertyType.GetGenericArguments()[0]);
+                        var collection = property.GetValue(_dynamic);
+                        var genericCollectionType = typeof(ICollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
+                        var addMethod = genericCollectionType.GetMethod("Add");
+                        addMethod.Invoke(collection, new object[] { convertedValue });
+                    }
                 }
                 else if(property.PropertyType == typeof(DateTime))
                 {

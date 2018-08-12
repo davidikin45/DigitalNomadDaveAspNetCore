@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using DND.Common.Infrastructure;
+﻿using DND.Common.Infrastructure;
+using DND.Common.Interfaces.Dtos;
 using DND.Common.Interfaces.Models;
 using DND.Common.ModelMetadataCustom.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DND.Common.Interfaces.Dtos;
-using System.Collections.Generic;
 
 namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 {
@@ -130,6 +130,57 @@ namespace DND.Common.ModelMetadataCustom.DisplayAttributes
 
         public CheckboxOrRadioAttribute(Type selectorModelType, string displayExpression, string valueExpression, string orderByProperty, string orderByType, string bindingProperty)
           : base("ModelCheckboxOrRadio", selectorModelType, valueExpression, displayExpression, orderByProperty, orderByType, false, bindingProperty)
+        {
+
+        }
+    }
+
+    public class YesNoCheckboxOrRadioButtonsAttribute : CheckboxOrRadioButtonsAttribute
+    {
+        public YesNoCheckboxOrRadioButtonsAttribute()
+        : base(new List<string>() { "Yes", "No" })
+        {
+
+        }
+    }
+
+    public class TrueFalseCheckboxOrRadioButtonsAttribute : CheckboxOrRadioButtonsAttribute
+    {
+        public TrueFalseCheckboxOrRadioButtonsAttribute()
+        : base(new List<string>() { "True", "False" })
+        {
+
+        }
+    }
+
+    public class CheckboxOrRadioButtonsAttribute : DataboundAttribute
+    {
+        public CheckboxOrRadioButtonsAttribute(IEnumerable<string> options)
+           : base("ModelCheckboxOrRadioButtons", null, null, null, null, null, false, null, options)
+        {
+
+        }
+
+        public CheckboxOrRadioButtonsAttribute(Type selectorModelType, string displayExpression)
+            : base("ModelCheckboxOrRadioButtons", selectorModelType, nameof(IBaseEntity.Id), displayExpression, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
+        {
+
+        }
+
+        public CheckboxOrRadioButtonsAttribute(Type selectorModelType, string displayExpression, string valueExpression)
+        : base("ModelCheckboxOrRadioButtons", selectorModelType, valueExpression, displayExpression, nameof(IBaseEntity.Id), DND.Common.ModelMetadataCustom.DisplayAttributes.OrderByType.Descending, false, null)
+        {
+
+        }
+
+        public CheckboxOrRadioButtonsAttribute(Type selectorModelType, string displayExpression, string orderByProperty, string orderByType)
+           : base("ModelCheckboxOrRadioButtons", selectorModelType, nameof(IBaseEntity.Id), displayExpression, orderByProperty, orderByType, false, null)
+        {
+
+        }
+
+        public CheckboxOrRadioButtonsAttribute(Type selectorModelType, string displayExpression, string valueExpression, string orderByProperty, string orderByType, string bindingProperty)
+          : base("ModelCheckboxOrRadioButtons", selectorModelType, valueExpression, displayExpression, orderByProperty, orderByType, false, bindingProperty)
         {
 
         }

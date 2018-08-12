@@ -47,10 +47,14 @@
   <ItemGroup>
     <None Remove="App_Data\Regions.csv" />
     <None Remove="App_Data\ffmpeg\ffmpeg.exe" />
+    <None Remove="MVCImplementation\DynamicForms\Views\Embed.js" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="App_Data\ffmpeg\ffmpeg.exe" />
+    <Content Include="MVCImplementation\DynamicForms\Scripts\IFrameEmbed.js">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -342,7 +346,7 @@
     <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarMailingList.cshtml" />
     <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarRSSFeed.cshtml" />
     <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarTags.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\_Blank.cshtml" />
+    <None Include="MVCImplementation\Shared\Views\_IFrame.cshtml" />
     <None Include="MVCImplementation\Shared\Views\_Layout.cshtml" />
     <None Include="MVCImplementation\Shared\Views\_LoginPartial.cshtml" />
     <None Include="MVCImplementation\Shared\Views\_MailingList.cshtml" />
@@ -419,10 +423,43 @@
     <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormMenuAndForm.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="MVCImplementation\Shared\Views\Bundles\_IFrameJS.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\Boolean.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\BooleanTextButton.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\BooleanYesNoButtons.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\BooleanTrueFalseButtons.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\ModelCheckboxOrRadioButtons.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\Slider.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\BooleanTextButton.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\BooleanYesNoButtons.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\BooleanTrueFalseButtons.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="MVCImplementation\Shared\Views\EditorTemplates\Boolean.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\IEnumerable`IFormFile.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\ModelCheckboxOrRadioButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="MVCImplementation\Shared\Views\EditorTemplates\Slider.cshtml">

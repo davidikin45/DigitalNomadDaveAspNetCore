@@ -1,27 +1,42 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DND.Common.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Win32;
-using DND.Common.Helpers;
-using DND.Common.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Common.Helpers
 {
     public static class FileHelperExtensions
     {
-        public static Boolean SaveToDirectory(this IFormFile fileUpload, string physicalFolder)
+        public async static Task<Boolean> SaveToDirectoryAsync(this IFormFile fileUpload, IHostingEnvironment environment, string contentFolder)
+        {
+            var physicalFolder = Path.Combine(environment.ContentRootPath, contentFolder);
+
+            if (fileUpload != null && fileUpload.Length > 0)
+            {
+                var fileName = Path.GetFileName(fileUpload.FileName);
+                using (var stream = new FileStream(Path.Combine(physicalFolder, fileName), FileMode.Create))
+                {
+                    await fileUpload.CopyToAsync(stream);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public async static Task<Boolean> SaveToDirectoryAsync(this IFormFile fileUpload, string physicalFolder)
         {
             if (fileUpload != null && fileUpload.Length > 0)
             {
                 var fileName = Path.GetFileName(fileUpload.FileName);
                 using (var stream = new FileStream(Path.Combine(physicalFolder, fileName), FileMode.Create))
                 {
-                    fileUpload.CopyTo(stream);
+                    await fileUpload.CopyToAsync(stream);
                 }
                 return true;
             }

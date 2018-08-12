@@ -4,7 +4,7 @@
     var properties = ((CustomModelMetadata)ViewData.ModelMetadata).PropertiesRuntime(ViewData.Model);
     var propertyModelExplorers = Html.ModelExplorerPropertiesRuntime();
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", data_ajax = "true", data_ajax_method = "POST", data_ajax_mode = "replace", data_ajax_update = "#dynamicForm" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", data_ajax = "true", data_ajax_method = "POST", data_ajax_enctype = "multipart/form-data", data_ajax_mode = "replace", data_ajax_update = "#dynamicForm" }))
 {
 @Html.AntiForgeryToken()
     //Only displays Model level validation

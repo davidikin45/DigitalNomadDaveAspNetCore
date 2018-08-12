@@ -2,14 +2,11 @@
 using Microsoft.AspNetCore.Mvc.DataAnnotations.Internal;
 using Microsoft.Extensions.Localization;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Validation
 {
+    //https://blogs.msdn.microsoft.com/mvpawardprogram/2017/01/03/asp-net-core-mvc/
     public class InheritanceValidationAttributeAdapterProvider : IValidationAttributeAdapterProvider
     {
         private readonly ValidationAttributeAdapterProvider defaultClientModelValidatorProvider;

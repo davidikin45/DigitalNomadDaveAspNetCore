@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using DND.Common.Helpers;
+using DND.Common.Interfaces.Data;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
-using DND.Common.Helpers;
-using DND.Common.Interfaces.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using System.Globalization;
-using HtmlTags;
+using System.Threading;
 
 namespace DND.Common.Extensions
 {
@@ -263,7 +260,25 @@ namespace DND.Common.Extensions
             }
             else
             {
-                return htmlHelper.ValueRadioButtonList(propertyName, items, inline);
+                return htmlHelper.ValueRadioList(propertyName, items, inline);
+            }
+        }
+
+        public static IHtmlContent CheckboxButtonsFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, bool groupRadioButtons, object htmlAttributes = null, object labelCheckboxHtmlAttributes = null, object labelRadioHtmlAttributes = null) where TIDbContext : IBaseDbContext
+        {
+            IList<SelectListItem> items = GetSelectListFromDatabase<TIDbContext>(htmlHelper, propertyName);
+
+            Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider).Metadata;
+            Type propertyType = GetNonNullableModelType(metadata);
+
+            var sb = new StringBuilder();
+            if (propertyType != typeof(string) && (propertyType.GetInterfaces().Contains(typeof(IEnumerable))))
+            {
+                return htmlHelper.ValueCheckboxButtonList(propertyName, items, htmlAttributes, labelCheckboxHtmlAttributes);
+            }
+            else
+            {
+                return htmlHelper.ValueRadioButtonList(propertyName, items, groupRadioButtons, htmlAttributes, labelRadioHtmlAttributes);
             }
         }
 

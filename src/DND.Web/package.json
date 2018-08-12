@@ -32,7 +32,7 @@
   "dependencies": {
     "oidc-client": "^1.5.2-beta.1",
     "@aspnet/signalr": "^1.0.0",
-    "bootstrap": "^4.1.1",
+    "bootstrap": "^4.1.3",
     "jquery": "^3.2.1",
     "jquery-ajax-unobtrusive": "^3.2.4",
     "jquery-validation": "^1.17.0",

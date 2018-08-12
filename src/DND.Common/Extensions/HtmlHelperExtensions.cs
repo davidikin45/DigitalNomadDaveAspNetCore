@@ -988,7 +988,7 @@ namespace DND.Common.Extensions
         public static Dictionary<string, string> ToDictionary(this Object attributes)
         {
             var props = attributes.GetType().GetProperties();
-            var pairs = props.ToDictionary(x => x.Name, x=> x.GetValue(attributes, null).ToString());
+            var pairs = props.ToDictionary(x => x.Name.Replace("_","-"), x=> x.GetValue(attributes, null).ToString());
             return pairs;
         }
 
@@ -1031,6 +1031,41 @@ namespace DND.Common.Extensions
             {
                 div.Append(label);
             }
+
+            return new HtmlString(div.ToString());
+        }
+
+        public static HtmlString BooleanCheckboxButton(this IHtmlHelper htmlHelper, string expression, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes, object labelHtmlAttributes)
+        {
+            HtmlTag div = new HtmlTag("div");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
+
+            var input = htmlHelper.CheckBox(expression, isChecked, inputHtmlAttributes).Render();
+
+            HtmlTag label = new HtmlTag("label");
+            if (labelHtmlAttributes != null)
+            {
+                foreach (var kvp in labelHtmlAttributes.ToDictionary())
+                {
+                    label.Attr(kvp.Key, kvp.Value);
+                }
+            }
+
+            if(isChecked)
+            {
+                label.AddClass("active");
+            }
+
+            label.AppendHtml(input);
+            label.AppendHtml(text);
+
+            div.Append(label);
 
             return new HtmlString(div.ToString());
         }
@@ -1086,6 +1121,47 @@ namespace DND.Common.Extensions
             return new HtmlString(div.ToString());
         }
 
+        public static HtmlString ValueCheckboxButton(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object inputHtmlAttributes, object labelHtmlAttributes)
+        {
+            var id = htmlHelper.Id(expression);
+
+            HtmlTag input = new HtmlTag("input");
+            if (inputHtmlAttributes != null)
+            {
+                foreach (var kvp in inputHtmlAttributes.ToDictionary())
+                {
+                    input.Attr(kvp.Key, kvp.Value);
+                }
+            }
+            input.Id(id);
+            input.Name(id);
+            input.Attr("type", "checkbox");
+            input.Value(value);
+            if (isChecked)
+            {
+                input.Attr("checked", "checked");
+            }
+
+            //var checkboxHtml = htmlHelper.CheckBox(expression, isChecked, htmlAttributes).Render().Replace("true", value);
+
+            HtmlTag label = new HtmlTag("label");
+            if (labelHtmlAttributes != null)
+            {
+                foreach (var kvp in labelHtmlAttributes.ToDictionary())
+                {
+                    label.Attr(kvp.Key, kvp.Value);
+                }
+            }
+            if (isChecked)
+            {
+                label.AddClass("active");
+            }
+            label.Append(input);
+            label.AppendHtml(text);
+
+            return new HtmlString(label.ToString());
+        }
+
         public static HtmlString ValueRadio(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object divHtmlAttributes, object inputHtmlAttributes, object labelHtmlAttributes)
         {
             // var radioHtml = htmlHelper.RadioButton(expression, value, isChecked, htmlAttributes).Render();
@@ -1123,6 +1199,32 @@ namespace DND.Common.Extensions
             return new HtmlString(div.ToString());
         }
 
+        public static HtmlString ValueRadioButton(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object inputHtmlAttributes, object labelHtmlAttributes)
+        {
+            var input = htmlHelper.RadioButton(expression, value, isChecked, inputHtmlAttributes).Render();
+
+            //var checkboxHtml = htmlHelper.CheckBox(expression, isChecked, htmlAttributes).Render().Replace("true", value);
+
+            HtmlTag label = new HtmlTag("label");
+            if (labelHtmlAttributes != null)
+            {
+                foreach (var kvp in labelHtmlAttributes.ToDictionary())
+                {
+                    label.Attr(kvp.Key, kvp.Value);
+                }
+            }
+            if(isChecked)
+            {
+                label.AddClass("active");
+            }
+
+            label.AppendHtml(input);
+            label.AppendHtml(text);
+
+
+            return new HtmlString(label.ToString());
+        }
+
         public static HtmlString ValueCheckboxList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items, bool inline)
         {
             string divClass = "form-check";
@@ -1139,7 +1241,7 @@ namespace DND.Common.Extensions
             return new HtmlString(sb.ToString());
         }
 
-        public static HtmlString ValueRadioButtonList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items, bool inline)
+        public static HtmlString ValueRadioList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items, bool inline)
         {
             string divClass = "form-check";
             if (inline)
@@ -1153,6 +1255,102 @@ namespace DND.Common.Extensions
                 sb.AppendLine(htmlHelper.ValueRadio(expression, item.Value, item.Text, item.Selected, new { @class = divClass }, new { @class= "form-check-input" }, new { @class = "form-check-label" }).Render());
             }
             return new HtmlString(sb.ToString());
+        }
+
+        public static HtmlString ValueCheckboxButtonList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items, object divHtmlAttributes, object labelHtmlAttributes)
+        {
+            HtmlTag div = new HtmlTag("div");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
+
+            foreach (var item in items)
+            {
+                div.AppendHtml(htmlHelper.ValueCheckboxButton(expression, item.Value, item.Text, item.Selected, new { @class = "", autocomplete = "off" }, labelHtmlAttributes).Render());
+            }
+
+            return new HtmlString(div.ToString());
+        }
+
+        public static HtmlString ValueRadioButtonList(this IHtmlHelper htmlHelper, string expression, IList<SelectListItem> items, bool groupRadioButtons, object divHtmlAttributes, object labelHtmlAttributes)
+        {
+            HtmlTag div = new HtmlTag("div");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
+            if(groupRadioButtons)
+            {
+                div.AddClass("btn-group");
+            }
+
+            foreach (var item in items)
+            {
+                div.AppendHtml(htmlHelper.ValueRadioButton(expression, item.Value, item.Text, item.Selected, new { @class = "", autocomplete = "off" }, labelHtmlAttributes).Render());
+            }
+
+            return new HtmlString(div.ToString());
+        }
+
+        public static HtmlString TrueFalseRadioButtonList(this IHtmlHelper htmlHelper, string expression, bool isChecked, bool groupRadioButtons, object divHtmlAttributes, object labelHtmlAttributes)
+        {
+            var items = new List<SelectListItem>();
+            items.Add(new SelectListItem("True","true", isChecked, false));
+            items.Add(new SelectListItem("False", "false", !isChecked, false));
+
+            HtmlTag div = new HtmlTag("div");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
+            if (groupRadioButtons)
+            {
+                div.AddClass("btn-group");
+            }
+
+            foreach (var item in items)
+            {
+                div.AppendHtml(htmlHelper.ValueRadioButton(expression, item.Value, item.Text, item.Selected, new { @class = "", autocomplete = "off" }, labelHtmlAttributes).Render());
+            }
+
+            return new HtmlString(div.ToString());
+        }
+
+        public static HtmlString YesNoRadioButtonList(this IHtmlHelper htmlHelper, string expression, bool isChecked, bool groupRadioButtons, object divHtmlAttributes, object labelHtmlAttributes)
+        {
+            var items = new List<SelectListItem>();
+            items.Add(new SelectListItem("Yes", "true", isChecked, false));
+            items.Add(new SelectListItem("No", "false", !isChecked, false));
+
+            HtmlTag div = new HtmlTag("div");
+            if (divHtmlAttributes != null)
+            {
+                foreach (var kvp in divHtmlAttributes.ToDictionary())
+                {
+                    div.Attr(kvp.Key, kvp.Value);
+                }
+            }
+            if (groupRadioButtons)
+            {
+                div.AddClass("btn-group");
+            }
+
+            foreach (var item in items)
+            {
+                div.AppendHtml(htmlHelper.ValueRadioButton(expression, item.Value, item.Text, item.Selected, new { @class = "", autocomplete = "off" }, labelHtmlAttributes).Render());
+            }
+
+            return new HtmlString(div.ToString());
         }
     }
 }

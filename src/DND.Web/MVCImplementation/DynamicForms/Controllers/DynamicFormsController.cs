@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DND.Common.ActionResults;
 using DND.Common.Controllers;
 using DND.Common.Dynamic;
 using DND.Common.Email;
@@ -11,6 +12,7 @@ using DND.Common.ModelMetadataCustom.DynamicFormsAttributes;
 using DND.Common.ModelMetadataCustom.LinkAttributes;
 using DND.Common.ModelMetadataCustom.ValidationAttributes;
 using DND.Common.Validation;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace DND.Web.MVCImplementation.DynamicForms.Controllers
@@ -31,14 +34,35 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
     {
         private readonly IHtmlHelper Html;
         private readonly ICookieService _cookieService;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public DynamicFormsController(IMapper mapper, IEmailService emailService, IConfiguration configuration, IHtmlHelperGeneratorService htmlHelperGeneratorService, ICookieService cookieService)
+
+        public DynamicFormsController(
+            IMapper mapper, 
+            IEmailService emailService, IConfiguration configuration, 
+            IHtmlHelperGeneratorService htmlHelperGeneratorService, 
+            ICookieService cookieService, 
+            IHostingEnvironment hostingEnvironment)
             : base(mapper, emailService, configuration)
         {
             Html = htmlHelperGeneratorService.HtmlHelper("");
             _cookieService = cookieService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
+        #region IFrame Embed
+        [Route("embed/{formId}.js")]
+        public virtual async Task<IActionResult> IFrameEmbed(string formId)
+        {
+            string absoluteFormUrl = Url.AbsoluteUrl<DynamicFormsController>(c => c.Edit(formId, ""), true);
+            string iFrameEmbedPath = Path.Combine(_hostingEnvironment.ContentRootPath, @"MVCImplementation\DynamicForms\Scripts\IFrameEmbed.js");
+            var iFrameEmbedScript = System.IO.File.ReadAllText(iFrameEmbedPath);
+            iFrameEmbedScript = iFrameEmbedScript.Replace("{absoluteFormUrl}", absoluteFormUrl);
+            return new JavaScriptResult(iFrameEmbedScript);
+        }
+        #endregion
+
+        #region Edit
         [NoAjaxRequest]
         [Route("{formId}")]
         [Route("{formId}/section/{sectionId}")]
@@ -51,6 +75,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             ViewBag.DetailsMode = false;
             ViewBag.PageTitle = Title;
             ViewBag.Admin = false;
+
             return View("DynamicFormMenuAndFormPage", response);
         }
 
@@ -76,18 +101,26 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             return wrapper;
         }
+        #endregion
 
+        #region Update
         [NoAjaxRequest]
         [ValidateAntiForgeryToken]
         [HttpPost]
         [Route("{formId}")]
         [Route("{formId}/section/{sectionId}")]
-        public virtual IActionResult Update(string formId, string sectionId, IFormCollection formData)
+        public virtual async Task<IActionResult> Update(string formId, string sectionId, IFormCollection formData)
         {
             //dto.Id = id;
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var response = GetUpdateFormResponse(formData);
+
+            if (TryValidateModel(response))
+            {
+                //Save Data
+                //Redirect
+            };
 
             ViewBag.DetailsMode = false;
             ViewBag.PageTitle = Title;
@@ -100,11 +133,17 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         [HttpPost]
         [Route("{formId}")]
         [Route("{formId}/section/{sectionId}")]
-        public virtual IActionResult UpdateAjax(string formId, string sectionId, IFormCollection formData)
+        public virtual async Task<IActionResult> UpdateAjax(string formId, string sectionId, IFormCollection formData)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
             var response = GetUpdateFormResponse(formData);
+
+            if (TryValidateModel(response))
+            {
+                //Save Data
+                //Redirect
+            };
 
             ViewBag.DetailsMode = false;
             return PartialView("_DynamicFormMenuAndForm", response);
@@ -118,39 +157,50 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             PopulateForm(wrapper, formData);
             PopulateFormFiles(wrapper, formData.Files);
 
-            //4. Validate
+            return wrapper;
+        }
+        #endregion
+
+        #region Summary
+        [AjaxRequest]
+        [HttpGet]
+        [Route("{formId}/summary")]
+        public virtual async Task<IActionResult> Summary(string formId)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = GetSummaryResponse();
+
+            ViewBag.ExcludePropertyErrors = false;
+            ViewBag.DetailsMode = true;
+            return View("_DynamicFormMenuAndForm", response);
+        }
+
+        [NoAjaxRequest]
+        [HttpGet]
+        [Route("{formId}/summary")]
+        public virtual async Task<IActionResult> SummaryAjax(string formId)
+        {
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+
+            var response = GetSummaryResponse();
+
+            ViewBag.ExcludePropertyErrors = false;
+            ViewBag.DetailsMode = true;
+            ViewBag.PageTitle = Title;
+            ViewBag.Admin = false;
+            return View("DynamicFormMenuAndFormPage", response);
+        }
+
+        private DynamicTypeDescriptorWrapper GetSummaryResponse()
+        {
+            var wrapper = SetupForm(true);
+
             TryValidateModel(wrapper);
 
             return wrapper;
         }
-
-        [HttpGet]
-        [Route("{formId}/summary")]
-        public virtual ActionResult Summary(string formId)
-        {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            try
-            {
-                //1. Setup Form definition and 2. Add Validation
-                var wrapper = SetupForm(true);
-
-                //3. Prepropulate from routeData and query string
-                PopulateFormRouteData(wrapper, this.RouteData.Values);
-                PopulateForm(wrapper, Request.Query);
-
-                TryValidateModel(wrapper);
-
-                ViewBag.ExcludePropertyErrors = false;
-                ViewBag.DetailsMode = true;
-                ViewBag.PageTitle = Title;
-                ViewBag.Admin = false;
-                return View("DynamicFormMenuAndFormPage", wrapper);
-            }
-            catch (Exception ex)
-            {
-                return HandleReadException();
-            }
-        }
+        #endregion
 
         private DynamicTypeDescriptorWrapper SetupForm(bool summary)
         {
@@ -181,25 +231,32 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             dto.Add("Dropdown", "");
             dto.Add("DropdownMany", new List<string>());
             dto.Add("RadioList", "");
+            dto.Add("RadioListButtons", "");
             dto.Add("CheckboxList", new List<string>());
-            dto.Add("CheckboxFalseDefault", false);
-            dto.Add("CheckboxTrueDefault", true);
+            dto.Add("CheckboxListButtons", new List<string>());
+            dto.Add("Checkbox", false);
+            dto.Add("YesButton", false);
+
             dto.Add("YesNo", "");
-            dto.Add("YesNoYesDefault", "Yes");
-            dto.Add("YesNoNoDefault", "No");
+            dto.Add("YesNoButtons", "");
+            dto.Add("YesNoButtonsBoolean", false);
+
             dto.Add("TrueFalse", "");
-            dto.Add("TrueFalseTrueDefault", "True");
-            dto.Add("TrueFalseFalseDefault", "False");
+            dto.Add("TrueFalseButtons", "");
+            dto.Add("TrueFalseButtonsBoolean", false);
+
             FormFile formFile = new FormFile(null, 0, 0, "", "");
             dto.Add("File", formFile);
+            dto.Add("MultipleFiles", new List<FormFile>() { });
+            dto.Add("MultipleMediaFiles", new List<FormFile>() { });
 
             //YesNoList
-            var sections = new List<string>();
-            for (int i = 0; i < 10; i++)
-            {
-                sections.Add("Section" + i);
-                dto.Add("Section" + i, "");
-            }
+            //var sections = new List<string>();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    sections.Add("Section" + i);
+            //    dto.Add("Section" + i, "");
+            //}
 
             if (summary)
             {
@@ -241,11 +298,14 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             wrapper.AddAttribute("RadioList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
             wrapper.AddAttribute("RadioList", new RequiredAttribute());
+            wrapper.AddAttribute("RadioListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
 
             wrapper.AddAttribute("CheckboxList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
-            wrapper.AddAttribute("CheckboxList", new CheckboxOrRadioInlineAttribute());
+            //wrapper.AddAttribute("CheckboxList", new CheckboxOrRadioInlineAttribute());
             wrapper.AddAttribute("CheckboxList", new LimitCountAttribute(3, 5));
             wrapper.AddAttribute("CheckboxList", new RequiredAttribute());
+
+            wrapper.AddAttribute("CheckboxListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
 
             wrapper.AddAttribute("Currency", new DataTypeAttribute(DataType.Currency));
 
@@ -255,42 +315,39 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             wrapper.AddAttribute("DateTime", new DataTypeAttribute(DataType.DateTime));
 
-            wrapper.AddAttribute("CheckboxTrueDefault", new RequiredAttribute());
+            wrapper.AddAttribute("Checkbox", new RequiredAttribute());
 
-            wrapper.AddAttribute("CheckboxFalseDefault", new RequiredAttribute());
+            wrapper.AddAttribute("YesButton", new BooleanYesButtonAttribute());
 
             wrapper.AddAttribute("YesNo", new YesNoCheckboxOrRadioAttribute());
             wrapper.AddAttribute("YesNo", new CheckboxOrRadioInlineAttribute());
             wrapper.AddAttribute("YesNo", new RequiredAttribute());
 
-            wrapper.AddAttribute("YesNoYesDefault", new YesNoCheckboxOrRadioAttribute());
-            wrapper.AddAttribute("YesNoYesDefault", new CheckboxOrRadioInlineAttribute());
-            wrapper.AddAttribute("YesNoYesDefault", new RequiredAttribute());
+            wrapper.AddAttribute("YesNoButtons", new YesNoCheckboxOrRadioButtonsAttribute());
+            wrapper.AddAttribute("YesNoButtons", new RequiredAttribute());
 
-            wrapper.AddAttribute("YesNoNoDefault", new YesNoCheckboxOrRadioAttribute());
-            wrapper.AddAttribute("YesNoNoDefault", new CheckboxOrRadioInlineAttribute());
-            wrapper.AddAttribute("YesNoNoDefault", new RequiredAttribute());
+            wrapper.AddAttribute("YesNoButtonsBoolean", new BooleanYesNoButtonsAttribute());
 
             wrapper.AddAttribute("TrueFalse", new TrueFalseCheckboxOrRadioAttribute());
             wrapper.AddAttribute("TrueFalse", new CheckboxOrRadioInlineAttribute());
             wrapper.AddAttribute("TrueFalse", new RequiredAttribute());
 
-            wrapper.AddAttribute("TrueFalseTrueDefault", new TrueFalseCheckboxOrRadioAttribute());
-            wrapper.AddAttribute("TrueFalseTrueDefault", new CheckboxOrRadioInlineAttribute());
-            wrapper.AddAttribute("TrueFalseTrueDefault", new RequiredAttribute());
+            wrapper.AddAttribute("TrueFalseButtons", new TrueFalseCheckboxOrRadioButtonsAttribute());
+            wrapper.AddAttribute("TrueFalseButtons", new RequiredAttribute());
 
-            wrapper.AddAttribute("TrueFalseFalseDefault", new TrueFalseCheckboxOrRadioAttribute());
-            wrapper.AddAttribute("TrueFalseFalseDefault", new CheckboxOrRadioInlineAttribute());
-            wrapper.AddAttribute("TrueFalseFalseDefault", new RequiredAttribute());
+            wrapper.AddAttribute("TrueFalseButtonsBoolean", new BooleanTrueFalseButtonsAttribute());
 
-            foreach (var section in sections)
-            {
-                wrapper.AddAttribute(section, new YesNoCheckboxOrRadioAttribute());
-                wrapper.AddAttribute(section, new CheckboxOrRadioInlineAttribute());
-                wrapper.AddAttribute(section, new RequiredAttribute());
-            }
+            //foreach (var section in sections)
+            //{
+            //    wrapper.AddAttribute(section, new YesNoCheckboxOrRadioAttribute());
+            //    wrapper.AddAttribute(section, new CheckboxOrRadioInlineAttribute());
+            //    wrapper.AddAttribute(section, new RequiredAttribute());
+            //}
 
             //wrapper.AddAttribute("Submit", new OffsetRightAttribute(1));
+
+            wrapper.AddAttribute("MultipleMediaFiles", new FileImageAudioVideoAcceptAttribute());
+
             wrapper.AddAttribute("Submit", new NoLabelAttribute());
             wrapper.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
 

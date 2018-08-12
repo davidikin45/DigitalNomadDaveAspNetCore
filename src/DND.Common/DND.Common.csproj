@@ -730,6 +730,7 @@
     <Compile Include="ActionResults\CsvResult.cs" />
     <Compile Include="ActionResults\HTMLActionResult.cs" />
     <Compile Include="ActionResults\RSSActionResult.cs" />
+    <Compile Include="ActionResults\JavaScriptResult.cs" />
     <Compile Include="ActionResults\UnprocessableEntityObjectResult.cs" />
     <Compile Include="Alerts\Alert.cs" />
     <Compile Include="Alerts\AlertDecoratorResult.cs" />
@@ -848,6 +849,7 @@
     <Compile Include="Extensions\TempDataExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Extensions\ViewResultExtensions.cs" />
     <Compile Include="Filters\AjaxRequestAttribute.cs" />
     <Compile Include="Filters\ExceptionHandlingFilter.cs" />
     <Compile Include="Filters\FeatureAuthFilter.cs" />
@@ -1056,8 +1058,12 @@
     <Compile Include="ModelMetadataCustom\ConventionFilters\TextAreaByNameConventionFilter.cs" />
     <Compile Include="ModelMetadataCustom\ConventionFilters\TextboxPlaceholderConventionFilter.cs" />
     <Compile Include="ModelMetadataCustom\DatabaseAttributes\DbWhereClauseAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\BooleanYesNoButtonsAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\BooleanTrueFalseButtonsAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\FileAcceptAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\HelpTextAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\NoLabelAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\DisplayAttributes\BooleanTextButtonAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\SliderAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\IconLinkAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\HeadingAttribute.cs" />
@@ -1069,6 +1075,7 @@
     <Compile Include="ModelMetadataCustom\DisplayAttributes\ReadOnlyAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\ReadOnlyHiddenInputAttribute.cs" />
     <Compile Include="ModelMetadataCustom\DisplayAttributes\RenderAttribute.cs" />
+    <Compile Include="ModelMetadataCustom\FileAttributes\FileSaveAttribute.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\ConfigurationExtensions.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\Extension.cs" />
     <Compile Include="ModelMetadataCustom\Providers\CustomModelMetadataProviderSingleton.cs" />

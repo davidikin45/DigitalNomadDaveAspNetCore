@@ -2,9 +2,13 @@
 @{
     var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(ViewData["htmlAttributes"]);
     htmlAttributes["type"] = "file";
-    htmlAttributes["class"] = "custom-file-input";
+    htmlAttributes["class"] = "form-control-file";
+    if (Html.ViewData.ModelMetadata.AdditionalValues.ContainsKey("Accept"))
+    {
+        htmlAttributes["accept"] = Html.ViewData.ModelMetadata.AdditionalValues["Accept"];
+    }
 }
-<div class="custom-file">
-    @Html.TextBoxFor(model => model, htmlAttributes)
-    <label class="custom-file-label">Choose file</label>
-</div>
+@*<div class="custom-file">*@
+    @Html.TextBox(null, Html.ViewData, null, htmlAttributes)
+    @*<label class="custom-file-label">Choose file</label>
+</div>*@

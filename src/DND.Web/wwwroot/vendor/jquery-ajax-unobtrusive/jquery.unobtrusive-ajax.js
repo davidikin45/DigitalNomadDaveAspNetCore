@@ -87,7 +87,7 @@
 
         loading = $(element.getAttribute("data-ajax-loading"));
         duration = parseInt(element.getAttribute("data-ajax-loading-duration"), 10) || 0;
-
+		
         $.extend(options, {
             type: element.getAttribute("data-ajax-method") || undefined,
             url: element.getAttribute("data-ajax-url") || undefined,
@@ -121,6 +121,14 @@
             options.type = "POST";
             options.data.push({ name: "X-HTTP-Method-Override", value: method });
         }
+		
+		var enctype = element.getAttribute("enctype") || undefined;
+		if (enctype === 'multipart/form-data')
+		{
+			options.enctype = 'multipart/form-data';
+			options.processData = false;
+			options.contentType = false;
+		}
 
         $.ajax(options);
     }
