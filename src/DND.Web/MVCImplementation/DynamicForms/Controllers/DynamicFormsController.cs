@@ -116,6 +116,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             var response = GetUpdateFormResponse(formData);
 
+            //Manual validation
             if (TryValidateModel(response))
             {
                 //Save Data
@@ -139,6 +140,8 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             var response = GetUpdateFormResponse(formData);
 
+
+            //Manual validation
             if (TryValidateModel(response))
             {
                 //Save Data

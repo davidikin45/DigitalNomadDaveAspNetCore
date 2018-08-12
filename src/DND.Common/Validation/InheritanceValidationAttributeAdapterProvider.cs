@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace DND.Common.Validation
 {
     //https://blogs.msdn.microsoft.com/mvpawardprogram/2017/01/03/asp-net-core-mvc/
+    //https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-2.1
     public class InheritanceValidationAttributeAdapterProvider : IValidationAttributeAdapterProvider
     {
         private readonly ValidationAttributeAdapterProvider defaultClientModelValidatorProvider;
