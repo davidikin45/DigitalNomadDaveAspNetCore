@@ -806,12 +806,12 @@
     <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
     <Compile Include="DomainEvents\IDomainEventHandler.cs" />
     <Compile Include="DomainEvents\IDomainEvent.cs" />
+    <Compile Include="DynamicForms\DynamicFormModel.cs" />
     <Compile Include="Dynamic\DynamicHelper.cs" />
     <Compile Include="Dynamic\DynamicPropertyDescriptor.cs" />
     <Compile Include="Dynamic\DynamicTypeDescriptorWrapper.cs" />
     <Compile Include="Dynamic\Expando.cs" />
     <Compile Include="Dynamic\PropertyBag.cs" />
-    <Compile Include="Dynamic\TypeDescriptorDynamicWrapper.cs" />
     <Compile Include="Email\EmailMessage.cs" />
     <Compile Include="Email\EmailServiceFileSystem.cs" />
     <Compile Include="Email\EmailServiceOptions.cs" />

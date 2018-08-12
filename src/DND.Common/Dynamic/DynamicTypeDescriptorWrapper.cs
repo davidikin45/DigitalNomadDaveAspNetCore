@@ -10,7 +10,7 @@ using System.Reflection;
 namespace DND.Common.Dynamic
 {
     //https://weblogs.asp.net/bleroy/fun-with-c-4-0-s-dynamic
-    public class DynamicTypeDescriptorWrapper : ICustomTypeDescriptor
+    public class DynamicTypeDescriptorWrapper : DynamicObject, ICustomTypeDescriptor
     {
         private IDynamicMetaObjectProvider _dynamic;
 
@@ -102,12 +102,58 @@ namespace DND.Common.Dynamic
         {
             return _dynamic;
         }
-
         #endregion
 
-        public void AddProperty(string property, object value)
+        #region Helper Methods
+        private bool IsCollection(Type type)
         {
-            if(!(_dynamic is IDictionary<string, object>))
+            return type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType).Any(x => x.GetGenericTypeDefinition() == typeof(ICollection<>) && !x.GetGenericArguments().Contains(typeof(Byte)));
+        }
+        #endregion
+
+        #region Property Index Accessor
+        public object this[string key]
+        {
+            get
+            {
+                //Must exist for get
+                return GetMember(key);
+            }
+            set
+            {
+                if (ContainsProperty(key))
+                {
+                    SetMember(key, value);
+                }
+                else
+                {
+                    Add(key, value);
+                }
+            }
+        }
+        #endregion
+
+        #region Add Attribute
+        public void AddAttribute<TAttribute>(string propertyName, TAttribute attribute) where TAttribute : Attribute
+        {
+            var property = (DynamicPropertyDescriptor)GetProperties()[propertyName];
+            properties.Remove(propertyName);
+            var newPropertyWithAttribute = new DynamicPropertyDescriptor(property, new Attribute[] { attribute });
+            properties.Add(propertyName, newPropertyWithAttribute);
+        }
+        #endregion
+
+        #region Contains Property
+        public bool ContainsProperty(string property)
+        {
+            return GetProperties().Find(property, true) != null;
+        }
+        #endregion
+
+        #region Add/Remove Properties
+        public void Add(string property, object value)
+        {
+            if (!(_dynamic is IDictionary<string, object>))
             {
                 throw new Exception("Can only add properties to Expando Objects");
             }
@@ -121,7 +167,7 @@ namespace DND.Common.Dynamic
             dict.Add(property, value);
         }
 
-        public void RemoveProperty(string property)
+        public void Remove(string property)
         {
             if (!(_dynamic is IDictionary<string, object>))
             {
@@ -136,71 +182,83 @@ namespace DND.Common.Dynamic
         {
             dict.Remove(property);
         }
+        #endregion
 
-        public object this[string key]
+        #region Dynamic Methods
+        private object GetMember(string propertyName)
         {
-            get
-            {
-                return GetProperties().Find(key, true).GetValue(_dynamic);
-            }
-            set
-            {
-                var property = GetProperties().Find(key, true);
+            return GetProperties().Find(propertyName, true).GetValue(_dynamic);
+        }
 
-                if (IsCollection(property.PropertyType))
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        {
+            result = null;
+
+            if (ContainsProperty(binder.Name))
+            {
+                result = GetMember(binder.Name);
+                return true;
+            }
+
+            // failed to retrieve a property
+            result = null;
+            return false;
+        }
+
+        private void SetMember(string propertyName, object value)
+        {
+            var property = GetProperties().Find(propertyName, true);
+            if (IsCollection(property.PropertyType))
+            {
+                if (!(property.PropertyType.GetGenericArguments()[0] == typeof(FormFile) && !(value is FormFile)))
                 {
-                    if(!(property.PropertyType.GetGenericArguments()[0] == typeof(FormFile) && !(value is FormFile)))
-                    {
-                        var convertedValue = Convert.ChangeType(value, property.PropertyType.GetGenericArguments()[0]);
-                        var collection = property.GetValue(_dynamic);
-                        var genericCollectionType = typeof(ICollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
-                        var addMethod = genericCollectionType.GetMethod("Add");
-                        addMethod.Invoke(collection, new object[] { convertedValue });
-                    }
+                    var convertedValue = Convert.ChangeType(value, property.PropertyType.GetGenericArguments()[0]);
+                    var collection = property.GetValue(_dynamic);
+                    var genericCollectionType = typeof(ICollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
+                    var addMethod = genericCollectionType.GetMethod("Add");
+                    addMethod.Invoke(collection, new object[] { convertedValue });
                 }
-                else if(property.PropertyType == typeof(DateTime))
-                {
-                    if(!String.IsNullOrWhiteSpace(value.ToString()))
-                    {
-                        var convertedValue = Convert.ChangeType(value, property.PropertyType);
-                        property.SetValue(_dynamic, convertedValue);
-                    }
-                    else
-                    {
-                        property.SetValue(_dynamic, new DateTime());
-                    }
-                }
-                else if (property.PropertyType == typeof(FormFile))
-                {
-                    if(!string.IsNullOrWhiteSpace(value.ToString()))
-                    {
-                        property.SetValue(_dynamic, value);
-                    }
-                }
-                else
+            }
+            else if (property.PropertyType == typeof(DateTime))
+            {
+                if (!String.IsNullOrWhiteSpace(value.ToString()))
                 {
                     var convertedValue = Convert.ChangeType(value, property.PropertyType);
                     property.SetValue(_dynamic, convertedValue);
                 }
+                else
+                {
+                    property.SetValue(_dynamic, new DateTime());
+                }
+            }
+            else if (property.PropertyType == typeof(FormFile))
+            {
+                if (!string.IsNullOrWhiteSpace(value.ToString()))
+                {
+                    property.SetValue(_dynamic, value);
+                }
+            }
+            else
+            {
+                var convertedValue = Convert.ChangeType(value, property.PropertyType);
+                property.SetValue(_dynamic, convertedValue);
             }
         }
 
-        private bool IsCollection(Type type)
+        public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            return type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType).Any(x => x.GetGenericTypeDefinition() == typeof(ICollection<>) && !x.GetGenericArguments().Contains(typeof(Byte)));
+            // first check to see if there's a native property to set
+            if(ContainsProperty(binder.Name))
+            {
+                SetMember(binder.Name, value);
+                return true;
+            }
+            else
+            {
+                Add(binder.Name, value);
+                return true;
+            }
         }
-
-        public bool ContainsProperty(string property)
-        {
-            return GetProperties().Find(property, true) != null;
-        }
-
-        public void AddAttribute<TAttribute>(string propertyName, TAttribute attribute) where TAttribute : Attribute
-        {
-            var property = (DynamicPropertyDescriptor)GetProperties()[propertyName];
-            properties.Remove(propertyName);
-            var newPropertyWithAttribute = new DynamicPropertyDescriptor(property, new Attribute[] { attribute });
-            properties.Add(propertyName, newPropertyWithAttribute);
-        }
+        #endregion
     }
 }

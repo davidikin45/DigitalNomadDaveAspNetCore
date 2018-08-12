@@ -2,6 +2,7 @@
 using DND.Common.ActionResults;
 using DND.Common.Controllers;
 using DND.Common.Dynamic;
+using DND.Common.DynamicForms;
 using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
@@ -23,7 +24,6 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -205,159 +205,140 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         }
         #endregion
 
-        private DynamicTypeDescriptorWrapper SetupForm(bool summary)
+        private DynamicFormModel SetupForm(bool summary)
         {
             string containerDiv = "#dynamicForm";
 
             //1. Setup Form definition
-            ExpandoObject dto = new ExpandoObject();
-            dto.Add("Text", "");
-            dto.Add("Email", "");
-            dto.Add("Website", "");
-            dto.Add("PhoneNumber", "");
-            dto.Add("TextArea", "");
-            dto.Add("Number", 0);
-            dto.Add("Slider", 50);
+            DynamicFormModel model = new DynamicFormModel();
+            model.Add("Text", "");
+            model.Add("Email", "");
+            model.Add("Website", "");
+            model.Add("PhoneNumber", "");
+            model.Add("TextArea", "");
+            model.Add("Number", 0);
+            model.Add("Slider", 50);
 
             if (summary)
             {
-                dto.Add("IconButton", "");
+                model.Add("IconButton", "");
             }
 
             var section2Link = Html.ActionLink("Section 2", "Edit", "DynamicForms", new { sectionId = "section2", formId = "insurance" }, new { @class="text-danger", data_ajax = "true", data_ajax_method = "GET", data_ajax_mode = "replace", data_ajax_update = containerDiv }).Render();
-            dto.Add("SectionHeading", section2Link);
+            model.Add("SectionHeading", section2Link);
 
             decimal currency = 0;
-            dto.Add("Currency", currency);
-            dto.Add("Date", new DateTime());
-            dto.Add("DateTime", new DateTime());
-            dto.Add("Dropdown", "");
-            dto.Add("DropdownMany", new List<string>());
-            dto.Add("RadioList", "");
-            dto.Add("RadioListButtons", "");
-            dto.Add("CheckboxList", new List<string>());
-            dto.Add("CheckboxListButtons", new List<string>());
-            dto.Add("Checkbox", false);
-            dto.Add("YesButton", false);
+            model.Add("Currency", currency);
+            model.Add("Date", new DateTime());
+            model.Add("DateTime", new DateTime());
+            model.Add("Dropdown", "");
+            model.Add("DropdownMany", new List<string>());
+            model.Add("RadioList", "");
+            model.Add("RadioListButtons", "");
+            model.Add("CheckboxList", new List<string>());
+            model.Add("CheckboxListButtons", new List<string>());
+            model.Add("Checkbox", false);
+            model.Add("YesButton", false);
 
-            dto.Add("YesNo", "");
-            dto.Add("YesNoButtons", "");
-            dto.Add("YesNoButtonsBoolean", false);
+            model.Add("YesNo", "");
+            model.Add("YesNoButtons", "");
+            model.Add("YesNoButtonsBoolean", false);
 
-            dto.Add("TrueFalse", "");
-            dto.Add("TrueFalseButtons", "");
-            dto.Add("TrueFalseButtonsBoolean", false);
+            model.Add("TrueFalse", "");
+            model.Add("TrueFalseButtons", "");
+            model.Add("TrueFalseButtonsBoolean", false);
 
             FormFile formFile = new FormFile(null, 0, 0, "", "");
-            dto.Add("File", formFile);
-            dto.Add("MultipleFiles", new List<FormFile>() { });
-            dto.Add("MultipleMediaFiles", new List<FormFile>() { });
-
-            //YesNoList
-            //var sections = new List<string>();
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    sections.Add("Section" + i);
-            //    dto.Add("Section" + i, "");
-            //}
+            model.Add("File", formFile);
+            model.Add("MultipleFiles", new List<FormFile>() { });
+            model.Add("MultipleMediaFiles", new List<FormFile>() { });
 
             if (summary)
             {
-                dto.Add("Submit", "Submit");
+                model.Add("Submit", "Submit");
             }
             else
             {
-                dto.Add("Submit", "Next");
+                model.Add("Submit", "Next");
             }
 
-            var wrapper = new DynamicTypeDescriptorWrapper(dto);
-
             //2. Add Display and Validation
-            wrapper.AddAttribute("Text", new DisplayAttribute() { Name = "What is your Name?" });
-            wrapper.AddAttribute("Text", new RequiredAttribute() { ErrorMessage ="Please enter your name1." });
-            wrapper.AddAttribute("Email", new DataTypeAttribute(DataType.EmailAddress));
-            wrapper.AddAttribute("Email", new HelpTextAttribute("Your personal email please"));
-            wrapper.AddAttribute("PhoneNumber", new DataTypeAttribute(DataType.PhoneNumber));
-            wrapper.AddAttribute("Email", new RequiredAttribute() { ErrorMessage = "Please enter your Email3." });
-            wrapper.AddAttribute("Website", new DataTypeAttribute(DataType.Url));
-            wrapper.AddAttribute("TextArea", new MultilineTextAttribute(5));
+            model.AddAttribute("Text", new DisplayAttribute() { Name = "What is your Name?" });
+            model.AddAttribute("Text", new RequiredAttribute() { ErrorMessage ="Please enter your name1." });
+            model.AddAttribute("Email", new DataTypeAttribute(DataType.EmailAddress));
+            model.AddAttribute("Email", new HelpTextAttribute("Your personal email please"));
+            model.AddAttribute("PhoneNumber", new DataTypeAttribute(DataType.PhoneNumber));
+            model.AddAttribute("Email", new RequiredAttribute() { ErrorMessage = "Please enter your Email3." });
+            model.AddAttribute("Website", new DataTypeAttribute(DataType.Url));
+            model.AddAttribute("TextArea", new MultilineTextAttribute(5));
 
-            wrapper.AddAttribute("Number", new NumberValidatorAttribute());
+            model.AddAttribute("Number", new NumberValidatorAttribute());
 
-            wrapper.AddAttribute("Slider", new SliderAttribute(0, 100));
+            model.AddAttribute("Slider", new SliderAttribute(0, 100));
 
             if (summary)
             {
-                wrapper.AddAttribute("IconButton", new OffsetRightAttribute(1));
-                wrapper.AddAttribute("IconButton", new EditLinkAttribute("Edit", "DynamicForms", containerDiv));
-                wrapper.AddAttribute("IconButton", new LinkRouteValueAttribute("formId", "insurance"));
-                wrapper.AddAttribute("IconButton", new LinkRouteValueAttribute("sectionId", "section2"));
+                model.AddAttribute("IconButton", new OffsetRightAttribute(1));
+                model.AddAttribute("IconButton", new EditLinkAttribute("Edit", "DynamicForms", containerDiv));
+                model.AddAttribute("IconButton", new LinkRouteValueAttribute("formId", "insurance"));
+                model.AddAttribute("IconButton", new LinkRouteValueAttribute("sectionId", "section2"));
             }
             //text-success
-            wrapper.AddAttribute("SectionHeading", new HeadingAttributeH3("text-danger"));
+            model.AddAttribute("SectionHeading", new HeadingAttributeH3("text-danger"));
 
-            wrapper.AddAttribute("Dropdown", new DropdownAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
-            wrapper.AddAttribute("DropdownMany", new DropdownAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
+            model.AddAttribute("Dropdown", new DropdownAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
+            model.AddAttribute("DropdownMany", new DropdownAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
 
-            wrapper.AddAttribute("RadioList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
-            wrapper.AddAttribute("RadioList", new RequiredAttribute());
-            wrapper.AddAttribute("RadioListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
+            model.AddAttribute("RadioList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
+            model.AddAttribute("RadioList", new RequiredAttribute());
+            model.AddAttribute("RadioListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
 
-            wrapper.AddAttribute("CheckboxList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
+            model.AddAttribute("CheckboxList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
             //wrapper.AddAttribute("CheckboxList", new CheckboxOrRadioInlineAttribute());
-            wrapper.AddAttribute("CheckboxList", new LimitCountAttribute(3, 5));
-            wrapper.AddAttribute("CheckboxList", new RequiredAttribute());
+            model.AddAttribute("CheckboxList", new LimitCountAttribute(3, 5));
+            model.AddAttribute("CheckboxList", new RequiredAttribute());
 
-            wrapper.AddAttribute("CheckboxListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
+            model.AddAttribute("CheckboxListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
 
-            wrapper.AddAttribute("Currency", new DataTypeAttribute(DataType.Currency));
+            model.AddAttribute("Currency", new DataTypeAttribute(DataType.Currency));
 
-            wrapper.AddAttribute("Date", new DataTypeAttribute(DataType.Date));
-            wrapper.AddAttribute("Date", new AgeValidatorAttribute(18));
-            wrapper.AddAttribute("Date", new RequiredAttribute());
+            model.AddAttribute("Date", new DataTypeAttribute(DataType.Date));
+            model.AddAttribute("Date", new AgeValidatorAttribute(18));
+            model.AddAttribute("Date", new RequiredAttribute());
 
-            wrapper.AddAttribute("DateTime", new DataTypeAttribute(DataType.DateTime));
+            model.AddAttribute("DateTime", new DataTypeAttribute(DataType.DateTime));
 
-            wrapper.AddAttribute("Checkbox", new RequiredAttribute());
+            model.AddAttribute("Checkbox", new RequiredAttribute());
 
-            wrapper.AddAttribute("YesButton", new BooleanYesButtonAttribute());
+            model.AddAttribute("YesButton", new BooleanYesButtonAttribute());
 
-            wrapper.AddAttribute("YesNo", new YesNoCheckboxOrRadioAttribute());
-            wrapper.AddAttribute("YesNo", new CheckboxOrRadioInlineAttribute());
-            wrapper.AddAttribute("YesNo", new RequiredAttribute());
+            model.AddAttribute("YesNo", new YesNoCheckboxOrRadioAttribute());
+            model.AddAttribute("YesNo", new CheckboxOrRadioInlineAttribute());
+            model.AddAttribute("YesNo", new RequiredAttribute());
 
-            wrapper.AddAttribute("YesNoButtons", new YesNoCheckboxOrRadioButtonsAttribute());
-            wrapper.AddAttribute("YesNoButtons", new RequiredAttribute());
+            model.AddAttribute("YesNoButtons", new YesNoCheckboxOrRadioButtonsAttribute());
+            model.AddAttribute("YesNoButtons", new RequiredAttribute());
 
-            wrapper.AddAttribute("YesNoButtonsBoolean", new BooleanYesNoButtonsAttribute());
+            model.AddAttribute("YesNoButtonsBoolean", new BooleanYesNoButtonsAttribute());
 
-            wrapper.AddAttribute("TrueFalse", new TrueFalseCheckboxOrRadioAttribute());
-            wrapper.AddAttribute("TrueFalse", new CheckboxOrRadioInlineAttribute());
-            wrapper.AddAttribute("TrueFalse", new RequiredAttribute());
+            model.AddAttribute("TrueFalse", new TrueFalseCheckboxOrRadioAttribute());
+            model.AddAttribute("TrueFalse", new CheckboxOrRadioInlineAttribute());
+            model.AddAttribute("TrueFalse", new RequiredAttribute());
 
-            wrapper.AddAttribute("TrueFalseButtons", new TrueFalseCheckboxOrRadioButtonsAttribute());
-            wrapper.AddAttribute("TrueFalseButtons", new RequiredAttribute());
+            model.AddAttribute("TrueFalseButtons", new TrueFalseCheckboxOrRadioButtonsAttribute());
+            model.AddAttribute("TrueFalseButtons", new RequiredAttribute());
 
-            wrapper.AddAttribute("TrueFalseButtonsBoolean", new BooleanTrueFalseButtonsAttribute());
+            model.AddAttribute("TrueFalseButtonsBoolean", new BooleanTrueFalseButtonsAttribute());
 
-            //foreach (var section in sections)
-            //{
-            //    wrapper.AddAttribute(section, new YesNoCheckboxOrRadioAttribute());
-            //    wrapper.AddAttribute(section, new CheckboxOrRadioInlineAttribute());
-            //    wrapper.AddAttribute(section, new RequiredAttribute());
-            //}
+            model.AddAttribute("MultipleMediaFiles", new FileImageAudioVideoAcceptAttribute());
 
-            //wrapper.AddAttribute("Submit", new OffsetRightAttribute(1));
+            model.AddAttribute("Submit", new NoLabelAttribute());
+            model.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
 
-            wrapper.AddAttribute("MultipleMediaFiles", new FileImageAudioVideoAcceptAttribute());
-
-            wrapper.AddAttribute("Submit", new NoLabelAttribute());
-            wrapper.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
-
-            return wrapper;
+            return model;
         }
 
-        private void PopulateForm(DynamicTypeDescriptorWrapper form, IEnumerable<KeyValuePair<string, StringValues>> formData)
+        private void PopulateForm(DynamicFormModel form, IEnumerable<KeyValuePair<string, StringValues>> formData)
         {
             foreach (var item in formData)
             {
@@ -374,7 +355,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             }
         }
 
-        private void PopulateFormRouteData(DynamicTypeDescriptorWrapper form, IEnumerable<KeyValuePair<string, object>> formData)
+        private void PopulateFormRouteData(DynamicFormModel form, IEnumerable<KeyValuePair<string, object>> formData)
         {
             foreach (var item in formData)
             {
@@ -385,7 +366,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             }
         }
 
-        private void PopulateFormFiles(DynamicTypeDescriptorWrapper form, IFormFileCollection formData)
+        private void PopulateFormFiles(DynamicFormModel form, IFormFileCollection formData)
         {
             if (formData != null)
             {
