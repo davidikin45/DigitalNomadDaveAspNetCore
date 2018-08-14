@@ -3,21 +3,17 @@ using DND.Common.Extensions;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.UnitOfWork;
 using DND.Domain.DynamicForms.LookupTables;
-using DND.Domain.DynamicForms.Questions;
 using DND.Domain.DynamicForms.Questions.Enums;
-using DND.Domain.DynamicForms.Sections.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Domain.DynamicForms.Questions
 {
     public class Question : BaseEntityAggregateRootAuditable<int>
     {
+        public string FieldName { get; set; }
         public string QuestionText { get; set; }
 
         public string QuestionTypeString

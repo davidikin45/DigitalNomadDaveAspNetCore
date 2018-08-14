@@ -50,6 +50,7 @@
     <Compile Include="ApplicationServices\IFormApplicationService.cs" />
     <Compile Include="ApplicationServices\IFormSectionSubmissionApplicationService.cs" />
     <Compile Include="ApplicationServices\IFormSubmissionApplicationService.cs" />
+    <Compile Include="ApplicationServices\IDynamicFormsApplicationServices.cs" />
     <Compile Include="ApplicationServices\ILookupTableApplicationService.cs" />
     <Compile Include="ApplicationServices\IQuestionApplicationService.cs" />
     <Compile Include="ApplicationServices\ISectionApplicationService.cs" />

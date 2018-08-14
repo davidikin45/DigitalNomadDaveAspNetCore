@@ -17,10 +17,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,26 +35,29 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         private readonly IHtmlHelper Html;
         private readonly ICookieService _cookieService;
         private readonly IHostingEnvironment _hostingEnvironment;
-
+        private readonly IValueProvider _valueProvider;
 
         public DynamicFormsController(
             IMapper mapper, 
             IEmailService emailService, IConfiguration configuration, 
             IHtmlHelperGeneratorService htmlHelperGeneratorService, 
             ICookieService cookieService, 
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            IValueProvider valueProvider)
             : base(mapper, emailService, configuration)
         {
             Html = htmlHelperGeneratorService.HtmlHelper("");
             _cookieService = cookieService;
             _hostingEnvironment = hostingEnvironment;
+            _valueProvider = valueProvider;
         }
 
         #region IFrame Embed
-        [Route("embed/{formId}.js")]
-        public virtual async Task<IActionResult> IFrameEmbed(string formId)
+        [Route("{formSlug}/embed")]
+        [Route("{formSlug}/embed.js")]
+        public virtual async Task<IActionResult> Embed(string formSlug)
         {
-            string absoluteFormUrl = Url.AbsoluteUrl<DynamicFormsController>(c => c.Edit(formId, ""), true);
+            string absoluteFormUrl = Url.AbsoluteUrl<DynamicFormsController>(c => c.Edit(formSlug, ""), true);
             string iFrameEmbedPath = Path.Combine(_hostingEnvironment.ContentRootPath, @"MVCImplementation\DynamicForms\Scripts\IFrameEmbed.js");
             var iFrameEmbedScript = System.IO.File.ReadAllText(iFrameEmbedPath);
             iFrameEmbedScript = iFrameEmbedScript.Replace("{absoluteFormUrl}", absoluteFormUrl);
@@ -64,13 +67,13 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
         #region Edit
         [NoAjaxRequest]
-        [Route("{formId}")]
-        [Route("{formId}/section/{sectionId}")]
-        public virtual async Task<IActionResult> Edit(string formId, string sectionId)
+        [Route("{formSlug}")]
+        [Route("{formSlug}/section/{sectionId}")]
+        public virtual async Task<IActionResult> Edit(string formSlug, string sectionId)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = GetEditFormResponse(this.RouteData.Values, Request.Query);
+            var response = GetEditFormResponse(this.RouteData, Request.Query);
 
             ViewBag.DetailsMode = false;
             ViewBag.PageTitle = Title;
@@ -80,26 +83,26 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         }
 
         [AjaxRequest]
-        [Route("{formId}")]
-        [Route("{formId}/section/{sectionId}")]
-        public virtual async Task<IActionResult> EditAjax(string formId, string sectionId)
+        [Route("{formSlug}")]
+        [Route("{formSlug}/section/{sectionSlug}")]
+        public virtual async Task<IActionResult> EditAjax(string formSlug, string sectionSlug)
         {
-            var response = GetEditFormResponse(this.RouteData.Values, Request.Query);
+            var response = GetEditFormResponse(this.RouteData, Request.Query);
+
 
             ViewBag.DetailsMode = false;
             return View("_DynamicFormMenuAndForm", response);
         }
 
-        private DynamicTypeDescriptorWrapper GetEditFormResponse(RouteValueDictionary routeData, IQueryCollection queryString)
+        private DynamicFormModel GetEditFormResponse(RouteData routeData, IQueryCollection queryStringData)
         {
             //1. Setup Form definition and 2. Add Validation
-            var wrapper = SetupForm(false);
+            var form = SetupForm(false);
 
             //3. Prepropulate from routeData and query string
-            PopulateFormRouteData(wrapper, this.RouteData.Values);
-            PopulateForm(wrapper, Request.Query);
+            form.BindData(null, routeData, queryStringData);
 
-            return wrapper;
+            return form;
         }
         #endregion
 
@@ -107,14 +110,14 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         [NoAjaxRequest]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Route("{formId}")]
-        [Route("{formId}/section/{sectionId}")]
-        public virtual async Task<IActionResult> Update(string formId, string sectionId, IFormCollection formData)
+        [Route("{formSlug}")]
+        [Route("{formSlug}/section/{sectionSlug}")]
+        public virtual async Task<IActionResult> Update(string formSlug, string sectionSlug, IFormCollection formData)
         {
             //dto.Id = id;
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
-            var response = GetUpdateFormResponse(formData);
+            
+            var response = GetUpdateFormResponse(formData, this.RouteData, Request.Query);
 
             //Manual validation
             if (TryValidateModel(response))
@@ -132,14 +135,13 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         [AjaxRequest]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Route("{formId}")]
-        [Route("{formId}/section/{sectionId}")]
-        public virtual async Task<IActionResult> UpdateAjax(string formId, string sectionId, IFormCollection formData)
+        [Route("{formSlug}")]
+        [Route("{sectionSlug}/section/{sectionId}")]
+        public virtual async Task<IActionResult> UpdateAjax(string formSlug, string sectionSlug, IFormCollection formData)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = GetUpdateFormResponse(formData);
-
+            var response = GetUpdateFormResponse(formData, this.RouteData, Request.Query);
 
             //Manual validation
             if (TryValidateModel(response))
@@ -152,23 +154,21 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             return PartialView("_DynamicFormMenuAndForm", response);
         }
 
-        private DynamicTypeDescriptorWrapper GetUpdateFormResponse(IFormCollection formData)
+        private DynamicFormModel GetUpdateFormResponse(IFormCollection formData, RouteData routeData, IQueryCollection queryStringData)
         {
-            var wrapper = SetupForm(false);
+            var form = SetupForm(false);
 
-            //3. Populate with formData
-            PopulateForm(wrapper, formData);
-            PopulateFormFiles(wrapper, formData.Files);
+            form.BindData(formData, routeData, queryStringData);    
 
-            return wrapper;
+            return form;
         }
         #endregion
 
         #region Summary
         [AjaxRequest]
         [HttpGet]
-        [Route("{formId}/summary")]
-        public virtual async Task<IActionResult> Summary(string formId)
+        [Route("{formSlug}/summary")]
+        public virtual async Task<IActionResult> Summary(string formSlug)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -181,8 +181,8 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
         [NoAjaxRequest]
         [HttpGet]
-        [Route("{formId}/summary")]
-        public virtual async Task<IActionResult> SummaryAjax(string formId)
+        [Route("{formSlug}/summary")]
+        public virtual async Task<IActionResult> SummaryAjax(string formSlug)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -210,7 +210,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             string containerDiv = "#dynamicForm";
 
             //1. Setup Form definition
-            DynamicFormModel model = new DynamicFormModel();
+            dynamic model = new DynamicFormModel();
             model.Add("Text", "");
             model.Add("Email", "");
             model.Add("Website", "");
@@ -242,6 +242,9 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             model.Add("YesNo", "");
             model.Add("YesNoButtons", "");
+
+
+
             model.Add("YesNoButtonsBoolean", false);
 
             model.Add("TrueFalse", "");
@@ -259,16 +262,14 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             }
             else
             {
-                model.Add("Submit", "Next");
+                model.Add("Submit", "Continue");
             }
 
             //2. Add Display and Validation
             model.AddAttribute("Text", new DisplayAttribute() { Name = "What is your Name?" });
-            model.AddAttribute("Text", new RequiredAttribute() { ErrorMessage ="Please enter your name1." });
             model.AddAttribute("Email", new DataTypeAttribute(DataType.EmailAddress));
             model.AddAttribute("Email", new HelpTextAttribute("Your personal email please"));
             model.AddAttribute("PhoneNumber", new DataTypeAttribute(DataType.PhoneNumber));
-            model.AddAttribute("Email", new RequiredAttribute() { ErrorMessage = "Please enter your Email3." });
             model.AddAttribute("Website", new DataTypeAttribute(DataType.Url));
             model.AddAttribute("TextArea", new MultilineTextAttribute(5));
 
@@ -290,13 +291,11 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             model.AddAttribute("DropdownMany", new DropdownAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
 
             model.AddAttribute("RadioList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
-            model.AddAttribute("RadioList", new RequiredAttribute());
             model.AddAttribute("RadioListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
 
             model.AddAttribute("CheckboxList", new CheckboxOrRadioAttribute(Type.GetType("DND.Domain.Blog.Tags.Tag, DND.Domain.Blog"), "Name", "Name"));
             //wrapper.AddAttribute("CheckboxList", new CheckboxOrRadioInlineAttribute());
             model.AddAttribute("CheckboxList", new LimitCountAttribute(3, 5));
-            model.AddAttribute("CheckboxList", new RequiredAttribute());
 
             model.AddAttribute("CheckboxListButtons", new CheckboxOrRadioButtonsAttribute(new List<string>() { "Option 1", "Option 2", "Option 3", "Option 4" }));
 
@@ -304,29 +303,22 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             model.AddAttribute("Date", new DataTypeAttribute(DataType.Date));
             model.AddAttribute("Date", new AgeValidatorAttribute(18));
-            model.AddAttribute("Date", new RequiredAttribute());
 
             model.AddAttribute("DateTime", new DataTypeAttribute(DataType.DateTime));
-
-            model.AddAttribute("Checkbox", new RequiredAttribute());
 
             model.AddAttribute("YesButton", new BooleanYesButtonAttribute());
 
             model.AddAttribute("YesNo", new YesNoCheckboxOrRadioAttribute());
             model.AddAttribute("YesNo", new CheckboxOrRadioInlineAttribute());
-            model.AddAttribute("YesNo", new RequiredAttribute());
 
             model.AddAttribute("YesNoButtons", new YesNoCheckboxOrRadioButtonsAttribute());
-            model.AddAttribute("YesNoButtons", new RequiredAttribute());
 
             model.AddAttribute("YesNoButtonsBoolean", new BooleanYesNoButtonsAttribute());
 
             model.AddAttribute("TrueFalse", new TrueFalseCheckboxOrRadioAttribute());
             model.AddAttribute("TrueFalse", new CheckboxOrRadioInlineAttribute());
-            model.AddAttribute("TrueFalse", new RequiredAttribute());
 
             model.AddAttribute("TrueFalseButtons", new TrueFalseCheckboxOrRadioButtonsAttribute());
-            model.AddAttribute("TrueFalseButtons", new RequiredAttribute());
 
             model.AddAttribute("TrueFalseButtonsBoolean", new BooleanTrueFalseButtonsAttribute());
 
@@ -336,48 +328,6 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             model.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
 
             return model;
-        }
-
-        private void PopulateForm(DynamicFormModel form, IEnumerable<KeyValuePair<string, StringValues>> formData)
-        {
-            foreach (var item in formData)
-            {
-                if (form.ContainsProperty(item.Key))
-                {
-                    foreach (var value in item.Value)
-                    {
-                        foreach (var csvSplit in value.Split(','))
-                        {
-                            form[item.Key] = csvSplit.Trim();
-                        }
-                    }
-                }
-            }
-        }
-
-        private void PopulateFormRouteData(DynamicFormModel form, IEnumerable<KeyValuePair<string, object>> formData)
-        {
-            foreach (var item in formData)
-            {
-                if (form.ContainsProperty(item.Key))
-                {
-                    form[item.Key] = item.Value.ToString().Trim();
-                }
-            }
-        }
-
-        private void PopulateFormFiles(DynamicFormModel form, IFormFileCollection formData)
-        {
-            if (formData != null)
-            {
-                foreach (var item in formData)
-                {
-                    if (form.ContainsProperty(item.Name))
-                    {
-                        form[item.Name] = (FormFile)item;
-                    }
-                }
-            }
         }
     }
 }

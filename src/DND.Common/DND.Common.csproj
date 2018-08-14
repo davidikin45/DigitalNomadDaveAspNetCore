@@ -806,6 +806,7 @@
     <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
     <Compile Include="DomainEvents\IDomainEventHandler.cs" />
     <Compile Include="DomainEvents\IDomainEvent.cs" />
+    <Compile Include="DynamicForms\DynamicFormExtensions.cs" />
     <Compile Include="DynamicForms\DynamicFormModel.cs" />
     <Compile Include="Dynamic\DynamicHelper.cs" />
     <Compile Include="Dynamic\DynamicPropertyDescriptor.cs" />

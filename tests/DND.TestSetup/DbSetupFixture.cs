@@ -20,7 +20,7 @@ namespace DND.TestSetup
 
         public override void MigrateDatabaseAndSeed()
         {
-            DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new ApplicationDbContextFactory()}), new ApplicationDbInitializerMigrate(), true, true);
+            DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new ApplicationDbContextFactory()}), new ApplicationDbInitializerMigrate(), true, true);
 
             using (var context = CreateIdentityContext(false))
             {

@@ -12,6 +12,10 @@ namespace DND.Domain.DynamicForms.FormSectionSubmissions
     {
         public Guid FormSubmissionId { get; set; }
 
+        public int SectionId { get; set; }
+
+        public string UrlSlug { get; set; }
+
         public bool Completed { get; set; }
         public bool Valid { get; set; }
 

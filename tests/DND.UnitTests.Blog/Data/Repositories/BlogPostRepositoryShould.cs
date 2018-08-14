@@ -24,7 +24,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         public BlogPostRepositoryShould()
         {
             _context = new InMemoryDataContext();
-            var uowFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<ICMSDbContext>(_context)}), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<ICMSDbContext>(_context)}), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _uow = uowFactory.CreateReadOnly();
             _repository = new GenericEFRepository<BlogPost>(_context, _uow);
         }

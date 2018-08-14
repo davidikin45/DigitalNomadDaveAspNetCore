@@ -105,6 +105,12 @@ namespace DND.Common.Dynamic
         #endregion
 
         #region Helper Methods
+        public bool IsCollectionProperty(string propertyName)
+        {
+            var property = GetProperties().Find(propertyName, true);
+            return IsCollection(property.PropertyType);
+        }
+
         private bool IsCollection(Type type)
         {
             return type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType).Any(x => x.GetGenericTypeDefinition() == typeof(ICollection<>) && !x.GetGenericArguments().Contains(typeof(Byte)));
@@ -258,6 +264,13 @@ namespace DND.Common.Dynamic
                 Add(binder.Name, value);
                 return true;
             }
+        }
+
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            var meta = _dynamic.GetMetaObject(Expression.Constant(_dynamic));
+            var memberNames = meta.GetDynamicMemberNames();
+            return memberNames;
         }
         #endregion
     }

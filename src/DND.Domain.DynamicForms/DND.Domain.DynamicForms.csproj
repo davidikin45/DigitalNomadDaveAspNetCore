@@ -209,6 +209,7 @@
     <Compile Include="Questions\QuestionValidation.cs" />
     <Compile Include="Sections\Dtos\SectionDeleteDto.cs" />
     <Compile Include="Sections\Dtos\SectionDto.cs" />
+    <Compile Include="Sections\Dtos\SectionQuestionDto.cs" />
     <Compile Include="Sections\Enums\SectionType.cs" />
     <Compile Include="Sections\SectionQuestion.cs" />
     <Compile Include="Sections\Section.cs" />

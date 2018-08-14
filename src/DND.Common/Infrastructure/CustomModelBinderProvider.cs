@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity.Spatial;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Common.Infrastructure
@@ -56,7 +53,7 @@ namespace DND.Common.Infrastructure
         }
     }
 
-    public class CustomModelBinderProvider : IModelBinderProvider
+    public class DbGeographyModelBinderProvider : IModelBinderProvider
     {
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {

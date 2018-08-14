@@ -46,7 +46,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
 
             _identityContext = GlobalDbSetupFixture.CreateIdentityContext(false);
 
-            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { mockDbContextFactory.Object }), new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper), _mapper, null, null, null);
+            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { mockDbContextFactory.Object }), new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper), _mapper, null, null, null);
         }
 
         [TearDown]
@@ -65,7 +65,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
             var user = _identityContext.Users.First();
             _controller.MockCurrentUser(user.Id, user.UserName, IdentityConstants.ApplicationScheme);
 
-            var unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
 
             var category = new Category()
             {

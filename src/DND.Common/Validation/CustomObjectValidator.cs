@@ -3,21 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Validation
 {
+    //.Net Core Object validator
     public class CustomObjectValidator : DefaultObjectValidator
     {
-        private readonly ICustomModelMetadataProviderSingleton _customNodelMetadataProvider;
+        private readonly ICustomModelMetadataProviderSingleton _customModelMetadataProvider;
         public CustomObjectValidator(ICustomModelMetadataProviderSingleton modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders)
             :base(modelMetadataProvider, validatorProviders)
         {
-            _customNodelMetadataProvider = modelMetadataProvider;
+            _customModelMetadataProvider = modelMetadataProvider;
         }
 
         public override ValidationVisitor GetValidationVisitor(ActionContext actionContext, IModelValidatorProvider validatorProvider, ValidatorCache validatorCache, IModelMetadataProvider metadataProvider, ValidationStateDictionary validationState)
@@ -26,7 +23,7 @@ namespace DND.Common.Validation
                 actionContext,
                 validatorProvider,
                 validatorCache,
-                _customNodelMetadataProvider,
+                _customModelMetadataProvider,
                 validationState);
         }
     }

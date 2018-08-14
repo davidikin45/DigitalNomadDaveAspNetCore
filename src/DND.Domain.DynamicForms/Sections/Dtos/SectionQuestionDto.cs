@@ -2,9 +2,8 @@
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Domain.Blog.Sections.Dtos;
 using DND.Domain.DynamicForms.Questions;
-using DND.Domain.DynamicForms.Sections;
+using DND.Domain.DynamicForms.Questions.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;

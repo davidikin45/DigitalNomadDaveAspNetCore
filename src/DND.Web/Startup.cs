@@ -25,6 +25,7 @@ using DND.Common.Validation;
 using DND.Data.Identity;
 using DND.Domain.Identity.Users;
 using DND.Infrastructure;
+using DND.Web.MVCImplementation.DynamicForms.ModelBinders;
 using Hangfire;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication;
@@ -533,7 +534,8 @@ namespace DND.Web
             // Add framework services.
             var mvc = services.AddMvc(options =>
             {
-                options.UseCustomModelBinding();
+                options.UseDbGeographyModelBinding();
+                options.UseDynamicFormsModelBinding();
 
                 //DbGeography causes infinite validation loop
                 //https://github.com/aspnet/Home/issues/2024

@@ -103,6 +103,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DynamicFormsApplicationServices.cs" />
     <Compile Include="FormSectionSubmissions\Services\FormSectionSubmissionApplicationService.cs" />
     <Compile Include="FormSubmissions\Services\FormSubmissionApplicationService.cs" />
     <Compile Include="Forms\Services\FormApplicationService.cs" />

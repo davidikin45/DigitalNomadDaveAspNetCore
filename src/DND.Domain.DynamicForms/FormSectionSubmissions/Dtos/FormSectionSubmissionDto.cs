@@ -3,8 +3,6 @@ using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Common.ModelMetadataCustom.LinkAttributes;
-using DND.Domain.DynamicForms.FormSectionSubmissions;
-using DND.Domain.DynamicForms.FormSectionSubmissions.Dtos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +12,10 @@ namespace DND.Domain.DynamicForms.FormSectionSubmissions.Dtos
     public class FormSectionSubmissionDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
         public Guid FormSubmissionId { get; set; }
+
+        public int SectionId { get; set; }
+
+        public string UrlSlug { get; set; }
 
         public bool Completed { get; set; }
         public bool Valid { get; set; }

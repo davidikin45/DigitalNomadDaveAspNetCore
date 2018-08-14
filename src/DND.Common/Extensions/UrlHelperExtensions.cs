@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
-using DND.Common.Helpers;
+﻿using DND.Common.Helpers;
 using DND.Common.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Extensions
 {
@@ -18,9 +13,26 @@ namespace DND.Common.Extensions
         {
             var absoluteVirtual = urlHelper.Content(path);
 
-            Uri url = new Uri(new Uri(ConfigurationManager.AppSettings("SiteUrl")), absoluteVirtual);
+            if (!toAbsolute)
+            {
+                return absoluteVirtual;
+            }
+            else
+            {
+                var siteUrl = ConfigurationManager.AppSettings("SiteUrl");
+                if (string.IsNullOrWhiteSpace(siteUrl))
+                {
+                    siteUrl = urlHelper.ActionContext.HttpContext.Request.Host.ToUriComponent();
+                }
 
-            return toAbsolute ? url.AbsoluteUri : absoluteVirtual;
+                var absoluteUri = string.Concat(
+                        urlHelper.ActionContext.HttpContext.Request.Scheme,
+                        "://",
+                       siteUrl,
+                        urlHelper.ActionContext.HttpContext.Request.PathBase.ToUriComponent(),
+                        absoluteVirtual);
+                return absoluteUri;
+            }
         }
 
         public static string Content(this IUrlHelper urlHelper, string folderId, string path, bool toAbsolute)
@@ -72,6 +84,7 @@ namespace DND.Common.Extensions
             }
             else
             {
+                //The trick here is that once you specify the protocol/scheme when calling any routing method, you get an absolute URL. I recommend this one when possible, but you also have the more generic way in the first example in case you need it.
                 absoluteUrl = url.Action(actionName, controllerName, routeValues, url.ActionContext.HttpContext.Request.Scheme).ToString();
             }
             return absoluteUrl;

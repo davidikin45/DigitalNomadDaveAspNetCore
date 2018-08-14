@@ -13,6 +13,9 @@ namespace DND.Domain.DynamicForms.Questions.Dtos
 {
     public class QuestionDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
     {
+        [Required]
+        public string FieldName { get; set; }
+
         [Required()]
         public string QuestionText { get; set; }
 

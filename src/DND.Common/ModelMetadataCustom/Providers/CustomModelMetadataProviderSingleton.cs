@@ -1,6 +1,4 @@
-﻿using DND.Common.Dynamic;
-using DND.Common.Helpers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.Extensions.Options;
@@ -9,8 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.ModelMetadataCustom.Providers
 {
@@ -32,7 +28,7 @@ namespace DND.Common.ModelMetadataCustom.Providers
         public override ModelMetadata GetMetadataForType(Type modelType)
         {
             //  Optimization for intensively used System.Object
-            if (!modelType.GetInterfaces().Contains(typeof(ICustomTypeDescriptor)))
+            if (!typeof(ICustomTypeDescriptor).IsAssignableFrom(modelType))
             {
                 return base.GetMetadataForType(modelType);
             }

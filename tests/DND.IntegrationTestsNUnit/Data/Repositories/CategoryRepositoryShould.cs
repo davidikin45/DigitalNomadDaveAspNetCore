@@ -27,7 +27,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             _context = new ApplicationDbContext(connectionString, true);
 
-            var uowFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(_context) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(_context) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
             _ouw = uowFactory.CreateReadOnly();
             _repository = new GenericEFRepository<Category>(_context, _ouw);
         }
@@ -44,7 +44,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
             using (var con = new ApplicationDbContext(connectionString, true))
             {
-                var uowFactory = new UnitOfWorkScopeFactory(new DbContextAbstractFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(con) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(con) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
 
                 using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
                 {
