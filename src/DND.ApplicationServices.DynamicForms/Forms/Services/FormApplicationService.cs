@@ -21,7 +21,7 @@ namespace DND.ApplicationServices.DynamicForms.Forms.Services
 
         public Task<FormDto> GetFormByUrlSlugAsync(string formUrlSlug, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return GetOneAsync(cancellationToken, f => f.UrlSlug == formUrlSlug, true, true);
         }
     }
 }

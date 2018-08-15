@@ -1,8 +1,9 @@
 ﻿using DND.Common.DomainEvents;
 using DND.Common.Extensions;
+using DND.Common.Helpers;
 using DND.Common.Implementation.Validation;
-using DND.Common.Interfaces.Models;
 using DND.Common.Interfaces.Data;
+using DND.Common.Interfaces.Models;
 using RefactorThis.GraphDiff;
 using System;
 using System.Collections;
@@ -21,7 +22,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using DND.Common.Helpers;
 
 
 namespace DND.Common.Implementation.Data

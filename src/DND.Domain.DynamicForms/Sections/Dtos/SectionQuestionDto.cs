@@ -17,6 +17,7 @@ namespace DND.Domain.DynamicForms.Sections.Dtos
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]
         public override int Id { get => base.Id; set => base.Id = value; }
 
+        [Display(Name = "Question")]
         [Required]
         [Dropdown(typeof(Question), nameof(DND.Domain.DynamicForms.Questions.Question.QuestionText))]
         public int QuestionId { get; set; }

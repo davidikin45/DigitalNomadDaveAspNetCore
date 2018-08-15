@@ -861,6 +861,7 @@
     <Compile Include="Hangfire\HangfireDependencyInjection.cs" />
     <Compile Include="Helpers\AngularHelper.cs" />
     <Compile Include="Helpers\AsyncHelper.cs" />
+    <Compile Include="Helpers\BoolParser.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />
     <Compile Include="Helpers\Cryptography\AsymmetricEncryptionHelper.cs" />
     <Compile Include="Helpers\Cryptography\BlockChain.cs" />
@@ -991,7 +992,7 @@
     <Compile Include="Infrastructure\NonValidatingValidator.cs" />
     <Compile Include="Infrastructure\PaginatedList.cs" />
     <Compile Include="Infrastructure\ConfigurationManager.cs" />
-    <Compile Include="Infrastructure\CustomModelBinderProvider.cs" />
+    <Compile Include="Infrastructure\DbGeographyModelBinderProvider.cs" />
     <Compile Include="Infrastructure\CustomViewLocator.cs" />
     <Compile Include="Infrastructure\DbContextInitializer.cs" />
     <Compile Include="Infrastructure\ffMpeg.cs" />

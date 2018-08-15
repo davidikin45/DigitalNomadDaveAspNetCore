@@ -28,7 +28,7 @@ namespace DND.Common.ModelMetadataCustom.Providers
         public override ModelMetadata GetMetadataForType(Type modelType)
         {
             //  Optimization for intensively used System.Object
-            if (!typeof(ICustomTypeDescriptor).IsAssignableFrom(modelType))
+            if(!modelType.GetInterfaces().Contains(typeof(ICustomTypeDescriptor)))
             {
                 return base.GetMetadataForType(modelType);
             }

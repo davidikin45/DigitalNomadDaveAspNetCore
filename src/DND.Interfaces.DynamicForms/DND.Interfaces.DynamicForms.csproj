@@ -61,6 +61,7 @@
     <Compile Include="DomainServices\IQuestionDomainService.cs" />
     <Compile Include="DomainServices\ISectionDomainService.cs" />
     <Compile Include="DomainServices\IFormDomainService.cs" />
+    <Compile Include="PresentationServices\IDynamicFormsPresentationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

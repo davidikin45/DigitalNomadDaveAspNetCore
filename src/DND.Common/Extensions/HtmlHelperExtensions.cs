@@ -52,6 +52,12 @@ namespace DND.Common.Extensions
             return dbContext;
         }
 
+        public static IBaseDbContext DatabaseByEntityType(this IHtmlHelper html, Type entityType)
+        {
+            var dbContext = html.GetInstance<IDbContextFactoryProducerSingleton>().GetFactoryByEntityType(entityType).CreateBaseDbContext();
+            return dbContext;
+        }
+
         public static HtmlString ClientIdFor<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
             return new HtmlString(

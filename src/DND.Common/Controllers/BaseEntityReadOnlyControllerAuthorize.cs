@@ -93,12 +93,23 @@ namespace DND.Common.Controllers
         }
         #endregion
 
-        #region Dynamic
-        [Route("dynamic/{id}")]
-        public virtual async Task<ActionResult> Dynamic(string id)
+        #region Details
+        // GET: Default/Details/5
+        [Route("details/{id}")]
+        public virtual async Task<ActionResult> Details(string id)
         {
-            dynamic data = new ExpandoObject();
-            data.Names = "Test";
+            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            TDto data = null;
+            try
+            {
+                data = await Service.GetByIdAsync(id, cts.Token, true);
+                if (data == null)
+                    return HandleReadException();
+            }
+            catch (Exception ex)
+            {
+                return HandleReadException();
+            }
 
             ViewBag.PageTitle = Title;
             ViewBag.Admin = Admin;

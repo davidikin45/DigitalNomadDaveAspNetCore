@@ -3,7 +3,6 @@ using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Common.ModelMetadataCustom.LinkAttributes;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -28,7 +27,7 @@ namespace DND.Domain.DynamicForms.Forms.Dtos
         [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
         [ActionLink("Notifications")]
         [Repeater("{" + nameof(FormNotificationDto.Email) + "}")]
-        public List<FormSectionDto> Notifications { get; set; }
+        public List<FormNotificationDto> Notifications { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {

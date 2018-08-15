@@ -125,7 +125,7 @@ namespace DND.Common.Extensions
                 if(options == null)
                 {
 
-                    using (var db = htmlHelper.Database<TIDbContext>())
+                    using (var db = htmlHelper.DatabaseByEntityType(dropdownModelType))
                     {
 
                         var pi = dropdownModelType.GetProperty(orderByProperty);
@@ -167,9 +167,9 @@ namespace DND.Common.Extensions
                         items.Add(new SelectListItem()
                         {
                             Text = GetDisplayString(htmlHelper, item, valueProperty),
-                        //Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
-                        //Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
-                        Value = GetDisplayString(htmlHelper, item, keyProperty),
+                            //Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
+                            //Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
+                            Value = GetDisplayString(htmlHelper, item, keyProperty),
                             Selected = ids.Contains(GetDisplayString(htmlHelper, item, keyProperty))
                         }));
                     }

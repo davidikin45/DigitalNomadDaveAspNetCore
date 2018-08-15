@@ -1,0 +1,149 @@
+[
+  {
+    "Controller": "Admin",
+    "Action": "Index",
+    "LinkText": "Admin"
+  },
+  {
+    "Controller": "Manage",
+    "Action": "Index",
+    "LinkText": "Manage"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminCarouselItems",
+    "Action": "Index",
+    "LinkText": "Carousel"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminContentHtmls",
+    "Action": "Index",
+    "LinkText": "Content Html"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminContentTexts",
+    "Action": "Index",
+    "LinkText": "Content Text"
+  },
+  {
+    "Active": false,
+    "Controller": "Admin",
+    "Action": "FileManager",
+    "LinkText": "File Manager"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminFolderMetadata",
+    "Action": "Index",
+    "LinkText": "Folder Metadata"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminFileMetadata",
+    "Action": "Index",
+    "LinkText": "File Metadata"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminMetadata",
+    "Action": "Index",
+    "LinkText": "Image Metadata"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminAuthors",
+    "Action": "Index",
+    "LinkText": "Authors"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminBlogPosts",
+    "Action": "Index",
+    "LinkText": "Posts"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminCategories",
+    "Action": "Index",
+    "LinkText": "Categories"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminTags",
+    "Action": "Index",
+    "LinkText": "Tags"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminLocations",
+    "Action": "Index",
+    "LinkText": "Locations"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminProjects",
+    "Action": "Index",
+    "LinkText": "Projects"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminTestimonials",
+    "Action": "Index",
+    "LinkText": "Testimonials"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminMailingList",
+    "Action": "Index",
+    "LinkText": "Mailing List"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminMailingList",
+    "Action": "Email",
+    "LinkText": "Email Mailing List"
+  },
+  {
+    "Active": false,
+    "Controller": "AdminFaqs",
+    "Action": "Index",
+    "LinkText": "FAQ"
+  },
+  {
+    "Controller": "AdminForms",
+    "Action": "Index",
+    "LinkText": "Forms"
+  },
+  {
+    "Controller": "AdminSections",
+    "Action": "Index",
+    "LinkText": "Sections"
+  },
+  {
+    "Controller": "AdminQuestions",
+    "Action": "Index",
+    "LinkText": "Questions"
+  },
+  {
+    "Controller": "AdminLookupTables",
+    "Action": "Index",
+    "LinkText": "Lookup Tables"
+  },
+  {
+    "Controller": "Admin",
+    "Action": "ClearCache",
+    "LinkText": "Clear Cache"
+  },
+  {
+    "Controller": "",
+    "Action": "/admin/hangfire",
+    "LinkText": "Jobs"
+  },
+  {
+    "Controller": "",
+    "Action": "/Glimpse.axd",
+    "LinkText": "Glimpse"
+  }
+]

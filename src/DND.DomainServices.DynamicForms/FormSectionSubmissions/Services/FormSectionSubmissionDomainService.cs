@@ -6,9 +6,9 @@ using DND.Interfaces.DynamicForms.DomainServices;
 
 namespace DND.DomainServices.DynamicForms.FormSectionSubmissions.Services
 {
-    public class FormSectionSubmissionsDomainService : BaseEntityDomainService<IDynamicFormsDbContext, FormSectionSubmission>, IFormSectionSubmissionDomainService
+    public class FormSectionSubmissionDomainService : BaseEntityDomainService<IDynamicFormsDbContext, FormSectionSubmission>, IFormSectionSubmissionDomainService
     {
-        public FormSectionSubmissionsDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
+        public FormSectionSubmissionDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
         {
 

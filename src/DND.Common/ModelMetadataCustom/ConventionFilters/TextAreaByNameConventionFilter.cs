@@ -1,15 +1,13 @@
-﻿using DND.Common.ModelMetadataCustom;
-using System;
+﻿using DND.Common.AppSettings;
+using DND.Common.ModelMetadataCustom.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using DND.Common.ModelMetadataCustom.Interfaces;
-using DND.Common.AppSettings;
-using Microsoft.Extensions.Options;
 
 namespace DND.Common.ModelMetadataCustom.ConventionFilters
 {
-	public class TextAreaByNameConventionFilter : IDisplayMetadataFilter
+    public class TextAreaByNameConventionFilter : IDisplayMetadataFilter
     {
         private readonly DisplayConventionsDisableOptions _displayConventionsDisableOptions;
         public TextAreaByNameConventionFilter(IOptions<DisplayConventionsDisableOptions> displayConventionsDisableOptions)
@@ -21,7 +19,6 @@ namespace DND.Common.ModelMetadataCustom.ConventionFilters
 				new HashSet<string>
 						{
 							"body",
-                            "message",
                             "comments"
                         };
 

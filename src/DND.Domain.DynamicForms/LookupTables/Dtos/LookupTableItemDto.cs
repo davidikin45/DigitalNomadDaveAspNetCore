@@ -20,7 +20,6 @@ namespace DND.Domain.DynamicForms.LookupTables.Dtos
 
         [Required()]
         public string Text { get; set; }
-        public string Value { get; set; }
 
         public void CreateMappings(IMapperConfigurationExpression configuration)
         {

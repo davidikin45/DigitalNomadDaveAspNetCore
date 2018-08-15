@@ -1,15 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using DND.Common.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using DND.Common.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace DND.Common.Helpers
 {
@@ -28,14 +22,14 @@ namespace DND.Common.Helpers
         public class NavigationMenuHelper
         {
             public static string MVCImplementationFolder { get; set; }
-            private static Lazy<object> _menu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("~/" + MVCImplementationFolder + "Shared/Views/Navigation/navigation.json"))));
+            private static Lazy<object> _menu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("navigation.json"))));
 
             public dynamic Menu
             {
                 get { return _menu.Value; }
             }
 
-            private static Lazy<object> _adminMenu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("~/" + MVCImplementationFolder + "Shared/Views/Navigation/admin-navigation.json"))));
+            private static Lazy<object> _adminMenu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("navigation-admin.json"))));
 
             public dynamic AdminMenu
             {

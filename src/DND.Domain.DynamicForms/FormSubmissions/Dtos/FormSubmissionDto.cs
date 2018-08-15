@@ -3,10 +3,9 @@ using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Common.ModelMetadataCustom.LinkAttributes;
-using DND.Domain.DynamicForms.FormSectionSubmissions.Dtos;
 using DND.Domain.DynamicForms.Forms;
 using DND.Domain.DynamicForms.Forms.Dtos;
-using DND.Domain.DynamicForms.FormSubmissions;
+using DND.Domain.DynamicForms.FormSectionSubmissions.Dtos;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,6 +18,7 @@ namespace DND.Domain.DynamicForms.FormSubmissions.Dtos
         public bool Completed { get; set; }
         public bool Valid { get; set; }
 
+        [Display(Name = "Form")]
         [Required]
         [Dropdown(typeof(Form), nameof(DND.Domain.DynamicForms.Forms.Form.Name))]
         public int FormId { get; set; }

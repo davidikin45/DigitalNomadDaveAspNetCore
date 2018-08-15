@@ -1,14 +1,8 @@
 ﻿using DND.Common.Enums;
-using DND.Common.Extensions;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.UnitOfWork;
-using DND.Domain.DynamicForms.Questions;
-using DND.Domain.DynamicForms.Sections.Enums;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Domain.DynamicForms.LookupTables
@@ -17,7 +11,7 @@ namespace DND.Domain.DynamicForms.LookupTables
     {
         public string Name { get; set; }
 
-        public List<LookupTable> LookupTableItems { get; set; } = new List<LookupTable>();
+        public List<LookupTableItem> LookupTableItems { get; set; } = new List<LookupTableItem>();
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {

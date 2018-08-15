@@ -2,9 +2,8 @@
 using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Domain.DynamicForms.Sections.Dtos;
+using DND.Common.ModelMetadataCustom.LinkAttributes;
 using DND.Domain.DynamicForms.Questions.Enums;
-using DND.Domain.DynamicForms.Sections;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -18,6 +17,9 @@ namespace DND.Domain.DynamicForms.Questions.Dtos
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]
         public override int Id { get => base.Id; set => base.Id = value; }
 
+        [ActionLink("Details", "AdminQuestions")]
+        [LinkRouteValue("id", "{LogicQuestionId}")]
+        [Display(Name = "Question")]
         [Required]
         [Dropdown(typeof(Question), nameof(DND.Domain.DynamicForms.Questions.Question.QuestionText))]
         public int LogicQuestionId { get; set; }
