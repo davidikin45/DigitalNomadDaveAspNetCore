@@ -81,7 +81,7 @@ namespace DND.Common.DynamicForms
             if (model != null)
             {
                 string formSubmissionId = default(string);
-                var formSubmissionIdResult = bindingContext.ValueProvider.GetValue("FormSubmissionId");
+                var formSubmissionIdResult = bindingContext.ValueProvider.GetValue(modelName);
                 if (formSubmissionIdResult != ValueProviderResult.None)
                 {
                     formSubmissionId = formSubmissionIdResult.FirstValue;

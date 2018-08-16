@@ -25,6 +25,7 @@ namespace DND.Common.ModelMetadataCustom.Providers
         }
 
         //Lazy Loaded
+        private bool propertiesRuntimeLoaded = false;
         public ModelPropertyCollection PropertiesRuntime(object model)
         {
 
@@ -36,14 +37,44 @@ namespace DND.Common.ModelMetadataCustom.Providers
             {
                 var propertiesField = typeof(CustomModelMetadata).BaseType.GetField("_properties", BindingFlags.Instance | BindingFlags.NonPublic);
 
-                if (propertiesField.GetValue(this) == null)
+                if (propertiesField.GetValue(this) == null || !propertiesRuntimeLoaded)
                 {
                     var properties = _customProvider.GetMetadataForProperties(ModelType, model as ICustomTypeDescriptor);
                     properties = properties.OrderBy(p => p.Order);
                     propertiesField.SetValue(this, new ModelPropertyCollection(properties));
+                    propertiesRuntimeLoaded = true;
                 }
 
                 return (ModelPropertyCollection)propertiesField.GetValue(this);
+            }
+        }
+
+        public override ModelPropertyCollection Properties
+        {
+            get
+            {
+               
+                return base.Properties;
+            }
+        }
+
+        public override ModelMetadata ElementMetadata
+        {
+            get
+            {
+                if (ElementType != null)
+                {
+                    if (ElementType.GetInterfaces().Contains(typeof(ICustomTypeDescriptor)))
+                    {
+                        return _customProvider.GetMetadataForType(ElementType);
+                    }
+                    else
+                    {
+                        return base.ElementMetadata;
+                    }
+                }
+
+                return null;
             }
         }
 

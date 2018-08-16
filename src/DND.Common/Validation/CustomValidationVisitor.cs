@@ -3,12 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Validation
 {
@@ -50,7 +45,7 @@ namespace DND.Common.Validation
             {
                 if (Metadata.IsEnumerableType)
                 {
-                    return VisitComplexType(DefaultCollectionValidationStrategy.Instance);
+                    return VisitComplexType(CustomCollectionValidationStrategy.Instance);
                 }
 
                 if (Metadata.IsComplexType)

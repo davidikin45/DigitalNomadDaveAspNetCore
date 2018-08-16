@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.ActionResults;
 using DND.Common.Controllers;
-using DND.Common.Dynamic;
 using DND.Common.DynamicForms;
 using DND.Common.Email;
 using DND.Common.Extensions;
@@ -249,6 +248,8 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             var response = GetSummaryResponse();
 
+            var sections = new List<DynamicFormModel>() { response, response };
+
             ViewBag.ExcludePropertyErrors = false;
             ViewBag.DetailsMode = true;
             return View("_DynamicFormMenuAndForm", response);
@@ -263,18 +264,21 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             var response = GetSummaryResponse();
 
+            var sections = new List<DynamicFormModel>() { response, response };
+
+            TryValidateModel(sections);
+
             ViewBag.ExcludePropertyErrors = false;
             ViewBag.DetailsMode = true;
             ViewBag.PageTitle = Title;
             ViewBag.Admin = false;
-            return View("DynamicFormMenuAndFormPage", response);
+            return View("DynamicFormMenuAndFormPage", sections);
         }
 
-        private DynamicTypeDescriptorWrapper GetSummaryResponse()
+        private DynamicFormModel GetSummaryResponse()
         {
             var wrapper = SetupForm(true);
 
-            TryValidateModel(wrapper);
 
             return wrapper;
         }

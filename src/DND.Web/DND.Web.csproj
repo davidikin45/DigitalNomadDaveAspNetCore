@@ -445,6 +445,9 @@
     <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\BooleanTrueFalseButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\IFormFile.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\ModelCheckboxOrRadioButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

@@ -1148,6 +1148,7 @@
     <Compile Include="Testing\TestHelper.cs" />
     <Compile Include="Testing\TestServer\BaseTestServerFixture.cs" />
     <Compile Include="ModelMetadataCustom\ValidationAttributes\AgeValidatorAttribute.cs" />
+    <Compile Include="Validation\CustomCollectionValidationStrategy.cs" />
     <Compile Include="Validation\CustomComplexObjectValidatorExtension.cs" />
     <Compile Include="Validation\CustomComplexObjectValidationStrategy.cs" />
     <Compile Include="Validation\CustomObjectValidator.cs" />
