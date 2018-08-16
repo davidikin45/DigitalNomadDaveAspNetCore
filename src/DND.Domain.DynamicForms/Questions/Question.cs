@@ -14,6 +14,7 @@ namespace DND.Domain.DynamicForms.Questions
     public class Question : BaseEntityAggregateRootAuditable<int>
     {
         public string FieldName { get; set; }
+
         public string QuestionText { get; set; }
 
         public string QuestionTypeString

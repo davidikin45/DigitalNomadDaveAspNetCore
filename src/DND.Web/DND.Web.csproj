@@ -17,6 +17,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
+    <Content Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
+    <EmbeddedResource Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
+    <None Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="MVCImplementation\Author\Api\AuthorsController.cs" />
     <Compile Remove="MVCImplementation\Author\Controllers\AdminAuthorController.cs" />
     <Compile Remove="MVCImplementation\Author\Notifications\AuthorsNotifications.cs" />

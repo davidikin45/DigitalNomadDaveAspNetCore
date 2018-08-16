@@ -13,7 +13,6 @@ namespace DND.Domain.DynamicForms.Forms.Dtos
         [Required()]
         public string Name { get; set; }
 
-        [Required()]
         public string UrlSlug { get; set; }
 
         [Required()]

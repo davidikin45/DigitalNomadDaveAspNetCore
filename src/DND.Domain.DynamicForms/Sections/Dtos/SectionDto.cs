@@ -14,7 +14,6 @@ namespace DND.Domain.DynamicForms.Sections.Dtos
         [Required()]
         public string Name { get; set; }
 
-        [Required()]
         public string UrlSlug { get; set; }
 
         public SectionType SectionType { get; set; }

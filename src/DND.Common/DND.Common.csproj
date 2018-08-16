@@ -806,8 +806,13 @@
     <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
     <Compile Include="DomainEvents\IDomainEventHandler.cs" />
     <Compile Include="DomainEvents\IDomainEvent.cs" />
+    <Compile Include="DynamicForms\DynamicFormsValueProviderKeys.cs" />
     <Compile Include="DynamicForms\DynamicFormExtensions.cs" />
     <Compile Include="DynamicForms\DynamicFormModel.cs" />
+    <Compile Include="DynamicForms\DynamicFormsModelBinder.cs" />
+    <Compile Include="DynamicForms\DynamicFormsModelBinderProvider.cs" />
+    <Compile Include="DynamicForms\DynamicFormsModelBinderProviderExtension.cs" />
+    <Compile Include="DynamicForms\IDynamicFormsPresentationService.cs" />
     <Compile Include="Dynamic\DynamicHelper.cs" />
     <Compile Include="Dynamic\DynamicPropertyDescriptor.cs" />
     <Compile Include="Dynamic\DynamicTypeDescriptorWrapper.cs" />

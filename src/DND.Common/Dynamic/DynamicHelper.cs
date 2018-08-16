@@ -15,6 +15,11 @@ namespace DND.Common.Dynamic
                 var dict = dyn as IDictionary<string, object>;
                 return dict[propName];
             }
+            else if(dyn is DynamicTypeDescriptorWrapper)
+            {
+                var dict = dyn as DynamicTypeDescriptorWrapper;
+                return dict[propName];
+            }
             else
             {
                 // Warning: this is rather expensive, and should be cached in a real app
@@ -33,6 +38,11 @@ namespace DND.Common.Dynamic
             if (dyn is ExpandoObject)
             {
                 var dict = dyn as IDictionary<string, object>;
+                dict[propName] = val;
+            }
+            else if(dyn is DynamicTypeDescriptorWrapper)
+            {
+                var dict = dyn as DynamicTypeDescriptorWrapper;
                 dict[propName] = val;
             }
             else

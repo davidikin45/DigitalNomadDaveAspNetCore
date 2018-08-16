@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Data
 {
@@ -17,14 +15,18 @@ namespace DND.Common.Implementation.Data
         //2. Never have 1-To-1 Composition ENTITY Relationships!!! For Composition relationships use Value types instead if required. In EF6 extend from BaseValueObject. In EF Core decorate value type with [OwnedAttribute]. Not sure if this attribute can be applied on base class. ValueTypes are included by default.
         //3. Use collections only for Composition/Owned relationships(1-To-Many, child cannot exist independent of the parent, ) not Aggregation/Associated relationshiships(child can exist independently of the parent, reference relationship). Never use a Collection for Navigation purposes!!!!
         //4. Use Complex properties for Aggregation relationships only (Many-To-1, child can exist independently of the parent, reference relationship). e.g Navigation purposes
-        public static List<string> GetAllCompositionRelationshipPropertyIncludes(Type type)
+        public static List<string> GetAllCompositionRelationshipPropertyIncludes(Type type, int maxDepth = 10)
         {
-            return GetAllCompositionAndAggregationRelationshipPropertyIncludes(true, type, null);
+            return GetAllCompositionAndAggregationRelationshipPropertyIncludes(true, type, null, 0, maxDepth);
         }
 
-        public static List<string> GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type, string path = null)
+        public static List<string> GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type, string path = null, int depth = 0, int maxDepth = 10)
         {
             List<string> includesList = new List<string>();
+            if(depth > maxDepth)
+            {
+                return includesList;
+            }
 
             List<Type> excludeTypes = new List<Type>()
             {
@@ -52,7 +54,7 @@ namespace DND.Common.Implementation.Data
                     propType = p.PropertyType;
                 }
 
-                includesList.AddRange(GetAllCompositionAndAggregationRelationshipPropertyIncludes(compositionRelationshipsOnly, propType, includePath));
+                includesList.AddRange(GetAllCompositionAndAggregationRelationshipPropertyIncludes(compositionRelationshipsOnly, propType, includePath, depth + 1, maxDepth));
             }
 
             return includesList;

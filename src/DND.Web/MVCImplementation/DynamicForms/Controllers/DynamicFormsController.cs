@@ -13,7 +13,6 @@ using DND.Common.ModelMetadataCustom.DynamicFormsAttributes;
 using DND.Common.ModelMetadataCustom.LinkAttributes;
 using DND.Common.ModelMetadataCustom.ValidationAttributes;
 using DND.Common.Validation;
-using DND.Interfaces.DynamicForms.PresentationServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
@@ -53,11 +52,11 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         }
 
         #region IFrame Embed
-        [Route("{formSlug}/embed")]
-        [Route("{formSlug}/embed.js")]
-        public virtual async Task<IActionResult> Embed(string formSlug)
+        [Route("{"+ DynamicFormsValueProviderKeys.FormUrlSlug + "}/embed")]
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/embed.js")]
+        public virtual async Task<IActionResult> Embed(string formUrlSlug)
         {
-            string absoluteFormUrl = Url.AbsoluteUrl<DynamicFormsController>(c => c.Edit(formSlug, ""), true);
+            string absoluteFormUrl = Url.AbsoluteUrl<DynamicFormsController>(c => c.Edit(formUrlSlug, ""), true);
             string iFrameEmbedPath = Path.Combine(_hostingEnvironment.ContentRootPath, @"MVCImplementation\DynamicForms\Scripts\IFrameEmbed.js");
             var iFrameEmbedScript = System.IO.File.ReadAllText(iFrameEmbedPath);
             iFrameEmbedScript = iFrameEmbedScript.Replace("{absoluteFormUrl}", absoluteFormUrl);
@@ -67,19 +66,39 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
         #region Edit
         [NoAjaxRequest]
-        [Route("{formSlug}")]
-        [Route("{formSlug}/section/{sectionSlug}")]
-        public virtual async Task<IActionResult> Edit(string formSlug, string sectionSlug)
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/section/{*" + DynamicFormsValueProviderKeys.SectionUrlSlug + "}")]
+        public virtual async Task<IActionResult> Edit(string formUrlSlug, string sectionUrlSlug)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-           var formModel = await _dynamicFormsPresentationService.CreateFormModelFromDbAsync(formSlug, sectionSlug, cts.Token);
+            var formModel = await _dynamicFormsPresentationService.CreateFormModelFromDbAsync(formUrlSlug, sectionUrlSlug, cts.Token);
+
+            if(formModel == null)
+            {
+                return BadRequest();
+            }
+
+            var formSubmissionId = _cookieService.Get(formUrlSlug);
+            if(string.IsNullOrEmpty(_cookieService.Get(formUrlSlug)))
+            {
+                formSubmissionId = Guid.NewGuid().ToString();
+                _cookieService.Set(formUrlSlug, formSubmissionId, 14);
+            }
+            else
+            {
+                if (sectionUrlSlug == null)
+                {
+                    sectionUrlSlug = await _dynamicFormsPresentationService.GetFirstSectionUrlSlugAsync(formUrlSlug);
+                }
+
+                await _dynamicFormsPresentationService.PopulateFormModelFromDbAsync(formModel, formSubmissionId, sectionUrlSlug);
+            }
+
+            //Add Additional controls
             formModel.Add("Submit", "Continue");
             formModel.AddAttribute("Submit", new NoLabelAttribute());
             formModel.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
-            //formModel.BindData(null, this.RouteData, Request.Query);
-
-            //var response = GetEditFormResponse(this.RouteData, Request.Query);
 
             ViewBag.DetailsMode = false;
             ViewBag.PageTitle = Title;
@@ -89,13 +108,39 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         }
 
         [AjaxRequest]
-        [Route("{formSlug}")]
-        [Route("{formSlug}/section/{sectionSlug}")]
-        public virtual async Task<IActionResult> EditAjax(string formSlug, string sectionSlug)
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/section/{*" + DynamicFormsValueProviderKeys.SectionUrlSlug + "}")]
+        public virtual async Task<IActionResult> EditAjax(string formUrlSlug, string sectionUrlSlug)
         {
-            //var response = GetEditFormResponse(this.RouteData, Request.Query);
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-            var formModel = await _dynamicFormsPresentationService.CreateFormModelFromDbAsync(formSlug, sectionSlug, cts.Token);
+
+            var formModel = await _dynamicFormsPresentationService.CreateFormModelFromDbAsync(formUrlSlug, sectionUrlSlug, cts.Token);
+
+            if (formModel == null)
+            {
+                return BadRequest();
+            }
+
+            var formSubmissionId = _cookieService.Get(formUrlSlug);
+            if (string.IsNullOrEmpty(_cookieService.Get(formUrlSlug)))
+            {
+                formSubmissionId = Guid.NewGuid().ToString();
+                _cookieService.Set(formUrlSlug, formSubmissionId, 14);
+            }
+            else
+            {
+                if (sectionUrlSlug == null)
+                {
+                    sectionUrlSlug = await _dynamicFormsPresentationService.GetFirstSectionUrlSlugAsync(formUrlSlug);
+                }
+
+                await _dynamicFormsPresentationService.PopulateFormModelFromDbAsync(formModel, formSubmissionId, sectionUrlSlug);
+            }
+
+            //Add Additional controls
+            formModel.Add("Submit", "Continue");
+            formModel.AddAttribute("Submit", new NoLabelAttribute());
+            formModel.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
 
             ViewBag.DetailsMode = false;
             return View("_DynamicFormMenuAndForm", formModel);
@@ -117,53 +162,71 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         [NoAjaxRequest]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Route("{formSlug}")]
-        [Route("{formSlug}/section/{sectionSlug}")]
-        public virtual async Task<IActionResult> Update(string formSlug, string sectionSlug, DynamicFormModel formModel, IFormCollection formData)
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/section/{*" + DynamicFormsValueProviderKeys.SectionUrlSlug + "}")]
+        public virtual async Task<IActionResult> Update(DynamicFormModel formModel, IFormCollection formData)
         {
+            var formUrlSlug = this.RouteData.Values[DynamicFormsValueProviderKeys.FormUrlSlug].ToString();
             //dto.Id = id;
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
             
-            var response = GetUpdateFormResponse(formData, this.RouteData, Request.Query);
+            //var response = GetUpdateFormResponse(formData, this.RouteData, Request.Query);
 
             //Manual validation
-            if (TryValidateModel(response))
-            {
+           // if (TryValidateModel(response))
+            //{
                 //Save Data
                 //Redirect
-            };
+            //};
 
+            //Model Binder Validation
             if(ModelState.IsValid)
             {
-                return RedirectToAction<DynamicFormsController>(c => c.Edit(formSlug, sectionSlug+"#2"));
+                //Persist to Db and say valid
+                //Redirect to next section
+                var nextSectionUrlSlug = "";
+                return RedirectToAction<DynamicFormsController>(c => c.Edit(formUrlSlug, nextSectionUrlSlug));
             }
 
             ViewBag.DetailsMode = false;
             ViewBag.PageTitle = Title;
             ViewBag.Admin = false;
-            return View("DynamicFormMenuAndFormPage", response);
+            return View("DynamicFormMenuAndFormPage", formModel);
         }
 
         [AjaxRequest]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        [Route("{formSlug}")]
-        [Route("{sectionSlug}/section/{sectionId}")]
-        public virtual async Task<IActionResult> UpdateAjax(DynamicFormModel formModel, IFormCollection formData)
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/section/{*" + DynamicFormsValueProviderKeys.SectionUrlSlug + "}")]
+        public virtual async Task<IActionResult> UpdateAjax(DynamicFormModel formModel)
         {
+            var formUrlSlug = this.RouteData.Values[DynamicFormsValueProviderKeys.FormUrlSlug].ToString();
+
+
+
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
-            var response = GetUpdateFormResponse(formData, this.RouteData, Request.Query);
+            //var response = GetUpdateFormResponse(formData, this.RouteData, Request.Query);
 
             //Manual validation
-            if (TryValidateModel(response))
-            {
+            //if (TryValidateModel(response))
+            //{
                 //Save Data
                 //Redirect
-            };
+            //};
+
+            //Model Binder Validation
+            if (ModelState.IsValid)
+            {
+                //Persist to Db
+                //Redirect to next section
+                var nextSectionUrlSlug = ""; 
+                return RedirectToAction<DynamicFormsController>(c => c.EditAjax(formUrlSlug, nextSectionUrlSlug));
+            }
 
             ViewBag.DetailsMode = false;
-            return PartialView("_DynamicFormMenuAndForm", response);
+            return PartialView("_DynamicFormMenuAndForm", formModel);
         }
 
         private DynamicFormModel GetUpdateFormResponse(IFormCollection formData, RouteData routeData, IQueryCollection queryStringData)
@@ -179,8 +242,8 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         #region Summary
         [AjaxRequest]
         [HttpGet]
-        [Route("{formSlug}/summary")]
-        public virtual async Task<IActionResult> Summary(string formSlug)
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/summary")]
+        public virtual async Task<IActionResult> Summary(string formUrlSlug)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -193,8 +256,8 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
         [NoAjaxRequest]
         [HttpGet]
-        [Route("{formSlug}/summary")]
-        public virtual async Task<IActionResult> SummaryAjax(string formSlug)
+        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/summary")]
+        public virtual async Task<IActionResult> SummaryAjax(string formUrlSlug)
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 

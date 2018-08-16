@@ -1,21 +1,16 @@
-﻿using DND.Common.Dynamic;
-using DND.Common.Extensions;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.DotNet.PlatformAbstractions;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.ModelMetadataCustom.Providers
 {
     public class CustomModelMetadata : DefaultModelMetadata
     {
+        public new ModelMetadataIdentity Identity { get { return base.Identity; } }
+
         private readonly ICustomModelMetadataProviderSingleton _customProvider;
         public CustomModelMetadata(ICustomModelMetadataProviderSingleton provider, ICompositeMetadataDetailsProvider detailsProvider, DefaultMetadataDetails details)
             : base(provider, detailsProvider, details)
@@ -52,7 +47,7 @@ namespace DND.Common.ModelMetadataCustom.Providers
             }
         }
 
-
+        //1.
         public override int GetHashCode()
         {
             if (MetadataKind != ModelMetadataKind.Property || !ContainerType.GetInterfaces().Contains(typeof(ICustomTypeDescriptor)))
@@ -71,6 +66,7 @@ namespace DND.Common.ModelMetadataCustom.Providers
             }
         }
 
+        //2.
         public override bool Equals(object obj)
         {
             if (MetadataKind != ModelMetadataKind.Property || !ContainerType.GetInterfaces().Contains(typeof(ICustomTypeDescriptor)))
