@@ -13,7 +13,7 @@ namespace DND.Common.DynamicForms
             }
 
             var modelType = context.Metadata.ModelType;
-            if (modelType.IsAssignableFrom(typeof(DynamicFormModel)))
+            if (modelType.IsAssignableFrom(typeof(DynamicForm)))
             {
                 var dynamicFormsPresentationService = (IDynamicFormsPresentationService)context.Services.GetService(typeof(IDynamicFormsPresentationService));
                 return new DynamicFormsModelBinder(context, dynamicFormsPresentationService);

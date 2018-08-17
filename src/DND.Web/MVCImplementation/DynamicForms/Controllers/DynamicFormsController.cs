@@ -65,7 +65,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
         #region Edit
         [NoAjaxRequest]
-        [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
+        //[Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
         [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/section/{*" + DynamicFormsValueProviderKeys.SectionUrlSlug + "}")]
         public virtual async Task<IActionResult> Edit(string formUrlSlug, string sectionUrlSlug)
         {
@@ -95,15 +95,40 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             }
 
             //Add Additional controls
-            formModel.Add("Submit", "Continue");
-            formModel.AddAttribute("Submit", new NoLabelAttribute());
-            formModel.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
+            var extraComponents = new DynamicForm();
+            extraComponents.Add("Submit", "Continue");
+            extraComponents.AddAttribute("Submit", new NoLabelAttribute());
+            extraComponents.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
+
+            var navigation = new DynamicFormNavigation();
+
+            var menuItem = new DynamicFormNavigationMenuItem() { LinkText = "Child Section", ActionName = nameof(Edit), ControllerName = "DynamicForms", Visited = true, IsValid = false };
+            menuItem.RouteValues.Add(DynamicFormsValueProviderKeys.FormUrlSlug, formUrlSlug);
+            menuItem.RouteValues.Add(DynamicFormsValueProviderKeys.SectionUrlSlug, "personal-details");
+
+            navigation.MenuItems.Add(menuItem);
+
+            var menuItem2 = new DynamicFormNavigationMenuItem() { LinkText = "Section", ActionName = nameof(Edit), ControllerName = "DynamicForms", Visited = true, IsValid = true };
+            menuItem2.RouteValues.Add(DynamicFormsValueProviderKeys.FormUrlSlug, formUrlSlug);
+            menuItem2.RouteValues.Add(DynamicFormsValueProviderKeys.SectionUrlSlug, "section-2");
+
+            menuItem2.ChildNavigation = navigation;
+ 
+            var navigation2 = new DynamicFormNavigation();
+            navigation2.MenuItems.Add(menuItem2);
+
+            var formContainer = new DynamicFormContainer();
+            formContainer.Sections.Add(formModel);
+            formContainer.Sections.Add(extraComponents);
+            formContainer.Navigation = navigation2;
+            formContainer.PercentageCompleted = 50;
 
             ViewBag.DetailsMode = false;
             ViewBag.PageTitle = Title;
             ViewBag.Admin = false;
+       
 
-            return View("DynamicFormMenuAndFormPage", formModel);
+            return View("DynamicFormContainerPage", formContainer);
         }
 
         [AjaxRequest]
@@ -142,10 +167,10 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             formModel.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
 
             ViewBag.DetailsMode = false;
-            return View("_DynamicFormMenuAndForm", formModel);
+            return View("_DynamicFormContainer", formModel);
         }
 
-        private DynamicFormModel GetEditFormResponse(RouteData routeData, IQueryCollection queryStringData)
+        private DynamicForm GetEditFormResponse(RouteData routeData, IQueryCollection queryStringData)
         {
             //1. Setup Form definition and 2. Add Validation
             var form = SetupForm(false);
@@ -163,7 +188,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         [HttpPost]
         [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
         [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/section/{*" + DynamicFormsValueProviderKeys.SectionUrlSlug + "}")]
-        public virtual async Task<IActionResult> Update(DynamicFormModel formModel, IFormCollection formData)
+        public virtual async Task<IActionResult> Update(DynamicForm formModel, IFormCollection formData)
         {
             var formUrlSlug = this.RouteData.Values[DynamicFormsValueProviderKeys.FormUrlSlug].ToString();
             //dto.Id = id;
@@ -190,7 +215,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             ViewBag.DetailsMode = false;
             ViewBag.PageTitle = Title;
             ViewBag.Admin = false;
-            return View("DynamicFormMenuAndFormPage", formModel);
+            return View("DynamicFormContainerPage", formModel);
         }
 
         [AjaxRequest]
@@ -198,7 +223,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         [HttpPost]
         [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}")]
         [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/section/{*" + DynamicFormsValueProviderKeys.SectionUrlSlug + "}")]
-        public virtual async Task<IActionResult> UpdateAjax(DynamicFormModel formModel)
+        public virtual async Task<IActionResult> UpdateAjax(DynamicForm formModel)
         {
             var formUrlSlug = this.RouteData.Values[DynamicFormsValueProviderKeys.FormUrlSlug].ToString();
 
@@ -225,10 +250,10 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             }
 
             ViewBag.DetailsMode = false;
-            return PartialView("_DynamicFormMenuAndForm", formModel);
+            return PartialView("_DynamicFormContainer", formModel);
         }
 
-        private DynamicFormModel GetUpdateFormResponse(IFormCollection formData, RouteData routeData, IQueryCollection queryStringData)
+        private DynamicForm GetUpdateFormResponse(IFormCollection formData, RouteData routeData, IQueryCollection queryStringData)
         {
             var form = SetupForm(false);
 
@@ -248,11 +273,11 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             var response = GetSummaryResponse();
 
-            var sections = new List<DynamicFormModel>() { response, response };
+            var sections = new List<DynamicForm>() { response, response };
 
             ViewBag.ExcludePropertyErrors = false;
             ViewBag.DetailsMode = true;
-            return View("_DynamicFormMenuAndForm", response);
+            return View("_DynamicFormContainer", response);
         }
 
         [NoAjaxRequest]
@@ -264,7 +289,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 
             var response = GetSummaryResponse();
 
-            var sections = new List<DynamicFormModel>() { response, response };
+            var sections = new List<DynamicForm>() { response, response };
 
             TryValidateModel(sections);
 
@@ -272,10 +297,10 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             ViewBag.DetailsMode = true;
             ViewBag.PageTitle = Title;
             ViewBag.Admin = false;
-            return View("DynamicFormMenuAndFormPage", sections);
+            return View("DynamicFormContainerPage", sections);
         }
 
-        private DynamicFormModel GetSummaryResponse()
+        private DynamicForm GetSummaryResponse()
         {
             var wrapper = SetupForm(true);
 
@@ -284,12 +309,12 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         }
         #endregion
 
-        private DynamicFormModel SetupForm(bool summary)
+        private DynamicForm SetupForm(bool summary)
         {
             string containerDiv = "#dynamicForm";
 
             //1. Setup Form definition
-            dynamic model = new DynamicFormModel();
+            dynamic model = new DynamicForm();
             model.Add("Text", "");
             model.Add("Email", "");
             model.Add("Website", "");

@@ -7,7 +7,7 @@ namespace DND.Common.DynamicForms
     //https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-2.1
     public static class DynamicFormExtensions
     {
-        public static DynamicFormModel BindData(this DynamicFormModel form, IFormCollection formData, RouteData routeData, IQueryCollection queryStringData)
+        public static DynamicForm BindData(this DynamicForm form, IFormCollection formData, RouteData routeData, IQueryCollection queryStringData)
         {
             foreach (var propertyName in form.GetDynamicMemberNames())
             {
@@ -53,7 +53,7 @@ namespace DND.Common.DynamicForms
             return form;
         }
 
-        private static DynamicFormModel BindFiles(this DynamicFormModel form, IFormFileCollection files)
+        private static DynamicForm BindFiles(this DynamicForm form, IFormFileCollection files)
         {
             foreach (var item in files)
             {

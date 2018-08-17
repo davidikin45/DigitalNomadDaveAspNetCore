@@ -295,7 +295,7 @@
     <None Include="MVCImplementation\Shared\Views\CRUD\Create.cshtml" />
     <None Include="MVCImplementation\Shared\Views\CRUD\Delete.cshtml" />
     <None Include="MVCImplementation\Shared\Views\CRUD\Details.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\DynamicFormMenuAndFormPage.cshtml" />
+    <None Include="MVCImplementation\DynamicForms\Views\DynamicFormContainerPage.cshtml" />
     <None Include="MVCImplementation\Shared\Views\CRUD\Edit.cshtml" />
     <None Include="MVCImplementation\Shared\Views\CRUD\Email.cshtml" />
     <None Include="MVCImplementation\Shared\Views\CRUD\List.cshtml" />
@@ -424,10 +424,16 @@
     <Content Update="features.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormMenu.cshtml">
+    <Content Update="MVCImplementation\DynamicForms\Views\DisplayTemplates\DynamicFormNavigationMenuItem.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormMenuAndForm.cshtml">
+    <Content Update="MVCImplementation\DynamicForms\Views\DisplayTemplates\DynamicFormNavigation.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormNavigation.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormContainer.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="MVCImplementation\Shared\Views\Bundles\_IFrameJS.cshtml">

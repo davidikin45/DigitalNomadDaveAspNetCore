@@ -1,0 +1,59 @@
+﻿@model dynamic
+@{
+    ViewContext.ClientValidationEnabled = true;
+    Layout = "_IFrame";
+    ViewBag.Blog = false;
+}
+
+<div id="dynamicForm">
+    @Html.Partial("_DynamicFormContainer")
+</div>
+
+@section scripts
+    {
+    <script>
+        function createCollectionItem(id, collectionItemUrl) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var elem = document.createElement('div');
+                    elem.innerHTML = this.responseText;
+                    document.getElementById(id).appendChild(elem.firstElementChild);
+                }
+            };
+            xhttp.open("GET", collectionItemUrl, true);
+            xhttp.send();
+        }
+
+
+        $(function () {
+            formDependancies();
+        });
+
+        $('form').on('keyup change paste', 'input, select, textarea', function () {
+            formDependancies();
+        });
+
+        function formDependancies() {
+            console.log('Form changed!');
+        }
+
+        var onBegin = function () {
+            
+        };
+
+        var onComplete = function () {
+            
+        };
+
+        var onSuccess = function (responseHtml) {
+            var parsed = $('<div/>').append(responseHtml);
+            console.log(parsed);
+            //$("#UpdateContentDiv").html(context);
+        };
+
+        var onFailed = function (context) {
+            alert("Failed");
+        };
+    </script>
+}

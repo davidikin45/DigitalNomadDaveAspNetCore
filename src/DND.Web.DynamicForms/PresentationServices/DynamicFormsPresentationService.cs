@@ -34,16 +34,82 @@ namespace DND.Web.DynamicForms.PresentationServices
 
         public async Task<string> GetFirstSectionUrlSlugAsync(string formUrlSlug, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var form = formDtos.GetOrAdd(formUrlSlug, await _dynamicFormsApplicationServices.FormApplicationService.GetFormByUrlSlugAsync(formUrlSlug, cancellationToken));
+            var form = await GetFormByUrlSlugAsync(formUrlSlug, cancellationToken);
             return form.Sections.First().Section.UrlSlug;
         }
 
         private static ConcurrentDictionary<string, FormDto> formDtos = new ConcurrentDictionary<string, FormDto>();
-
-
-        public async Task<DynamicFormModel> CreateFormModelFromDbAsync(string formUrlSlug, string sectionUrlSlug, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<FormDto> GetFormByUrlSlugAsync(string formUrlSlug, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var form = formDtos.GetOrAdd(formUrlSlug, await _dynamicFormsApplicationServices.FormApplicationService.GetFormByUrlSlugAsync(formUrlSlug, cancellationToken));
+            return formDtos.GetOrAdd(formUrlSlug, await _dynamicFormsApplicationServices.FormApplicationService.GetFormByUrlSlugAsync(formUrlSlug, cancellationToken));
+        }
+
+        public async Task<bool> IsValidUrl(string formUrlSlug, string sectionUrlSlug, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var form = await GetFormByUrlSlugAsync(formUrlSlug, cancellationToken);
+
+            if (form == null || !form.Published)
+            {
+                return false;
+            }
+
+            return GetSectionByUrlSlug(form, sectionUrlSlug) != null;
+        }
+
+        public SectionDto GetSectionByUrlSlug(FormDto form, string sectionUrlSlug)
+        {
+            SectionDto slugSection = null;
+
+            IEnumerable<SectionDto> sections = form.Sections.Select(s => s.Section);
+
+            if (sectionUrlSlug != null)
+            {
+                int i = 0;
+                foreach (var sectionUrlSlugPart in GetSectionUrlSlugParts(sectionUrlSlug))
+                {
+                    if (i % 3 == 0)
+                    {
+                        slugSection = sections.First(s => s.UrlSlug == sectionUrlSlugPart);
+                        if (slugSection == null)
+                        {
+                            return null;
+                        }
+
+                    }
+                    else if (i % 3 == 1)
+                    {
+                        //number
+                    }
+                    else if (i % 3 == 2)
+                    {
+                        //question
+                        var questionSection = slugSection.Questions.First(q => q.Question.FieldName == sectionUrlSlugPart);
+                        if (questionSection == null)
+                        {
+                            return null;
+                        }
+                        sections = questionSection.Question.Sections.Select(s => s.Section);
+                    }
+
+                    i++;
+                }
+
+                if (i % 3 != 1)
+                {
+                    return null;
+                }
+            }
+            else if (sections.Count() > 0)
+            {
+                slugSection = sections.First();
+            }
+
+            return slugSection;
+        }
+
+        public async Task<DynamicForm> CreateFormModelFromDbAsync(string formUrlSlug, string sectionUrlSlug, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var form = await GetFormByUrlSlugAsync(formUrlSlug, cancellationToken);
 
             if (form == null || !form.Published)
             {
@@ -58,7 +124,6 @@ namespace DND.Web.DynamicForms.PresentationServices
 
             if(sectionUrlSlug != null)
             {
-
                 int i = 0;
                 foreach (var sectionUrlSlugPart in GetSectionUrlSlugParts(sectionUrlSlug))
                 {
@@ -99,7 +164,7 @@ namespace DND.Web.DynamicForms.PresentationServices
                 slugSection = sections.First();
             }
 
-            var formModel = new DynamicFormModel();
+            var formModel = new DynamicForm();
 
             //Setup Form Section
             if(slugSection != null)
@@ -114,7 +179,7 @@ namespace DND.Web.DynamicForms.PresentationServices
             return formModel;
         }
 
-        private async Task AddQuestionToFormAsync(DynamicFormModel formModel, QuestionDto question, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task AddQuestionToFormAsync(DynamicForm formModel, QuestionDto question, CancellationToken cancellationToken = default(CancellationToken))
         {
             IEnumerable<string> options;
 
@@ -299,7 +364,7 @@ namespace DND.Web.DynamicForms.PresentationServices
             }
         }
 
-        public async Task PopulateFormModelFromDbAsync(DynamicFormModel formModel, string formSubmissionId, string sectionSlug, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task PopulateFormModelFromDbAsync(DynamicForm formModel, string formSubmissionId, string sectionSlug, CancellationToken cancellationToken = default(CancellationToken))
         {
             FormSectionSubmissionDto sectionSubmission = null;
             if (!string.IsNullOrEmpty(formSubmissionId) && !string.IsNullOrEmpty(sectionSlug))

@@ -1,0 +1,7 @@
+﻿@model DynamicFormNavigationMenuItem
+@inject IHttpContextAccessor HttpContextAccessor
+@Html.ActionLink(Model.LinkText, Model.ActionName, Model.ControllerName, Model.RouteValues, new { @class = "nav-link " + ((int)ViewBag.Level > 0 ? "ml-"+ (ViewBag.Level*2).ToString() + " my-1" : "") + " " + (Model.IsValid ? "" : Model.Visited ? "" : "") + " " + (HttpContextAccessor.HttpContext.Request.Path.ToString() == Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues) ? "active" : "") })
+@if(Model.ChildNavigation != null && Model.ChildNavigation.MenuItems.Count > 0)
+{
+    @Html.DisplayFor(mi=> mi.ChildNavigation, new { Level = ViewBag.Level + 1 })
+}

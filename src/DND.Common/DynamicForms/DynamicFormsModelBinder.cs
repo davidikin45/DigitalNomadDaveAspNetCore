@@ -29,7 +29,7 @@ namespace DND.Common.DynamicForms
             }
 
             //Binder only works for DynamicFormModel
-            if (!bindingContext.ModelType.IsAssignableFrom(typeof(DynamicFormModel)))
+            if (!bindingContext.ModelType.IsAssignableFrom(typeof(DynamicForm)))
             {
                 bindingContext.Result = ModelBindingResult.Failed();
                 return Task.CompletedTask;
