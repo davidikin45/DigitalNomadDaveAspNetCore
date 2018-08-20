@@ -18,6 +18,8 @@ namespace DND.Domain.DynamicForms.Forms.Dtos
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]
         public override int Id { get => base.Id; set => base.Id = value; }
 
+        public string Name { get; set; }
+
         [ActionLink("Details", "AdminSections")]
         [LinkRouteValue("id", "{SectionId}")]
         [Display(Name = "Section")]
@@ -27,7 +29,6 @@ namespace DND.Domain.DynamicForms.Forms.Dtos
 
         [HiddenInput()]
         public int FormId { get; set; }
-
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [Render(ShowForGrid = false, ShowForDisplay = false, ShowForEdit = false, ShowForCreate = false)]

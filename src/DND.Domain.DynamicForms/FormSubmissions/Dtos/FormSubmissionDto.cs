@@ -30,7 +30,7 @@ namespace DND.Domain.DynamicForms.FormSubmissions.Dtos
         [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
         [ActionLink("Sections")]
         [Repeater("{" + nameof(FormSectionSubmissionDto.QuestionAnswers) + "}")]
-        public List<FormSectionSubmissionDto> Sections { get; set; }
+        public List<FormSectionSubmissionDto> Sections { get; set; } = new List<FormSectionSubmissionDto>();
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {

@@ -13,17 +13,14 @@ namespace DND.Domain.DynamicForms.FormSectionSubmissions.Dtos
     {
         public Guid FormSubmissionId { get; set; }
 
-        public int SectionId { get; set; }
-
         public string UrlSlug { get; set; }
 
-        public bool Completed { get; set; }
         public bool Valid { get; set; }
 
         [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
         [ActionLink("Question and Answers")]
         [Repeater("{" + nameof(FormSectionSubmissionQuestionAnswerDto.Question) + "}")]
-        public List<FormSectionSubmissionQuestionAnswerDto> QuestionAnswers { get; set; }
+        public List<FormSectionSubmissionQuestionAnswerDto> QuestionAnswers { get; set; } = new List<FormSectionSubmissionQuestionAnswerDto>();
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {

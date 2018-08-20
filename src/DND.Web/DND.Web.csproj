@@ -424,13 +424,19 @@
     <Content Update="features.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\DisplayTemplates\DynamicFormNavigationMenuItem.cshtml">
+    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormVerticalNavigationMenu.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\DisplayTemplates\DynamicFormNavigation.cshtml">
+    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormHorizontalNavigationMenuItem.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormNavigation.cshtml">
+    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormVerticalNavigationMenuItem.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormHorizontalNavigation.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormVerticalNavigation.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormContainer.cshtml">

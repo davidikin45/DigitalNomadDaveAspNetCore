@@ -1,7 +1,6 @@
 ﻿using DND.Common.Enums;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.UnitOfWork;
-using DND.Domain.DynamicForms.Forms;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -14,6 +13,8 @@ namespace DND.Domain.DynamicForms.Sections
 
         public int SectionId { get; set; }
         public Section Section { get; set; }
+
+        public string Name { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {

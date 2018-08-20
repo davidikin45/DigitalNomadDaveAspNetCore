@@ -11,6 +11,7 @@ namespace DND.Domain.DynamicForms.FormSectionSubmissions
     {
         public int FormSectionSubmissionId { get; set; }
 
+        public string FieldName { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
 

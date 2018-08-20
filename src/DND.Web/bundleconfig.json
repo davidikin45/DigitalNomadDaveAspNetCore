@@ -16,7 +16,8 @@
       "wwwroot/css/site-md.css",
       "wwwroot/css/site-lg.css",
       "wwwroot/css/site-xl.css",
-      "wwwroot/css/blog.css"
+      "wwwroot/css/blog.css",
+      "wwwroot/css/iframe.css"
     ]
   },
   {
@@ -33,7 +34,8 @@
       "wwwroot/css/site-md.css",
       "wwwroot/css/site-lg.css",
       "wwwroot/css/site-xl.css",
-      "wwwroot/css/blog.css"
+      "wwwroot/css/blog.css",
+      "wwwroot/css/iframe.css"
     ]
   },
   {

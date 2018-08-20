@@ -1,7 +1,6 @@
 ﻿using DND.Common.Enums;
 using DND.Common.Implementation.Models;
 using DND.Common.Interfaces.UnitOfWork;
-using DND.Domain.DynamicForms.LookupTables;
 using DND.Domain.DynamicForms.Sections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +15,8 @@ namespace DND.Domain.DynamicForms.Forms
         public string Name { get; set; }
 
         public string UrlSlug { get; set; }
+
+        public string ConfirmationText { get; set; }
 
         public List<FormSection> Sections { get; set; } = new List<FormSection>();
 

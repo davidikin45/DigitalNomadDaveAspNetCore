@@ -42,9 +42,11 @@ namespace DND.Common.DynamicForms
         {
             bindingContext.Model = await CreateModelAsync(bindingContext);
             var propertyBinders = new Dictionary<ModelMetadata, IModelBinder>();
-            for (var i = 0; i < ((CustomModelMetadata)_modelBinderProviderContext.Metadata).PropertiesRuntime(bindingContext.Model).Count; i++)
+            var propertiesRuntime2 = ((CustomModelMetadata)bindingContext.ModelMetadata).PropertiesRuntime(bindingContext.Model);
+            var propertiesRuntime = ((CustomModelMetadata)_modelBinderProviderContext.Metadata).PropertiesRuntime(bindingContext.Model);
+            for (var i = 0; i < propertiesRuntime.Count; i++)
             {
-                var property = bindingContext.ModelMetadata.Properties[i];
+                var property = propertiesRuntime[i];
                 propertyBinders.Add(property, _modelBinderProviderContext.CreateBinder(property));
             }
 

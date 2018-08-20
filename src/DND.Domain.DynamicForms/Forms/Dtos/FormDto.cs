@@ -18,6 +18,9 @@ namespace DND.Domain.DynamicForms.Forms.Dtos
         [Required()]
         public bool Published { get; set; }
 
+        [MultilineText(HTML = true)]
+        public string ConfirmationText { get; set; }
+
         [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
         [ActionLink("Sections")]
         [Repeater("{" + nameof(FormSectionDto.Id) + "}")]

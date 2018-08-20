@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
@@ -12,7 +11,7 @@ namespace DND.Common.Dynamic
     //https://weblogs.asp.net/bleroy/fun-with-c-4-0-s-dynamic
     public class DynamicTypeDescriptorWrapper : DynamicObject, ICustomTypeDescriptor
     {
-        private IDynamicMetaObjectProvider _dynamic;
+        protected IDynamicMetaObjectProvider _dynamic;
 
         public DynamicTypeDescriptorWrapper(IDynamicMetaObjectProvider dynamicObject)
         {
@@ -111,7 +110,7 @@ namespace DND.Common.Dynamic
             return IsCollection(property.PropertyType);
         }
 
-        private bool IsCollection(Type type)
+        public bool IsCollection(Type type)
         {
             return type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType).Any(x => x.GetGenericTypeDefinition() == typeof(ICollection<>) && !x.GetGenericArguments().Contains(typeof(Byte)));
         }
@@ -147,9 +146,15 @@ namespace DND.Common.Dynamic
             var newPropertyWithAttribute = new DynamicPropertyDescriptor(property, new Attribute[] { attribute });
             properties.Add(propertyName, newPropertyWithAttribute);
         }
+
+        public IEnumerable<TAttribute> GetAttribute<TAttribute>(string propertyName) where TAttribute : Attribute
+        {
+            var property = (DynamicPropertyDescriptor)GetProperties()[propertyName];
+            return property.Attributes.OfType<TAttribute>();
+        }
         #endregion
 
-        #region Contains Property
+            #region Contains Property
         public bool ContainsProperty(string property)
         {
             return GetProperties().Find(property, true) != null;
@@ -214,41 +219,43 @@ namespace DND.Common.Dynamic
         private void SetMember(string propertyName, object value)
         {
             var property = GetProperties().Find(propertyName, true);
-            if (IsCollection(property.PropertyType))
-            {
-                if (!(property.PropertyType.GetGenericArguments()[0] == typeof(FormFile) && !(value is FormFile)))
-                {
-                    var convertedValue = Convert.ChangeType(value, property.PropertyType.GetGenericArguments()[0]);
-                    var collection = property.GetValue(_dynamic);
-                    var genericCollectionType = typeof(ICollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
-                    var addMethod = genericCollectionType.GetMethod("Add");
-                    addMethod.Invoke(collection, new object[] { convertedValue });
-                }
-            }
-            else if (property.PropertyType == typeof(DateTime))
-            {
-                if (!String.IsNullOrWhiteSpace(value.ToString()))
-                {
-                    var convertedValue = Convert.ChangeType(value, property.PropertyType);
-                    property.SetValue(_dynamic, convertedValue);
-                }
-                else
-                {
-                    property.SetValue(_dynamic, new DateTime());
-                }
-            }
-            else if (property.PropertyType == typeof(FormFile))
-            {
-                if (!string.IsNullOrWhiteSpace(value.ToString()))
-                {
-                    property.SetValue(_dynamic, value);
-                }
-            }
-            else
-            {
-                var convertedValue = Convert.ChangeType(value, property.PropertyType);
-                property.SetValue(_dynamic, convertedValue);
-            }
+            var convertedValue = Convert.ChangeType(value, property.PropertyType);
+            property.SetValue(_dynamic, convertedValue);
+            //if (IsCollection(property.PropertyType))
+            //{
+            //    if (!(property.PropertyType.GetGenericArguments()[0] == typeof(FormFile) && !(value is FormFile)))
+            //    {
+            //        var convertedValue = Convert.ChangeType(value, property.PropertyType.GetGenericArguments()[0]);
+            //        var collection = property.GetValue(_dynamic);
+            //        var genericCollectionType = typeof(ICollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
+            //        var addMethod = genericCollectionType.GetMethod("Add");
+            //        addMethod.Invoke(collection, new object[] { convertedValue });
+            //    }
+            //}
+            //else if (property.PropertyType == typeof(DateTime))
+            //{
+            //    if (!String.IsNullOrWhiteSpace(value.ToString()))
+            //    {
+            //        var convertedValue = Convert.ChangeType(value, property.PropertyType);
+            //        property.SetValue(_dynamic, convertedValue);
+            //    }
+            //    else
+            //    {
+            //        property.SetValue(_dynamic, new DateTime());
+            //    }
+            //}
+            //else if (property.PropertyType == typeof(FormFile))
+            //{
+            //    if (!string.IsNullOrWhiteSpace(value.ToString()))
+            //    {
+            //        property.SetValue(_dynamic, value);
+            //    }
+            //}
+            //else
+            //{
+            //    var convertedValue = Convert.ChangeType(value, property.PropertyType);
+            //    property.SetValue(_dynamic, convertedValue);
+            //}
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)

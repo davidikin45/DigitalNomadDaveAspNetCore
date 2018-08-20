@@ -50,6 +50,7 @@ namespace DND.Data.DynamicForms
             modelBuilder.Configurations.Add(new FormSectionConfiguration());
             modelBuilder.Configurations.Add(new FormNotificationConfiguration());
             modelBuilder.Configurations.Add(new SectionConfiguration());
+            modelBuilder.Configurations.Add(new SectionSectionConfiguration());
             modelBuilder.Configurations.Add(new SectionQuestionConfiguration());
             modelBuilder.Configurations.Add(new QuestionConfiguration());
             modelBuilder.Configurations.Add(new QuestionQuestionConfiguration());

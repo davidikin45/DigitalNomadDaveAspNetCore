@@ -1,0 +1,10 @@
+﻿@model DynamicFormNavigation
+<nav class="nav nav-pills flex-column">
+    @foreach (var item in Model.MenuItems)
+    {
+        @await Html.PartialAsync("_DynamicFormVerticalNavigationMenuItem", item, new ViewDataDictionary(Html.MetadataProvider, new ModelStateDictionary())
+                             {
+                                 { "Level", ViewBag.Level }
+                             })
+    }
+</nav>

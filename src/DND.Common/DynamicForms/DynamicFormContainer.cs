@@ -6,6 +6,6 @@ namespace DND.Common.DynamicForms
     {
         public int PercentageCompleted { get; set; }
         public DynamicFormNavigation Navigation { get; set; } = new DynamicFormNavigation();
-        public List<DynamicForm> Sections { get; set; } = new List<DynamicForm>();
+        public List<DynamicForm> Forms { get; set; } = new List<DynamicForm>();
     }
 }

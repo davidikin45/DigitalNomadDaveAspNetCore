@@ -19,6 +19,8 @@ namespace DND.Domain.DynamicForms.Questions.Dtos
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]
         public override int Id { get => base.Id; set => base.Id = value; }
 
+        public string Name { get; set; }
+
         [ActionLink("Details", "AdminSections")]
         [LinkRouteValue("id", "{SectionId}")]
         [Display(Name = "Section")]

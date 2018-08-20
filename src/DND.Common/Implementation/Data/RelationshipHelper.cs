@@ -20,7 +20,7 @@ namespace DND.Common.Implementation.Data
             return GetAllCompositionAndAggregationRelationshipPropertyIncludes(true, type, null, 0, maxDepth);
         }
 
-        public static List<string> GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type, string path = null, int depth = 0, int maxDepth = 10)
+        public static List<string> GetAllCompositionAndAggregationRelationshipPropertyIncludes(bool compositionRelationshipsOnly, Type type, string path = null, int depth = 0, int maxDepth = 5)
         {
             List<string> includesList = new List<string>();
             if(depth > maxDepth)

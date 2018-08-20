@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -24,8 +25,6 @@ namespace DND.Common.ModelMetadataCustom.Providers
             _customProvider = provider;
         }
 
-        //Lazy Loaded
-        private bool propertiesRuntimeLoaded = false;
         public ModelPropertyCollection PropertiesRuntime(object model)
         {
 
@@ -37,13 +36,9 @@ namespace DND.Common.ModelMetadataCustom.Providers
             {
                 var propertiesField = typeof(CustomModelMetadata).BaseType.GetField("_properties", BindingFlags.Instance | BindingFlags.NonPublic);
 
-                if (propertiesField.GetValue(this) == null || !propertiesRuntimeLoaded)
-                {
-                    var properties = _customProvider.GetMetadataForProperties(ModelType, model as ICustomTypeDescriptor);
-                    properties = properties.OrderBy(p => p.Order);
-                    propertiesField.SetValue(this, new ModelPropertyCollection(properties));
-                    propertiesRuntimeLoaded = true;
-                }
+                IEnumerable<ModelMetadata> properties = _customProvider.GetMetadataForProperties(ModelType, model as ICustomTypeDescriptor);
+                properties = properties.OrderBy(p => p.Order);
+                propertiesField.SetValue(this, new ModelPropertyCollection(properties));
 
                 return (ModelPropertyCollection)propertiesField.GetValue(this);
             }

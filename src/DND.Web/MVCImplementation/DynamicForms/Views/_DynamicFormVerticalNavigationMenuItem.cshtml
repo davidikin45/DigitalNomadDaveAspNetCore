@@ -1,0 +1,10 @@
+﻿@model DynamicFormNavigationMenuItem
+@inject IHttpContextAccessor HttpContextAccessor
+@Html.Raw(Html.ActionLink(Model.LinkText, Model.ActionName, Model.ControllerName, Model.RouteValues, new { @class = "nav-link " + ((int)ViewBag.Level > 0 ? "ml-" + (ViewBag.Level * 2).ToString() + " my-1" : "") + " " + (Model.IsValid ? "" : Model.Visited ? "" : "") + " " + (HttpContextAccessor.HttpContext.Request.Path.ToString() == Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues).Replace("%2F", "/") ? "active" : ""), data_ajax = "true", data_ajax_update = "#dynamicForm" }).Render().Replace("%2F", "/"))
+@if (Model.ChildNavigation != null && Model.ChildNavigation.MenuItems.Count > 0)
+{
+    @await Html.PartialAsync("_DynamicFormVerticalNavigationMenu", Model.ChildNavigation, new ViewDataDictionary(Html.MetadataProvider, new ModelStateDictionary())
+                             {
+                                 { "Level", ViewBag.Level + 1 }
+                             })
+}

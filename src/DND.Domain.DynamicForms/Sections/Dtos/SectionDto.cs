@@ -3,7 +3,6 @@ using DND.Common.Implementation.Dtos;
 using DND.Common.Interfaces.Automapper;
 using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Common.ModelMetadataCustom.LinkAttributes;
-using DND.Domain.DynamicForms.Sections.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,12 +15,15 @@ namespace DND.Domain.DynamicForms.Sections.Dtos
 
         public string UrlSlug { get; set; }
 
-        public SectionType SectionType { get; set; }
-
         [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
         [ActionLink("Questions")]
         [Repeater("{" + nameof(SectionQuestionDto.QuestionId) + "}")]
         public List<SectionQuestionDto> Questions { get; set; }
+
+        [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
+        [ActionLink("Child Sections")]
+        [Repeater("{" + nameof(SectionSectionDto.ChildSectionId) + "}")]
+        public List<SectionSectionDto> Sections { get; set; } = new List<SectionSectionDto>();
 
         public override IEnumerable<ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {

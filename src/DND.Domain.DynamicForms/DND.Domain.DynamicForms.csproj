@@ -209,8 +209,9 @@
     <Compile Include="Questions\QuestionValidation.cs" />
     <Compile Include="Sections\Dtos\SectionDeleteDto.cs" />
     <Compile Include="Sections\Dtos\SectionDto.cs" />
+    <Compile Include="Sections\Dtos\SectionSectionDto.cs" />
     <Compile Include="Sections\Dtos\SectionQuestionDto.cs" />
-    <Compile Include="Sections\Enums\SectionType.cs" />
+    <Compile Include="Sections\SectionSection.cs" />
     <Compile Include="Sections\SectionQuestion.cs" />
     <Compile Include="Sections\Section.cs" />
   </ItemGroup>
@@ -224,6 +225,8 @@
       <Name>DND.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Sections\Enums\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

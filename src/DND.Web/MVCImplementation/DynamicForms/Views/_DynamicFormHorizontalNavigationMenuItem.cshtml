@@ -1,0 +1,10 @@
+﻿@model DynamicFormNavigationMenuItem
+@inject IHttpContextAccessor HttpContextAccessor
+<li class="@(HttpContextAccessor.HttpContext.Request.Path.ToString() == Url.Action(Model.ActionName, Model.ControllerName, Model.RouteValues).Replace("%2F", "/") ? "active" : "")">@Html.Raw(Html.ActionLink(Model.LinkText, Model.ActionName, Model.ControllerName, Model.RouteValues, new { data_ajax = "true", data_ajax_update = "#dynamicForm" }).Render().Replace("%2F", "/"))</li>
+@if (Model.ChildNavigation != null && Model.ChildNavigation.MenuItems.Count > 0)
+{
+    @foreach (var item in Model.ChildNavigation.MenuItems)
+    {
+        @await Html.PartialAsync("_DynamicFormHorizontalNavigationMenuItem", item)
+    }
+}

@@ -10,17 +10,14 @@ namespace DND.Data.DynamicForms.Configurations.Sections
         {
             HasKey(p => p.Id);
 
+
             Ignore(p => p.DateDeleted);
             Ignore(p => p.UserDeleted);
 
             Property(p => p.RowVersion).IsRowVersion();
 
-            //NotMapped
-            //Ignore(p => p.SectionType);
-
-            Property(p => p.SectionTypeString)
-                .HasColumnName(nameof(Section.SectionType));
-                 
+            //this section has many sections, each section with a required owner
+            HasMany(p => p.Sections).WithRequired().HasForeignKey(s => s.SectionId).WillCascadeOnDelete(false);
         }
     }
 }

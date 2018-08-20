@@ -1,0 +1,7 @@
+﻿@model DynamicFormNavigation
+<nav id="dynamicFormNav" class="nav">
+    @await Html.PartialAsync("_DynamicFormVerticalNavigationMenu", Model, new ViewDataDictionary(Html.MetadataProvider, new ModelStateDictionary())
+                          {
+                              { "Level", 0}
+                          })
+</nav>

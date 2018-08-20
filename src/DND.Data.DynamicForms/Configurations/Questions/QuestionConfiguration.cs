@@ -1,5 +1,4 @@
 ﻿using DND.Domain.DynamicForms.Questions;
-using DND.Domain.DynamicForms.Sections;
 using System.Data.Entity.ModelConfiguration;
 
 namespace DND.Data.DynamicForms.Configurations.Questions
@@ -21,7 +20,8 @@ namespace DND.Data.DynamicForms.Configurations.Questions
 
             Property(p => p.QuestionTypeString)
                 .HasColumnName(nameof(Question.QuestionType));
-                 
+
+            HasMany(p => p.Questions).WithRequired().HasForeignKey(c => c.QuestionId).WillCascadeOnDelete(false);
         }
     }
 }

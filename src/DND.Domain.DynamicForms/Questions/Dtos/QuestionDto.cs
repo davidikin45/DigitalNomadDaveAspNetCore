@@ -34,15 +34,15 @@ namespace DND.Domain.DynamicForms.Questions.Dtos
         public string Placeholder { get; set; }
         public string HelpText { get; set; }
 
-        [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
-        [ActionLink("Questions")]
-        [Repeater("{" + nameof(QuestionQuestionDto.LogicQuestionId) + "}")]
-        public List<QuestionQuestionDto> Questions { get; set; }
+        //[Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
+        //[ActionLink("Questions")]
+        //[Repeater("{" + nameof(QuestionQuestionDto.LogicQuestionId) + "}")]
+        //public List<QuestionQuestionDto> Questions { get; set; }
 
-        [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
-        [ActionLink("Sections")]
-        [Repeater("{" + nameof(QuestionSectionDto.SectionId) + "}")]
-        public List<QuestionSectionDto> Sections { get; set; }
+        //[Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
+        //[ActionLink("Sections")]
+        //[Repeater("{" + nameof(QuestionSectionDto.SectionId) + "}")]
+        //public List<QuestionSectionDto> Sections { get; set; }
 
         [Render(ShowForGrid = true, AllowSortForGrid = false, LinkToCollectionInGrid = true, ShowForDisplay = true, ShowForEdit = true)]
         [ActionLink("Validations")]

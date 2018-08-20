@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configurations\Sections\SectionSectionConfiguration.cs" />
     <Compile Include="DynamicFormsDbInitializer.cs" />
     <Compile Include="Configurations\FormSectionSubmissions\FormSectionSubmissionConfiguration.cs" />
     <Compile Include="Configurations\FormSectionSubmissions\FormSectionSubmissionQuestionAnswerConfiguration.cs" />

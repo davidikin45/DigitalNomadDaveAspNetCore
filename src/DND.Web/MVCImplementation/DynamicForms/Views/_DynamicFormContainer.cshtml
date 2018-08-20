@@ -1,7 +1,7 @@
 ﻿@model DynamicFormContainer
 <div class="row">
     <div class="col-12 mb-2">
-        <progressBar percent="@Model.PercentageCompleted"></progressBar>
+        @await Html.PartialAsync("_DynamicFormHorizontalNavigation", Model.Navigation)
     </div>
 </div>
 
@@ -10,7 +10,7 @@
         <div class="sticky-top">
             <div class="card">
                 <div class="card-body">
-                    @await Html.PartialAsync("_DynamicFormNavigation", Model.Navigation)
+                    @await Html.PartialAsync("_DynamicFormVerticalNavigation", Model.Navigation)
                 </div>
             </div>
         </div>
@@ -18,8 +18,12 @@
     <div class="col-sm-9 col-lg-10">
         <div class="card">
             <div class="card-body">
-                @await Html.PartialAsync("_DynamicFormEdit", Model.Sections)
+                @await Html.PartialAsync("_DynamicFormEdit", Model.Forms)
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript" language=javascript>
+    $.validator.unobtrusive.parse(document);
+</script>

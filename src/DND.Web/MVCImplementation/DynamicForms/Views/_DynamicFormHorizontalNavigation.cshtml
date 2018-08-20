@@ -1,0 +1,7 @@
+﻿@model DynamicFormNavigation
+<ul class="wizard">
+    @foreach (var item in Model.MenuItems)
+    {
+        @await Html.PartialAsync("_DynamicFormHorizontalNavigationMenuItem", item)
+    }
+</ul>
