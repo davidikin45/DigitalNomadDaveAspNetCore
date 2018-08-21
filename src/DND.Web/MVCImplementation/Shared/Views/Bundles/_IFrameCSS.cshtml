@@ -1,0 +1,15 @@
+﻿<environment include="Development">
+    @foreach (string style in Html.BundleConfig().Bundle("wwwroot/css/third-party.min.css").inputFiles)
+    {
+        <link rel="stylesheet" href="@style.Replace("wwwroot","~")" asp-append-version="true" />
+    }
+
+    @foreach (string style in Html.BundleConfig().Bundle("wwwroot/css/iframe.min.css").inputFiles)
+    {
+        <link rel="stylesheet" href="@style.Replace("wwwroot","~")" asp-append-version="true" />
+    }
+</environment>
+<environment exclude="Development">
+    <link rel="stylesheet" href="~/css/third-party.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/iframe.min.css" asp-append-version="true" />
+</environment>

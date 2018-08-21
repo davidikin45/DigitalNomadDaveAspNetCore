@@ -39,6 +39,14 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/css/iframe.min.css",
+    "inputFiles": [
+      "wwwroot/css/styles.css",
+      "wwwroot/css/validation.css",
+      "wwwroot/css/iframe.css"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/css/site.admin.min.css",
     "inputFiles": [
       "wwwroot/css/admin.css"

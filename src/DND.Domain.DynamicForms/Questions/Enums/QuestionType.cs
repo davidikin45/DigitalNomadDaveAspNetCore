@@ -22,6 +22,8 @@ namespace DND.Domain.DynamicForms.Questions.Enums
         PhoneNumber,
         [Display(Name = "Email")]
         Email,
+        [Display(Name = "Website")]
+        Website,
         [Display(Name = "Checkbox")]
         Checkbox,
         [Display(Name = "Yes Button")]

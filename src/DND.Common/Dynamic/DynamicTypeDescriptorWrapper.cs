@@ -219,43 +219,7 @@ namespace DND.Common.Dynamic
         private void SetMember(string propertyName, object value)
         {
             var property = GetProperties().Find(propertyName, true);
-            var convertedValue = Convert.ChangeType(value, property.PropertyType);
-            property.SetValue(_dynamic, convertedValue);
-            //if (IsCollection(property.PropertyType))
-            //{
-            //    if (!(property.PropertyType.GetGenericArguments()[0] == typeof(FormFile) && !(value is FormFile)))
-            //    {
-            //        var convertedValue = Convert.ChangeType(value, property.PropertyType.GetGenericArguments()[0]);
-            //        var collection = property.GetValue(_dynamic);
-            //        var genericCollectionType = typeof(ICollection<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
-            //        var addMethod = genericCollectionType.GetMethod("Add");
-            //        addMethod.Invoke(collection, new object[] { convertedValue });
-            //    }
-            //}
-            //else if (property.PropertyType == typeof(DateTime))
-            //{
-            //    if (!String.IsNullOrWhiteSpace(value.ToString()))
-            //    {
-            //        var convertedValue = Convert.ChangeType(value, property.PropertyType);
-            //        property.SetValue(_dynamic, convertedValue);
-            //    }
-            //    else
-            //    {
-            //        property.SetValue(_dynamic, new DateTime());
-            //    }
-            //}
-            //else if (property.PropertyType == typeof(FormFile))
-            //{
-            //    if (!string.IsNullOrWhiteSpace(value.ToString()))
-            //    {
-            //        property.SetValue(_dynamic, value);
-            //    }
-            //}
-            //else
-            //{
-            //    var convertedValue = Convert.ChangeType(value, property.PropertyType);
-            //    property.SetValue(_dynamic, convertedValue);
-            //}
+            property.SetValue(_dynamic, value);
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)

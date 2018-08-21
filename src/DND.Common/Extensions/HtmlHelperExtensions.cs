@@ -1088,6 +1088,7 @@ namespace DND.Common.Extensions
             }
 
             var id = htmlHelper.Id(expression);
+            var name = htmlHelper.Name(expression);
 
             HtmlTag input = new HtmlTag("input");
             if(inputHtmlAttributes != null)
@@ -1098,7 +1099,7 @@ namespace DND.Common.Extensions
                 }
             }
             input.Id(id);
-            input.Name(id);
+            input.Name(name);
             input.Attr("type", "checkbox");
             input.Value(value);
             if(isChecked)
@@ -1130,6 +1131,7 @@ namespace DND.Common.Extensions
         public static HtmlString ValueCheckboxButton(this IHtmlHelper htmlHelper, string expression, string value, string text, bool isChecked, object inputHtmlAttributes, object labelHtmlAttributes)
         {
             var id = htmlHelper.Id(expression);
+            var name = htmlHelper.Name(expression);
 
             HtmlTag input = new HtmlTag("input");
             if (inputHtmlAttributes != null)
@@ -1140,7 +1142,7 @@ namespace DND.Common.Extensions
                 }
             }
             input.Id(id);
-            input.Name(id);
+            input.Name(name);
             input.Attr("type", "checkbox");
             input.Value(value);
             if (isChecked)

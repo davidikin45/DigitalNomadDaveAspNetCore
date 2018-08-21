@@ -49,6 +49,6 @@
 /*The number of the step and the connector before it = green*/
 .wizard li.active:before,
 .wizard li.active:after {
-  background: #ee0979;
+  background: #e74c3c;
   color: black;
 }

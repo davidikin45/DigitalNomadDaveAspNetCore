@@ -55,7 +55,7 @@
     @Html.GoogleFontAsync(new List<string> { (Settings.GetValue<String>("BodyFont")), (Settings.GetValue<String>("NavBarFont")) }, true, true, true, true, true, true, 2000)
     @Html.GetFontBodyCSSAsync((Settings.GetValue<String>("BodyFont")))
 
-    @Html.Partial("_CSS")
+    @Html.Partial("_IFrameCSS")
 
     @RenderSection("styles", required: false)
     @if ((ViewBag.Admin == null || !ViewBag.Admin) && !String.IsNullOrWhiteSpace(Settings.GetValue<String>("GoogleAnalyticsTrackingId")))

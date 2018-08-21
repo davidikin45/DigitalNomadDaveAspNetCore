@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DND.Common.Interfaces.Models;
-using DND.Common.Interfaces.Repository;
-using DND.Common.Interfaces.Data;
-
-using System.Data.Entity;
-using RefactorThis.GraphDiff;
-using System.Linq.Expressions;
-using System.Threading;
-using DND.Common.Interfaces.UnitOfWork;
-using DND.Common.Enums;
-using DND.Common.Implementation.Validation;
+﻿using DND.Common.Enums;
+using DND.Common.Extensions;
 using DND.Common.Helpers;
 using DND.Common.Implementation.Data;
+using DND.Common.Implementation.Validation;
+using DND.Common.Interfaces.Data;
+using DND.Common.Interfaces.Models;
+using DND.Common.Interfaces.Repository;
+using DND.Common.Interfaces.UnitOfWork;
+using RefactorThis.GraphDiff;
+using System;
 using System.Collections;
-using DND.Common.Extensions;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Repository.EntityFramework
 
@@ -299,7 +294,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public virtual Result Delete(TEntity entity, string deletedBy = null)
         {
-            if (!(Exists(entity)))
+            if (!(ExistsNoTracking(entity)))
             {
                 return Result.ObjectDoesNotExist();
             }
@@ -324,7 +319,7 @@ namespace DND.Common.Implementation.Repository.EntityFramework
 
         public async virtual Task<Result> DeleteAsync(TEntity entity, string deletedBy = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (!(await ExistsAsync(entity).ConfigureAwait(false)))
+            if (!(await ExistsNoTrackingAsync(entity).ConfigureAwait(false)))
             {
                 return Result.ObjectDoesNotExist();
             }

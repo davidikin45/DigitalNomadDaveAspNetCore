@@ -18,6 +18,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -154,22 +155,22 @@ namespace DND.Web.DynamicForms.PresentationServices
                     formModel.AddAttribute(questionFieldName, new MultilineTextAttribute(5));
                     break;
                 case QuestionType.Number:
-                    formModel.Add(questionFieldName, new Nullable<int>());
+                    formModel.Add(questionFieldName, default(int));
                     break;
                 case QuestionType.Slider:
-                    formModel.Add(questionFieldName, new Nullable<int>());
+                    formModel.Add(questionFieldName, default(int));
                     formModel.AddAttribute(questionFieldName, new SliderAttribute());
                     break;
                 case QuestionType.Currency:
-                    formModel.Add(questionFieldName, new Nullable<decimal>());
+                    formModel.Add(questionFieldName, default(decimal));
                     formModel.AddAttribute(questionFieldName, new DataTypeAttribute(DataType.Currency));
                     break;
                 case QuestionType.Date:
-                    formModel.Add(questionFieldName, new Nullable<DateTime>());
+                    formModel.Add(questionFieldName, default(DateTime));
                     formModel.AddAttribute(questionFieldName, new DataTypeAttribute(DataType.Date));
                     break;
                 case QuestionType.DateTime:
-                    formModel.Add(questionFieldName, new Nullable<DateTime>());
+                    formModel.Add(questionFieldName, default(DateTime));
                     formModel.AddAttribute(questionFieldName, new DataTypeAttribute(DataType.DateTime));
                     break;
                 case QuestionType.PhoneNumber:
@@ -179,6 +180,10 @@ namespace DND.Web.DynamicForms.PresentationServices
                 case QuestionType.Email:
                     formModel.Add(questionFieldName, string.Empty);
                     formModel.AddAttribute(questionFieldName, new DataTypeAttribute(DataType.EmailAddress));
+                    break;
+                case QuestionType.Website:
+                    formModel.Add(questionFieldName, string.Empty);
+                    formModel.AddAttribute(questionFieldName, new DataTypeAttribute(DataType.Url));
                     break;
                 case QuestionType.Checkbox:
                     formModel.Add(questionFieldName, false);
@@ -361,22 +366,57 @@ namespace DND.Web.DynamicForms.PresentationServices
 
             if (sectionSubmission != null)
             {
+                var properties = formModel.GetProperties();
+
                 foreach (var propertyName in formModel.GetDynamicMemberNames())
                 {
                     var persistedValue = sectionSubmission.QuestionAnswers.Where(qa => qa.FieldName == propertyName).FirstOrDefault();
                     if (persistedValue != null)
                     {
                         bool isCollection = formModel.IsCollectionProperty(propertyName);
+                        var property = properties.Find(propertyName, true);
 
-                        foreach (var csvSplit in persistedValue.Answer.Split(','))
+                        if (isCollection)
                         {
-                            formModel[propertyName] = csvSplit.Trim();
-                        }
-                        if (!isCollection)
-                        {
-                            break;
-                        }
+                            var genericCollectionType = typeof(List<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);
+                            var newCollection = Activator.CreateInstance(genericCollectionType);
 
+                            formModel[propertyName] = newCollection;
+
+                            var addMethod = genericCollectionType.GetMethod("Add");
+
+                            foreach (var csvSplit in persistedValue.Answer.Split(','))
+                            {
+                                var convertedValue = Convert.ChangeType(csvSplit.Trim(), property.PropertyType.GetGenericArguments()[0]);
+                                addMethod.Invoke(newCollection, new object[] { convertedValue });
+                            }
+                        }
+                        else if (property.PropertyType == typeof(DateTime))
+                        {
+                            if (!String.IsNullOrWhiteSpace(persistedValue.Answer))
+                            {
+                                var parsedValue = DateTime.Parse(persistedValue.Answer);
+                                formModel[propertyName] = parsedValue;
+                            }
+                            else
+                            {
+                                formModel[propertyName] = new DateTime();
+                            }
+                        }
+                        else if (property.PropertyType == typeof(bool))
+                        {
+                            formModel[propertyName] = BoolParser.GetValue(persistedValue.Answer);
+                        }
+                        else if (property.PropertyType == typeof(decimal))
+                        {
+                            var convertedValue = decimal.Parse(persistedValue.Answer, NumberStyles.Currency);
+                            formModel[propertyName] = convertedValue;
+                        }
+                        else
+                        {
+                            var convertedValue = Convert.ChangeType(persistedValue.Answer, property.PropertyType);
+                            formModel[propertyName] = convertedValue;
+                        }
                     }
                 }
             }
@@ -392,8 +432,27 @@ namespace DND.Web.DynamicForms.PresentationServices
 
             foreach (var prop in htmlHelper.ViewData.ModelMetadata.Properties.Where(p => p.ShowForDisplay))
             {
-                var displayString = htmlHelper.Display(prop.PropertyName).Render();
-                displayValues.Add(prop.PropertyName, displayString);
+
+                if (prop.IsCollectionType)
+                {
+                    var displayString = htmlHelper.Display(prop.PropertyName).Render();
+                    displayValues.Add(prop.PropertyName, displayString);
+                }
+                else if(prop.ModelType == typeof(Boolean))
+                {
+                    var displayString = htmlHelper.Display(prop.PropertyName).Render();
+                    displayValues.Add(prop.PropertyName, displayString);
+                }
+                else if (prop.ModelType == typeof(DateTime))
+                {
+                    var displayString = ((DateTime)formModel[prop.PropertyName]).ToString("O");
+                    displayValues.Add(prop.PropertyName, displayString);
+                }
+                else
+                {
+                    var displayString = htmlHelper.DisplayText(prop.PropertyName);
+                    displayValues.Add(prop.PropertyName, displayString);
+                }
             }
 
             return displayValues;
@@ -587,7 +646,6 @@ namespace DND.Web.DynamicForms.PresentationServices
             var formContainer = new DynamicFormContainer();
             formContainer.Forms.Add(formModel);
             formContainer.Navigation = navigation;
-            formContainer.PercentageCompleted = 50;
 
             return formContainer;
         }
@@ -622,8 +680,6 @@ namespace DND.Web.DynamicForms.PresentationServices
             additionalControls.AddAttribute("Submit", new SubmitButtonAttribute("btn btn-block btn-success"));
 
             formContainer.Forms.Add(additionalControls);
-
-            formContainer.PercentageCompleted = 50;
 
             return formContainer;
         }

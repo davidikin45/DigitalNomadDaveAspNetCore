@@ -442,6 +442,9 @@
     <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormContainer.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="MVCImplementation\Shared\Views\Bundles\_IFrameCSS.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="MVCImplementation\Shared\Views\Bundles\_IFrameJS.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
