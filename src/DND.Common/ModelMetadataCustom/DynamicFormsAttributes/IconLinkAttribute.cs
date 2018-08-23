@@ -7,13 +7,13 @@ namespace DND.Common.ModelMetadataCustom.DynamicFormsAttributes
     public class EditLinkAttribute : IconLinkAttribute, IDisplayMetadataAttribute
     {
         public EditLinkAttribute(string actionName, string controllerName)
-            : base("Edit", actionName, controllerName, "fa fa-pencil", new { @class = "btn btn-warning btn-sm mr-2 mb-2" })
+            : base("Edit", actionName, controllerName, "fa fa-pencil", new { @class = "btn btn-block btn-warning btn-sm mr-2 mb-2" })
         {
 
         }
 
         public EditLinkAttribute(string actionName, string controllerName, string ajaxUpdate)
-            : base("Edit", actionName, controllerName, "fa fa-pencil", new { @class = "btn btn-warning btn-sm mr-2 mb-2", data_ajax = "true", data_ajax_method = "GET", data_ajax_mode = "replace", data_ajax_update = ajaxUpdate })
+            : base("Edit", actionName, controllerName, "fa fa-pencil", new { @class = "btn btn-block btn-warning btn-sm mr-2 mb-2", data_ajax = "true", data_ajax_method = "GET", data_ajax_mode = "replace", data_ajax_update = ajaxUpdate })
         {
 
         }

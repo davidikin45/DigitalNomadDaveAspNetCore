@@ -16,8 +16,10 @@ namespace DND.Common.DynamicForms
         public string ControllerName { get; set; }
         public RouteValueDictionary RouteValues { get; set; } = new RouteValueDictionary();
 
+        public bool IsActive { get; set; }
+        public bool IsPrevious { get; set; }
+
         public bool IsValid { get; set; }
-        public bool Visited { get; set; }
 
         public DynamicFormNavigation ChildNavigation { get; set; }
     }
