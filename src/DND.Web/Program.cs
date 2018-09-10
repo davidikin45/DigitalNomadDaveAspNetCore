@@ -123,11 +123,6 @@ namespace DND.Web
 
         private static void MigrateDatabases(IServiceProvider services)
         {
-            //var context = services.GetRequiredService<IdentityDbContext>();
-
-            //var initializer = new IdentityDbContextInitializer(context);
-            //initializer.Initialize();
-
             var taskRunner = services.GetRequiredService<TaskRunner>();
             taskRunner.RunTasksOnWebHostStartup();
         }

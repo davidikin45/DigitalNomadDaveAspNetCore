@@ -1,10 +1,6 @@
 ﻿using DND.Common.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Implementation.Services
 {
@@ -20,7 +16,6 @@ namespace DND.Common.Implementation.Services
         {
             if (_httpContextAccessor.HttpContext.Request.Cookies.ContainsKey(key))
                 return _httpContextAccessor.HttpContext.Request.Cookies[key];
-
             return "";
         }
 

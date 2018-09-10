@@ -400,7 +400,7 @@ namespace DND.Web.DynamicForms.PresentationServices
                             if (!String.IsNullOrWhiteSpace(persistedValue.Answer))
                             {
                                 //ISO 8601
-                                var parsedValue = DateTime.Parse(persistedValue.Answer, null, DateTimeStyles.RoundtripKind);
+                                var parsedValue = DateTime.Parse(persistedValue.Answer, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
                                 formModel[propertyName] = parsedValue;
                             }
                             else
