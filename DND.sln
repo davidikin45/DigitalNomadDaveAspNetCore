@@ -226,6 +226,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Presentation", "0. Prese
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DND.Web.FlightSearch", "src\DND.Web.FlightSearch\DND.Web.FlightSearch.csproj", "{DB29ED77-3757-4570-8265-3EAFDBAB5648}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{F5BA879B-601B-44D9-B93D-3889DAF6F480}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\Data.sql = scripts\Data.sql
+		scripts\DropAllTables.sql = scripts\DropAllTables.sql
+		scripts\Isolation Level.sql = scripts\Isolation Level.sql
+		scripts\Isolations Levels.txt = scripts\Isolations Levels.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

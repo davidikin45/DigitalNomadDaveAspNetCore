@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -88,9 +87,7 @@ namespace DND.IntegrationTestsXUnit
             // Create POST request, adding anti forgery cookie and form field
             HttpRequestMessage postRequest = new HttpRequestMessage(HttpMethod.Post, "/contact");
 
-            postRequest.Headers.Add("Cookie",
-              new CookieHeaderValue(TestServerFixture.AntiForgeryCookieName,
-                                    antiForgeryValues.cookieValue).ToString());
+            postRequest.Headers.Add("Cookie", $"{TestServerFixture.AntiForgeryCookieName}={antiForgeryValues.cookieValue}");
 
             var formData = new Dictionary<string, string>
             {
