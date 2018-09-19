@@ -27,12 +27,13 @@
 @using DND.Web.MVCImplementation.Manage.Models
 @using DND.Web.MVCImplementation.Contact.Models
 @using DND.Web.MVCImplementation.Sidebar.Models
-@using DND.Web.MVCImplementation.Sidebar.Models
 @using DND.Web.MVCImplementation.Testimonial.Models
 @using DND.Web.MVCImplementation.Project.Models
 @using DND.Web.MVCImplementation.Shared.Models
 
 @using DND.Domain.Identity.Users
+@using DND.Data
+
 
 @using DND.Domain.Blog.Authors.Dtos
 @using DND.Domain.Blog.BlogPosts.Dtos
@@ -49,9 +50,6 @@
 @using DND.Domain.CMS.Testimonials.Dtos
 @using DND.Domain.FlightSearch.Enums
 
-@using DND.Interfaces.Data
-@using DND.Interfaces.Blog.Data
-@using DND.Interfaces.CMS.Data
 @using DND.Interfaces.Blog.ApplicationServices
 @using DND.Interfaces.CMS.ApplicationServices
 @using DND.Interfaces.FlightSearch.ApplicationServices
@@ -65,8 +63,8 @@
 @using DND.Common.DynamicForms
 @using DND.Common.Infrastructure
 @using DND.Common.ModelMetadataCustom.Providers
-@using DND.Common.Implementation.Dtos
-@using DND.Common.ModelMetadataCustom.DisplayAttributes
+@using DND.Common.Dtos
+@using DND.Common.Domain.ModelMetadata
 @using System.IO;
 @using System.Collections
 @using System.Threading

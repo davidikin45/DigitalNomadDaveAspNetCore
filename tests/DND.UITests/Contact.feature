@@ -21,7 +21,7 @@ Scenario Outline: Cannot submit contact form unless name is entered
 	And I enter subject as <subject>
 	And I enter mesage as This is a test message
 	When I submit the contact form
-	Then I should see an error message telling me the Name field is required
+	Then I should see an error message telling me the Name field is required 
 
 	Examples: 
 	| subject                     |

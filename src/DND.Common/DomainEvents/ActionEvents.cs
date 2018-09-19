@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using DND.Common.Infrastructure;
-using DND.Common.Interfaces.Models;
+using DND.Common.Infrastructure.DomainEvents;
+using DND.Common.Infrastructure.Interfaces.DomainEvents;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.DomainEvents
 {
@@ -21,7 +21,7 @@ namespace DND.Common.DomainEvents
             Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
 
             var mapper = HttpContext.GetInstance<IMapper>();
-            var mapping = mapper.ConfigurationProvider.GetAllTypeMaps().Where(m => m.SourceType == dtoType && typeof(IBaseEntity).IsAssignableFrom(m.DestinationType)).FirstOrDefault();
+            var mapping = mapper.ConfigurationProvider.GetAllTypeMaps().Where(m => m.SourceType == dtoType && typeof(IEntity).IsAssignableFrom(m.DestinationType)).FirstOrDefault();
             if (mapping != null)
             {
                 var entityType = mapping.DestinationType;
@@ -36,7 +36,7 @@ namespace DND.Common.DomainEvents
 
             IDomainActionEvent actionEvent = null;
 
-            if (typeof(IBaseEntity).IsAssignableFrom(entityType))
+            if (typeof(IEntity).IsAssignableFrom(entityType))
             {
                 Type genericType = typeof(EntityActionEvent<>);
                 Type[] typeArgs = { entityType };
@@ -69,21 +69,6 @@ namespace DND.Common.DomainEvents
             }
 
             return actions;
-        }
-
-        public IDomainActionEvent CreateEntityActionEvent(string action, dynamic args, object entity, string triggeredBy)
-        {
-            IDomainActionEvent actionEvent = null;
-
-            if (entity is IBaseEntity)
-            {
-                Type genericType = typeof(EntityActionEvent<>);
-                Type[] typeArgs = { entity.GetType() };
-                Type constructed = genericType.MakeGenericType(typeArgs);
-                actionEvent = (IDomainActionEvent)Activator.CreateInstance(constructed, action, args, entity, triggeredBy);
-            }
-
-            return actionEvent;
         }
     }
 }

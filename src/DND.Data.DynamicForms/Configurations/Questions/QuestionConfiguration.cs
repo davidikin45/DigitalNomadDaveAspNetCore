@@ -1,27 +1,29 @@
 ﻿using DND.Domain.DynamicForms.Questions;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.DynamicForms.Configurations.Questions
 {
     public class QuestionConfiguration
-           : EntityTypeConfiguration<Question>
+           : IEntityTypeConfiguration<Question>
     {
-        public QuestionConfiguration()
+
+        public void Configure(EntityTypeBuilder<Question> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
             //NotMapped
             //Ignore(p => p.SectionType);
 
-            Property(p => p.QuestionTypeString)
+            builder.Property(p => p.QuestionTypeString)
                 .HasColumnName(nameof(Question.QuestionType));
 
-            HasMany(p => p.Questions).WithRequired().HasForeignKey(c => c.QuestionId).WillCascadeOnDelete(false);
+            builder.HasMany(p => p.Questions).WithOne().IsRequired().HasForeignKey(c => c.QuestionId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

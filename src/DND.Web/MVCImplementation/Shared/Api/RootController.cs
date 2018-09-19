@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using DND.Common.Controllers.Api;
-using DND.Common.Email;
-using DND.Common.Implementation.Dtos;
+using DND.Common.Dtos;
+using DND.Common.Infrastructure.Email;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace DND.Web.MVCImplementation.Shared.Api
 {
     [ApiVersion("1.0")]
     [Route("api")]
-    public class RootController : BaseWebApiController
+    public class RootController : ApiControllerBase
     {
         public RootController(IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
             : base(mapper, emailService, urlHelper)

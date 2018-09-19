@@ -1,24 +1,21 @@
 ﻿using DND.Domain.Blog.BlogPosts;
-using DND.Domain.Blog.Categories;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.Blog.BlogPosts
 {
     public class BlogPostTagConfiguration
-           : EntityTypeConfiguration<BlogPostTag>
+           : IEntityTypeConfiguration<BlogPostTag>
     {
-        public BlogPostTagConfiguration()
+
+        public void Configure(EntityTypeBuilder<BlogPostTag> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            //HasRequired(p => p.BlogPost)
-            //    .WithMany()
-            //    .HasForeignKey(p => p.BlogPostId);
-
-            HasRequired(p => p.Tag)
+            builder.HasOne(p => p.Tag)
                 .WithMany()
                 .HasForeignKey(p => p.TagId);
         }

@@ -1,4 +1,4 @@
-﻿using DND.Common.Controllers.Api;
+﻿using DND.Common.Infrastructure;
 using DND.Domain.Identity.Users;
 using DND.Infrastructure;
 using Microsoft.AspNetCore.Identity;
@@ -9,12 +9,12 @@ namespace DND.Data.Identity
 {
     public class DbSeed
     {
-        public static void Seed(IdentityDbContext context)
+        public static void Seed(IdentityContext context)
         {
             CreateUsers(context);
         }
 
-        private static void CreateUsers(IdentityDbContext context)
+        private static void CreateUsers(IdentityContext context)
         {
             if (!context.Users.Any())
             {

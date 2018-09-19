@@ -1,13 +1,13 @@
-﻿using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.Blog.Tags
 {
-    public class Tag : BaseEntityAggregateRootAuditable<int>
+    public class Tag : EntityAggregateRootAuditableBase<int>
     {
         //[Required, StringLength(50)]
         public string Name
@@ -30,10 +30,10 @@ namespace DND.Domain.Blog.Tags
             return errors;
         }
 
-        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

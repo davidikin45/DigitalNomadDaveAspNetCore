@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using DND.Common.ApplicationServices.SignalR;
 using DND.Common.Implementation.ApplicationServices;
-using DND.Common.SignalRHubs;
 using DND.Domain.Blog.Categories;
 using DND.Domain.Blog.Categories.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.Categories.Services
 {
-    public class CategoryApplicationService : BaseEntityApplicationService<Category, CategoryDto, CategoryDto, CategoryDto, CategoryDeleteDto, ICategoryDomainService>, ICategoryApplicationService
+    public class CategoryApplicationService : ApplicationServiceEntityBase<Category, CategoryDto, CategoryDto, CategoryDto, CategoryDeleteDto, ICategoryDomainService>, ICategoryApplicationService
     {
 
         protected virtual ICategoryDomainService CategoryDomainService { get; }

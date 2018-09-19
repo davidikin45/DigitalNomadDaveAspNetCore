@@ -1,26 +1,26 @@
 ﻿using DND.Domain.Blog.Locations;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.Blog.Locations
 {
     public class LocationConfiguration
-           : EntityTypeConfiguration<Location>
+           : IEntityTypeConfiguration<Location>
     {
-        public LocationConfiguration()
+        public void Configure(EntityTypeBuilder<Location> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
             //NotMapped
             //Ignore(p => p.LocationType);
 
-            Property(p => p.LocationTypeString)
+            builder.Property(p => p.LocationTypeString)
                 .HasColumnName("LocationType");
-                 
         }
     }
 }

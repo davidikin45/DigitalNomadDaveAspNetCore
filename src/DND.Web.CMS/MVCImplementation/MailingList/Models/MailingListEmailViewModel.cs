@@ -1,4 +1,4 @@
-﻿using DND.Common.ModelMetadataCustom.DisplayAttributes;
+﻿using DND.Common.Domain.ModelMetadata;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Web.CMS.MVCImplementation.MailingList.Models

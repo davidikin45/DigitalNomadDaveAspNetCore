@@ -1,17 +1,14 @@
-﻿using DND.Domain.Models;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+﻿using AutoMapper;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DND.Common.Implementation.Dtos;
-using AutoMapper;
 
 namespace DND.Domain.Blog.Categories.Dtos
 {
-    public class CategoryDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class CategoryDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
 
         [Required, StringLength(50)]

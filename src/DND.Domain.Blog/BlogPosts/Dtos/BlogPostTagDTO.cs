@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using AutoMapper.EquivalencyExpression;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.Blog.Tags;
 using DND.Domain.Blog.Tags.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.BlogPosts.Dtos
 {
-    public class BlogPostTagDto : BaseDto<int>, IMapFrom<BlogPostTag>, IMapTo<BlogPostTag>
+    public class BlogPostTagDto : DtoBase<int>, IMapFrom<BlogPostTag>, IMapTo<BlogPostTag>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]

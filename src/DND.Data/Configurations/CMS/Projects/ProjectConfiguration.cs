@@ -1,29 +1,29 @@
-﻿using DND.Domain.Blog.Tags;
-using DND.Domain.CMS.Projects;
-using System.Data.Entity.ModelConfiguration;
+﻿using DND.Domain.CMS.Projects;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.CMS.Projects
 {
     public class ProjectConfiguration
-           : EntityTypeConfiguration<Project>
+           : IEntityTypeConfiguration<Project>
     {
-        public ProjectConfiguration()
+
+        public void Configure(EntityTypeBuilder<Project> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
-            Property(p => p.Name)
+            builder.Property(p => p.Name)
                  .IsRequired()
                 .HasMaxLength(100);
 
-            Property(p => p.DescriptionText)
+            builder.Property(p => p.DescriptionText)
                 .IsRequired()
                .HasMaxLength(200);
-
         }
     }
 }

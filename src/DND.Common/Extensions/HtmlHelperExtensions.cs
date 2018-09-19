@@ -2,9 +2,8 @@
 using DND.Common.DomainEvents;
 using DND.Common.Extensions;
 using DND.Common.Infrastructure;
-using DND.Common.Interfaces.Data;
+using DND.Common.Infrastructure.Interfaces.Data;
 using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using HtmlTags;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -46,13 +46,13 @@ namespace DND.Common.Extensions
             return repos;
         }
 
-        public static TIDbContext Database<TIDbContext>(this IHtmlHelper html) where TIDbContext : IBaseDbContext
+        public static TDbContext Database<TDbContext>(this IHtmlHelper html) where TDbContext : DbContext
         {
-            var dbContext = html.GetInstance<IDbContextFactoryProducerSingleton>().GetFactory<TIDbContext>().CreateDbContext();
+            var dbContext = html.GetInstance<IDbContextFactoryProducerSingleton>().GetFactory<TDbContext>().CreateDbContext();
             return dbContext;
         }
 
-        public static IBaseDbContext DatabaseByEntityType(this IHtmlHelper html, Type entityType)
+        public static DbContext DatabaseByEntityType(this IHtmlHelper html, Type entityType)
         {
             var dbContext = html.GetInstance<IDbContextFactoryProducerSingleton>().GetFactoryByEntityType(entityType).CreateBaseDbContext();
             return dbContext;
@@ -116,10 +116,10 @@ namespace DND.Common.Extensions
             {
                 var th = new TagBuilder("th");
 
-                var orderType = OrderByType.Descending;
-                if (html.ViewBag.OrderColumn.ToLower() == prop.PropertyName.ToLower() && html.ViewBag.OrderType != OrderByType.Ascending)
+                var orderType = "desc";
+                if (html.ViewBag.OrderColumn.ToLower() == prop.PropertyName.ToLower() && html.ViewBag.OrderType != "asc")
                 {
-                    orderType = OrderByType.Ascending;
+                    orderType = "asc";
                 }
 
                 string linkText = ModelHelperExtensions.DisplayName(html.ViewData.Model, prop.PropertyName).ToString();

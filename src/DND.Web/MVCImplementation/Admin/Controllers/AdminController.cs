@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers.Admin;
-using DND.Common.Email;
-using Marvin.Cache.Headers;
+using DND.Common.Infrastructure.Email;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -9,7 +8,7 @@ namespace DND.Web.MVCImplementation.Admin.Controllers
 {
     //[LayoutInjector("_LayoutAdmin")]
     [Route("admin")]
-    public class AdminController : BaseAdminControllerAuthorize
+    public class AdminController : MvcControllerAdminAuthorizeBase
     {
 
         public AdminController(IMapper mapper, IEmailService emailService, IConfiguration configuration)
@@ -20,7 +19,6 @@ namespace DND.Web.MVCImplementation.Admin.Controllers
 
         public override ActionResult ClearCache()
         {
-            HttpCacheHeadersMiddleware.ClearCache();
             return base.ClearCache();
         }
 

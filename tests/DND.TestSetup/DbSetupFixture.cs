@@ -1,43 +1,33 @@
-﻿using DND.Common.Implementation.Data;
-using DND.Common.Infrastructure;
-using DND.Common.Interfaces.Data;
-using DND.Common.Testing;
+﻿using DND.Common.Testing;
 using DND.Data;
 using DND.Data.Identity;
+using DND.Data.Identity.Initializers;
 using DND.Data.Initializers;
-using DND.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace DND.TestSetup
 {
-    public abstract class DbSetupFixture : BaseIntegrationTestDbSetup<DbSetupFixture>, IDisposable
+    public abstract class DbSetupFixture : IntegrationTestDbSetupBase<DbSetupFixture>, IDisposable
     {
         public DbSetupFixture()
-             : base(DNDConnectionStrings.GetConnectionString("DefaultConnectionString"))
+             : base(TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString"))
         {
         }
 
-        public override void MigrateDatabaseAndSeed()
+        public override void MigrateDatabaseAndSeed(string connectionString)
         {
-            DbContextInitializer<ApplicationDbContext>.SetInitializer(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new ApplicationDbContextFactory()}), new ApplicationDbInitializerMigrate(), true, true);
-
-            using (var context = CreateIdentityContext(false))
+            using (var context = TestHelper.GetContext<ApplicationContext>(connectionString, false))
             {
-                context.Database.Migrate();
-                context.Seed();
-                context.SaveChanges();
+                var migration = new ApplicationContextInitializerMigrate(context);
+                migration.Initialize();
             }
-        }
 
-        public static IdentityDbContext CreateIdentityContext(bool beginTransaction = true)
-        {
-            var db = new IdentityDbContextDesignTimeFactory().CreateDbContext(null);
-            if (beginTransaction)
+            using (var context = TestHelper.GetContext<IdentityContext>(connectionString, false))
             {
-                db.Database.BeginTransaction(); //For EF Core need to use this instead of Isolated attribute.
+                var migration = new IdentityContextInitializerMigrate(context);
+                migration.Initialize();
             }
-            return db;
         }
     }
 }

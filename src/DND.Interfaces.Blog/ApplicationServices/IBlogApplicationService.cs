@@ -1,8 +1,8 @@
-﻿using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Infrastructure.Interfaces.ApplicationServices;
 
 namespace DND.Interfaces.Blog.ApplicationServices
 {
-    public interface IBlogApplicationService : IBaseApplicationService
+    public interface IBlogApplicationService : IApplicationService
     {
         IBlogPostApplicationService BlogPostApplicationService { get; }
         ICategoryApplicationService CategoryApplicationService { get; }

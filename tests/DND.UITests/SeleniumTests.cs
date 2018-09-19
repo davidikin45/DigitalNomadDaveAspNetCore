@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Threading;
-using DND.Common.Alerts;
+﻿using DND.Common.Alerts;
 using DND.Common.Testing.Selenium;
 using DND.TestSetup;
 using DND.Web.MVCImplementation.Contact.Models;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using Xunit;
 
 namespace DND.UITests

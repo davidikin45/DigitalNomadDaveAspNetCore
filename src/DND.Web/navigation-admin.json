@@ -10,103 +10,103 @@
     "LinkText": "Manage"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminCarouselItems",
     "Action": "Index",
     "LinkText": "Carousel"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminContentHtmls",
     "Action": "Index",
     "LinkText": "Content Html"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminContentTexts",
     "Action": "Index",
     "LinkText": "Content Text"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "Admin",
     "Action": "FileManager",
     "LinkText": "File Manager"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminFolderMetadata",
     "Action": "Index",
     "LinkText": "Folder Metadata"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminFileMetadata",
     "Action": "Index",
     "LinkText": "File Metadata"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminMetadata",
     "Action": "Index",
     "LinkText": "Image Metadata"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminAuthors",
     "Action": "Index",
     "LinkText": "Authors"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminBlogPosts",
     "Action": "Index",
     "LinkText": "Posts"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminCategories",
     "Action": "Index",
     "LinkText": "Categories"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminTags",
     "Action": "Index",
     "LinkText": "Tags"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminLocations",
     "Action": "Index",
     "LinkText": "Locations"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminProjects",
     "Action": "Index",
     "LinkText": "Projects"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminTestimonials",
     "Action": "Index",
     "LinkText": "Testimonials"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminMailingList",
     "Action": "Index",
     "LinkText": "Mailing List"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminMailingList",
     "Action": "Email",
     "LinkText": "Email Mailing List"
   },
   {
-    "Active": false,
+    "Active": true,
     "Controller": "AdminFaqs",
     "Action": "Index",
     "LinkText": "FAQ"

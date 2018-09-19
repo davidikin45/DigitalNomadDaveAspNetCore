@@ -3,7 +3,6 @@ using DND.Common.Testing.Selenium;
 using DND.TestSetup;
 using DND.Web.MVCImplementation.Contact.Models;
 using OpenQA.Selenium;
-using System;
 using System.Linq;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;

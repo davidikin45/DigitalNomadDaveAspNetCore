@@ -4,7 +4,7 @@ using DND.Interfaces.Blog.ApplicationServices;
 
 namespace DND.ApplicationServices.Blog.Services
 {
-    public class BlogApplicationService : BaseApplicationService, IBlogApplicationService
+    public class BlogApplicationService : ApplicationServiceBase, IBlogApplicationService
     {
         public IBlogPostApplicationService BlogPostApplicationService { get; private set; }
         public ICategoryApplicationService CategoryApplicationService { get; private set; }

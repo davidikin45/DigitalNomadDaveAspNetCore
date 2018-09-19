@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.ContentHtmls.Dtos
 {
-    public class ContentHtmlDto : BaseDtoAggregateRoot<string>, IHaveCustomMappings
+    public class ContentHtmlDto : DtoAggregateRootBase<string>, IHaveCustomMappings
     {
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = true)]
         public override string Id { get => base.Id; set => base.Id = value; }

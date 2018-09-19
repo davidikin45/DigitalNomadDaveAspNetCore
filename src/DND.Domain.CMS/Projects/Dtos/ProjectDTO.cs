@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Infrastructure.Constants;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.Projects.Dtos
 {
-    public class ProjectDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class ProjectDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
 
         [Required, StringLength(100)]

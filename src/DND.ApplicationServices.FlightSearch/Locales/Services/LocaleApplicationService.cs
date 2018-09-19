@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.FlightSearch.Locales.Services
 {
-    public class LocaleApplicationService : BaseApplicationService, ILocaleApplicationService
+    public class LocaleApplicationService : ApplicationServiceBase, ILocaleApplicationService
     {
         protected ILocaleDomainService DomainService { get; }
 

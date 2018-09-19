@@ -1,18 +1,19 @@
 ﻿using DND.Domain.DynamicForms.LookupTables;
-using DND.Domain.DynamicForms.Sections;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.DynamicForms.Configurations.LookupTables
 {
     public class LookupTableItemConfiguration
-           : EntityTypeConfiguration<LookupTableItem>
+           : IEntityTypeConfiguration<LookupTableItem>
     {
-        public LookupTableItemConfiguration()
-        {
-            HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+        public void Configure(EntityTypeBuilder<LookupTableItem> builder)
+        {
+            builder.HasKey(p => p.Id);
+
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
         }
     }
 }

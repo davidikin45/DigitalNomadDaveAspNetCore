@@ -1,7 +1,8 @@
 using AutoMapper;
+using DND.Common.Domain;
 using DND.Common.Extensions;
 using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.Automapper;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.FlightSearch.Enums;
 using DND.Domain.FlightSearch.Search.Dtos;
 using System;
@@ -10,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.ViewModels
 {
-    public class FlightSearchClientRequestForm : BaseObjectValidatable, IMapTo<FlightSearchRequestDto>, IHaveCustomMappings
+    public class FlightSearchClientRequestForm : ObjectValidatableBase, IMapTo<FlightSearchRequestDto>, IHaveCustomMappings
     {
         [Required]
         public string Locale { get; set; }

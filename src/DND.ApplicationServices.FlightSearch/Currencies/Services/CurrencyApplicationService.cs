@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.FlightSearch.Currencies.Services
 {
-    public class CurrencyApplicationService : BaseApplicationService, ICurrencyApplicationService
+    public class CurrencyApplicationService : ApplicationServiceBase, ICurrencyApplicationService
     {
         protected ICurrencyDomainService DomainService { get; }
 

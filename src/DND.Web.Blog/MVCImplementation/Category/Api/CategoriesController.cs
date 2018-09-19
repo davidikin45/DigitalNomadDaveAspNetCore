@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers.Api;
-using DND.Common.Email;
+using DND.Common.Infrastructure.Email;
 using DND.Common.Interfaces.Services;
 using DND.Domain.Blog.Categories.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
@@ -10,7 +10,7 @@ namespace DND.Web.Blog.MVCImplementation.Category.Api
 {
     [ApiVersion("1.0")]
     [Route("api/blog/categories")]
-    public class CategoriesController : BaseEntityWebApiControllerAuthorize<CategoryDto, CategoryDto, CategoryDto, CategoryDeleteDto, ICategoryApplicationService>
+    public class CategoriesController : ApiControllerEntityAuthorizeBase<CategoryDto, CategoryDto, CategoryDto, CategoryDeleteDto, ICategoryApplicationService>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryController"/> class.

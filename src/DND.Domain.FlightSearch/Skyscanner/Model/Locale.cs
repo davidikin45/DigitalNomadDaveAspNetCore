@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using DND.Common.Interfaces.Automapper;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.FlightSearch.Locales.Dtos;
 
 namespace DND.Domain.Skyscanner.Model

@@ -1,20 +1,20 @@
 ﻿using DND.Domain.DynamicForms.Questions;
-using DND.Domain.DynamicForms.Sections;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.DynamicForms.Configurations.Questions
 {
     public class QuestionQuestionConfiguration
-           : EntityTypeConfiguration<QuestionQuestion>
+           : IEntityTypeConfiguration<QuestionQuestion>
     {
-        public QuestionQuestionConfiguration()
+        public void Configure(EntityTypeBuilder<QuestionQuestion> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            HasRequired(p => p.LogicQuestion)
+            builder.HasOne(p => p.LogicQuestion)
                 .WithMany()
                 .HasForeignKey(p => p.LogicQuestionId);
         }

@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.DynamicForms.Sections;
 using DND.Domain.DynamicForms.Sections.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.Forms.Dtos
 {
-    public class FormSectionDto : BaseDto<int>, IMapFrom<FormSection>, IMapTo<FormSection>
+    public class FormSectionDto : DtoBase<int>, IMapFrom<FormSection>, IMapTo<FormSection>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]

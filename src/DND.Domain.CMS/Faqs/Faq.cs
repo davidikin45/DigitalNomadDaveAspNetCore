@@ -1,13 +1,13 @@
-﻿using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.CMS.Faqs
 {
-    public class Faq : BaseEntityAggregateRootAuditable<int>
+    public class Faq : EntityAggregateRootAuditableBase<int>
     {
         //[Required]
         public string Question { get; set; }
@@ -20,10 +20,10 @@ namespace DND.Domain.CMS.Faqs
             yield break;
         }
 
-        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

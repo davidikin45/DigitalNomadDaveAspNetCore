@@ -1,7 +1,6 @@
 ﻿using DND.Common.Extensions;
 using DND.Common.Implementation.Models;
 using HtmlTags;
-using Humanizer;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -189,7 +188,7 @@ namespace DND.Common.Helpers
             return expression;
         }
 
-        public HtmlTag EnumDropdownFor<TProp>(Expression<Func<TModel, TProp>> property, bool showLabel = true, int xs = 0, int sm = 0, int md = 0, int lg = 0, int xl = 0)
+        public IHtmlContent EnumDropdownFor<TProp>(Expression<Func<TModel, TProp>> property, bool showLabel = true, int xs = 0, int sm = 0, int md = 0, int lg = 0, int xl = 0)
         {
             var metadata = ExpressionMetadataProvider.FromLambdaExpression(property, new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary()), Helper.MetadataProvider);
             Type propertyType = Nullable.GetUnderlyingType(metadata.ModelType) ?? metadata.ModelType;
@@ -249,7 +248,7 @@ namespace DND.Common.Helpers
         }
 
 
-        public HtmlTag EnumRadioButtonListFor<TProp>(Expression<Func<TModel, TProp>> property, Boolean inline, int xs = 0, int sm = 0, int md = 0, int lg = 0, int xl = 0)
+        public IHtmlContent EnumRadioButtonListFor<TProp>(Expression<Func<TModel, TProp>> property, Boolean inline, int xs = 0, int sm = 0, int md = 0, int lg = 0, int xl = 0)
         {
             var metadata = ExpressionMetadataProvider.FromLambdaExpression(property, new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary()), Helper.MetadataProvider);
             Type propertyType = Nullable.GetUnderlyingType(metadata.ModelType) ?? metadata.ModelType;
@@ -329,12 +328,12 @@ namespace DND.Common.Helpers
             return null != displayAttributes && displayAttributes.Length > 0 ? displayAttributes[0].Name : e.ToString();
         }
 
-        public HtmlTag FormGroupForGeneric<TProp>(Expression<Func<TModel, TProp>> property)
+        public IHtmlContent FormGroupForGeneric<TProp>(Expression<Func<TModel, TProp>> property)
         {
             return FormGroupFor(property, true, 12, 12, 12, 12, 12, null, null);
         }
 
-        public HtmlTag FormGroupFor<TProp>(Expression<Func<TModel, TProp>> property, bool showLabel = true, int xs = 0, int sm = 0, int md = 0, int lg = 0, int xl = 0, string dependentBinding = null, string typeAhead = null)
+        public IHtmlContent FormGroupFor<TProp>(Expression<Func<TModel, TProp>> property, bool showLabel = true, int xs = 0, int sm = 0, int md = 0, int lg = 0, int xl = 0, string dependentBinding = null, string typeAhead = null)
         {
             var metadata = ExpressionMetadataProvider.FromLambdaExpression(property, new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary()), Helper.MetadataProvider);
             Type propertyType = Nullable.GetUnderlyingType(metadata.ModelType) ?? metadata.ModelType;
@@ -348,7 +347,7 @@ namespace DND.Common.Helpers
 
             var formGroup = CommonFormGroupFor(property, showLabel, xs, sm, md, lg, xl, dependentBinding);
 
-            var labelText = metadata.Metadata.DisplayName ?? name.Humanize(LetterCasing.Title);
+            var labelText = metadata.Metadata.DisplayName;
 
             if (propertyType.IsEnum && !showLabel)
             {
@@ -450,7 +449,7 @@ namespace DND.Common.Helpers
                 }
 
                 var placeholder = metadata.Metadata.Placeholder ??
-                                  ((metadata.Metadata.DisplayName ?? name.Humanize(LetterCasing.Title)) + "...");
+                                  ((metadata.Metadata.DisplayName) + "...");
                 //Creates <input ng-model="expression"
                 //		   class="form-control" name="Name" type="text" >
                 var input = new HtmlTag(tagName)
@@ -519,7 +518,7 @@ namespace DND.Common.Helpers
                 formGroup.Attr("ng-hide", "!" + dependentBinding);
             }
 
-            var labelText = metadata.Metadata.DisplayName ?? name.Humanize(LetterCasing.Title);
+            var labelText = metadata.Metadata.DisplayName;
 
 
             //Creates <label class="form-control-label" for="Name">Name</label>

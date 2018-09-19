@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DND.Common.Alerts;
 using DND.Common.Controllers;
-using DND.Common.Email;
 using DND.Common.Helpers;
+using DND.Common.Infrastructure.Email;
 using DND.Domain.CMS.MailingLists.Dtos;
 using DND.Interfaces.CMS.ApplicationServices;
 using DND.Web.CMS.MVCImplementation.MailingList.Models;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace DND.Web.Controllers.Admin
 {
     [Route("admin/cms/mailing-list")]
-    public class AdminMailingListController : BaseEntityControllerAuthorize<MailingListDto, MailingListDto, MailingListDto, MailingListDeleteDto, IMailingListApplicationService>
+    public class AdminMailingListController : MvcControllerEntityAuthorizeBase<MailingListDto, MailingListDto, MailingListDto, MailingListDeleteDto, IMailingListApplicationService>
     {
         public AdminMailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)
              : base(true, service, mapper, emailService, configuration)

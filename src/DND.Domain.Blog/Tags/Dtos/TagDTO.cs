@@ -1,18 +1,14 @@
-﻿using DND.Domain.Models;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+﻿using AutoMapper;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DND.Common.Implementation.Dtos;
-using AutoMapper;
-using DND.Domain.Blog.Locations.Dtos;
 
 namespace DND.Domain.Blog.Tags.Dtos
 {
-    public class TagDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class TagDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         public TagDto()
         {

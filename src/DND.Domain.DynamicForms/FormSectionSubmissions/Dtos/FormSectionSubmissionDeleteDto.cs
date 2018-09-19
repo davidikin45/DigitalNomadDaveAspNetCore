@@ -1,12 +1,11 @@
-﻿using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Domain.DynamicForms.FormSectionSubmissions;
+﻿using DND.Common.Domain.Dtos;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.FormSectionSubmissions.Dtos
 {
-    public class FormSectionSubmissionDeleteDto : BaseDtoAggregateRoot<int>,  IMapFrom<FormSectionSubmission>, IMapTo<FormSectionSubmission>
+    public class FormSectionSubmissionDeleteDto : DtoAggregateRootBase<int>,  IMapFrom<FormSectionSubmission>, IMapTo<FormSectionSubmission>
     {
         public FormSectionSubmissionDeleteDto()
         {

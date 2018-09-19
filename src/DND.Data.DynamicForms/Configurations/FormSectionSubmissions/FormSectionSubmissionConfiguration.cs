@@ -1,18 +1,18 @@
-﻿using DND.Domain.DynamicForms.Forms;
-using DND.Domain.DynamicForms.FormSectionSubmissions;
-using System.Data.Entity.ModelConfiguration;
+﻿using DND.Domain.DynamicForms.FormSectionSubmissions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.DynamicForms.Configurations.FormSectionSubmissions
 {
     public class FormSectionSubmissionConfiguration
-           : EntityTypeConfiguration<FormSectionSubmission>
+           : IEntityTypeConfiguration<FormSectionSubmission>
     {
-        public FormSectionSubmissionConfiguration()
+        public void Configure(EntityTypeBuilder<FormSectionSubmission> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);                 
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
         }
     }
 }

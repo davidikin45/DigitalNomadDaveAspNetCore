@@ -1,8 +1,8 @@
-﻿using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Infrastructure.Interfaces.ApplicationServices;
 
 namespace DND.Interfaces.DynamicForms.ApplicationServices
 {
-    public interface IDynamicFormsApplicationServices : IBaseApplicationService
+    public interface IDynamicFormsApplicationServices : IApplicationService
     {
         IFormApplicationService FormApplicationService { get; }
         IFormSubmissionApplicationService FormSubmissionApplicationService { get; }

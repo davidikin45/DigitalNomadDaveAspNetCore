@@ -1,12 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DND.Common.Infrastructure
 {
@@ -64,7 +60,7 @@ namespace DND.Common.Infrastructure
             //first make sure we have a value for the ffexe file setting
             if (string.IsNullOrEmpty(_ffExe))
             {
-                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg-ExeLocation");
+                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg_ExeLocation");
                 if (o == null)
                 {
                     throw new Exception("Could not find the location of the ffmpeg exe file.  The path for ffmpeg.exe " +
@@ -93,7 +89,7 @@ namespace DND.Common.Infrastructure
             //now see if we have a temporary place to work
             if (string.IsNullOrEmpty(_WorkingPath))
             {
-                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg-WorkingPath");
+                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg_WorkingPath");
                 if (o != null)
                 {
                     _WorkingPath = o.ToString();

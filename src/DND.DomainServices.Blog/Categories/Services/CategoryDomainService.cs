@@ -1,9 +1,9 @@
-﻿using DND.Common.Implementation.DomainServices;
-using DND.Common.Implementation.Validation;
+﻿using DND.Common.DomainServices;
 using DND.Common.Infrastructure;
-using DND.Common.Interfaces.UnitOfWork;
+using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
+using DND.Common.Infrastructure.Validation;
+using DND.Data;
 using DND.Domain.Blog.Categories;
-using DND.Interfaces.Blog.Data;
 using DND.Interfaces.Blog.DomainServices;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DND.DomainServices.Categories.Services
 {
-    public class CategoryDomainService : BaseEntityDomainService<IBlogDbContext, Category>, ICategoryDomainService
+    public class CategoryDomainService : DomainServiceEntityBase<ApplicationContext, Category>, ICategoryDomainService
     {
         public CategoryDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)
@@ -24,28 +24,28 @@ namespace DND.DomainServices.Categories.Services
 
         public async Task<Category> GetCategoryAsync(string categorySlug, CancellationToken cancellationToken)
         {
-            using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
+            using (var UoW = UnitOfWorkFactory.CreateReadOnly(UnitOfWorkScopeOption.JoinExisting))
             {
-                return await UoW.ReadOnlyRepository<IBlogDbContext, Category>().GetFirstAsync(c => c.UrlSlug.Equals(categorySlug)).ConfigureAwait(false);
+                return await UoW.ReadOnlyRepository<ApplicationContext, Category>().GetFirstAsync(cancellationToken, c => c.UrlSlug.Equals(categorySlug)).ConfigureAwait(false);
             }
         }
 
         public async override Task<IEnumerable<Category>> GetAllAsync(CancellationToken cancellationToken, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, int? pageNo = null, int? pageSize = null, bool includeAllCompositionRelationshipProperties = false, bool includeAllCompositionAndAggregationRelationshipProperties = false, params Expression<Func<Category, object>>[] includeProperties)
         {
-            using (var UoW = UnitOfWorkFactory.CreateReadOnly(BaseUnitOfWorkScopeOption.JoinExisting, cancellationToken))
+            using (var UoW = UnitOfWorkFactory.CreateReadOnly(UnitOfWorkScopeOption.JoinExisting))
             {
-                return await UoW.ReadOnlyRepository<IBlogDbContext, Category>().GetAllAsync(o => o.OrderBy(c => c.Name)).ConfigureAwait(false);
+                return await UoW.ReadOnlyRepository<ApplicationContext, Category>().GetAllAsync(cancellationToken, o => o.OrderBy(c => c.Name)).ConfigureAwait(false);
             }
         }
 
-        public async override Task<Result<Category>> CreateAsync(Category entity, string createdBy, CancellationToken cancellationToken)
+        public async override Task<Result<Category>> CreateAsync(CancellationToken cancellationToken, Category entity, string createdBy)
         {
             if (string.IsNullOrEmpty(entity.UrlSlug))
             {
                 entity.UrlSlug = UrlSlugger.ToUrlSlug(entity.Name);
             }
 
-            return await base.CreateAsync(entity, createdBy, cancellationToken).ConfigureAwait(false);
+            return await base.CreateAsync(cancellationToken, entity, createdBy).ConfigureAwait(false);
         }
 
     }

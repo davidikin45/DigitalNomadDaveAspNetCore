@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props" Condition="Exists('..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props')" />
   <Import Project="..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props" Condition="Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props')" />
   <Import Project="..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props" Condition="Exists('..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props')" />
   <Import Project="..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.props" Condition="Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.props')" />
   <Import Project="..\..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props" Condition="Exists('..\..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props')" />
-  <Import Project="..\..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -46,6 +46,9 @@
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AspNetCoreRateLimit, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AspNetCoreRateLimit.2.1.0\lib\net46\AspNetCoreRateLimit.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
@@ -79,9 +82,6 @@
     <Reference Include="Hangfire.Core, Version=1.6.20.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hangfire.Core.1.6.20\lib\net45\Hangfire.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Hangfire.SQLite, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Hangfire.SQLite.1.4.2\lib\net45\Hangfire.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="Hangfire.SqlServer, Version=1.6.20.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hangfire.SqlServer.1.6.20\lib\net45\Hangfire.SqlServer.dll</HintPath>
     </Reference>
@@ -97,11 +97,23 @@
     <Reference Include="IdentityModel, Version=3.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\IdentityModel.3.9.0\lib\net452\IdentityModel.dll</HintPath>
     </Reference>
+    <Reference Include="IdentityModel.AspNetCore.OAuth2Introspection, Version=3.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\IdentityModel.AspNetCore.OAuth2Introspection.3.4.1\lib\net461\IdentityModel.AspNetCore.OAuth2Introspection.dll</HintPath>
+    </Reference>
+    <Reference Include="IdentityServer4.AccessTokenValidation, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\IdentityServer4.AccessTokenValidation.2.6.0\lib\net461\IdentityServer4.AccessTokenValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="Marvin.Cache.Headers, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Marvin.Cache.Headers.2.0.1\lib\netstandard1.6\Marvin.Cache.Headers.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Antiforgery, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Antiforgery.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Antiforgery.dll</HintPath>
@@ -117,6 +129,12 @@
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Authentication.Core, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Authentication.Core.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authentication.Facebook, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Authentication.Facebook.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authentication.Google, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Authentication.Google.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Google.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Authentication.JwtBearer, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Authentication.JwtBearer.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll</HintPath>
@@ -154,8 +172,14 @@
     <Reference Include="Microsoft.AspNetCore.DataProtection.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.DataProtection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.DataProtection.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.Diagnostics, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Diagnostics.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Diagnostics.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Diagnostics.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Diagnostics.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Diagnostics.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.HostFiltering, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.HostFiltering.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.HostFiltering.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Hosting, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Hosting.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.dll</HintPath>
@@ -186,6 +210,12 @@
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Http.Features, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Http.Features.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.HttpOverrides, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.HttpOverrides.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.HttpOverrides.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.HttpsPolicy, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.HttpsPolicy.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.HttpsPolicy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Identity, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Identity.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Identity.dll</HintPath>
@@ -219,6 +249,9 @@
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Mvc.Formatters.Json, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Mvc.Formatters.Json.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Formatters.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Mvc.Formatters.Xml.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Formatters.Xml.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Mvc.Localization, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Mvc.Localization.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Localization.dll</HintPath>
@@ -256,6 +289,9 @@
     <Reference Include="Microsoft.AspNetCore.ResponseCaching.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.ResponseCaching.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.ResponseCaching.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.ResponseCompression, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.ResponseCompression.2.1.1\lib\net461\Microsoft.AspNetCore.ResponseCompression.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Rewrite, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Rewrite.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Rewrite.dll</HintPath>
     </Reference>
@@ -264,6 +300,24 @@
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Routing.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Routing.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Routing.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.IISIntegration, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Server.IISIntegration.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Server.IISIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Server.Kestrel.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Core, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Server.Kestrel.Core.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Https, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Server.Kestrel.Https.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.2.1.3\lib\netstandard2.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.SignalR, Version=1.0.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.SignalR.1.0.3\lib\netstandard2.0\Microsoft.AspNetCore.SignalR.dll</HintPath>
@@ -279,9 +333,6 @@
     </Reference>
     <Reference Include="Microsoft.AspNetCore.StaticFiles, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.StaticFiles.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.StaticFiles.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.TestHost, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNetCore.TestHost.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.TestHost.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.WebSockets, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.WebSockets.2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.WebSockets.dll</HintPath>
@@ -304,23 +355,23 @@
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.1.0\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.2.1.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.Abstractions.2.1.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.Abstractions.2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.InMemory, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.InMemory.2.1.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.InMemory, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.InMemory.2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.InMemory.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.Relational.2.1.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.Relational.2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Sqlite, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.Sqlite.Core.2.1.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Sqlite.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Sqlite, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.Sqlite.Core.2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Sqlite.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.SqlServer.2.1.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer, Version=2.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.EntityFrameworkCore.SqlServer.2.1.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Caching.Abstractions.2.1.2\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
@@ -337,6 +388,9 @@
     <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Binder.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.CommandLine, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.CommandLine.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Configuration.EnvironmentVariables, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Configuration.EnvironmentVariables.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.EnvironmentVariables.dll</HintPath>
     </Reference>
@@ -345,6 +399,9 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration.Json, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Configuration.Json.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.UserSecrets, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.2.1.1\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
@@ -445,22 +502,17 @@
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.4.0.0\lib\net451\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualStudio.Web.BrowserLink, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Web.BrowserLink.2.1.1\lib\netstandard2.0\Microsoft.VisualStudio.Web.BrowserLink.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq, Version=4.9.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.9.0\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -471,6 +523,18 @@
     </Reference>
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.2.7.1\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.AspNetCore, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.AspNetCore.2.1.1\lib\netstandard2.0\Serilog.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Extensions.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.Extensions.Logging.2.0.2\lib\net461\Serilog.Extensions.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Settings.Configuration, Version=2.6.1.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Serilog.Settings.Configuration.2.6.1\lib\net451\Serilog.Settings.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCLRaw.batteries_green, Version=1.1.11.121, Culture=neutral, PublicKeyToken=a84b7dcfb1391f7f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
@@ -513,29 +577,14 @@
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Console, Version=4.0.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.Data.SqlClient, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Data.SqlClient.4.5.1\lib\net461\System.Data.SqlClient.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.109.1\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Data.SQLite.EF6.1.0.109.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.EF6.Migrations, Version=1.0.104.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Data.SQLite.EF6.Migrations.1.0.104\lib\System.Data.SQLite.EF6.Migrations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Data.SQLite.Linq.1.0.109.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Diagnostics.DiagnosticSource.4.5.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
@@ -577,7 +626,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.IO.Pipelines, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IO.Pipelines.4.5.0\lib\netstandard2.0\System.IO.Pipelines.dll</HintPath>
+      <HintPath>..\..\packages\System.IO.Pipelines.4.5.1\lib\netstandard2.0\System.IO.Pipelines.dll</HintPath>
     </Reference>
     <Reference Include="System.Linq">
       <HintPath>..\..\packages\System.Linq.4.3.0\lib\net463\System.Linq.dll</HintPath>
@@ -596,11 +645,9 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Net.WebSockets.WebSocketProtocol, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Net.WebSockets.WebSocketProtocol.4.5.1\lib\netstandard2.0\System.Net.WebSockets.WebSocketProtocol.dll</HintPath>
     </Reference>
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
@@ -640,13 +687,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
     <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Cryptography.Algorithms">
       <HintPath>..\..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Cng, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Cryptography.Cng.4.5.0\lib\net47\System.Security.Cryptography.Cng.dll</HintPath>
     </Reference>
     <Reference Include="System.Security.Cryptography.Encoding">
       <HintPath>..\..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
@@ -670,7 +719,6 @@
       <HintPath>..\..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Text.Encoding.CodePages, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Encoding.CodePages.4.5.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
@@ -687,16 +735,13 @@
       <HintPath>..\..\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Transactions" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -716,12 +761,6 @@
       <HintPath>..\..\packages\System.Xml.XPath.XDocument.4.3.0\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebDriver, Version=3.14.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Selenium.WebDriver.3.14.0\lib\net45\WebDriver.dll</HintPath>
-    </Reference>
-    <Reference Include="WebDriver.Support, Version=3.14.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Selenium.Support.3.14.0\lib\net45\WebDriver.Support.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -731,7 +770,7 @@
     <Compile Include="ActionResults\HTMLActionResult.cs" />
     <Compile Include="ActionResults\RSSActionResult.cs" />
     <Compile Include="ActionResults\JavaScriptResult.cs" />
-    <Compile Include="ActionResults\UnprocessableEntityObjectResult.cs" />
+    <Compile Include="ActionResults\UnprocessableEntityAngularObjectResult.cs" />
     <Compile Include="Alerts\Alert.cs" />
     <Compile Include="Alerts\AlertDecoratorResult.cs" />
     <Compile Include="Alerts\AlertExtensions.cs" />
@@ -742,51 +781,46 @@
     <Compile Include="APIs\Google.cs" />
     <Compile Include="APIs\Instagram.cs" />
     <Compile Include="APIs\IPLocator.cs" />
-    <Compile Include="AppSettings\AppSettings.cs" />
-    <Compile Include="AppSettings\DisplayConventionsDisableOptions.cs" />
+    <Compile Include="AppStartupWithIdentity.cs" />
+    <Compile Include="Authorization\AnonymousRequirement.cs" />
+    <Compile Include="Authorization\AuthorizationPolicyProvider.cs" />
+    <Compile Include="Authorization\AuthorizeIfAny.cs" />
     <Compile Include="AutoMapper\AutoMapperConfiguration.cs" />
+    <Compile Include="ConfigureMvcOptions.cs" />
     <Compile Include="Constants\CMS.cs" />
     <Compile Include="Constants\Folders.cs" />
     <Compile Include="Constraints\ActionVersionConstraint.cs" />
     <Compile Include="Constraints\MobileSelector.cs" />
     <Compile Include="Constraints\RouteVersionConstraint.cs" />
     <Compile Include="Constraints\TokenConstraint.cs" />
-    <Compile Include="Controllers\Admin\AdminFileManagerController.cs" />
-    <Compile Include="Controllers\Admin\BaseAdminController.cs" />
-    <Compile Include="Controllers\Api\ApiScopes.cs" />
-    <Compile Include="Controllers\Api\BaseEntityReadOnlyWebApiControllerAuthorize.cs" />
-    <Compile Include="Controllers\Api\BaseEntityReadOnlyWebApiController.cs" />
-    <Compile Include="Controllers\Api\BaseEntityWebApiControllerAuthorize.cs" />
-    <Compile Include="Controllers\Api\BaseEntityWebApiController.cs" />
-    <Compile Include="Controllers\Api\BaseWebApiController.cs" />
-    <Compile Include="Controllers\Api\BaseWebApiControllerAuthorize.cs" />
-    <Compile Include="Controllers\Api\TestController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\BaseControllerAuthorize.cs" />
-    <Compile Include="Controllers\BaseEntityControllerAuthorize.cs" />
-    <Compile Include="Controllers\BaseEntityController.cs" />
-    <Compile Include="Controllers\BaseEntityReadOnlyControllerAuthorize.cs" />
-    <Compile Include="Controllers\BaseEntityReadOnlyController.cs" />
-    <Compile Include="Controllers\BaseHomeController.cs" />
-    <Compile Include="Controllers\BaseTemplateController.cs" />
-    <Compile Include="Controllers\File\BaseFileMetadataControllerAuthorize.cs" />
-    <Compile Include="Controllers\File\BaseFileMetadataReadOnlyControllerAuthorize.cs" />
-    <Compile Include="Controllers\File\BaseJpegMetadataControllerAuthorize.cs" />
-    <Compile Include="Controllers\File\BaseJpegMetadataReadOnlyControllerAuthorize.cs" />
-    <Compile Include="Controllers\Folder\BaseFolderMetadataControllerAuthorize.cs" />
-    <Compile Include="Controllers\Folder\BaseFolderMetadataReadOnlyControllerAuthorize.cs" />
+    <Compile Include="Controllers\Admin\MvcControllerAdminFileManagerAuthorizeBase.cs" />
+    <Compile Include="Controllers\Admin\MvcControllerAdminAuthorizeBase.cs" />
+    <Compile Include="Controllers\Angular\MvcControllerAngularServerTemplateBase.cs" />
+    <Compile Include="Controllers\Api\Authentication\ApiControllerRegistrationBase.cs" />
+    <Compile Include="Controllers\Api\Authentication\ApiControllerAuthenticationBase.cs" />
+    <Compile Include="Controllers\Api\ApiControllerEntityReadOnlyAuthorizeBase.cs" />
+    <Compile Include="Controllers\Api\ApiControllerEntityReadOnlyBase.cs" />
+    <Compile Include="Controllers\Api\ApiControllerEntityAuthorizeBase.cs" />
+    <Compile Include="Controllers\Api\ApiControllerEntityBase.cs" />
+    <Compile Include="Controllers\Api\ApiControllerBase.cs" />
+    <Compile Include="Controllers\Api\ApiControllerAuthorizeBase.cs" />
+    <Compile Include="Controllers\Api\ApiTestController.cs" />
+    <Compile Include="Controllers\MvcControllerBase.cs" />
+    <Compile Include="Controllers\MvcControllerAuthorizeBase.cs" />
+    <Compile Include="Controllers\MvcControllerEntityAuthorizeBase.cs" />
+    <Compile Include="Controllers\MvcControllerEntityBase.cs" />
+    <Compile Include="Controllers\MvcControllerEntityReadOnlyAuthorizeBase.cs" />
+    <Compile Include="Controllers\MvcControllerEntityReadOnlyBase.cs" />
+    <Compile Include="Controllers\MvcControllerHomeBase.cs" />
+    <Compile Include="Controllers\Angular\MvcControllerAngular6ServerTemplateBase.cs" />
+    <Compile Include="Controllers\File\MvcControllerFileMetadataAuthorizeBase.cs" />
+    <Compile Include="Controllers\File\MvcControllerFileMetadataReadOnlyAuthorizeBase.cs" />
+    <Compile Include="Controllers\File\MvcControllerJpegMetadataAuthorizeBase.cs" />
+    <Compile Include="Controllers\File\MvcControllerJpegMetadataReadOnlyAuthorizeBase.cs" />
+    <Compile Include="Controllers\Folder\MvcControllerFolderMetadataAuthorizeBase.cs" />
+    <Compile Include="Controllers\Folder\MvcControllerFolderMetadataReadOnlyAuthorizeBase.cs" />
     <Compile Include="Conventions\BindName.cs" />
     <Compile Include="Conventions\ControllerVersion.cs" />
-    <Compile Include="Cryptography\AsnKeyBuilder.cs" />
-    <Compile Include="Cryptography\AsnKeyParser.cs" />
-    <Compile Include="Cryptography\BerDecodeError.cs" />
-    <Compile Include="Cryptography\BigInteger.cs" />
-    <Compile Include="Cryptography\EncryptedPacket.cs" />
-    <Compile Include="Cryptography\enums.cs" />
-    <Compile Include="Cryptography\Helpers.cs" />
-    <Compile Include="Cryptography\Crypto.cs" />
-    <Compile Include="Cryptography\Program.cs" />
-    <Compile Include="Cryptography\RSAParameterTraits.cs" />
     <Compile Include="DependencyInjection\Autofac\AutofacExtensions.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsSignalRHubModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsMetadataModule.cs" />
@@ -796,16 +830,17 @@
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacAutomapperModule.cs" />
     <Compile Include="DependencyInjection\Autofac\Modules\AutofacConventionsDependencyInjectionModule.cs" />
     <Compile Include="DomainEvents\ActionEvents.cs" />
-    <Compile Include="DomainEvents\DbContext\DbContextDomainEvents.cs" />
-    <Compile Include="DomainEvents\DbContext\DbContextDomainEventsInMemoryAdapter.cs" />
-    <Compile Include="DomainEvents\DbContext\DbContextDomainEventsEFCoreAdapter.cs" />
-    <Compile Include="DomainEvents\DbContext\DbContextDomainEventsEF6Adapter.cs" />
-    <Compile Include="DomainEvents\EntityEvents.cs" />
-    <Compile Include="DomainEvents\DbContext\IDbContextDomainEvents.cs" />
-    <Compile Include="DomainEvents\IDomainEvents.cs" />
-    <Compile Include="DomainEvents\IFirePropertyUpdatedEvents.cs" />
-    <Compile Include="DomainEvents\IDomainEventHandler.cs" />
-    <Compile Include="DomainEvents\IDomainEvent.cs" />
+    <Compile Include="Dtos\Authentication\AuthenticateDto.cs" />
+    <Compile Include="Dtos\Authentication\ForgotPasswordDto.cs" />
+    <Compile Include="Dtos\Authentication\RegisterDto.cs" />
+    <Compile Include="Dtos\Authentication\ResetPasswordDto.cs" />
+    <Compile Include="Dtos\FileMetadataDto.cs" />
+    <Compile Include="Dtos\FolderMetadataDto.cs" />
+    <Compile Include="Dtos\JpegMetadataDto.cs" />
+    <Compile Include="Dtos\LinkDto.cs" />
+    <Compile Include="Dtos\WebApiPagedRequestDto.cs" />
+    <Compile Include="Dtos\WebApiPagedResponseDto.cs" />
+    <Compile Include="Dtos\WebApiPagedSearchOrderingRequestDto.cs" />
     <Compile Include="DynamicForms\DynamicFormContainer.cs" />
     <Compile Include="DynamicForms\DynamicFormNavigation.cs" />
     <Compile Include="DynamicForms\DynamicFormsValueProviderKeys.cs" />
@@ -820,15 +855,10 @@
     <Compile Include="Dynamic\DynamicTypeDescriptorWrapper.cs" />
     <Compile Include="Dynamic\Expando.cs" />
     <Compile Include="Dynamic\PropertyBag.cs" />
-    <Compile Include="Email\EmailMessage.cs" />
-    <Compile Include="Email\EmailServiceFileSystem.cs" />
-    <Compile Include="Email\EmailServiceOptions.cs" />
-    <Compile Include="Email\EmailServiceSmtp.cs" />
-    <Compile Include="Email\IEmailService.cs" />
-    <Compile Include="Enums\ValidationMode.cs" />
     <Compile Include="Enums\ResourceUriType.cs" />
     <Compile Include="Enums\CropType.cs" />
     <Compile Include="Extensions\AutomapperExtensions.cs" />
+    <Compile Include="Extensions\EmailTemplateCallbackExtensions.cs" />
     <Compile Include="Extensions\ExpandObjectExtensions.cs" />
     <Compile Include="Extensions\ExpandoObjectExtensions.cs" />
     <Compile Include="Extensions\HostingEnvironmentExtensions.cs" />
@@ -859,6 +889,7 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ViewResultExtensions.cs" />
     <Compile Include="Filters\AjaxRequestAttribute.cs" />
+    <Compile Include="Middleware\ApiErrorHandler.cs" />
     <Compile Include="Filters\ExceptionHandlingFilter.cs" />
     <Compile Include="Filters\FeatureAuthFilter.cs" />
     <Compile Include="Filters\ModelValidationFilter.cs" />
@@ -870,13 +901,7 @@
     <Compile Include="Helpers\AsyncHelper.cs" />
     <Compile Include="Helpers\BoolParser.cs" />
     <Compile Include="Helpers\BootstrapHelper.cs" />
-    <Compile Include="Helpers\Cryptography\AsymmetricEncryptionHelper.cs" />
     <Compile Include="Helpers\Cryptography\BlockChain.cs" />
-    <Compile Include="Helpers\Cryptography\Hashing.cs" />
-    <Compile Include="Helpers\Cryptography\Hmac.cs" />
-    <Compile Include="Helpers\Cryptography\HybridEncryptionHelper.cs" />
-    <Compile Include="Helpers\Cryptography\RSADigitalSignature.cs" />
-    <Compile Include="Helpers\Cryptography\SigningKey.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\ExpressionHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
@@ -906,102 +931,21 @@
     <Compile Include="HttpClientREST\HttpResponseExtensions.cs" />
     <Compile Include="HttpClientREST\JsonContent.cs" />
     <Compile Include="HttpClientREST\PatchContent.cs" />
-    <Compile Include="Implementation\ApplicationServices\BaseApplicationService.cs" />
-    <Compile Include="Implementation\ApplicationServices\BaseEntityApplicationService.cs" />
-    <Compile Include="Implementation\ApplicationServices\BaseEntityReadOnlyApplicationService.cs" />
-    <Compile Include="Implementation\Data\DbContextFactoryProducerSingleton.cs" />
-    <Compile Include="Implementation\Data\DesignTimeDbContextFactoryBase.cs" />
-    <Compile Include="Implementation\Data\RelationshipHelper.cs" />
-    <Compile Include="Implementation\DTOs\BaseDtoAggregateRoot.cs" />
-    <Compile Include="Implementation\DTOs\BaseDto.cs" />
-    <Compile Include="Implementation\DTOs\ActionDto.cs" />
-    <Compile Include="Implementation\DTOs\FolderMetadataDto.cs" />
-    <Compile Include="Implementation\DTOs\FileMetadataDto.cs" />
-    <Compile Include="Implementation\DTOs\JpegMetadataDto.cs" />
-    <Compile Include="Implementation\DTOs\LinkDTO.cs" />
-    <Compile Include="Implementation\DTOs\PatchDto.cs" />
-    <Compile Include="Implementation\DTOs\WebApiPagedSearchOrderingRequestDto.cs" />
-    <Compile Include="Implementation\DTOs\WebApiPagedRequestDto.cs" />
-    <Compile Include="Implementation\DTOs\WebApiPagedResponseDto.cs" />
-    <Compile Include="Implementation\Models\BaseEntityAggregateRoot.cs" />
-    <Compile Include="Implementation\Models\BaseApplicationUser.cs" />
-    <Compile Include="Implementation\Models\BaseEntity.cs" />
-    <Compile Include="Implementation\Models\BaseEntityAggregateRootAuditable.cs" />
-    <Compile Include="Implementation\Models\BaseEntityAuditable.cs" />
-    <Compile Include="Implementation\Models\BaseObjectValidatable.cs" />
-    <Compile Include="Implementation\Models\BaseValueObject.cs" />
-    <Compile Include="Implementation\Models\JpegMetadata.cs" />
     <Compile Include="Implementation\Models\EnumDatasourceAttribute.cs" />
-    <Compile Include="Implementation\Data\BaseDbConfigurationSQLite.cs" />
-    <Compile Include="Implementation\Data\BaseDbConfiguration.cs" />
-    <Compile Include="Implementation\Data\BaseDbContextTransaction.cs" />
-    <Compile Include="Implementation\Data\BaseDbContextTransactionAspNetCore.cs" />
-    <Compile Include="Implementation\Data\BaseDropCreateForceDatabaseInitializer.cs" />
-    <Compile Include="Implementation\Data\BaseDbContext.cs" />
-    <Compile Include="Implementation\Data\BaseIdentityDbContext.cs" />
-    <Compile Include="Implementation\Data\ConnectionStrings.cs" />
-    <Compile Include="Implementation\Data\DbConfigurationSwitcher.cs" />
-    <Compile Include="Implementation\Data\DbContextTimestamps.cs" />
-    <Compile Include="Implementation\Data\InMemory\InMemoryDbContext.cs" />
-    <Compile Include="Implementation\Data\InMemory\Accessor.cs" />
-    <Compile Include="Implementation\Data\InMemory\AfterSave.cs" />
-    <Compile Include="Implementation\Data\InMemory\BeforeSave.cs" />
-    <Compile Include="Implementation\Data\InMemory\ConcurrentList.cs" />
-    <Compile Include="Implementation\Data\InMemory\GuidIdentityStrategy.cs" />
-    <Compile Include="Implementation\Data\InMemory\IdentityStrategy.cs" />
-    <Compile Include="Implementation\Data\InMemory\IntegerIdentityStrategy.cs" />
-    <Compile Include="Implementation\Data\InMemory\IIdentityStrategy.cs" />
-    <Compile Include="Implementation\Data\InMemory\LongIdentityStrategy.cs" />
-    <Compile Include="Implementation\Data\InMemory\ObjectRepresentation.cs" />
-    <Compile Include="Implementation\Data\InMemory\ObjectRepresentationRepository.cs" />
-    <Compile Include="Implementation\Data\InMemory\ShortIdentityStrategy.cs" />
-    <Compile Include="Implementation\Data\InMemory\TestDbAsyncQueryProvider.cs" />
-    <Compile Include="Implementation\Repository\GenericRepositoryFactory.cs" />
-    <Compile Include="Implementation\Repository\EntityFramework\GenericEFReadOnlyRepository.cs" />
-    <Compile Include="Implementation\Repository\EntityFramework\GenericEFRepository.cs" />
-    <Compile Include="Implementation\Repository\FileSystemRepositoryFactory.cs" />
-    <Compile Include="Implementation\Repository\File\BaseFileReadOnlyRepository.cs" />
-    <Compile Include="Implementation\Repository\File\BaseFileRepository.cs" />
-    <Compile Include="Implementation\Repository\File\BaseJpegMetadataReadOnlyRepository.cs" />
-    <Compile Include="Implementation\Repository\File\BaseJpegMetadataRepository.cs" />
-    <Compile Include="Implementation\Repository\Folder\BaseFolderReadOnlyRepository.cs" />
-    <Compile Include="Implementation\Repository\Folder\BaseFolderRepository.cs" />
-    <Compile Include="Implementation\DomainServices\BaseDomainService.cs" />
-    <Compile Include="Implementation\DomainServices\BaseEntityDomainService.cs" />
-    <Compile Include="Implementation\DomainServices\BaseEntityReadOnlyDomainService.cs" />
     <Compile Include="Implementation\Services\CookieService.cs" />
     <Compile Include="Implementation\Services\FeatureService.cs" />
     <Compile Include="Implementation\Services\HelperGeneratorService.cs" />
     <Compile Include="Implementation\Services\TypeHelperService.cs" />
-    <Compile Include="Implementation\UnitOfWork\AmbientDbContextLocator.cs" />
-    <Compile Include="Implementation\UnitOfWork\AmbientUnitOfWorkSuppressor.cs" />
-    <Compile Include="Implementation\UnitOfWork\DbContextCollection.cs" />
-    <Compile Include="Implementation\UnitOfWork\UnitOfWorkScopeFactory.cs" />
-    <Compile Include="Implementation\UnitOfWork\Scopes\UnitOfWorkReadOnlyScope.cs" />
-    <Compile Include="Implementation\UnitOfWork\Scopes\BaseUnitOfWorkScope.cs" />
-    <Compile Include="Implementation\UnitOfWork\Scopes\UnitOfWorkTransactionalScope.cs" />
-    <Compile Include="Implementation\Validation\DatabaseValidationErrors.cs" />
-    <Compile Include="Implementation\Validation\DbEntityValidationResultBetter.cs" />
-    <Compile Include="Implementation\Validation\EntityValidationErrors.cs" />
-    <Compile Include="Implementation\Validation\GeneralError.cs" />
-    <Compile Include="Implementation\Validation\PropertyError.cs" />
-    <Compile Include="Implementation\Validation\Result.cs" />
-    <Compile Include="Implementation\Validation\ResultExtensions.cs" />
-    <Compile Include="Implementation\Validation\ServiceValidationErrors.cs" />
-    <Compile Include="Implementation\Validation\ValidationErrors.cs" />
-    <Compile Include="Implementation\Validation\ValidationHelper.cs" />
     <Compile Include="Infrastructure\Activators.cs" />
     <Compile Include="Infrastructure\ArrayModelBinder.cs" />
     <Compile Include="Infrastructure\AspNetCoreExtensions.cs" />
-    <Compile Include="DomainEvents\DomainEvents.cs" />
     <Compile Include="Infrastructure\DoesNotContainPasswordValidator.cs" />
     <Compile Include="Infrastructure\EmailConfirmationTokenProvider.cs" />
     <Compile Include="Infrastructure\NonValidatingValidator.cs" />
     <Compile Include="Infrastructure\PaginatedList.cs" />
     <Compile Include="Infrastructure\ConfigurationManager.cs" />
     <Compile Include="Infrastructure\DbGeographyModelBinderProvider.cs" />
-    <Compile Include="Infrastructure\CustomViewLocator.cs" />
-    <Compile Include="Infrastructure\DbContextInitializer.cs" />
+    <Compile Include="ViewExpander.cs" />
     <Compile Include="Infrastructure\ffMpeg.cs" />
     <Compile Include="Infrastructure\HttpContext.cs" />
     <Compile Include="Infrastructure\ModelMetadataProvider.cs" />
@@ -1009,82 +953,21 @@
     <Compile Include="Infrastructure\Server.cs" />
     <Compile Include="Infrastructure\StaticProperties.cs" />
     <Compile Include="Infrastructure\UrlSlugger.cs" />
-    <Compile Include="Interfaces\ApplicationServices\IBaseApplicationService.cs" />
-    <Compile Include="Interfaces\Automapper\IHaveCustomMappings.cs" />
-    <Compile Include="Interfaces\Automapper\IMapFrom.cs" />
-    <Compile Include="Interfaces\Automapper\IMapTo.cs" />
-    <Compile Include="Interfaces\Data\IDbContextAbstractFactory.cs" />
-    <Compile Include="Interfaces\Data\IDbContextAbstractFactoryProducerSingleton.cs" />
-    <Compile Include="Interfaces\Dtos\IBaseDto.cs" />
-    <Compile Include="Interfaces\Dtos\IBaseDtoConcurrencyAware.cs" />
-    <Compile Include="Interfaces\Models\IBaseEntity.cs" />
-    <Compile Include="Interfaces\Models\IBaseEntityConcurrencyAware.cs" />
-    <Compile Include="Interfaces\Models\IBaseEntityAggregateRoot.cs" />
-    <Compile Include="Interfaces\Models\IBaseEntityAuditable.cs" />
-    <Compile Include="Interfaces\Models\IBaseObjectValidatable.cs" />
-    <Compile Include="Interfaces\Data\IBaseDbContext.cs" />
-    <Compile Include="Interfaces\Data\IBaseDbContextTransaction.cs" />
-    <Compile Include="Interfaces\Repository\IBaseFileReadOnlyRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseFileRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseFolderReadOnlyRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseFolderRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseJpegMetadataReadOnlyRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseJpegMetadataRepository.cs" />
-    <Compile Include="Interfaces\Repository\IGenericEFReadOnlyRepository.cs" />
-    <Compile Include="Interfaces\Repository\IGenericEFRepository.cs" />
-    <Compile Include="Interfaces\Repository\IBaseRepositoryFactory.cs" />
-    <Compile Include="Interfaces\Repository\IFileSystemRepositoryFactory.cs" />
-    <Compile Include="Interfaces\DomainServices\IBaseDomainService.cs" />
-    <Compile Include="Interfaces\ApplicationServices\IBaseEntityApplicationService.cs" />
-    <Compile Include="Interfaces\ApplicationServices\IBaseEntityReadOnlyApplicationService.cs" />
-    <Compile Include="Interfaces\DomainServices\IBaseEntityDomainService.cs" />
-    <Compile Include="Interfaces\DomainServices\IBaseEntityReadOnlyDomainService.cs" />
     <Compile Include="Interfaces\Services\ICookieService.cs" />
     <Compile Include="Interfaces\Services\IFeatureService.cs" />
     <Compile Include="Interfaces\Services\IHtmlHelperGeneratorService.cs" />
     <Compile Include="Interfaces\Services\ITypeHelperService.cs" />
-    <Compile Include="Interfaces\UnitOfWork\BaseUnitOfWorkScopeOption.cs" />
-    <Compile Include="Interfaces\UnitOfWork\IBaseAmbientDbContextLocator.cs" />
-    <Compile Include="Interfaces\UnitOfWork\IBaseUnitOfWorkContextCollection.cs" />
-    <Compile Include="Interfaces\UnitOfWork\IBaseUnitOfWorkScopeFactory.cs" />
-    <Compile Include="Interfaces\UnitOfWork\Scopes\IBaseUnitOfWorkReadOnlyScope.cs" />
-    <Compile Include="Interfaces\UnitOfWork\Scopes\IBaseUnitOfWorkScope.cs" />
-    <Compile Include="Interfaces\UnitOfWork\Scopes\IBaseUnitOfWorkTransactionalScope.cs" />
-    <Compile Include="Interfaces\Validation\IBaseError.cs" />
-    <Compile Include="Interfaces\Validation\IValidationErrors.cs" />
     <Compile Include="JwtTokens\JwtTokenHelper.cs" />
+    <Compile Include="Middleware\ApiGlobalExceptionHandlerExtension.cs" />
     <Compile Include="Middleware\BaseRangeRequestHandler.cs" />
-    <Compile Include="Middleware\ApiErrorHandlingMiddleware.cs" />
     <Compile Include="Middleware\BasicAuthMiddleware.cs" />
     <Compile Include="Middleware\ContentHandlerMiddleware.cs" />
     <Compile Include="Middleware\MiddlewareExtensions.cs" />
+    <Compile Include="Middleware\PingServerExtensions.cs" />
     <Compile Include="Middleware\RedirectToWwwRule.cs" />
     <Compile Include="Middleware\RequestTasksMiddleware.cs" />
     <Compile Include="Middleware\ResponseCachingCustomMiddleware.cs" />
     <Compile Include="Middleware\RewriteOptionsExtensions.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\HtmlByNameConventionFilter.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\LabelTextConventionFilter.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\TextAreaByNameConventionFilter.cs" />
-    <Compile Include="ModelMetadataCustom\ConventionFilters\TextboxPlaceholderConventionFilter.cs" />
-    <Compile Include="ModelMetadataCustom\DatabaseAttributes\DbWhereClauseAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\BooleanYesNoButtonsAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\BooleanTrueFalseButtonsAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\FileAcceptAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\HelpTextAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\NoLabelAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\BooleanTextButtonAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\SliderAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\IconLinkAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\HeadingAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\OffsetRightAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\DataboundAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\AlignRightAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DynamicFormsAttributes\SubmitButtonAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\MultilineTextAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\ReadOnlyAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\ReadOnlyHiddenInputAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\DisplayAttributes\RenderAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\FileAttributes\FileSaveAttribute.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\ConfigurationExtensions.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\Extension.cs" />
     <Compile Include="ModelMetadataCustom\Providers\CustomModelMetadataProviderSingleton.cs" />
@@ -1102,16 +985,11 @@
     <Compile Include="ModelMetadataCustom\FluentMetadata\ModelMetadataConfiguration.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\MvcOptionsSetup.cs" />
     <Compile Include="ModelMetadataCustom\FluentMetadata\TestConfig.cs" />
-    <Compile Include="ModelMetadataCustom\Interfaces\IDisplayMetadataAttribute.cs" />
-    <Compile Include="ModelMetadataCustom\Interfaces\IDisplayMetadataFilter.cs" />
-    <Compile Include="ModelMetadataCustom\LinkAttributes\ActionLinkAttribute.cs" />
     <Compile Include="ModelMetadataCustom\Providers\ConventionsMetadataProvider.cs" />
     <Compile Include="ModelMetadataCustom\Providers\AttributeMetadataProvider.cs" />
     <Compile Include="ModelMetadataCustom\Providers\ICustomModelMetadataProviderSingleton.cs" />
-    <Compile Include="ModelMetadataCustom\ValidationAttributes\NumberValidatorAttribute.cs" />
     <Compile Include="OpenIDConnect\OpenIDConnectClient.cs" />
-    <Compile Include="Processes\SimpeProcess.cs" />
-    <Compile Include="Processes\ChildProcessTracker.cs" />
+    <Compile Include="ProgramBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\AssemblyProviderOptions.cs" />
     <Compile Include="Reflection\TypeFinder.cs" />
@@ -1123,10 +1001,11 @@
     <Compile Include="Scripts\IScriptManagerSingleton.cs" />
     <Compile Include="Scripts\ScriptManagerSingleton.cs" />
     <Compile Include="SignalRHubs\ChatHub.cs" />
-    <Compile Include="SignalRHubs\ApiNotificationHub.cs" />
     <Compile Include="SignalRHubs\ISignalRHubMap.cs" />
     <Compile Include="SignalRHubs\NotificationHub.cs" />
     <Compile Include="SignalRHubs\SignalRHubMapper.cs" />
+    <Compile Include="AppStartup.cs" />
+    <Compile Include="AppStartupBasic.cs" />
     <Compile Include="Swagger\SwaggerModelExamples.cs" />
     <Compile Include="Swagger\SwaggerAssignSecurityRequirements.cs" />
     <Compile Include="TagHelpers\ActiveTagHelper.cs" />
@@ -1134,22 +1013,6 @@
     <Compile Include="TagHelpers\BodyTagHelper.cs" />
     <Compile Include="TagHelpers\ProgressBarTagHelper.cs" />
     <Compile Include="TagHelpers\YouTubeEmbedTagHelper.cs" />
-    <Compile Include="Tasks\IRunAfterEachRequest.cs" />
-    <Compile Include="Tasks\IRunAfterApplicationConfiguration.cs" />
-    <Compile Include="Tasks\IRunOnWebHostStartup.cs" />
-    <Compile Include="Tasks\IRunOnEachRequest.cs" />
-    <Compile Include="Tasks\IRunOnError.cs" />
-    <Compile Include="Tasks\TaskRunner.cs" />
-    <Compile Include="Testing\BaseIntegrationTestDbSetup.cs" />
-    <Compile Include="Testing\DotNetRun\BaseDotNetRunFixture.cs" />
-    <Compile Include="Testing\Fakes\FakeSingleDbContextFactory.cs" />
-    <Compile Include="Testing\Isolated.cs" />
-    <Compile Include="Testing\Selenium\BaseSeleniumChromeBrowserFixture.cs" />
-    <Compile Include="Testing\Selenium\SeleniumPage.cs" />
-    <Compile Include="Testing\TestDbAsyncQueryProvider.cs" />
-    <Compile Include="Testing\TestHelper.cs" />
-    <Compile Include="Testing\TestServer\BaseTestServerFixture.cs" />
-    <Compile Include="ModelMetadataCustom\ValidationAttributes\AgeValidatorAttribute.cs" />
     <Compile Include="Validation\CustomCollectionValidationStrategy.cs" />
     <Compile Include="Validation\CustomComplexObjectValidatorExtension.cs" />
     <Compile Include="Validation\CustomComplexObjectValidationStrategy.cs" />
@@ -1157,7 +1020,6 @@
     <Compile Include="Validation\InheritanceValidationAttributeAdapterProvider.cs" />
     <Compile Include="Validation\InheritanceValidationAttributeAdapterProviderExtension.cs" />
     <Compile Include="Validation\CustomValidationVisitor.cs" />
-    <Compile Include="ModelMetadataCustom\ValidationAttributes\LimitCountAttribute.cs" />
     <Compile Include="ViewComponents\BaseViewComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1177,37 +1039,43 @@
       <Project>{c4dea306-79e2-4154-9f46-ec1d22530850}</Project>
       <Name>KeyCore.NET</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DND.Common.Data\DND.Common.Data.csproj">
+      <Project>{C9B5D500-9C77-451C-AB98-A8E7966EE20D}</Project>
+      <Name>DND.Common.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Common.Domain\DND.Common.Domain.csproj">
+      <Project>{10C01BD4-DC4E-49FE-8E94-5BA329EFCF06}</Project>
+      <Name>DND.Common.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Common.Infrastructure\DND.Common.Infrastructure.csproj">
+      <Project>{7A9B9FA9-4D57-4FA9-BF94-668CDD35F648}</Project>
+      <Name>DND.Common.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Startup\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.10.1\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets'))" />
     <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets'))" />
     <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets'))" />
     <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.DiaSymReader.Native.1.7.0\build\Microsoft.DiaSymReader.Native.props'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.props'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Selenium.WebDriver.ChromeDriver.2.41.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Selenium.WebDriver.ChromeDriver.2.41.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props'))" />
-    <Error Condition="!Exists('..\..\packages\System.Data.SQLite.Core.1.0.109.1\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.Data.SQLite.Core.1.0.109.1\build\net46\System.Data.SQLite.Core.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets'))" />
   </Target>
+  <Import Project="..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
+  <Import Project="..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets" Condition="Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets')" />
+  <Import Project="..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets" Condition="Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets')" />
+  <Import Project="..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets" Condition="Exists('..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.targets')" />
   <Import Project="..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
   <Import Project="..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets" Condition="Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" />
   <Import Project="..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets" Condition="Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" />
-  <Import Project="..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Import Project="..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets" Condition="Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets')" />
-  <Import Project="..\..\packages\Selenium.WebDriver.ChromeDriver.2.41.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\..\packages\Selenium.WebDriver.ChromeDriver.2.41.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
-  <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.109.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.109.1\build\net46\System.Data.SQLite.Core.targets')" />
-  <Import Project="..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets" Condition="Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.targets')" />
 </Project>

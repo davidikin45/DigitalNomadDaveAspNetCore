@@ -1,8 +1,9 @@
-﻿using DND.Common.Helpers;
-using DND.Common.Interfaces.Data;
+﻿using DND.Common.Data.Helpers;
+using DND.Common.Helpers;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace DND.Common.Extensions
 {
     public static class DropdownExtensions
     {
-        public static IList<SelectListItem> GetSelectListFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, bool selectedOnly = false) where TIDbContext : IBaseDbContext
+        public static IList<SelectListItem> GetSelectListFromDatabase<TDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, bool selectedOnly = false) where TDbContext : DbContext
         {
             var modelExplorer = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider);
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = modelExplorer.Metadata;
@@ -132,7 +133,7 @@ namespace DND.Common.Extensions
 
                         Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { dropdownModelType });
 
-                        IEnumerable<Object> query = db.Queryable(dropdownModelType);
+                        IEnumerable<Object> query = db.Queryable(dropdownModelType).Cast<Object>();
 
                         if (selectedOnly)
                         {
@@ -223,9 +224,9 @@ namespace DND.Common.Extensions
             return matches.Cast<Match>().Select(m => m.Value).Distinct().ToList();
         }
 
-        public static IHtmlContent DropDownListFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, object htmlAttributes = null) where TIDbContext : IBaseDbContext
+        public static IHtmlContent DropDownListFromDatabase<TDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, object htmlAttributes = null) where TDbContext : DbContext
         {
-            IList<SelectListItem> items = GetSelectListFromDatabase<TIDbContext>(htmlHelper, propertyName);
+            IList<SelectListItem> items = GetSelectListFromDatabase<TDbContext>(htmlHelper, propertyName);
 
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider).Metadata;
             Type propertyType = GetNonNullableModelType(metadata);
@@ -240,9 +241,9 @@ namespace DND.Common.Extensions
             }
         }
 
-        public static IHtmlContent CheckboxFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, object htmlAttributes = null) where TIDbContext : IBaseDbContext
+        public static IHtmlContent CheckboxFromDatabase<TDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, object htmlAttributes = null) where TDbContext : DbContext
         {
-            IList<SelectListItem> items = GetSelectListFromDatabase<TIDbContext>(htmlHelper, propertyName);
+            IList<SelectListItem> items = GetSelectListFromDatabase<TDbContext>(htmlHelper, propertyName);
 
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider).Metadata;
             Type propertyType = GetNonNullableModelType(metadata);
@@ -264,9 +265,9 @@ namespace DND.Common.Extensions
             }
         }
 
-        public static IHtmlContent CheckboxButtonsFromDatabase<TIDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, bool groupRadioButtons, object htmlAttributes = null, object labelCheckboxHtmlAttributes = null, object labelRadioHtmlAttributes = null) where TIDbContext : IBaseDbContext
+        public static IHtmlContent CheckboxButtonsFromDatabase<TDbContext>(this IHtmlHelper<dynamic> htmlHelper, string propertyName, bool groupRadioButtons, object htmlAttributes = null, object labelCheckboxHtmlAttributes = null, object labelRadioHtmlAttributes = null) where TDbContext : DbContext
         {
-            IList<SelectListItem> items = GetSelectListFromDatabase<TIDbContext>(htmlHelper, propertyName);
+            IList<SelectListItem> items = GetSelectListFromDatabase<TDbContext>(htmlHelper, propertyName);
 
             Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata metadata = ExpressionMetadataProvider.FromStringExpression(propertyName, htmlHelper.ViewData, htmlHelper.MetadataProvider).Metadata;
             Type propertyType = GetNonNullableModelType(metadata);

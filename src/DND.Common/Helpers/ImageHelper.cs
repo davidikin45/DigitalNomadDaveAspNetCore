@@ -1,6 +1,6 @@
 ﻿using DND.Common.Extensions;
-using DND.Common.Implementation.Models;
-using DND.Common.Implementation.Repository.File;
+using DND.Common.Implementation.Repository.FileSystem.File;
+using DND.Common.Infrastructure.Model;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -225,7 +225,7 @@ namespace DND.Common.Helpers
         {
             if(directoryInfo != null)
             {
-                var repository = new BaseFileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg");
+                var repository = new FileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg");
                 return repository.GetMain();
             }
             return null;           
@@ -235,7 +235,7 @@ namespace DND.Common.Helpers
         {
             if (directoryInfo != null)
             {
-                var repository = new BaseFileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4",".avi");
+                var repository = new FileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4",".avi");
                 return repository.GetMain();
             }
             return null;
@@ -245,7 +245,7 @@ namespace DND.Common.Helpers
         {
             if (directoryInfo != null)
             {
-                var repository = new BaseFileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4",".avi",".txt");
+                var repository = new FileRepository(directoryInfo.FullName, true, "*.*", default(CancellationToken), ".jpg", ".jpeg", ".mp4",".avi",".txt");
                 return repository.GetMain();
             }
             return null;

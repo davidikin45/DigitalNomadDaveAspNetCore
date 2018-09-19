@@ -1,16 +1,12 @@
-﻿using Hangfire;
-using Hangfire.SQLite;
+﻿using DND.Common.Hangfire;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using DND.Common.Hangfire;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
-using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Middleware
 {
@@ -111,11 +107,6 @@ namespace DND.Common.Middleware
         public static IServiceCollection AddHangfireSqlServer(this IServiceCollection services, string connectionString)
         {
             return services.AddHangfire(config => config.UseSqlServerStorage(connectionString));
-        }
-
-        public static IServiceCollection AddHangfireSqlite(this IServiceCollection services, string connectionString)
-        {
-            return services.AddHangfire(config => config.UseSQLiteStorage(connectionString));
         }
 
         public static IApplicationBuilder UseHangfire(this IApplicationBuilder builder)

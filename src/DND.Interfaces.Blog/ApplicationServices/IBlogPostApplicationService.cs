@@ -1,15 +1,12 @@
-﻿using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Infrastructure.Interfaces.ApplicationServices;
 using DND.Domain.Blog.BlogPosts.Dtos;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Interfaces.Blog.ApplicationServices
 {
-    public interface IBlogPostApplicationService : IBaseEntityApplicationService<BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto>
+    public interface IBlogPostApplicationService : IApplicationServiceEntity<BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto>
     {
         Task<BlogPostDto> GetPostAsync(int year, int month, string titleSlug, CancellationToken cancellationToken);
 

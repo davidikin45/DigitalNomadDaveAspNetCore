@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Alerts
 {
@@ -111,6 +109,10 @@ namespace DND.Common.Alerts
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public IDictionary<string, List<AngularFormattedValidationError>> ModelState { get; private set; }
 
+        public override string ToString()
+        {
+           return JsonConvert.SerializeObject(this);
+        }
     }
 
     public class AngularFormattedValidationError

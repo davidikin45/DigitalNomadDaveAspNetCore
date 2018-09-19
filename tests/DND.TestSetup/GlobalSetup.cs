@@ -6,9 +6,9 @@ namespace DND.UnitTests
     public class GlobalSetup
     {
         //Allows scope of Db to be controlled independently of the context.
-        public static IdentityDbContext CreateIdentityContextInMemory(string dbIdentifier)
+        public static IdentityContext CreateIdentityContextInMemory(string dbIdentifier)
         {
-            var db = new IdentityDbContext(new DbContextOptionsBuilder<IdentityDbContext>().UseInMemoryDatabase(databaseName: dbIdentifier).Options);
+            var db = new IdentityContext(new DbContextOptionsBuilder<IdentityContext>().UseInMemoryDatabase(databaseName: dbIdentifier).Options);
             return db;
         }
     }

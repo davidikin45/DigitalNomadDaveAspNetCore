@@ -34,17 +34,17 @@
     var nextLocationName = "";
     var nextLocationLatitude = "";
     var nextLocationLongitude = "";
-    using (var db = Html.Database<IBlogDbContext>())
+    using (var db = Html.Database<ApplicationContext>())
     {
         var currentLocation = db.Locations.Where(l => l.CurrentLocation).OrderByDescending(l => l.DateModified).FirstOrDefault();
         currentLocationName = currentLocation != null ? currentLocation.Name : "";
-        currentLocationLatitude = currentLocation != null ? currentLocation.GPSLocation.Latitude.ToString() : "";
-        currentLocationLongitude = currentLocation != null ? currentLocation.GPSLocation.Longitude.ToString() : "";
+        currentLocationLatitude = currentLocation != null ? currentLocation.Latitude.ToString() : "";
+        currentLocationLongitude = currentLocation != null ? currentLocation.Longitude.ToString() : "";
 
         var nextLocation = db.Locations.Where(l => l.NextLocation).OrderByDescending(l => l.DateModified).FirstOrDefault();
         nextLocationName = nextLocation != null ? nextLocation.Name : "";
-        nextLocationLatitude = nextLocation != null ? nextLocation.GPSLocation.Latitude.ToString() : "";
-        nextLocationLongitude = nextLocation != null ? nextLocation.GPSLocation.Longitude.ToString() : "";
+        nextLocationLatitude = nextLocation != null ? nextLocation.Latitude.ToString() : "";
+        nextLocationLongitude = nextLocation != null ? nextLocation.Longitude.ToString() : "";
     }
 }
 

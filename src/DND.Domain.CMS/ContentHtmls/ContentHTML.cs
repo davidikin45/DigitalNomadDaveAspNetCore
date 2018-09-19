@@ -1,13 +1,13 @@
-﻿using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.CMS.ContentHtmls
 {
-    public class ContentHtml : BaseEntityAggregateRootAuditable<string>
+    public class ContentHtml : EntityAggregateRootAuditableBase<string>
     {
 
         public string HTML { get; set; }
@@ -19,10 +19,10 @@ namespace DND.Domain.CMS.ContentHtmls
             yield break;
         }
 
-        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

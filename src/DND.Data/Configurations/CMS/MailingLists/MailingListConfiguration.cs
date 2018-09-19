@@ -1,21 +1,22 @@
 ﻿using DND.Domain.CMS.MailingLists;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.CMS.MailingLists
 {
     public class MailingListConfiguration
-           : EntityTypeConfiguration<MailingList>
+           : IEntityTypeConfiguration<MailingList>
     {
-        public MailingListConfiguration()
+        public void Configure(EntityTypeBuilder<MailingList> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
-            Property(p => p.Email)
+            builder.Property(p => p.Email)
                  .IsRequired();
         }
     }

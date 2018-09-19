@@ -1,12 +1,11 @@
-﻿using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Domain.DynamicForms.Sections;
+﻿using DND.Common.Domain.Dtos;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.Sections.Dtos
 {
-    public class SectionDeleteDto : BaseDtoAggregateRoot<int>,  IMapFrom<Section>, IMapTo<Section>
+    public class SectionDeleteDto : DtoAggregateRootBase<int>,  IMapFrom<Section>, IMapTo<Section>
     {
         public SectionDeleteDto()
         {

@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
-using DND.Common.Email;
+using DND.Common.Dtos;
 using DND.Common.Filters;
 using DND.Common.Helpers;
-using DND.Common.Implementation.Dtos;
 using DND.Common.Infrastructure;
+using DND.Common.Infrastructure.Email;
 using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Infrastructure.Constants;
 using DND.Interfaces.Blog.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,8 +18,8 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
 {
     [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Gallery" })]
     [Route("gallery")]
-    public class GalleryController : BaseController
-	{
+    public class GalleryController : MvcControllerBase
+    {
         private readonly IBlogApplicationService _blogService;
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
@@ -35,7 +33,7 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
 
         [ResponseCache(CacheProfileName = "Cache24HourParams")]
         [Route("")]
-        public async Task<ActionResult> Index(int page = 1, int pageSize = 20, string orderColumn = nameof(DirectoryInfo.LastWriteTime), string orderType = OrderByType.Descending, string search = "")
+        public async Task<ActionResult> Index(int page = 1, int pageSize = 20, string orderColumn = nameof(DirectoryInfo.LastWriteTime), string orderType = "desc", string search = "")
 		{
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -69,7 +67,7 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
 
                 return View(response);
             }
-            catch (Exception ex)
+            catch
             {
                 return HandleReadException();
             }
@@ -107,7 +105,7 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
 
                 return View(response);
             }
-            catch (Exception ex)
+            catch
             {
                 return HandleReadException();
             }
@@ -136,7 +134,7 @@ namespace DND.Web.MVCImplementation.Gallery.Controllers
 
                 return PartialView("_GalleryAjax",response);
             }
-            catch (Exception ex)
+            catch
             {
                 return HandleReadException();
             }

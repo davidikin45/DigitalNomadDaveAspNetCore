@@ -1,5 +1,5 @@
-﻿using DND.Common.Implementation.DomainServices;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.DomainServices;
+using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
 using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.SearchEngines;
 using DND.Interfaces.FlightSearch.DomainServices;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DND.DomainServices.FlightSearch.Currencies.Services
 {
-    public class CurrencyDomainService : BaseDomainService, ICurrencyDomainService
+    public class CurrencyDomainService : DomainServiceBase, ICurrencyDomainService
     {
         public CurrencyDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)

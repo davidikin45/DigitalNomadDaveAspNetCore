@@ -1,16 +1,13 @@
-﻿using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
-using System;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DND.Domain.CMS.Testimonials
 {
-    public class Testimonial : BaseEntityAggregateRootAuditable<int>
+    public class Testimonial : EntityAggregateRootAuditableBase<int>
     {
         //[Required, StringLength(100)]
         public string Source
@@ -27,10 +24,10 @@ namespace DND.Domain.CMS.Testimonials
             return errors;
         }
 
-        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

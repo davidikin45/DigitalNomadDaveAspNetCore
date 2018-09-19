@@ -1,9 +1,9 @@
-﻿using DND.Domain.Skyscanner.Model;
+﻿using DND.Common.Extensions;
+using DND.Common.Helpers;
+using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.SearchEngines.Interfaces;
 using DND.DomainServices.Skyscanner.Model;
 using Newtonsoft.Json;
-using DND.Common.Extensions;
-using DND.Common.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -394,7 +394,7 @@ namespace DND.DomainServices.SearchEngines
 
                 return pollURL;
             }
-            catch(Exception ex)
+            catch
             {
                 throw;
             }
@@ -474,7 +474,7 @@ namespace DND.DomainServices.SearchEngines
             {
                 throw;
             }
-            catch(Exception ex)
+            catch
             {             
                 throw;
             }
@@ -589,7 +589,7 @@ namespace DND.DomainServices.SearchEngines
                                     File.WriteAllText(_dataPath + Settings.CurrenciesServiceFileName, responseString);
                                 }
                             }
-                            catch (Exception ex)
+                            catch
                             {
 
                             }
@@ -674,7 +674,7 @@ namespace DND.DomainServices.SearchEngines
                                     File.WriteAllText(_dataPath + Settings.LocalesServiceFileName, responseString);
                                 }
                             }
-                            catch (Exception ex)
+                            catch
                             {
 
                             }
@@ -764,7 +764,7 @@ namespace DND.DomainServices.SearchEngines
                                     File.WriteAllText(_dataPath + Settings.GeoServiceFileName, responseString);
                                 }
                             }
-                            catch (Exception ex)
+                            catch
                             {
 
                             }
@@ -839,7 +839,7 @@ namespace DND.DomainServices.SearchEngines
 
         public async Task<Region> GetRegionByIDAsync(string id, CancellationToken cancellationToken)
         {
-            return null;
+            return await Task.FromResult<Region>(null);
         }
 
         public async Task<Continent> GetContinentByIDAsync(string id, CancellationToken cancellationToken)
@@ -901,7 +901,7 @@ namespace DND.DomainServices.SearchEngines
                                     File.WriteAllText(_dataPath+Settings.CountriesServiceFileName.ReplaceFromDictionary(variablesPath), responseString);
                                 }
                             }
-                            catch(Exception ex)
+                            catch
                             {
                                 
                             }
@@ -920,7 +920,7 @@ namespace DND.DomainServices.SearchEngines
                             }
                             else
                             {
-                                Boolean noCurrency = true;
+
                             }
                         }
 

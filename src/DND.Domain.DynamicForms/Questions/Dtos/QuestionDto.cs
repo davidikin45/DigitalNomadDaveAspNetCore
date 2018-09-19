@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.DynamicForms.LookupTables;
 using DND.Domain.DynamicForms.LookupTables.Dtos;
 using DND.Domain.DynamicForms.Questions.Enums;
@@ -13,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.Questions.Dtos
 {
-    public class QuestionDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class QuestionDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         [Required]
         public string FieldName { get; set; }

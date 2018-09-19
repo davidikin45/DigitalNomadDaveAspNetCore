@@ -1,12 +1,12 @@
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.Automapper;
+using DND.Common.Domain;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.FlightSearch.Search.Dtos;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.ViewModels
 {
-    public class LocationAutoSuggestForm : BaseObjectValidatable, IMapTo<LocationAutoSuggestRequestDto>
+    public class LocationAutoSuggestForm : ObjectValidatableBase, IMapTo<LocationAutoSuggestRequestDto>
     {
         [Required]
         public string Locale { get; set; }

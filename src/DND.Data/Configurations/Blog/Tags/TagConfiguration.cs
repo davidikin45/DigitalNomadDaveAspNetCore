@@ -1,29 +1,30 @@
 ﻿using DND.Domain.Blog.Tags;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.Blog.Tags
 {
     public class TagConfiguration
-           : EntityTypeConfiguration<Tag>
+           : IEntityTypeConfiguration<Tag>
     {
-        public TagConfiguration()
+        public void Configure(EntityTypeBuilder<Tag> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
-            Property(p => p.Name)
+            builder.Property(p => p.Name)
                  .IsRequired()
                 .HasMaxLength(50);
 
-            Property(p => p.UrlSlug)
+            builder.Property(p => p.UrlSlug)
                 .IsRequired()
                .HasMaxLength(50);
 
-            Property(p => p.Description)
+            builder.Property(p => p.Description)
               .IsRequired()
              .HasMaxLength(200);
         }

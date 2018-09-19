@@ -1,6 +1,5 @@
 ﻿using DND.Common.Testing.Selenium;
 using DND.TestSetup;
-using System;
 using TechTalk.SpecFlow;
 using Xunit;
 

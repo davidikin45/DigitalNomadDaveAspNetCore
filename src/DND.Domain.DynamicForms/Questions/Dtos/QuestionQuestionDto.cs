@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.DynamicForms.Questions.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -11,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.Questions.Dtos
 {
-    public class QuestionQuestionDto : BaseDto<int>, IMapFrom<QuestionQuestion>, IMapTo<QuestionQuestion>
+    public class QuestionQuestionDto : DtoBase<int>, IMapFrom<QuestionQuestion>, IMapTo<QuestionQuestion>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]

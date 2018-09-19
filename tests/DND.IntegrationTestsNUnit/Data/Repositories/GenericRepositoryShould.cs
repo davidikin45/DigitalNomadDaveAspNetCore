@@ -1,22 +1,15 @@
-﻿using DND.Common.Extensions;
-using DND.Common.Implementation.Data;
-using DND.Common.Implementation.Repository;
-using DND.Common.Implementation.Repository.EntityFramework;
-using DND.Common.Implementation.UnitOfWork;
-using DND.Common.Interfaces.Data;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Data.Helpers;
+using DND.Common.Data.Repository.GenericEF;
+using DND.Common.Extensions;
 using DND.Common.Testing;
 using DND.Data;
 using DND.Domain.Blog.Categories;
-using DND.Infrastructure;
-using DND.Interfaces.Blog.Data;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.IntegrationTestsNUnit.Data.Repositories
 {
@@ -24,45 +17,36 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
     public class GenericRepositoryShould
     {
         private StringBuilder _logBuilder = new StringBuilder();
-        private string _log;
-        private ApplicationDbContext _context;
+        private ApplicationContext _context;
         private GenericEFRepository<Category> _repository;
-        private IUnitOfWorkReadOnlyScope _ouw;
 
         [SetUp]
         public void SetUp()
         {
-            var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
-            _context = new ApplicationDbContext(connectionString, true);
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
+            ApplicationContext.LoggerFactory.ConfigureLogging(s => BuildLogString(s), LoggingCategories.SQL);
 
-            var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(_context) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
-            _ouw = uowFactory.CreateReadOnly();
-            _repository = new GenericEFRepository<Category>(_context, _ouw);
-            _log = "";
+            _repository = new GenericEFRepository<Category>(_context);
             _logBuilder = new StringBuilder();
-            SetupLogging();
-        }
-
-        private void WriteLog()
-        {
-            Debug.WriteLine(_log);
-        }
-
-        private void SetupLogging()
-        {
-            _context.Database.Log = BuildLogString;
         }
 
         private void BuildLogString(string message)
         {
-            _logBuilder.Append(message);
-            _log = _logBuilder.ToString();
+            _logBuilder.AppendLine(message);
+        }
+
+        private string _log
+        {
+            get
+            {
+                return _logBuilder.ToString();
+            }
         }
 
         [TearDown]
         public void TearDown()
         {
-            _ouw.Dispose();
             _context.Dispose();
         }
 
@@ -70,31 +54,23 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
 
         public void Seed()
         {
-            var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
-            using (var con = new ApplicationDbContext(connectionString, true))
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            using (var seedContext = TestHelper.GetContext<ApplicationContext>(connectionString, false))
             {
-                var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(con) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
+                var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
+                seedContext.Categories.Add(cata);
+                seedContext.Categories.Add(catb);
 
-                using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
-                {
-                    var repo = new GenericEFRepository<Category>(con, unitOfWork);
+                seedContext.SaveChanges();
 
-                    var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
-                    var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
-                    repo.Insert(cata);
-                    repo.Insert(catb);
-
-                    con.SaveChanges();
-
-                    insertedCategoryId = cata.Id;
-
-                }
+                insertedCategoryId = cata.Id;
             }
+            _logBuilder = new StringBuilder();
         }
 
-
         [Test, Isolated]
-        public async Task InsertDeleteUpdate()
+        public void InsertDeleteUpdate()
         {
             Seed();
 
@@ -104,11 +80,11 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             //Insert, Delete, Update
             var cat3 = new Category() { Name = "Category 3", Description = "Category 3", UrlSlug = "category-3" };
             _repository.Insert(cat3);
-            _repository.Delete(cat2.Id);
+           _repository.Delete(cat2.Id);
             cat1.Name = "Category 4";
             _repository.Update(cat1);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //Update, Delete, Insert
         }
 
@@ -117,8 +93,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         {
             Seed();
             _repository.GetById(1);
-            WriteLog();
-            Assert.IsTrue(_log.Contains("FROM [dbo].[Category"));
+            Assert.IsTrue(_log.Contains("FROM [Category"));
         }
 
         [Test, Isolated]
@@ -127,7 +102,6 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             Seed();
             var ids = new List<object>() { 1, 2 };
             var entity = _repository.GetByIdsNoTracking(ids);
-            WriteLog();
             Assert.AreEqual(0, _context.CachedEntityCount());
         }
 
@@ -144,7 +118,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         {
             Seed();
             var entity = _repository.GetCount();
-            WriteLog();
+  
             Assert.AreEqual(0, _context.CachedEntityCount());
         }
 
@@ -153,7 +127,6 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         {
             Seed();
             var exists = _repository.ExistsNoTracking();
-            WriteLog();
             Assert.AreEqual(0, _context.CachedEntityCount());
         }
 
@@ -162,7 +135,6 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         {
             Seed();
             var exists = _repository.Exists();
-            WriteLog();
             Assert.AreNotEqual(0, _context.CachedEntityCount());
         }
 
@@ -173,7 +145,6 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _repository.Insert(category);
             _repository.Delete(category);
             _context.SaveChanges();
-            WriteLog();
             Assert.IsTrue(!_log.Contains("Insert"));
         }
 
@@ -182,9 +153,9 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         {
             Seed();
             var exists = _repository.ExistsById(insertedCategoryId);
+            Assert.AreEqual(1, _context.CachedEntityCount());
             var category = _repository.GetById(insertedCategoryId);
             Assert.AreEqual(1, _context.CachedEntityCount());
-            WriteLog();
             Assert.AreEqual(1, _log.CountStringOccurrences("SELECT"));
         }
 
@@ -200,10 +171,9 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _repository.Update(category);
             _context.SaveChanges();
 
-            WriteLog();
 
             //Select only once
-            Assert.AreEqual(1, _log.CountStringOccurrences("[Description] AS [Description]"));
+            Assert.AreEqual(1, _log.CountStringOccurrences("[Description]"));
             //Update only updated fields
             Assert.IsTrue(!_log.Contains("[Description] = "));
         }
@@ -231,10 +201,8 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
 
             _context.SaveChanges();
 
-            WriteLog();
-
             //Inital non tracking select + select from update
-            Assert.AreEqual(2, _log.CountStringOccurrences("[Description] AS [Description]"));
+            Assert.AreEqual(2, _log.CountStringOccurrences("[Description]"));
             //Update only updated fields
             Assert.IsTrue(!_log.Contains("[Description] = "));
         }
@@ -243,8 +211,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         public void CanQueryWithSinglePredicate()
         {
             _repository.Get(c => c.Name.StartsWith("L"));
-            WriteLog();
-            Assert.IsTrue(_log.Contains("'L%'"));
+            Assert.IsTrue(_log.Contains("N'L' + N'%'"));
         }
 
         [Test, Isolated]
@@ -253,15 +220,13 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             var date = new DateTime(2001, 1, 1);
             _repository
                .Get(c => c.Name.StartsWith("L") && c.DateCreated >= date);
-            WriteLog();
-            Assert.IsTrue(_log.Contains("'L%'") && _log.Contains("1/01/2001"));
+            Assert.IsTrue(_log.Contains("N'L' + N'%'") && _log.Contains("2001-01-01"));
         }
 
         [Test, Isolated]
         public void ComposedOnAllListExecutedInMemory()
         {
             _repository.GetAll().Where(c => c.Name == "Julie").ToList();
-            WriteLog();
             Assert.IsFalse(_log.Contains("Julie"));
         }
 
@@ -271,7 +236,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             var category = new Category { Name = "test", Description = "test", UrlSlug = "test" };
             _repository.Insert(category);
             _context.SaveChanges();
-            WriteLog();
+ 
             Assert.AreNotEqual(0, category.Id);
         }
     }

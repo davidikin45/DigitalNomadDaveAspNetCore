@@ -1,7 +1,6 @@
 ﻿using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.Skyscanner.Model;
 using Newtonsoft.Json;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,7 +129,7 @@ namespace DND.Services.FlightSearch.BusinessObjects
 
             int ascDesc = 1; //asc
 
-            if (SortOrder != null && SortOrder.ToLower() == OrderByType.Descending)
+            if (SortOrder != null && SortOrder.ToLower() == "desc")
             {
                 ascDesc = -1; //desc
             }

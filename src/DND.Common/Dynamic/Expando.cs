@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Dynamic;
+using System.Linq;
 using System.Reflection;
-using System.ComponentModel;
-using System.Linq.Expressions;
 
 namespace DND.Common.Dynamic
 {
@@ -288,7 +286,7 @@ namespace DND.Common.Dynamic
                     // try to get from properties collection first
                     return Properties[key];
                 }
-                catch (KeyNotFoundException ex)
+                catch (KeyNotFoundException)
                 {
                     // try reflection on instanceType
                     object result = null;

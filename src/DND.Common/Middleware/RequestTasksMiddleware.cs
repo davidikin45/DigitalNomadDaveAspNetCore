@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using DND.Common.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using DND.Common.Infrastructure.Tasks;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace DND.Common.Middleware
@@ -28,7 +24,7 @@ namespace DND.Common.Middleware
             {
                 await this._next(context);
             }
-            catch(Exception ex)
+            catch
             {
                 _taskRunner.RunTasksOnError();
                 throw;

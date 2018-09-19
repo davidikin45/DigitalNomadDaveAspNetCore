@@ -1,8 +1,14 @@
 npm update
-Update-Package -ProjectName Marvin.Cache.Headers
 Update-Package -ProjectName DND.Common
+Update-Package -ProjectName DND.Common.Infrastructure
+Update-Package -ProjectName DND.Common.Domain
+Update-Package -ProjectName DND.Common.ApplicationServices
+Update-Package -ProjectName DND.Common.DomainServices
+Update-Package -ProjectName DND.Common.Data
+Update-Package -ProjectName DND.Common.Testing
 Update-Package -ProjectName DND.Web
 Update-Package -ProjectName DND.Web.Blog
+Update-Package -ProjectName DND.Web.FlightSearch
 Update-Package -ProjectName DND.Web.CMS
 Update-Package -ProjectName DND.Web.DynamicForms
 Update-Package -ProjectName DND.ApplicationServices

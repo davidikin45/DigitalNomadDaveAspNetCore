@@ -1,13 +1,12 @@
 using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.Automapper;
+using DND.Common.Domain.Dtos;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.Authors.Dtos
 {
-    public class AuthorDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class AuthorDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         [Required]
         public string Name { get; set; }

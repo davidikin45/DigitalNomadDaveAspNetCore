@@ -1,17 +1,16 @@
-using DND.Common.Enums;
+using DND.Common.Domain;
 using DND.Common.Extensions;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
 using DND.Domain.Blog.Locations.Enums;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using System.Data.Entity.Spatial;
 
 namespace DND.Domain.Blog.Locations
 {
-    public class Location : BaseEntityAggregateRootAuditable<int>
+    public class Location : EntityAggregateRootAuditableBase<int>
     {
 		public string Name { get; set; }
 
@@ -34,7 +33,8 @@ namespace DND.Domain.Blog.Locations
         public Boolean NextLocation { get; set; }
 
         public string PlaceId { get; set; }
-        public DbGeography GPSLocation { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
 
         public string Album { get; set; }
 
@@ -53,10 +53,10 @@ namespace DND.Domain.Blog.Locations
             return errors;
         }
 
-        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

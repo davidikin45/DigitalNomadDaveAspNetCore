@@ -1,11 +1,11 @@
-﻿using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
+﻿using DND.Common.Domain.Dtos;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.Questions.Dtos
 {
-    public class QuestionDeleteDto : BaseDtoAggregateRoot<int>,  IMapFrom<Question>, IMapTo<Question>
+    public class QuestionDeleteDto : DtoAggregateRootBase<int>,  IMapFrom<Question>, IMapTo<Question>
     {
         public QuestionDeleteDto()
         {

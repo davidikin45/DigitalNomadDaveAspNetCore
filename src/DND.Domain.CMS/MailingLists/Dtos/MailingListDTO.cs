@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.MailingLists.Dtos
 {
-    public class MailingListDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class MailingListDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         public string Name { get; set; }
 

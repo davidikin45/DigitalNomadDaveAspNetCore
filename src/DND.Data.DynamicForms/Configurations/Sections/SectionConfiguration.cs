@@ -1,23 +1,24 @@
 ﻿using DND.Domain.DynamicForms.Sections;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.DynamicForms.Configurations.Sections
 {
     public class SectionConfiguration
-           : EntityTypeConfiguration<Section>
+           : IEntityTypeConfiguration<Section>
     {
-        public SectionConfiguration()
+        public void Configure(EntityTypeBuilder<Section> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
             //this section has many sections, each section with a required owner
-            HasMany(p => p.Sections).WithRequired().HasForeignKey(s => s.SectionId).WillCascadeOnDelete(false);
+            builder.HasMany(p => p.Sections).WithOne().IsRequired().HasForeignKey(s => s.SectionId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

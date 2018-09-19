@@ -1,17 +1,18 @@
 ﻿using DND.Domain.DynamicForms.Sections;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.DynamicForms.Configurations.Forms
 {
     public class FormSectionConfiguration
-           : EntityTypeConfiguration<FormSection>
+           : IEntityTypeConfiguration<FormSection>
     {
-        public FormSectionConfiguration()
+        public void Configure(EntityTypeBuilder<FormSection> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
         }
     }
 }

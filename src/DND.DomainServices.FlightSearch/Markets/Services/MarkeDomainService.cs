@@ -1,6 +1,6 @@
-﻿using DND.Common.Implementation.DomainServices;
-using DND.Common.Implementation.Validation;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.DomainServices;
+using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
+using DND.Common.Infrastructure.Validation.Errors;
 using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.SearchEngines;
 using DND.Interfaces.FlightSearch.DomainServices;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DND.DomainServices.FlightSearch.Markets.Services
 {
-    public class MarketDomainService : BaseDomainService, IMarketDomainService
+    public class MarketDomainService : DomainServiceBase, IMarketDomainService
     {
         public MarketDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)

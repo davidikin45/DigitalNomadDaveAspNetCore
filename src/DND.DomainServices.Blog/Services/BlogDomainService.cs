@@ -1,10 +1,10 @@
-﻿using DND.Common.Implementation.DomainServices;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.DomainServices;
+using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
 using DND.Interfaces.Blog.DomainServices;
 
 namespace DND.DomainServices.Blog.Services
 {
-    public class BlogDomainService : BaseDomainService, IBlogDomainService
+    public class BlogDomainService : DomainServiceBase, IBlogDomainService
     {
         public IBlogPostDomainService BlogPostDomainService { get; private set; }
         public ICategoryDomainService CategoryDomainService { get; private set; }

@@ -6,17 +6,17 @@ namespace DND.Data
 {
     public class DbSeed
     {
-        public static void Seed(ApplicationDbContext context)
+        public static void Seed(ApplicationContext context)
         {
             AddContentHtml(context);
         }
 
-        private static void AddContentText(ApplicationDbContext context)
+        private static void AddContentText(ApplicationContext context)
         {
            
         }
 
-        private static void AddContentHtml(ApplicationDbContext context)
+        private static void AddContentHtml(ApplicationContext context)
         {
             AddContentHTML(context, DND.Infrastructure.Constants.CMS.ContentHtml.About, "<p>About Me</p>");
             AddContentHTML(context, DND.Infrastructure.Constants.CMS.ContentHtml.SideBarAbout, "<p>About Me</p>");
@@ -30,7 +30,7 @@ namespace DND.Data
             AddContentHTML(context, DND.Common.Constants.CMS.ContentHtml.PrivacyPolicy, "");
         }
 
-        private static void AddContentHTML(ApplicationDbContext context, string id, string content)
+        private static void AddContentHTML(ApplicationContext context, string id, string content)
         {
             if (!context.ContentHtml.Any(c => c.Id == id))
             {

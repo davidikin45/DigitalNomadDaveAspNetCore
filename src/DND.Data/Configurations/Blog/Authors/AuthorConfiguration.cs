@@ -1,26 +1,21 @@
 ﻿using DND.Domain.Blog.Authors;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.Blog.Authors
 {
     public class AuthorConfiguration
-           : EntityTypeConfiguration<Author>
+           : IEntityTypeConfiguration<Author>
     {
-        public AuthorConfiguration()
+
+        public void Configure(EntityTypeBuilder<Author> builder)
         {
-            HasKey(p => p.Id);
-
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
-
-            Property(p => p.RowVersion).IsRowVersion();
-
-            Property(p => p.Name)
-                .IsRequired();
-
-            Property(p => p.UrlSlug)
-               .HasMaxLength(50);
-          
+            builder.HasKey(p => p.Id);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
+            builder.Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.Name).IsRequired();
+            builder.Property(p => p.UrlSlug).HasMaxLength(50);
         }
     }
 }

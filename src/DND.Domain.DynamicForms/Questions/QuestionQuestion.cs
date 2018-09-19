@@ -1,16 +1,15 @@
-﻿using DND.Common.Enums;
+﻿using DND.Common.Domain;
 using DND.Common.Extensions;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
 using DND.Domain.DynamicForms.Questions.Enums;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.DynamicForms.Questions
 {
-    public class QuestionQuestion : BaseEntityAuditable<int>
+    public class QuestionQuestion : EntityAuditableBase<int>
     {
         public int QuestionId { get; set; }
 
@@ -29,12 +28,14 @@ namespace DND.Domain.DynamicForms.Questions
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            throw new NotImplementedException();
+            var errors = new List<ValidationResult>();
+            return errors;
         }
 
-        public override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
-            throw new NotImplementedException();
+            var errors = new List<ValidationResult>();
+            return await Task.FromResult(errors);
         }
     }
 }

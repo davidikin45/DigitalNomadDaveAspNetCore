@@ -1,9 +1,9 @@
-﻿using DND.Common.Implementation.Models;
-using DND.Common.Implementation.Validation;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastructure.Validation;
 
 namespace DND.Domain.Models
 {
-    public class Dollars : BaseValueObject<Dollars>
+    public class Dollars : ValueObjectBase<Dollars>
     {
         private const decimal MaxDollarAmount = 1_000_000;
 

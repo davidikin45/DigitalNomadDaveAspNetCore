@@ -1,8 +1,8 @@
-﻿using DND.Common.Interfaces.DomainServices;
+﻿using DND.Common.Infrastructure.Interfaces.DomainServices;
 
 namespace DND.Interfaces.Blog.DomainServices
 {
-    public interface IBlogDomainService : IBaseDomainService
+    public interface IBlogDomainService : IDomainService
     {
         IBlogPostDomainService BlogPostDomainService { get; }
         ICategoryDomainService CategoryDomainService { get; }

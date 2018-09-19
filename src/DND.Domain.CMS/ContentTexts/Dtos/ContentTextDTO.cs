@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.CMS.ContentTexts.Dtos
 {
-    public class ContentTextDto : BaseDtoAggregateRoot<string>, IHaveCustomMappings
+    public class ContentTextDto : DtoAggregateRootBase<string>, IHaveCustomMappings
     {
         [MultilineText(HTML = false, Rows = 7)]
         public string Text { get; set; }

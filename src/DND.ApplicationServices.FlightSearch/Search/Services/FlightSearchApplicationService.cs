@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.FlightSearch.Search.Services
 {
-    public class FlightSearchApplicationService : BaseApplicationService, IFlightSearchApplicationService
+    public class FlightSearchApplicationService : ApplicationServiceBase, IFlightSearchApplicationService
     {
         protected IFlightSearchDomainService DomainService { get; }
         public FlightSearchApplicationService(IFlightSearchDomainService domainService, IMapper mapper)

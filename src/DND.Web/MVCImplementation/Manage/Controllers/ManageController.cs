@@ -1,4 +1,4 @@
-﻿using DND.Common.Email;
+﻿using DND.Common.Infrastructure.Email;
 using DND.Domain.Identity.Users;
 using DND.Web.MVCImplementation.Extensions;
 using DND.Web.MVCImplementation.Manage.Models;

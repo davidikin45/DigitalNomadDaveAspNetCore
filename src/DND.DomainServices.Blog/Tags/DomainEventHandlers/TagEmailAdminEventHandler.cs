@@ -1,5 +1,6 @@
-﻿using DND.Common.DomainEvents;
-using DND.Common.Implementation.Validation;
+﻿using DND.Common.Infrastructure.DomainEvents;
+using DND.Common.Infrastructure.Interfaces.DomainEvents;
+using DND.Common.Infrastructure.Validation;
 using DND.Domain.Blog.Tags;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
         {
             var after = domainEvent.Entity;
 
-            return Result.Ok();
+            return await Task.FromResult(Result.Ok());
         }
 
         public bool HandlePostCommitCondition(EntityActionEvent<Tag> domainEvent)
@@ -31,7 +32,7 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
         {
             var before = domainEvent.Entity;
 
-            return Result.Ok();
+            return await Task.FromResult(Result.Ok());
         }
     }
 }

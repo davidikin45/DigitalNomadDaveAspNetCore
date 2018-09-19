@@ -1,4 +1,5 @@
-﻿using DND.Common.SignalRHubs;
+﻿using DND.Common.ApplicationServices.SignalR;
+using DND.Common.SignalRHubs;
 using DND.Domain.CMS.ContentHtmls.Dtos;
 using Microsoft.AspNetCore.SignalR;
 

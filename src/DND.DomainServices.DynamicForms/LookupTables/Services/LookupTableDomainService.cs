@@ -1,12 +1,12 @@
-﻿using DND.Common.Implementation.DomainServices;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.DomainServices;
+using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
+using DND.Data.DynamicForms;
 using DND.Domain.DynamicForms.LookupTables;
-using DND.Interfaces.DynamicForms.Data;
 using DND.Interfaces.DynamicForms.DomainServices;
 
 namespace DND.DomainServices.DynamicForms.LookupTables.Services
 {
-    public class LookupTableDomainService : BaseEntityDomainService<IDynamicFormsDbContext, LookupTable>, ILookupTableDomainService
+    public class LookupTableDomainService : DomainServiceEntityBase<DynamicFormsContext, LookupTable>, ILookupTableDomainService
     {
         public LookupTableDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
         : base(baseUnitOfWorkScopeFactory)

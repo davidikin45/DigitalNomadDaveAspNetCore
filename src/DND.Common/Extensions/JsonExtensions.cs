@@ -7,8 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Xml;
 
@@ -38,7 +36,7 @@ namespace DND.Common.Extensions
                 tw = new XmlTextWriter(sw);
                 serializer.WriteObject(tw, o);
             }
-            catch (Exception ex)
+            catch
             {
                 //Handle Exception Code
             }

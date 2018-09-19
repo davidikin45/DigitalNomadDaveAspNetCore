@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using DND.Common.Alerts;
 using DND.Common.Controllers;
-using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
+using DND.Common.Infrastructure.Email;
 using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.SignalRHubs;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Domain.Blog.Categories.Dtos;
 using DND.Domain.Blog.Locations.Dtos;
@@ -23,7 +21,6 @@ using DND.Web.MVCImplementation.Countries.Controllers;
 using DND.Web.MVCImplementation.Locations.Controllers;
 using DND.Web.MVCImplementation.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -38,7 +35,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
 {
     [Route("")]
     //[LogAction]
-    public class HomeController : BaseHomeController
+    public class HomeController : MvcControllerHomeBase
     {
         private IBlogApplicationService _blogService;
         private ILocationApplicationService _locationService;
@@ -66,7 +63,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
                 {
 
                 }
-                catch (Exception ex)
+                catch
                 {
                     return HandleReadException();
                 }
@@ -216,7 +213,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             nodes.Add(
                  new SitemapNode()
                  {
-                     Url = Url.AbsoluteUrl<LocationsController>(c => c.Index(1, 20, nameof(LocationDto.Name), OrderByType.Ascending, ""), false),
+                     Url = Url.AbsoluteUrl<LocationsController>(c => c.Index(1, 20, nameof(LocationDto.Name), "asc", ""), false),
                      Priority = 0.9
                  });
 
@@ -224,7 +221,7 @@ namespace DND.Web.MVCImplementation.Home.Controllers
             nodes.Add(
              new SitemapNode()
              {
-                 Url = Url.AbsoluteUrl<CountriesController>(c => c.Index(1, 20, nameof(LocationDto.Name), OrderByType.Ascending, ""), false),
+                 Url = Url.AbsoluteUrl<CountriesController>(c => c.Index(1, 20, nameof(LocationDto.Name),"asc", ""), false),
                  Priority = 0.9
              });
 

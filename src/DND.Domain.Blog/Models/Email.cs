@@ -1,11 +1,6 @@
-﻿using DND.Common.Implementation.Models;
-using DND.Common.Implementation.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastructure.Validation;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace DND.Domain.Models
 {
@@ -15,7 +10,7 @@ namespace DND.Domain.Models
     //    return BadRequest(result.Error);
     //}
 
-    public class Email : BaseValueObject<Email>
+    public class Email : ValueObjectBase<Email>
     {
         public string Value { get; }
 

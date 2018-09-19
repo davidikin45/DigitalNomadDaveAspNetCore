@@ -1,18 +1,15 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Domain.DynamicForms.Sections.Dtos;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.DynamicForms.Questions.Enums;
-using DND.Domain.DynamicForms.Sections;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.Questions.Dtos
 {
-    public class QuestionValidationDto : BaseDto<int>, IMapFrom<QuestionValidation>, IMapTo<QuestionValidation>
+    public class QuestionValidationDto : DtoBase<int>, IMapFrom<QuestionValidation>, IMapTo<QuestionValidation>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]

@@ -1,85 +1,85 @@
 ﻿using DND.Domain.Blog.BlogPosts;
-using DND.Domain.Blog.Categories;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.Blog.BlogPosts
 {
     public class BlogPostConfiguration
-           : EntityTypeConfiguration<BlogPost>
+           : IEntityTypeConfiguration<BlogPost>
     {
-        public BlogPostConfiguration()
+        public void Configure(EntityTypeBuilder<BlogPost> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
-            Property(p => p.Title)
+            builder.Property(p => p.Title)
                  .IsRequired()
                 .HasMaxLength(500);
 
-            Property(p => p.ShortDescription)
+            builder.Property(p => p.ShortDescription)
                 .IsRequired()
                .HasMaxLength(5000);
 
-            Property(p => p.Description)
+            builder.Property(p => p.Description)
               .IsRequired()
              .HasMaxLength(300000);
 
-            Property(p => p.UrlSlug)
+            builder.Property(p => p.UrlSlug)
              .IsRequired()
             .HasMaxLength(200);
 
-            Property(p => p.CarouselText)
+            builder.Property(p => p.CarouselText)
             .HasMaxLength(200);
 
-            Property(p => p.ShowInCarousel)
+            builder.Property(p => p.ShowInCarousel)
             .IsRequired();
 
-            Property(p => p.Published)
+            builder.Property(p => p.Published)
             .IsRequired();
 
-            Property(p => p.DateCreated)
+            builder.Property(p => p.DateCreated)
            .IsRequired();
 
-            HasRequired(p => p.Author)
+            builder.HasOne(p => p.Author)
                 .WithMany()
                 .HasForeignKey(p => p.AuthorId)
-                 .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            HasRequired(p => p.Category)
+            builder.HasOne(p => p.Category)
                 .WithMany()
                 .HasForeignKey(p => p.CategoryId)
-                .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            HasMany(p => p.Tags)
-           .WithRequired()
+
+            builder.HasMany(p => p.Tags)
+           .WithOne().IsRequired()
            .HasForeignKey(p => p.BlogPostId);
 
-            HasMany(p => p.Locations)
-            .WithRequired()
+            builder.HasMany(p => p.Locations)
+            .WithOne().IsRequired()
            .HasForeignKey(p => p.BlogPostId);
 
-            Property(p => p.ShowLocationDetail)
+            builder.Property(p => p.ShowLocationDetail)
             .IsRequired();
 
-            Property(p => p.ShowLocationMap)
+            builder.Property(p => p.ShowLocationMap)
             .IsRequired();
 
-            Property(p => p.MapHeight)
+            builder.Property(p => p.MapHeight)
             .IsRequired();
 
-            Property(p => p.MapZoom)
+            builder.Property(p => p.MapZoom)
             .IsRequired();
 
-            Property(p => p.Album)
+            builder.Property(p => p.Album)
             .IsRequired();
 
-            Property(p => p.ShowPhotosInAlbum)
+            builder.Property(p => p.ShowPhotosInAlbum)
             .IsRequired();
-
         }
     }
 }

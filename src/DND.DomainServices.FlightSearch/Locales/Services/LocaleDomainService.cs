@@ -1,5 +1,5 @@
-﻿using DND.Common.Implementation.DomainServices;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.DomainServices;
+using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
 using DND.DomainServices.SearchEngines;
 using DND.Interfaces.FlightSearch.DomainServices;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DND.DomainServices.FlightSearch.Locales.Services
 {
-    public class LocaleDomainService : BaseDomainService, ILocaleDomainService
+    public class LocaleDomainService : DomainServiceBase, ILocaleDomainService
     {
 
         public LocaleDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)

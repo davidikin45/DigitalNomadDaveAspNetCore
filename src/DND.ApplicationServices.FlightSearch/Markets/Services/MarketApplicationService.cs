@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.FlightSearch.Markets.Services
 {
-    public class MarketApplicationService : BaseApplicationService, IMarketApplicationService
+    public class MarketApplicationService : ApplicationServiceBase, IMarketApplicationService
     {
         protected IMarketDomainService DomainService { get; }
         protected ICurrencyApplicationService CurrencyApplicationService { get; }

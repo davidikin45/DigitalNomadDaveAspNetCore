@@ -1,40 +1,51 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace DND.Common.Middleware
+public class BasicAuthMiddleware
 {
-    //Use on individual controller [MiddlewareFilter(typeof(BasicAuthConfig))]
-    public class BasicAuthMiddleware
+    private readonly RequestDelegate next;
+    private readonly string realm;
+    public BasicAuthMiddleware(RequestDelegate next, string realm)
     {
-        private RequestDelegate next;
-
-        public BasicAuthMiddleware(RequestDelegate next)
+        this.next = next;
+        this.realm = realm;
+    }
+    public async Task Invoke(HttpContext context)
+    {
+        string authHeader = context.Request.Headers["Authorization"];
+        if (authHeader != null && authHeader.StartsWith("Basic "))
         {
-            this.next = next;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            string authHeader = context.Request.Headers["Authorization"];
-            if (authHeader != null)
+            // Get the encoded username and password
+            var encodedUsernamePassword = authHeader.Split(' ')[1]?.Trim();
+            // Decode from Base64 to string
+            var decodedUsernamePassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
+            // Split username and password
+            var username = decodedUsernamePassword.Split(':')[0];
+            var password = decodedUsernamePassword.Split(':')[1];
+            // Check if login is correct
+            if (IsAuthorized(username, password))
             {
-                var authHeaderValue = authHeader.Replace("Basic", "").Trim();
-                var decodedUserPwd = Encoding.UTF8.GetString(
-                    Convert.FromBase64String(authHeaderValue)).Split(':');
-
-                if (decodedUserPwd[0] == "Hello" && decodedUserPwd[1] == "World")
-                {
-                    await next.Invoke(context);
-                    return;
-                }
+                await next.Invoke(context);
+                return;
             }
-
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         }
+        // Return authentication type (causes browser to show login dialog)
+        context.Response.Headers["WWW-Authenticate"] = "Basic";
+        // Add realm if it is not null
+        if (!string.IsNullOrWhiteSpace(realm))
+        {
+            context.Response.Headers["WWW-Authenticate"] += $" realm=\"{realm}\"";
+        }
+        // Return unauthorized
+        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+    }
+    // Make your own implementation of this
+    public bool IsAuthorized(string username, string password)
+    {
+        // Check that username and password are correct
+        return username.Equals("User1", StringComparison.InvariantCultureIgnoreCase)
+               && password.Equals("SecretPassword!");
     }
 }

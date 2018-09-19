@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using DND.Common.Helpers;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.Interfaces.Dtos;
-using DND.Common.Interfaces.Models;
+using DND.Common.Infrastructure.Interfaces.Automapper;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Automapper
 {
@@ -88,11 +86,11 @@ namespace DND.Common.Automapper
                 var createMapMethod = typeof(IProfileExpression).GetMethod(nameof(IProfileExpression.CreateMap), new List<Type>() { }.ToArray()).MakeGenericMethod(map.Source, map.Destination);
                 var mappingExpression = createMapMethod.Invoke(cfg, new List<Object>() { }.ToArray());
 
-                if (typeof(IBaseEntity).IsAssignableFrom(map.Source) && typeof(IBaseDtoWithId).IsAssignableFrom(map.Destination))
+                if (typeof(IEntity).IsAssignableFrom(map.Source) && typeof(IDtoWithId).IsAssignableFrom(map.Destination))
                 {
                     MapCollection(mappingExpression, map.Source, map.Destination);
                 }
-                else if (typeof(IBaseDtoWithId).IsAssignableFrom(map.Source) && typeof(IBaseEntity).IsAssignableFrom(map.Destination))
+                else if (typeof(IDtoWithId).IsAssignableFrom(map.Source) && typeof(IEntity).IsAssignableFrom(map.Destination))
                 {
                     MapCollection(mappingExpression, map.Source, map.Destination);
                 }
@@ -118,11 +116,11 @@ namespace DND.Common.Automapper
                 var createMapMethod = typeof(IProfileExpression).GetMethod(nameof(IProfileExpression.CreateMap), new List<Type>() { }.ToArray()).MakeGenericMethod(map.Source, map.Destination);
                 var mappingExpression = createMapMethod.Invoke(cfg, new List<Object>() { }.ToArray());
 
-                if (typeof(IBaseEntity).IsAssignableFrom(map.Source) && typeof(IBaseDtoWithId).IsAssignableFrom(map.Destination))
+                if (typeof(IEntity).IsAssignableFrom(map.Source) && typeof(IDtoWithId).IsAssignableFrom(map.Destination))
                 {
                     MapCollection(mappingExpression, map.Source, map.Destination);
                 }
-                else if (typeof(IBaseDtoWithId).IsAssignableFrom(map.Source) && typeof(IBaseEntity).IsAssignableFrom(map.Destination))
+                else if (typeof(IDtoWithId).IsAssignableFrom(map.Source) && typeof(IEntity).IsAssignableFrom(map.Destination))
                 {
                     MapCollection(mappingExpression, map.Source, map.Destination);
                 }

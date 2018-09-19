@@ -4,7 +4,7 @@ using DND.Interfaces.DynamicForms.ApplicationServices;
 
 namespace DND.ApplicationServices.DynamicForms
 {
-    public class DynamicFormsApplicationServices : BaseApplicationService, IDynamicFormsApplicationServices
+    public class DynamicFormsApplicationServices : ApplicationServiceBase, IDynamicFormsApplicationServices
     {
         public IFormApplicationService FormApplicationService { get; private set; }
         public IFormSubmissionApplicationService FormSubmissionApplicationService { get; private set; }

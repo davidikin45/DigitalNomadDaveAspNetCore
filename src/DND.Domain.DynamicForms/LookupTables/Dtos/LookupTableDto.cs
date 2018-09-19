@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.LookupTables.Dtos
 {
-    public class LookupTableDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class LookupTableDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         [Required()]
         public string Name { get; set; }

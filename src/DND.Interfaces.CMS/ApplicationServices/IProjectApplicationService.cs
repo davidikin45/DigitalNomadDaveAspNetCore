@@ -1,9 +1,9 @@
-﻿using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Infrastructure.Interfaces.ApplicationServices;
 using DND.Domain.CMS.Projects.Dtos;
 
 namespace DND.Interfaces.CMS.ApplicationServices
 {
-    public interface IProjectApplicationService : IBaseEntityApplicationService<ProjectDto, ProjectDto, ProjectDto, ProjectDeleteDto>
+    public interface IProjectApplicationService : IApplicationServiceEntity<ProjectDto, ProjectDto, ProjectDto, ProjectDeleteDto>
     {
         
     }

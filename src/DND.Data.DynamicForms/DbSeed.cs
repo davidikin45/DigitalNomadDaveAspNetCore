@@ -2,7 +2,7 @@
 {
     public class DbSeed
     {
-        public static void Seed(DynamicFormsDbContext context)
+        public static void Seed(DynamicFormsContext context)
         {
     
         }

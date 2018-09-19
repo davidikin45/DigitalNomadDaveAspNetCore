@@ -1,11 +1,10 @@
-﻿using System;
+﻿using DND.Common.Helpers;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
-using DND.Common.Helpers;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace DND.Common.ModelMetadataCustom.FluentMetadata
 {

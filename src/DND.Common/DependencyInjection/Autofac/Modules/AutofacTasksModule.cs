@@ -1,14 +1,9 @@
 ﻿using Autofac;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using DND.Common.Automapper;
-using DND.Common.Tasks;
+using DND.Common.Infrastructure.Tasks;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.DependencyInjection.Autofac.Modules
 {
@@ -31,7 +26,8 @@ namespace DND.Common.DependencyInjection.Autofac.Modules
 
             foreach (string path in Paths)
             {
-                var assemblies = Directory.GetFiles(path, "*.dll", SearchOption.TopDirectoryOnly)
+                var assemblies = Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
+                              .Where(file => new[] { ".dll", ".exe" }.Any(file.ToLower().EndsWith))
                               .Where(Filter)
                               .Select(System.Reflection.Assembly.LoadFrom);
 

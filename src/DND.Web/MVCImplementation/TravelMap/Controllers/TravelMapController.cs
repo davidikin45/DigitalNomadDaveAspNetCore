@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
-using DND.Common.Email;
+using DND.Common.Dtos;
 using DND.Common.Filters;
 using DND.Common.Helpers;
-using DND.Common.Implementation.Dtos;
+using DND.Common.Infrastructure.Email;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +15,8 @@ namespace DND.Web.MVCImplementation.TravelMap.Controllers
 {
     [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "TravelMap" })]
     [Route("travel-map")]
-    public class TravelMapController : BaseController
-	{
+    public class TravelMapController : MvcControllerBase
+    {
         private readonly ILocationApplicationService Service;
 
         public TravelMapController(ILocationApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)

@@ -11,11 +11,11 @@ namespace DND.Common.JwtTokens
     public static class JwtTokenHelper
     {
         //Assymetric
-        public static dynamic CreateJwtTokenSigningWithRsaSecurityKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, RsaSecurityKey key, string issuer, string audience, params string[] scopes)
+        public static dynamic CreateJwtTokenSigningWithRsaSecurityKey(string userId, string userName, IEnumerable<string> roles, int minuteExpiry, RsaSecurityKey key, string issuer, string audience, params string[] scopes)
         {
             var claims = new List<Claim>()
                         {
-                            new Claim(JwtRegisteredClaimNames.Sub, email),
+                            new Claim(JwtRegisteredClaimNames.Sub, userId),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.UniqueName, userName)
                         };
@@ -29,7 +29,7 @@ namespace DND.Common.JwtTokens
             //Add roles
             foreach (string role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim("role", role));
             }
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
@@ -38,11 +38,11 @@ namespace DND.Common.JwtTokens
         }
 
         //Assymetric
-        public static dynamic CreateJwtTokenSigningWithCertificateSecurityKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, X509SecurityKey key, string issuer, string audience, params string[] scopes)
+        public static dynamic CreateJwtTokenSigningWithCertificateSecurityKey(string userId, string userName, IEnumerable<string> roles, int minuteExpiry, X509SecurityKey key, string issuer, string audience, params string[] scopes)
         {
             var claims = new List<Claim>()
                         {
-                            new Claim(JwtRegisteredClaimNames.Sub, email),
+                            new Claim(JwtRegisteredClaimNames.Sub, userId),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.UniqueName, userName)
                         };
@@ -56,7 +56,7 @@ namespace DND.Common.JwtTokens
             //Add roles
             foreach (string role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim("role", role));
             }
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.RsaSha256);
@@ -65,11 +65,11 @@ namespace DND.Common.JwtTokens
         }
 
         //Symmetric
-        public static dynamic CreateJwtTokenSigningWithKey(string email, string userName, IEnumerable<string> roles, int minuteExpiry, string hmacKey, string issuer, string audience, params string[] scopes)
+        public static dynamic CreateJwtTokenSigningWithKey(string userId, string userName, IEnumerable<string> roles, int minuteExpiry, string hmacKey, string issuer, string audience, params string[] scopes)
         {
             var claims = new List<Claim>()
                         {
-                            new Claim(JwtRegisteredClaimNames.Sub, email),
+                            new Claim(JwtRegisteredClaimNames.Sub, userId),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.UniqueName, userName)
                         };
@@ -83,7 +83,7 @@ namespace DND.Common.JwtTokens
             //Add roles
             foreach (string role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim("role", role));
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(hmacKey));

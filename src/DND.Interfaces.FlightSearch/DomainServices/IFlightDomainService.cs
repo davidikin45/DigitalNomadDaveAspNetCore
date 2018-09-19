@@ -1,4 +1,4 @@
-﻿using DND.Common.Interfaces.DomainServices;
+﻿using DND.Common.Infrastructure.Interfaces.DomainServices;
 using DND.Domain.FlightSearch.Search.Dtos;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DND.Interfaces.FlightSearch.DomainServices
 {
-    public interface IFlightSearchDomainService : IBaseDomainService
+    public interface IFlightSearchDomainService : IDomainService
     {
         Task<FlightSearchResponseDto> SearchAsync(FlightSearchRequestDto request, CancellationToken cancellationToken);
 

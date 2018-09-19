@@ -1,48 +1,45 @@
-﻿using DND.Common.Implementation.Data;
-using DND.Common.Implementation.Data.InMemory;
-using DND.Common.Implementation.Repository;
-using DND.Common.Implementation.Repository.EntityFramework;
-using DND.Common.Implementation.UnitOfWork;
-using DND.Common.Interfaces.Data;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Data.Repository.GenericEF;
 using DND.Common.Testing;
+using DND.Data;
 using DND.Domain.Blog.BlogPosts;
-using DND.Interfaces.CMS.Data;
 using FluentAssertions;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DND.UnitTests.Blog.Data.Repositories
 {
     public class BlogPostRepositoryShould : IDisposable
     {
-        private InMemoryDataContext _context;
+        private ApplicationContext _context;
         private GenericEFRepository<BlogPost> _repository;
-        private IUnitOfWorkReadOnlyScope _uow;
+        private readonly ITestOutputHelper _testOutputHelper;
 
-        public BlogPostRepositoryShould()
+        public BlogPostRepositoryShould(ITestOutputHelper testOutputHelper)
         {
-            _context = new InMemoryDataContext();
-            var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<ICMSDbContext>(_context)}), new AmbientDbContextLocator(), new GenericRepositoryFactory());
-            _uow = uowFactory.CreateReadOnly();
-            _repository = new GenericEFRepository<BlogPost>(_context, _uow);
+            _context = TestHelper.GetContextInMemory<ApplicationContext>();     
+            _repository = new GenericEFRepository<BlogPost>(_context);
+            _testOutputHelper = testOutputHelper;
         }
 
         public void Dispose()
         {
-            _uow.Dispose();
+            _context.Dispose();
         }
 
         [Fact]
         public async Task Add()
         {
-            var post = new BlogPost() { Title = "Test Post" };
+            var post = new BlogPost() { Id = 1, Title = "Test Post" };
             _repository.Insert(post);
 
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetByIdAsync(1);
+            _testOutputHelper.WriteLine(post.Id.ToString());
+
+            var result = await _repository.GetByIdAsync(CancellationToken.None, 1);
 
             Assert.NotNull(result);
 
@@ -52,7 +49,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
         [Fact]
         public async Task AddThenUpdate()
         {
-            var post = new BlogPost() { Title = "Test Post" };
+            var post = new BlogPost() { Id = 1, Title = "Test Post" };
             _repository.Insert(post);
 
             post.Title = "Test Post 2";
@@ -60,7 +57,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
 
             await _context.SaveChangesAsync();
 
-            var count = await _repository.GetCountAsync();
+            var count = await _repository.GetCountAsync(CancellationToken.None);
 
             count.Should().Be(1);
         }
@@ -68,14 +65,14 @@ namespace DND.UnitTests.Blog.Data.Repositories
         [Fact]
         public async Task AddThenDelete()
         {
-            var post = new BlogPost() { Title = "Test Post" };
+            var post = new BlogPost() { Id = 1, Title = "Test Post" };
             _repository.Insert(post);
 
             _repository.Delete(post);
 
             await _context.SaveChangesAsync();
 
-            var count = await _repository.GetCountAsync();
+            var count = await _repository.GetCountAsync(CancellationToken.None);
 
             count.Should().Be(0);
         }
@@ -83,12 +80,12 @@ namespace DND.UnitTests.Blog.Data.Repositories
         [Fact]
         public async Task Update()
         {
-            var post = new BlogPost() { Title = "Test Post" };
+            var post = new BlogPost() { Id = 1, Title = "Test Post" };
             _repository.Insert(post);
 
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetByIdAsync(1);
+            var result = await _repository.GetByIdAsync(CancellationToken.None,1);
 
             Assert.NotNull(result);
 
@@ -97,7 +94,7 @@ namespace DND.UnitTests.Blog.Data.Repositories
             _repository.Update(result);
             await _context.SaveChangesAsync();
 
-            result = await _repository.GetByIdAsync(1);
+            result = await _repository.GetByIdAsync(CancellationToken.None,1);
 
             Assert.NotNull(result);
 
@@ -107,19 +104,19 @@ namespace DND.UnitTests.Blog.Data.Repositories
         [Fact]
         public async Task Delete()
         {
-            var post = new BlogPost() { Title = "Test Post" };
+            var post = new BlogPost() { Id = 1, Title = "Test Post" };
             _repository.Insert(post);
 
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetByIdAsync(1);
+            var result = await _repository.GetByIdAsync(CancellationToken.None,1);
 
             Assert.NotNull(result);
 
             _repository.Delete(result);
             await _context.SaveChangesAsync();
 
-            var count = await _repository.GetCountAsync();
+            var count = await _repository.GetCountAsync(CancellationToken.None);
 
             count.Should().Be(0);
         }
@@ -127,14 +124,14 @@ namespace DND.UnitTests.Blog.Data.Repositories
         [Fact]
         public async Task ReturnAllPostsForGetCount()
         {
-            var post = new BlogPost();
-            var post2 = new BlogPost();
+            var post = new BlogPost() { Id = 1 };
+            var post2 = new BlogPost() { Id = 2 };
             _repository.Insert(post);
             _repository.Insert(post2);
 
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetCountAsync();
+            var result = await _repository.GetCountAsync(CancellationToken.None);
 
             result.Should().Be(2);
         }

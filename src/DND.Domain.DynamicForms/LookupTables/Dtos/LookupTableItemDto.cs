@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.LookupTables.Dtos
 {
-    public class LookupTableItemDto : BaseDto<int>, IMapFrom<LookupTableItem>, IMapTo<LookupTableItem>
+    public class LookupTableItemDto : DtoBase<int>, IMapFrom<LookupTableItem>, IMapTo<LookupTableItem>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]

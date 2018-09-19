@@ -1,11 +1,11 @@
-﻿using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
+﻿using DND.Common.Domain.Dtos;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.LookupTables.Dtos
 {
-    public class LookupTableDeleteDto : BaseDtoAggregateRoot<int>,  IMapFrom<LookupTable>, IMapTo<LookupTable>
+    public class LookupTableDeleteDto : DtoAggregateRootBase<int>,  IMapFrom<LookupTable>, IMapTo<LookupTable>
     {
         public LookupTableDeleteDto()
         {

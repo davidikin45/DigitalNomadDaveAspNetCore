@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.DynamicForms.Questions.Enums;
 using DND.Domain.DynamicForms.Sections;
 using DND.Domain.DynamicForms.Sections.Dtos;
@@ -13,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.Questions.Dtos
 {
-    public class QuestionSectionDto : BaseDto<int>, IMapFrom<QuestionSection>, IMapTo<QuestionSection>
+    public class QuestionSectionDto : DtoBase<int>, IMapFrom<QuestionSection>, IMapTo<QuestionSection>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]

@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.FormSectionSubmissions.Dtos
 {
-    public class FormSectionSubmissionQuestionAnswerDto : BaseDto<int>, IMapFrom<FormSectionSubmissionQuestionAnswer>, IMapTo<FormSectionSubmissionQuestionAnswer>
+    public class FormSectionSubmissionQuestionAnswerDto : DtoBase<int>, IMapFrom<FormSectionSubmissionQuestionAnswer>, IMapTo<FormSectionSubmissionQuestionAnswer>
     {
         [HiddenInput()]
         [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = false), Display(Order = 0)]

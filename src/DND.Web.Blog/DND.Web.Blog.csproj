@@ -16,8 +16,11 @@
     <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DND.Common.ApplicationServices\DND.Common.ApplicationServices.csproj" />
     <ProjectReference Include="..\DND.Interfaces.Blog\DND.Interfaces.Blog.csproj" />
   </ItemGroup>
 

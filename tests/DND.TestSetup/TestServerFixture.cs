@@ -4,7 +4,7 @@ using System;
 
 namespace DND.TestSetup
 {
-    public class TestServerFixture : BaseTestServerFixture<Startup>, IDisposable
+    public class TestServerFixture : TestServerFixtureBase<Startup>, IDisposable
     {
         public TestServerFixture()
             :base($@"..\..\..\..\src\DND.Web", "Integration", "v4.7.2", Program.BuildWebHostConfiguration)

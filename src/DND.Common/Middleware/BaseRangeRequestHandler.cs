@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.Net.Http.Headers;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -204,11 +203,11 @@ namespace DND.Common.Middleware
                 else
                     await ReturnPartialEntity(context);
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 //do nothing
             }
-            catch (Exception ex)
+            catch
             {
                 //HandleException(context, ex);
             }

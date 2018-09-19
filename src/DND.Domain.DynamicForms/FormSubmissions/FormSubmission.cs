@@ -1,8 +1,8 @@
-﻿using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
 using DND.Domain.DynamicForms.Forms;
 using DND.Domain.DynamicForms.FormSectionSubmissions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DND.Domain.DynamicForms.FormSubmissions
 {
-    public class FormSubmission : BaseEntityAggregateRootAuditable<Guid>
+    public class FormSubmission : EntityAggregateRootAuditableBase<Guid>
     {
         public int FormId { get; set; }
         public Form Form { get; set; }
@@ -26,10 +26,10 @@ namespace DND.Domain.DynamicForms.FormSubmissions
             return errors;
         }
 
-        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

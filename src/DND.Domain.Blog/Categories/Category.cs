@@ -1,14 +1,14 @@
-﻿using DND.Common.DomainEvents;
-using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastructure.Interfaces.DomainEvents;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.Blog.Categories
 {
-    public class Category : BaseEntityAggregateRootAuditable<int>, IFirePropertyUpdatedEvents
+    public class Category : EntityAggregateRootAuditableBase<int>, IFirePropertyUpdatedEvents
     {
         //[Required, StringLength(50)]
         public string Name
@@ -34,10 +34,11 @@ namespace DND.Domain.Blog.Categories
             return errors;
         }
 
-        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
+
         }
     }
 }

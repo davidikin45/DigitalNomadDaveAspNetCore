@@ -1,25 +1,21 @@
-﻿using DND.Common.Interfaces.Data;
+﻿using DND.Common.Testing;
 using DND.Data;
 using DND.Domain.Blog.Categories;
-using DND.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
-using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DND.IntegrationTestsNUnit.Data.DbContext
 {
     [TestFixture]
     public class DbContextShould
     {
-        private ApplicationDbContext _context;
-        private IBaseDbContextTransaction _transaction;
+        private ApplicationContext _context;
         [SetUp]
         public void SetUp()
         {
-            var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
-            _context = new ApplicationDbContext(connectionString, true);
-            _transaction = _context.BeginTransaction(IsolationLevel.ReadCommitted);
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
         }
 
         [TearDown]
@@ -28,21 +24,19 @@ namespace DND.IntegrationTestsNUnit.Data.DbContext
             _context.Dispose();
         }
 
-        [Test]
+        [Test, Isolated]
         //When using isolated only the last saveChanges is kept
-        public async Task DbContextLocal()
+        public void DbContextLocal()
         {
             var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
             _context.Categories.Add(cata);
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
 
             var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
             _context.Categories.Add(catb);
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
 
             var categories = _context.Categories.ToList();
-
-            _transaction.Rollback();
 
             //Post Commit Events should not be fired until transaction commited.
 

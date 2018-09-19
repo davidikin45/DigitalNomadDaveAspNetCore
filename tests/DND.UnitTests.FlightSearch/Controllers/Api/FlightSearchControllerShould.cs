@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using DND.Common.ActionResults;
 using DND.Common.Testing;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.ViewModels;
 using DND.Interfaces.FlightSearch.ApplicationServices;
-using DND.Web.MVCImplementation.FlightSearch.Api;
+using DND.Web.FlightSearch.MVCImplementation.Api;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ namespace DND.UnitTests.Controllers.Api
             _controller.ViewData.ModelState.AddModelError("Key", "ErrorMessage");
 
             var result = await _controller.Search(model);
-            result.Should().BeOfType<Common.ActionResults.UnprocessableEntityObjectResult>();
+            result.Should().BeOfType<UnprocessableEntityAngularObjectResult>();
         }
     }
 }

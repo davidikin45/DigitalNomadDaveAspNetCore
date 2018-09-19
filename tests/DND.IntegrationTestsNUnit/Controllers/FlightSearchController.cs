@@ -1,32 +1,31 @@
 ﻿using AutoMapper;
 using DND.ApplicationServices.FlightSearch.Search.Services;
-using DND.Common.Implementation.Repository;
-using DND.Common.Implementation.UnitOfWork;
-using DND.Common.Interfaces.Data;
-using DND.Common.Testing;
 using DND.Data;
 using DND.Data.Identity;
 using DND.Domain.Blog.Categories;
 using DND.DomainServices.FlightSearch.Search.Services;
-using DND.Infrastructure;
-using DND.Interfaces.Blog.Data;
-using DND.Interfaces.Data;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using System.Linq;
 
 namespace DND.IntegrationTestsNUnit.Controllers
 {
-    using DND.Common.Implementation.Data;
-    using DND.Web.MVCImplementation.FlightSearch.Api;
+    using DND.Common.Data.Repository.GenericEF;
+    using DND.Common.Data.UnitOfWork;
+    using DND.Common.Infrastructure.Interfaces.Data;
+    using DND.Common.Testing;
+    using DND.Web.FlightSearch.MVCImplementation.Api;
+    using Microsoft.Extensions.Configuration;
     using NUnit.Framework;
+
     [TestFixture]
     public class FlightSearchControllerTests
     {
         private FlightSearchController _controller;
-        private ApplicationDbContext _context;
-        private IdentityDbContext _identityContext;
+        private ApplicationContext _context;
+        private IdentityContext _identityContext;
         private IMapper _mapper;
+        private IDbContextFactoryProducerSingleton _dbContextFactoryProducer;
 
 
         [SetUp]
@@ -38,15 +37,20 @@ namespace DND.IntegrationTestsNUnit.Controllers
             });
             _mapper = config.CreateMapper();
 
-            var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
 
-            _context = new ApplicationDbContext(connectionString, true);
-            var mockDbContextFactory = new Mock<IDbContextFactory<IBlogDbContext>>();
-            mockDbContextFactory.Setup(c => c.CreateBaseDbContext()).Returns(_context);
+            _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
 
-            _identityContext = GlobalDbSetupFixture.CreateIdentityContext(false);
+            var mockDbContextFactory = new Mock<IDbContextFactory<ApplicationContext>>();
+            mockDbContextFactory.Setup(c => c.CreateDbContext()).Returns(_context);
 
-            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { mockDbContextFactory.Object }), new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper), _mapper, null, null, null);
+            var mockDbContextFactoryProducer = new Mock<IDbContextFactoryProducerSingleton>();
+            mockDbContextFactoryProducer.Setup(c => c.GetFactory<ApplicationContext>()).Returns(mockDbContextFactory.Object);
+            _dbContextFactoryProducer = mockDbContextFactoryProducer.Object;
+
+            _identityContext = TestHelper.GetContext<IdentityContext>(connectionString, false);
+
+            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(_dbContextFactoryProducer, new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper), _mapper, null, null, null);
         }
 
         [TearDown]
@@ -65,7 +69,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
             var user = _identityContext.Users.First();
             _controller.MockCurrentUser(user.Id, user.UserName, IdentityConstants.ApplicationScheme);
 
-            var unitOfWorkFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+            var unitOfWorkFactory = new UnitOfWorkScopeFactory(_dbContextFactoryProducer, new AmbientDbContextLocator(), new GenericRepositoryFactory());
 
             var category = new Category()
             {
@@ -83,11 +87,11 @@ namespace DND.IntegrationTestsNUnit.Controllers
 
             using (var unitOfWork = unitOfWorkFactory.Create())
             {
-                unitOfWork.Repository<IBlogDbContext, Category>().Insert(category);
+                unitOfWork.Repository<ApplicationContext, Category>().Insert(category);
 
                 using (var unitOfWork2 = unitOfWorkFactory.Create())
                 {
-                    unitOfWork2.Repository<IApplicationDbContext, Category>().Insert(category2);
+                    unitOfWork2.Repository<ApplicationContext, Category>().Insert(category2);
                     unitOfWork2.Complete();
                 }
                 unitOfWork.Complete();

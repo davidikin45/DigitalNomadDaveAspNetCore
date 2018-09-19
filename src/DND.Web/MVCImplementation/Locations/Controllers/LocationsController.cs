@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
-using DND.Common.Email;
+using DND.Common.Dtos;
 using DND.Common.Filters;
 using DND.Common.Helpers;
-using DND.Common.Implementation.Dtos;
 using DND.Common.Infrastructure;
+using DND.Common.Infrastructure.Email;
 using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Infrastructure.Constants;
 using DND.Interfaces.Blog.ApplicationServices;
@@ -21,7 +20,7 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
 {
     [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Locations" })]
     [Route("locations")]
-    public class LocationsController : BaseController
+    public class LocationsController : MvcControllerBase
     {
         private readonly ILocationApplicationService _locationService;
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
@@ -35,7 +34,7 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
 
         [ResponseCache(CacheProfileName = "Cache24HourParams")]
         [Route("")]
-        public async Task<ActionResult> Index(int page = 1, int pageSize = 20, string orderColumn = nameof(LocationDto.Name), string orderType = OrderByType.Ascending, string search = "")
+        public async Task<ActionResult> Index(int page = 1, int pageSize = 20, string orderColumn = nameof(LocationDto.Name), string orderType = "asc", string search = "")
         {
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 
@@ -68,7 +67,7 @@ namespace DND.Web.MVCImplementation.Locations.Controllers
 
                 return View(response);
             }
-            catch (Exception ex)
+            catch
             {
                 return HandleReadException();
             }

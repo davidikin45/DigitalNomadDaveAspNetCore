@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.FormSectionSubmissions.Dtos
 {
-    public class FormSectionSubmissionDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class FormSectionSubmissionDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         public Guid FormSubmissionId { get; set; }
 

@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
 using DND.Common.ActionResults;
 using DND.Common.Controllers;
+using DND.Common.Domain.ModelMetadata;
 using DND.Common.DynamicForms;
-using DND.Common.Email;
 using DND.Common.Extensions;
 using DND.Common.Filters;
 using DND.Common.Helpers;
+using DND.Common.Infrastructure.Email;
 using DND.Common.Interfaces.Services;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.DynamicFormsAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
-using DND.Common.ModelMetadataCustom.ValidationAttributes;
-using DND.Common.Validation;
+using DND.Interfaces.DynamicForms.ApplicationServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +25,12 @@ using System.Threading.Tasks;
 namespace DND.Web.MVCImplementation.DynamicForms.Controllers
 {
     [Route("forms")]
-    public class DynamicFormsController : BaseController
+    public class DynamicFormsController : MvcControllerBase
     {
         private readonly IHtmlHelper Html;
         private readonly ICookieService _cookieService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IDynamicFormsPresentationService _dynamicFormsPresentationService;
-        private readonly IHtmlHelperGeneratorService _htmlHelperGeneratorService;
 
         public DynamicFormsController(
             IMapper mapper, 
@@ -42,7 +38,8 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
             IHtmlHelperGeneratorService htmlHelperGeneratorService, 
             ICookieService cookieService, 
             IHostingEnvironment hostingEnvironment,
-            IDynamicFormsPresentationService dynamicFormsPresentationService)
+            IDynamicFormsPresentationService dynamicFormsPresentationService,
+            IDynamicFormsApplicationServices dynamicFormsApplicationService)
             : base(mapper, emailService, configuration)
         {
             Html = htmlHelperGeneratorService.HtmlHelper("");
@@ -54,7 +51,7 @@ namespace DND.Web.MVCImplementation.DynamicForms.Controllers
         #region IFrame Embed
         [Route("{"+ DynamicFormsValueProviderKeys.FormUrlSlug + "}/embed")]
         [Route("{" + DynamicFormsValueProviderKeys.FormUrlSlug + "}/embed.js")]
-        public virtual async Task<IActionResult> Embed(string formUrlSlug)
+        public virtual IActionResult Embed(string formUrlSlug)
         {
             string absoluteFormUrl = Url.AbsoluteUrl<DynamicFormsController>(c => c.Edit(formUrlSlug, ""), true);
             string iFrameEmbedPath = Path.Combine(_hostingEnvironment.ContentRootPath, @"MVCImplementation\DynamicForms\Scripts\IFrameEmbed.js");

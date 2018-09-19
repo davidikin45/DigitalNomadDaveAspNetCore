@@ -1,4 +1,5 @@
 ﻿using DND.Common.Infrastructure;
+using DND.Common.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Win32;
@@ -300,7 +301,7 @@ namespace DND.Common.Helpers
                 }
                 result = FileHelper.GetMimeFromRegistry(filename);
             }
-            catch (System.Exception expr_6B)
+            catch
             {
                 result = FileHelper.GetMimeFromRegistry(filename);
             }
@@ -375,7 +376,7 @@ namespace DND.Common.Helpers
                 result = System.Runtime.InteropServices.Marshal.PtrToStringUni(ptr);
                 System.Runtime.InteropServices.Marshal.FreeCoTaskMem(ptr);
             }
-            catch (System.Exception expr_90)
+            catch
             {
 
             }
@@ -402,7 +403,7 @@ namespace DND.Common.Helpers
                 result = System.Runtime.InteropServices.Marshal.PtrToStringUni(ptr);
                 System.Runtime.InteropServices.Marshal.FreeCoTaskMem(ptr);
             }
-            catch (System.Exception expr_5D)
+            catch
             {
 
             }
@@ -446,7 +447,7 @@ namespace DND.Common.Helpers
                     result = array[1].Replace("%1", "");
                 }
             }
-            catch (System.Exception arg_B6_0)
+            catch
             {
                 result = "";
             }

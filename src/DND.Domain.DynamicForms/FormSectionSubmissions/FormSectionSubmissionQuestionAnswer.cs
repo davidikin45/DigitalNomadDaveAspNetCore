@@ -1,13 +1,13 @@
-﻿using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.DynamicForms.FormSectionSubmissions
 {
-    public class FormSectionSubmissionQuestionAnswer : BaseEntityAuditable<int>
+    public class FormSectionSubmissionQuestionAnswer : EntityAuditableBase<int>
     {
         public int FormSectionSubmissionId { get; set; }
 
@@ -21,10 +21,10 @@ namespace DND.Domain.DynamicForms.FormSectionSubmissions
             return errors;
         }
 
-        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

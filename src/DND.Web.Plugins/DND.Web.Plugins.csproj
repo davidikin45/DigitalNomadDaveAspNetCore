@@ -32,12 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,9 +69,21 @@
       <Project>{ce4a75dc-a8ec-4acb-9b78-5e737f094a13}</Project>
       <Name>DND.Data.DynamicForms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DND.Data\DND.Data.csproj">
-      <Project>{2350a5df-2635-47c9-9eb9-9d8e9d188955}</Project>
-      <Name>DND.Data</Name>
+    <ProjectReference Include="..\DND.Domain.Blog\DND.Domain.Blog.csproj">
+      <Project>{a81c1f68-e64e-473f-b397-45f64fd5e188}</Project>
+      <Name>DND.Domain.Blog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Domain.CMS\DND.Domain.CMS.csproj">
+      <Project>{fb3174f0-a81a-49f6-ac0f-95e46ab9d0f9}</Project>
+      <Name>DND.Domain.CMS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Domain.DynamicForms\DND.Domain.DynamicForms.csproj">
+      <Project>{400edab2-e036-4efb-9006-bea62a81b272}</Project>
+      <Name>DND.Domain.DynamicForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Domain.FlightSearch\DND.Domain.FlightSearch.csproj">
+      <Project>{0243f87d-007f-4b74-9429-fa8cc64c4bac}</Project>
+      <Name>DND.Domain.FlightSearch</Name>
     </ProjectReference>
     <ProjectReference Include="..\DND.DomainServices.Blog\DND.DomainServices.Blog.csproj">
       <Project>{94a5094c-7e3b-41f7-9619-4a8a9890a9a9}</Project>
@@ -95,6 +101,26 @@
       <Project>{47335015-f93e-4491-a97e-1433d3d6095d}</Project>
       <Name>DND.DomainServices.FlightSearch</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DND.Interfaces.Blog\DND.Interfaces.Blog.csproj">
+      <Project>{e3ad2968-0e0a-4331-99b3-2d8fc3ff23e4}</Project>
+      <Name>DND.Interfaces.Blog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Interfaces.CMS\DND.Interfaces.CMS.csproj">
+      <Project>{fd348f97-edd9-4e2d-ab0e-bdec23f3cb5a}</Project>
+      <Name>DND.Interfaces.CMS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Interfaces.DynamicForms\DND.Interfaces.DynamicForms.csproj">
+      <Project>{3bea5c90-f904-4d20-9406-a2615b588b3b}</Project>
+      <Name>DND.Interfaces.DynamicForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Interfaces.FlightSearch\DND.Interfaces.FlightSearch.csproj">
+      <Project>{76f827e3-7b3d-4491-9298-76036eda6ebe}</Project>
+      <Name>DND.Interfaces.FlightSearch</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Interfaces\DND.Interfaces.csproj">
+      <Project>{c0ccf34a-e0ca-45a4-88c1-d451ea3ce8b0}</Project>
+      <Name>DND.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DND.Web.Blog\DND.Web.Blog.csproj">
       <Project>{80c1ab4e-f995-44c3-9275-40d5ba07966e}</Project>
       <Name>DND.Web.Blog</Name>
@@ -106,6 +132,10 @@
     <ProjectReference Include="..\DND.Web.DynamicForms\DND.Web.DynamicForms.csproj">
       <Project>{9a0a751a-e856-4e8c-a52f-c1ddbad7d6e5}</Project>
       <Name>DND.Web.DynamicForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Web.FlightSearch\DND.Web.FlightSearch.csproj">
+      <Project>{db29ed77-3757-4570-8265-3eafdbab5648}</Project>
+      <Name>DND.Web.FlightSearch</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

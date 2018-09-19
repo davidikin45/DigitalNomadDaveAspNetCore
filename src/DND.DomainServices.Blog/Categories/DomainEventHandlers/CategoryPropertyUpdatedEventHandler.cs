@@ -1,5 +1,6 @@
-﻿using DND.Common.DomainEvents;
-using DND.Common.Implementation.Validation;
+﻿using DND.Common.Infrastructure.DomainEvents;
+using DND.Common.Infrastructure.Interfaces.DomainEvents;
+using DND.Common.Infrastructure.Validation;
 using DND.Domain.Blog.Categories;
 using DND.Interfaces.Blog.DomainServices;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
                 //await _tagService.CreateAsync(tag, domainEvent.UpdatedBy).ConfigureAwait(false);
             }
 
-            return Result.Ok();
+            return await Task.FromResult(Result.Ok());
         }
 
         public bool HandlePostCommitCondition(EntityPropertyUpdatedEvent<Category> domainEvent)
@@ -48,7 +49,7 @@ namespace DND.DomainServices.Blog.BlogPosts.DomainEventHandlers
                 //await _tagService.CreateAsync(tag, domainEvent.UpdatedBy).ConfigureAwait(false);
             }
 
-            return Result.Ok();
+            return await Task.FromResult(Result.Ok());
         }
     }
 }

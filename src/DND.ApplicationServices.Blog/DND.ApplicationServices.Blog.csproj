@@ -81,12 +81,11 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Pipelines, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IO.Pipelines.4.5.0\lib\netstandard2.0\System.IO.Pipelines.dll</HintPath>
+      <HintPath>..\..\packages\System.IO.Pipelines.4.5.1\lib\netstandard2.0\System.IO.Pipelines.dll</HintPath>
     </Reference>
     <Reference Include="System.Memory, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Memory.4.5.1\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
@@ -103,12 +102,6 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authors\Services\AuthorApplicationService.cs" />
@@ -132,6 +125,14 @@
     <Folder Include="Tags\Queries\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DND.Common.ApplicationServices\DND.Common.ApplicationServices.csproj">
+      <Project>{D6FDB12E-D8FE-46A1-86A4-FB94E8B204D0}</Project>
+      <Name>DND.Common.ApplicationServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DND.Common.Infrastructure\DND.Common.Infrastructure.csproj">
+      <Project>{7a9b9fa9-4d57-4fa9-bf94-668cdd35f648}</Project>
+      <Name>DND.Common.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DND.Common\DND.Common.csproj">
       <Project>{632121C5-DB10-4F32-A239-D4FA4EE8C12E}</Project>
       <Name>DND.Common</Name>

@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.DynamicForms.Forms;
 using DND.Domain.DynamicForms.Forms.Dtos;
 using DND.Domain.DynamicForms.FormSectionSubmissions.Dtos;
@@ -13,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.DynamicForms.FormSubmissions.Dtos
 {
-    public class FormSubmissionDto : BaseDtoAggregateRoot<Guid>, IHaveCustomMappings
+    public class FormSubmissionDto : DtoAggregateRootBase<Guid>, IHaveCustomMappings
     {
         public bool Completed { get; set; }
         public bool Valid { get; set; }

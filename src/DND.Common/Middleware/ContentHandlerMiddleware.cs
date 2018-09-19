@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using DND.Common.Constants;
+﻿using DND.Common.Constants;
 using DND.Common.Helpers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace DND.Common.Middleware
 {
@@ -343,7 +342,7 @@ namespace DND.Common.Middleware
                     _responseBytes = array2;
                     _responseFileName = Path.ChangeExtension(_responseFileName, ".jpg");
                 }
-                catch (Exception ex)
+                catch
                 {
 
                 }

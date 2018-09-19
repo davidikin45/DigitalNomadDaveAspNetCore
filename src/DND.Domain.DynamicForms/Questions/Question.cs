@@ -1,9 +1,9 @@
-﻿using DND.Common.Enums;
+﻿using DND.Common.Domain;
 using DND.Common.Extensions;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
 using DND.Domain.DynamicForms.LookupTables;
 using DND.Domain.DynamicForms.Questions.Enums;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DND.Domain.DynamicForms.Questions
 {
-    public class Question : BaseEntityAggregateRootAuditable<int>
+    public class Question : EntityAggregateRootAuditableBase<int>
     {
         public string FieldName { get; set; }
 
@@ -43,10 +43,10 @@ namespace DND.Domain.DynamicForms.Questions
             return errors;
         }
 
-        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

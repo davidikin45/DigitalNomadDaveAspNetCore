@@ -1,7 +1,7 @@
-﻿using DND.Common.Extensions;
-using DND.Common.Implementation.DomainServices;
-using DND.Common.Implementation.Validation;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.DomainServices;
+using DND.Common.Extensions;
+using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
+using DND.Common.Infrastructure.Validation.Errors;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.SearchEngines;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DND.DomainServices.FlightSearch.Search.Services
 {
-    public class FlightSearchDomainService : BaseDomainService, IFlightSearchDomainService
+    public class FlightSearchDomainService : DomainServiceBase, IFlightSearchDomainService
     {
         public FlightSearchDomainService(IUnitOfWorkScopeFactory baseUnitOfWorkScopeFactory)
             : base(baseUnitOfWorkScopeFactory)

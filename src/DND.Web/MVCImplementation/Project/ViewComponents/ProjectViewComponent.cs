@@ -1,6 +1,5 @@
 ﻿using DND.Common.Helpers;
 using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Common.ViewComponents;
 using DND.Domain.CMS.Projects.Dtos;
 using DND.Interfaces.CMS.ApplicationServices;
@@ -26,7 +25,7 @@ namespace DND.Web.MVCImplementation.Project.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             string orderColumn = nameof(ProjectDto.DateCreated);
-            string orderType = OrderByType.Descending;
+            string orderType = "desc";
 
             var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
 

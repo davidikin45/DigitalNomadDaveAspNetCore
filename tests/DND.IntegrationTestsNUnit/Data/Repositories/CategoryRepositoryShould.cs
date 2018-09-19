@@ -1,67 +1,50 @@
-﻿using DND.Common.Implementation.Data;
-using DND.Common.Implementation.Repository;
-using DND.Common.Implementation.Repository.EntityFramework;
-using DND.Common.Implementation.UnitOfWork;
-using DND.Common.Interfaces.Data;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Data.Repository.GenericEF;
 using DND.Common.Testing;
 using DND.Data;
 using DND.Domain.Blog.Categories;
-using DND.Infrastructure;
-using DND.Interfaces.Blog.Data;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace DND.IntegrationTestsNUnit.Data.Repositories
 {
     [TestFixture]
     public class CategoryRepositoryShould
     {
-        private ApplicationDbContext _context;
+        private ApplicationContext _context;
         private GenericEFRepository<Category> _repository;
-        private IUnitOfWorkReadOnlyScope _ouw;
 
         [SetUp]
         public void SetUp()
         {
-            var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
-            _context = new ApplicationDbContext(connectionString, true);
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
 
-            var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(_context) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
-            _ouw = uowFactory.CreateReadOnly();
-            _repository = new GenericEFRepository<Category>(_context, _ouw);
+            _repository = new GenericEFRepository<Category>(_context);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _ouw.Dispose();
             _context.Dispose();
         }
 
         public void Seed()
         {
-            var connectionString = DNDConnectionStrings.GetConnectionString("DefaultConnectionString");
-            using (var con = new ApplicationDbContext(connectionString, true))
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            using (var seedContext = TestHelper.GetContext<ApplicationContext>(connectionString, false))
             {
-                var uowFactory = new UnitOfWorkScopeFactory(new DbContextFactoryProducerSingleton(new IDbContextAbstractFactory[] { new FakeSingleDbContextFactory<IBlogDbContext>(con) }), new AmbientDbContextLocator(), new GenericRepositoryFactory());
+                var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
+                var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
+                seedContext.Categories.Add(cata);
+                seedContext.Categories.Add(catb);
 
-                using (var unitOfWork = uowFactory.Create(BaseUnitOfWorkScopeOption.ForceCreateNew))
-                {
-                    var repo = new GenericEFRepository<Category>(con, unitOfWork);
-
-                    var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };
-                    var catb = new Category() { Name = "Category 2", Description = "Category 2", UrlSlug = "category-2" };
-                    repo.Insert(cata);
-                    repo.Insert(catb);
-
-                    con.SaveChanges();
-                }
+                seedContext.SaveChanges();
             }
         }
 
         [Test, Isolated]
-        public async Task InsertDeleteUpdate()
+        public void InsertDeleteUpdate()
         {
             Seed();
 
@@ -70,17 +53,18 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
 
             //Insert, Delete, Update
             var cat3 = new Category() { Name = "Category 3", Description = "Category 3", UrlSlug = "category-3" };
-            _repository.Insert(cat3);
-            _repository.Delete(cat2.Id);
+            _context.Categories.Add(cat3);
+            //_repository.Delete(cat2.Id);
+            _context.Categories.Remove(cat2);
             cat1.Name = "Category 4";
-            _repository.Update(cat1);
+            _context.Categories.Update(cat1);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //Update, Delete, Insert
         }
 
         [Test, Isolated]
-        public async Task InsertUpdateDelete()
+        public void InsertUpdateDelete()
         {
             Seed();
 
@@ -94,12 +78,12 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _repository.Update(cat1);
             _repository.Delete(cat2.Id);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //Update, Delete, Insert
         }
 
         [Test, Isolated]
-        public async Task DeleteInsertUpdate()
+        public void DeleteInsertUpdate()
         {
             Seed();
 
@@ -113,12 +97,12 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             cat1.Name = "Category 4";
             _repository.Update(cat1);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //Update, Delete, Insert
         }
 
         [Test, Isolated]
-        public async Task DeleteUpdateInsert()
+        public void DeleteUpdateInsert()
         {
             Seed();
 
@@ -132,12 +116,12 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _repository.Update(cat1);
             _repository.Insert(cat3);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //Update, Delete, Insert
         }
 
         [Test, Isolated]
-        public async Task UpdateDeleteInsert()
+        public void UpdateDeleteInsert()
         {
             Seed();
 
@@ -151,12 +135,12 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _repository.Delete(cat2.Id);
             _repository.Insert(cat3);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //Update, Delete, Insert
         }
 
         [Test, Isolated]
-        public async Task UpdateInsertDelete()
+        public void UpdateInsertDelete()
         {
             Seed();
 
@@ -170,19 +154,19 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
             _repository.Insert(cat3);
             _repository.Delete(cat2.Id);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //Update, Delete, Insert
         }
 
         [Test, Isolated]
-        public async Task InsertDelete()
+        public void InsertDelete()
         {
             //Insert, Delete, Update
             var cat3 = new Category() { Name = "Category 3", Description = "Category 3", UrlSlug = "category-3" };
             _repository.Insert(cat3);
             _repository.Delete(cat3);
          
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             //No save occurs
         }
     }

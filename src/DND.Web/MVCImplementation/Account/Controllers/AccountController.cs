@@ -1,4 +1,4 @@
-﻿using DND.Common.Email;
+﻿using DND.Common.Infrastructure.Email;
 using DND.Domain.Identity.Users;
 using DND.Web.MVCImplementation.Account.Models;
 using DND.Web.MVCImplementation.Extensions;
@@ -382,7 +382,7 @@ namespace DND.Web.MVCImplementation.Account.Controllers
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>", true);
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 

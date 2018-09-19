@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace DND.Common.Reflection
 {
@@ -33,9 +32,10 @@ namespace DND.Common.Reflection
 
             foreach (string path in paths)
             {
-                IEnumerable<string> files = Directory.GetFiles(path, "*.dll").ToList();
+                IEnumerable<string> files = Directory.EnumerateFiles(path, "*.*")
+                     .Where(file => new[] { ".dll", ".exe" }.Any(file.ToLower().EndsWith)).ToList();
 
-                if(filter != null)
+                if (filter != null)
                 {
                     files = files.Where(filter);
                 }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
-using DND.Common.Email;
 using DND.Common.Filters;
 using DND.Common.Helpers;
+using DND.Common.Infrastructure.Email;
 using DND.Interfaces.Blog.ApplicationServices;
 using DND.Web.MVCImplementation.Blog.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ namespace DND.Web.MVCImplementation.Blog.Controllers
 {
     [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Blog" })]
     [Route("blog")]
-    public class BlogController : BaseController
+    public class BlogController : MvcControllerBase
     {
         private readonly IBlogApplicationService _blogService;
 

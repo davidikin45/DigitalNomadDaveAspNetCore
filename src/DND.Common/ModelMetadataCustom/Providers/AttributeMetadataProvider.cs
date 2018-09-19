@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using DND.Common.ModelMetadataCustom.Interfaces;
+﻿using DND.Common.Infrastructure.Interfaces.Domain.ModelMetadata;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace DND.Common.ModelMetadataCustom.Providers
 {

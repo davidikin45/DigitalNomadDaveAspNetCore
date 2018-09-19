@@ -1,10 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using DND.Common.Implementation.Data;
-using System;
-using System.Collections.Generic;
+﻿using DND.Common.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DND.Common.Extensions
 {

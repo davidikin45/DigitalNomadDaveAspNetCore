@@ -1,7 +1,6 @@
 ﻿using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Common.ViewComponents;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Domain.CMS.CarouselItems.Dtos;

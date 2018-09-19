@@ -1,13 +1,12 @@
-﻿using DND.Common.Extensions;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Implementation.Models;
+﻿using DND.Common.Domain.Dtos;
+using DND.Common.Extensions;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace DND.Domain.FlightSearch.Search.Dtos
 {
-    public class LocationRequestDto : BaseDto<string>
+    public class LocationRequestDto : DtoBase<string>
     {
         public string Locale { get; set; }
         public string[] Market { get; set; }

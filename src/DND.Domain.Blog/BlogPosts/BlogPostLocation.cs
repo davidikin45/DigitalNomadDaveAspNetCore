@@ -1,14 +1,14 @@
-using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
 using DND.Domain.Blog.Locations;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.Blog.BlogPosts
 {
-    public class BlogPostLocation : BaseEntityAuditable<int>
+    public class BlogPostLocation : EntityAuditableBase<int>
     {
         //[Required]
         public int BlogPostId { get; set; }
@@ -29,10 +29,10 @@ namespace DND.Domain.Blog.BlogPosts
             return errors;
         }
 
-        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public async override Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

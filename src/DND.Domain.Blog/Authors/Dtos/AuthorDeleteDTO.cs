@@ -1,12 +1,11 @@
-using DND.Common.Implementation.Dtos;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.Automapper;
+using DND.Common.Domain.Dtos;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DND.Domain.Blog.Authors.Dtos
 {
-    public class AuthorDeleteDto : BaseDtoAggregateRoot<int> , IMapFrom<Author>, IMapTo<Author>
+    public class AuthorDeleteDto : DtoAggregateRootBase<int> , IMapFrom<Author>, IMapTo<Author>
     {
         public AuthorDeleteDto()
 		{

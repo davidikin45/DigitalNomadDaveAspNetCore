@@ -1,9 +1,9 @@
-﻿using DND.Common.Interfaces.ApplicationServices;
+﻿using DND.Common.Infrastructure.Interfaces.ApplicationServices;
 using DND.Domain.CMS.Testimonials.Dtos;
 
 namespace DND.Interfaces.CMS.ApplicationServices
 {
-    public interface ITestimonialApplicationService : IBaseEntityApplicationService<TestimonialDto, TestimonialDto, TestimonialDto, TestimonialDeleteDto>
+    public interface ITestimonialApplicationService : IApplicationServiceEntity<TestimonialDto, TestimonialDto, TestimonialDto, TestimonialDeleteDto>
     {
         
     }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using DND.Common.ApplicationServices.SignalR;
 using DND.Common.Implementation.ApplicationServices;
-using DND.Common.SignalRHubs;
 using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DND.ApplicationServices.Blog.BlogPosts.Services
 {
-    public class BlogPostApplicationService : BaseEntityApplicationService<BlogPost, BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto, IBlogPostDomainService>, IBlogPostApplicationService
+    public class BlogPostApplicationService : ApplicationServiceEntityBase<BlogPost, BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto, IBlogPostDomainService>, IBlogPostApplicationService
     {
         public BlogPostApplicationService(IBlogPostDomainService domainService, IMapper mapper, IHubContext<ApiNotificationHub<BlogPostDto>> hubContext)
         : base(domainService, mapper, hubContext)

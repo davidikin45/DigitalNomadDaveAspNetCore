@@ -1,25 +1,25 @@
-﻿using DND.Domain.Blog.Tags;
-using DND.Domain.CMS.Faqs;
-using System.Data.Entity.ModelConfiguration;
+﻿using DND.Domain.CMS.Faqs;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DND.Data.Configurations.CMS.Faqs
 {
     public class FaqConfiguration
-           : EntityTypeConfiguration<Faq>
+           : IEntityTypeConfiguration<Faq>
     {
-        public FaqConfiguration()
+        public void Configure(EntityTypeBuilder<Faq> builder)
         {
-            HasKey(p => p.Id);
+            builder.HasKey(p => p.Id);
 
-            Ignore(p => p.DateDeleted);
-            Ignore(p => p.UserDeleted);
+            builder.Ignore(p => p.DateDeleted);
+            builder.Ignore(p => p.UserDeleted);
 
-            Property(p => p.RowVersion).IsRowVersion();
+            builder.Property(p => p.RowVersion).IsRowVersion();
 
-            Property(p => p.Question)
+            builder.Property(p => p.Question)
                  .IsRequired();
 
-            Property(p => p.Answer)
+            builder.Property(p => p.Answer)
                 .IsRequired();
         }
     }

@@ -1,18 +1,18 @@
 using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Domain.Blog.BlogPosts;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.Blog.Locations.Enums;
 using DND.Infrastructure.Constants;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Spatial;
+using System.Globalization;
 
 namespace DND.Domain.Blog.Locations.Dtos
 {
-    public class LocationDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class LocationDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         [Required]
         public string Name { get; set; }
@@ -65,9 +65,13 @@ namespace DND.Domain.Blog.Locations.Dtos
         {
             configuration.CreateMap<LocationDto, Location>()
              .ForMember(bo => bo.DateModified, dto => dto.Ignore())
-            .ForMember(bo => bo.DateCreated, dto => dto.Ignore());
+            .ForMember(bo => bo.DateCreated, dto => dto.Ignore())
+            .ForMember(bo => bo.Latitude, dto => dto.MapFrom(s => s.GPSLocation != null ? s.GPSLocation.Latitude : null))
+           .ForMember(bo => bo.Longitude, dto => dto.MapFrom(s => s.GPSLocation != null ? s.GPSLocation.Longitude : null));
 
-            configuration.CreateMap<Location, LocationDto>();
+            configuration.CreateMap<Location, LocationDto>()
+             .ForMember(dto => dto.GPSLocation, bo => bo.MapFrom(s => s.Latitude.HasValue && s.Longitude.HasValue ?
+             DbGeography.FromText(string.Format(CultureInfo.InvariantCulture, "POINT({1} {0})", s.Latitude.ToString(), s.Longitude.ToString()), DbGeography.DefaultCoordinateSystemId) : default(DbGeography)));
         }
     }
 }

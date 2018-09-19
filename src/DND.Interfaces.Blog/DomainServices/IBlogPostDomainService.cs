@@ -1,15 +1,13 @@
-﻿using DND.Common.Implementation.Validation;
-using DND.Common.Interfaces.DomainServices;
+﻿using DND.Common.Infrastructure.Interfaces.DomainServices;
+using DND.Common.Infrastructure.Validation;
 using DND.Domain.Blog.BlogPosts;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DND.Interfaces.Blog.DomainServices
 {
-    public interface IBlogPostDomainService : IBaseEntityDomainService<BlogPost>
+    public interface IBlogPostDomainService : IDomainServiceEntity<BlogPost>
     {
         Task<BlogPost> GetPostAsync(int year, int month, string titleSlug, CancellationToken cancellationToken);
 

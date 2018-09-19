@@ -1,26 +1,19 @@
 ﻿using AutoMapper;
-using DND.Common.Implementation.Dtos;
-using DND.Common.Interfaces.Automapper;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
-using DND.Common.ModelMetadataCustom.LinkAttributes;
-using DND.Common.Validation;
+using DND.Common.Domain.Dtos;
+using DND.Common.Domain.ModelMetadata;
+using DND.Common.Infrastructure.Interfaces.Automapper;
 using DND.Domain.Blog.Authors;
 using DND.Domain.Blog.Authors.Dtos;
 using DND.Domain.Blog.Categories;
 using DND.Domain.Blog.Categories.Dtos;
-using DND.Domain.Blog.Locations;
-using DND.Domain.Blog.Locations.Dtos;
-using DND.Domain.Blog.Tags;
-using DND.Domain.Blog.Tags.Dtos;
 using DND.Infrastructure.Constants;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace DND.Domain.Blog.BlogPosts.Dtos
 {
-    public class BlogPostDto : BaseDtoAggregateRoot<int>, IHaveCustomMappings
+    public class BlogPostDto : DtoAggregateRootBase<int>, IHaveCustomMappings
     {
         [Required(ErrorMessage = "Title: Field is required")]
         [StringLength(500, ErrorMessage = "Title: Length should not exceed 500 characters")]

@@ -1,14 +1,14 @@
-﻿using DND.Common.Enums;
-using DND.Common.Implementation.Models;
-using DND.Common.Interfaces.UnitOfWork;
+﻿using DND.Common.Domain;
+using DND.Common.Infrastrucutre.Interfaces.Domain;
 using DND.Domain.DynamicForms.Sections;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace DND.Domain.DynamicForms.Forms
 {
-    public class Form : BaseEntityAggregateRootAuditable<int>
+    public class Form : EntityAggregateRootAuditableBase<int>
     {
         public bool Published { get; set; }
 
@@ -28,10 +28,10 @@ namespace DND.Domain.DynamicForms.Forms
             return errors;
         }
 
-        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(IBaseUnitOfWorkScope unitOfWork, ValidationMode mode)
+        public override async Task<IEnumerable<ValidationResult>> ValidateWithDbConnectionAsync(DbContext context, ValidationMode mode)
         {
             var errors = new List<ValidationResult>();
-            return errors;
+            return await Task.FromResult(errors);
         }
     }
 }

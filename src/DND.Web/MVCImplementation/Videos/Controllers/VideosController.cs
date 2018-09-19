@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
-using DND.Common.Email;
+using DND.Common.Dtos;
 using DND.Common.Filters;
 using DND.Common.Helpers;
-using DND.Common.Implementation.Dtos;
 using DND.Common.Infrastructure;
+using DND.Common.Infrastructure.Email;
 using DND.Common.Interfaces.Repository;
-using DND.Common.ModelMetadataCustom.DisplayAttributes;
 using DND.Infrastructure.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +17,8 @@ namespace DND.Web.MVCImplementation.Videos.Controllers
 {
     [TypeFilter(typeof(FeatureAuthFilter), Arguments = new object[] { "Videos" })]
     [Route("videos")]
-    public class VideosController : BaseController
-	{
+    public class VideosController : MvcControllerBase
+    {
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
 
@@ -54,7 +52,7 @@ namespace DND.Web.MVCImplementation.Videos.Controllers
 
                 return View(response);
             }
-            catch (Exception ex)
+            catch
             {
                 return HandleReadException();
             }
@@ -77,7 +75,7 @@ namespace DND.Web.MVCImplementation.Videos.Controllers
 
                 return PartialView("_VideoAjax",response);
             }
-            catch (Exception ex)
+            catch
             {
                 return HandleReadException();
             }
