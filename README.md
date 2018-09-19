@@ -1,6 +1,6 @@
 # Digital Nomad Dave ASP.NET Core
 
-A custom built Content Management System using Bootstrap 4, Angular, C# MVC Core, xUnit, SpecFlow, Selenium, VSTS, JwtTokens, OpenID Connect, Identity Server 4.
+A custom built Content Management System using Bootstrap 4, Angular, C# MVC Core, xUnit, SpecFlow, Selenium, Azure Devops - Previously VSTS, JwtTokens, OpenID Connect, Identity Server 4.
 
 ## URLs
 * [Website](http://www.digitalnomaddave.com)
@@ -264,7 +264,7 @@ Publish DND.Web
 
 ## Continuous Integration (CI)
 
-Using [Visual Studio Team Services](https://www.visualstudio.com/team-services/)
+Using [Azure DevOps - Previously VSTS](https://azure.microsoft.com/en-us/services/devops/)
 
 ![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CI.png "Continuous Integration")
 
