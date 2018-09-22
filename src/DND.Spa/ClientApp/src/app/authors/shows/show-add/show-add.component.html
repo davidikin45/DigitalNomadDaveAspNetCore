@@ -10,7 +10,7 @@
           [formGroup]="showCollectionForm">
       <fieldset>
         <div formArrayName="shows"
-             *ngFor="let show of showCollectionForm.get('shows').controls; let i = index;">
+             *ngFor="let show of showCollectionForm.get('shows')['controls']; let i = index;">
           <app-show-single [showIndex]="i"
                            [show]="show" (removeShowClicked)="showCollectionForm.get('shows').removeAt($event)"></app-show-single>
         </div>
