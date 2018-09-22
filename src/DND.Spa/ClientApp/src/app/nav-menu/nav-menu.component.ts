@@ -17,7 +17,7 @@ export class NavMenuComponent {
     this.isExpanded = !this.isExpanded;
   }
 
-  constructor(private openIdConnectService: OpenIdConnectService) {
+  constructor(public openIdConnectService: OpenIdConnectService) {
   }
 }
 
