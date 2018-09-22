@@ -13,7 +13,7 @@ import { ShowSingleComponent } from '../show-single/show-single.component';
 
 export class ShowAddComponent implements OnInit {
   private sub: Subscription;
-  private authorId: number;
+  public authorId: number;
   public showCollectionForm: FormGroup;
 
   constructor(private showService: ShowService,

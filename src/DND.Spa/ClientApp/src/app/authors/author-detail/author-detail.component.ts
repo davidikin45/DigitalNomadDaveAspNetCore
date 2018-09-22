@@ -15,7 +15,7 @@ import { ShowForRead } from '../shows/shared/show-for-read.model';
 })
 export class AuthorDetailComponent implements OnInit, OnDestroy {
 
-  private author: any;
+  public author: any;
   private id: string;
   private sub: Subscription;
   private isAdmin: boolean = (this.openIdConnectService.user.profile.role === "Admin");
