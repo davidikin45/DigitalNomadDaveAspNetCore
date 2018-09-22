@@ -7,7 +7,7 @@ namespace DND.Data.Identity
     public class IdentityContextDesignTimeFactory : DesignTimeDbContextFactoryBase<IdentityContext>
     {
         public IdentityContextDesignTimeFactory()
-            : base("DefaultConnectionString", typeof(IdentityContext).GetTypeInfo().Assembly.GetName().Name)
+            : base("DefaultConnection", typeof(IdentityContext).GetTypeInfo().Assembly.GetName().Name)
         {
         }
 

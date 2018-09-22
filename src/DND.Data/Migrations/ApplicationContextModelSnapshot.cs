@@ -242,8 +242,8 @@ namespace DND.Data.Migrations
 
                     b.Property<string>("LinkText");
 
-                    b.Property<string>("LocationTypeString")
-                        .HasColumnName("LocationType");
+                    b.Property<string>("LocationType")
+                        .IsRequired();
 
                     b.Property<double?>("Longitude");
 

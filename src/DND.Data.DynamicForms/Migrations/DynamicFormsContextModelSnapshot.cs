@@ -328,8 +328,8 @@ namespace DND.Data.DynamicForms.Migrations
 
                     b.Property<string>("UserOwner");
 
-                    b.Property<string>("ValidationTypeString")
-                        .HasColumnName("ValidationType");
+                    b.Property<string>("ValidationType")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

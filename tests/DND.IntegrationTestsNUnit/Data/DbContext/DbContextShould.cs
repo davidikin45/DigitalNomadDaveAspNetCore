@@ -14,7 +14,7 @@ namespace DND.IntegrationTestsNUnit.Data.DbContext
         [SetUp]
         public void SetUp()
         {
-            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnection");
             _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
         }
 

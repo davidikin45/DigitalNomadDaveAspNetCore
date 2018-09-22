@@ -40,6 +40,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Authentication, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNetCore.Authentication.2.1.2\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.dll</HintPath>
@@ -223,10 +226,11 @@
     <Compile Include="FactoriesDesignTime\IdentityContextDesignTimeFactory.cs" />
     <Compile Include="Configurations\UserConfiguration.cs" />
     <Compile Include="IdentityContextInitializer.cs" />
+    <Compile Include="Initializers\IdentityContextInitializerDropCreate.cs" />
     <Compile Include="Initializers\IdentityContextInitializerMigrate.cs" />
-    <Compile Include="Migrations\20180916095755_InitialMigration.cs" />
-    <Compile Include="Migrations\20180916095755_InitialMigration.designer.cs">
-      <DependentUpon>20180916095755_InitialMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20180922090140_InitialMigration.cs" />
+    <Compile Include="Migrations\20180922090140_InitialMigration.designer.cs">
+      <DependentUpon>20180922090140_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\IdentityContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

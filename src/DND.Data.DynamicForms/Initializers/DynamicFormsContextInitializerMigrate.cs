@@ -1,28 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LeacockSite.Data;
 
 namespace DND.Data.DynamicForms.Initializers
 {
-    public class DynamicFormsContextInitializerMigrate
+    public class DynamicFormsContextInitializerMigrate : ContextInitializerMigrate<DynamicFormsContext>
     {
-        private readonly DynamicFormsContext _context;
-        //private readonly UserManager<User> _userManager;
-        //private readonly RoleManager<IdentityRole> _roleManager;
-
         public DynamicFormsContextInitializerMigrate(
             DynamicFormsContext context)
+            :base(context)
         {
-            _context = context;
+
         }
 
-        //This example just creates an Administrator role and one Admin users
-        public void Initialize()
+        public override void Seed(DynamicFormsContext context)
         {
-            //create database schema if none exists
-            _context.Database.Migrate();
-
-            _context.Seed();
-
-            _context.SaveChanges();
+            context.Seed();
         }
     }
 }

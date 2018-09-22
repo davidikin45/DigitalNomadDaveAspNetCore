@@ -1,5 +1,4 @@
 ﻿using DND.Common.Domain;
-using DND.Common.Extensions;
 using DND.Common.Infrastrucutre.Interfaces.Domain;
 using DND.Domain.DynamicForms.Questions.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -13,13 +12,7 @@ namespace DND.Domain.DynamicForms.Questions
     {
         public int QuestionId { get; set; }
 
-        public string ValidationTypeString
-        {
-            get { return ValidationType.ToString(); }
-            private set { ValidationType = EnumExtensions.ParseEnum<QuestionValidationType>(value); }
-        }
-
-        public QuestionValidationType ValidationType = QuestionValidationType.Required;
+        public QuestionValidationType ValidationType { get; set; } = QuestionValidationType.Required;
 
         public string CustomValidationMessage { get; set; }
 

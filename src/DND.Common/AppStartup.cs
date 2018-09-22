@@ -74,16 +74,19 @@ namespace DND.Common
     //Error = 4
     //Critical = 5
 
-    public class AppStartup
+    public abstract class AppStartup
     {
-        public AppStartup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public AppStartup(ILoggerFactory loggerFactory, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            Logger = loggerFactory.CreateLogger("Startup");
+
             Configuration = configuration;
             Configuration.PopulateStaticConnectionStrings();
 
             HostingEnvironment = hostingEnvironment;
 
             BinPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            Logger.LogInformation($"Bin Folder: {BinPath}");
             PluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), PluginsFolder);
             if (!Directory.Exists(PluginsPath)) Directory.CreateDirectory(PluginsPath);
             AssemblyName = this.GetType().Assembly.GetName().Name;
@@ -106,6 +109,7 @@ namespace DND.Common
             ApplicationParts = binAssemblies.Concat(pluginAssemblies).Where(AssemblyBoolFilter).ToList();
         }
 
+        public ILogger Logger { get; }
         public IHostingEnvironment HostingEnvironment { get; }
         public IConfiguration Configuration { get; }
 
@@ -217,7 +221,9 @@ namespace DND.Common
                 return new UrlHelper(actionContext);
             });
 
-            var connectionString = Configuration.GetConnectionString("DefaultConnectionString");
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            AddDatabases(services, connectionString);
 
             services.AddHangfireSqlServer(connectionString);
 
@@ -1004,5 +1010,8 @@ namespace DND.Common
 
             taskRunner.RunTasksAfterApplicationConfiguration();
         }
+
+        public abstract void AddDatabases(IServiceCollection services, string defaultConnectionString);
+
     }
 }

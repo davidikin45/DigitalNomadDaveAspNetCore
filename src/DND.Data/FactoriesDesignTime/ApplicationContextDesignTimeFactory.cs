@@ -7,7 +7,7 @@ namespace DND.Data
     public class ApplicationContextDesignTimeFactory : DesignTimeDbContextFactoryBase<ApplicationContext>
     {
         public ApplicationContextDesignTimeFactory()
-            : base("DefaultConnectionString", typeof(ApplicationContext).GetTypeInfo().Assembly.GetName().Name)
+            : base("DefaultConnection", typeof(ApplicationContext).GetTypeInfo().Assembly.GetName().Name)
         {
         }
 

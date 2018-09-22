@@ -34,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -205,9 +206,9 @@ SET bin="$(TargetDir)"
 del /q %25plugins%25\*
 for /d %25%25x in (%25plugins%25\*) do @rd /s /q ^"%25%25x^"
 
-xcopy "$(ProjectDir)..\..\src\DND.Web\bin\$(ConfigurationName)\net472\plugins\*.dll" %25plugins%25 /Y
-xcopy "$(ProjectDir)..\..\src\DND.Web\bin\$(ConfigurationName)\net472\plugins\*.exe" %25plugins%25 /Y
-xcopy "$(ProjectDir)..\..\src\DND.Web\bin\$(ConfigurationName)\net472\plugins\*.pdb" %25plugins%25 /Y</PostBuildEvent>
+xcopy "$(ProjectDir)..\..\src\DND.Web\bin\$(ConfigurationName)\net472\win7-x86\plugins\*.dll" %25plugins%25 /Y
+xcopy "$(ProjectDir)..\..\src\DND.Web\bin\$(ConfigurationName)\net472\win7-x86\plugins\*.exe" %25plugins%25 /Y
+xcopy "$(ProjectDir)..\..\src\DND.Web\bin\$(ConfigurationName)\net472\win7-x86\plugins\*.pdb" %25plugins%25 /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets" Condition="Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets')" />
   <Import Project="..\..\packages\xunit.core.2.4.0\build\xunit.core.targets" Condition="Exists('..\..\packages\xunit.core.2.4.0\build\xunit.core.targets')" />

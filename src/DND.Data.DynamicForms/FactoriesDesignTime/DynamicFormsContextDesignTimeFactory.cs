@@ -8,7 +8,7 @@ namespace DND.Data
     public class DynamicFormsContextDesignTimeFactory : DesignTimeDbContextFactoryBase<DynamicFormsContext>
     {
         public DynamicFormsContextDesignTimeFactory()
-            : base("DefaultConnectionString", typeof(DynamicFormsContext).GetTypeInfo().Assembly.GetName().Name)
+            : base("DefaultConnection", typeof(DynamicFormsContext).GetTypeInfo().Assembly.GetName().Name)
         {
         }
 

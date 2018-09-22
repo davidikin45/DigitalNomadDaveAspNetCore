@@ -5,6 +5,7 @@ A custom built Content Management System using Bootstrap 4, Angular, C# MVC Core
 ## URLs
 * [Website](http://www.digitalnomaddave.com)
 * [Swagger UI](http://www.digitalnomaddave.com/swagger)
+* [Azure DevOps](https://davidikin.visualstudio.com/Digital%20Nomad%20Dave)
 
 ## Getting Started
 
@@ -30,7 +31,7 @@ Login to /admin with username: admin password: password
 ```
 ## Folder Structure
 
-Wherever possible I have opted for Business Component organization over Functional organization. 
+Wherever possible I have opted for Business Component (Functional) organization over Categorical organization. 
 It's very easy to stick with the standard Model, View and Controllers structure but organizing into business components makes it alot easier to maintain and gives ability to easily copy/paste an entire piece of functionality.
 
 ###  MVC
@@ -311,6 +312,7 @@ This project is licensed under the MIT License
 
 ## Acknowledgments
 
+* [DevOps Assessment](http://devopsassessment.azurewebsites.net/)
 * [Pride Parrot](http://www.prideparrot.com)
 * [Mehdi El Gueddari](http://mehdi.me/ambient-dbcontext-in-ef6/)
 * [Favicon.io](https://favicon.io/)

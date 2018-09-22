@@ -1,28 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LeacockSite.Data;
 
 namespace DND.Data.Identity.Initializers
 {
-    public class IdentityContextInitializerMigrate
+    public class IdentityContextInitializerMigrate : ContextInitializerMigrate<IdentityContext>
     {
-        private readonly IdentityContext _context;
-        //private readonly UserManager<User> _userManager;
-        //private readonly RoleManager<IdentityRole> _roleManager;
-
         public IdentityContextInitializerMigrate(
             IdentityContext context)
+            :base(context)
         {
-            _context = context;
+
         }
 
-        //This example just creates an Administrator role and one Admin users
-        public void Initialize()
+        public override void Seed(IdentityContext context)
         {
-            //create database schema if none exists
-            _context.Database.Migrate();
-
-            _context.Seed();
-
-            _context.SaveChanges();
+            context.Seed();
         }
     }
 }

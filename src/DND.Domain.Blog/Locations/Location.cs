@@ -14,15 +14,11 @@ namespace DND.Domain.Blog.Locations
     {
 		public string Name { get; set; }
 
-        //[Column("LocationType")]
-        public string LocationTypeString
-        {
-            get { return LocationType.ToString(); }
-            private set { LocationType = EnumExtensions.ParseEnum<LocationType>(value); }
-        }
+        //https://stackoverflow.com/questions/47721246/ef-core-2-0-enums-stored-as-string
+        public LocationType LocationType { get; set; } = LocationType.City;
 
-        //[NotMapped]
-        public LocationType LocationType = LocationType.City;
+        public string LocationTypeDescription => LocationType.GetDescription();
+
         public string DescriptionBody { get; set; }
         public string TimeRequired { get; set; }
         public string Cost { get; set; }

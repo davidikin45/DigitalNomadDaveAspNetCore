@@ -1,6 +1,8 @@
 ﻿using DND.Domain.Blog.Locations;
+using DND.Domain.Blog.Locations.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DND.Data.Configurations.Blog.Locations
 {
@@ -16,11 +18,10 @@ namespace DND.Data.Configurations.Blog.Locations
 
             builder.Property(p => p.RowVersion).IsRowVersion();
 
-            //NotMapped
-            //Ignore(p => p.LocationType);
+            builder
+            .Property(e => e.LocationType)
+            .HasConversion(new EnumToStringConverter<LocationType>());
 
-            builder.Property(p => p.LocationTypeString)
-                .HasColumnName("LocationType");
         }
     }
 }

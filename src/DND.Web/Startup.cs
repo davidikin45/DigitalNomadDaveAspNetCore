@@ -8,14 +8,15 @@ using DND.Interfaces.DynamicForms.ApplicationServices;
 using DND.Interfaces.FlightSearch.ApplicationServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace DND.Web
 {
     public class Startup : AppStartupWithIdentity<IdentityContext,User>
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
-            : base(configuration, hostingEnvironment)
+        public Startup(ILoggerFactory loggerFactory, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+            : base(loggerFactory, configuration, hostingEnvironment)
         {
 
             var types = new Type[] {

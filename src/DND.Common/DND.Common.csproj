@@ -1021,6 +1021,7 @@
     <Compile Include="Validation\InheritanceValidationAttributeAdapterProviderExtension.cs" />
     <Compile Include="Validation\CustomValidationVisitor.cs" />
     <Compile Include="ViewComponents\BaseViewComponent.cs" />
+    <Compile Include="ViewExpanderMvc.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -5,15 +5,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DND.Common
 {
-    public class AppStartupWithIdentity<TIdentiyDbContext, TUser> : AppStartup
+    public abstract class AppStartupWithIdentity<TIdentiyDbContext, TUser> : AppStartup
         where TIdentiyDbContext : DbContext
         where TUser : class
     {
-        public AppStartupWithIdentity(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
-            :base(configuration, hostingEnvironment)
+        public AppStartupWithIdentity(ILoggerFactory loggerFactory, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+            :base(loggerFactory, configuration, hostingEnvironment)
         {
 
         }
@@ -30,10 +31,6 @@ namespace DND.Common
 
             var loginSettingsSection = Configuration.GetSection("LoginSettings");
             var loginSettings = loginSettingsSection.Get<LoginSettings>();
-
-            var connectionString = Configuration.GetConnectionString("DefaultConnectionString");
-
-            services.AddDbContextSqlServer<TIdentiyDbContext>(connectionString);
             
             if (loginSettings.Application.Enable || loginSettings.JwtToken.Enable)
             {
@@ -52,6 +49,11 @@ namespace DND.Common
                userSettings.ForgotPasswordEmailConfirmationExpireHours,
                userSettings.UserDetailsChangeLogoutMinutes);
             }
+        }
+
+        public override void AddDatabases(IServiceCollection services, string defaultConnectionString)
+        {
+            services.AddDbContextSqlServer<TIdentiyDbContext>(defaultConnectionString);
         }
     }
 }

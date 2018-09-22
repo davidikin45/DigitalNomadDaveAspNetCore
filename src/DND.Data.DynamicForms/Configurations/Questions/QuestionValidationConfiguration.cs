@@ -1,6 +1,8 @@
 ﻿using DND.Domain.DynamicForms.Questions;
+using DND.Domain.DynamicForms.Questions.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DND.Data.DynamicForms.Configurations.Questions
 {
@@ -15,8 +17,9 @@ namespace DND.Data.DynamicForms.Configurations.Questions
             builder.Ignore(p => p.DateDeleted);
             builder.Ignore(p => p.UserDeleted);
 
-            builder.Property(p => p.ValidationTypeString)
-             .HasColumnName(nameof(QuestionValidation.ValidationType));
+            builder
+           .Property(e => e.ValidationType)
+           .HasConversion(new EnumToStringConverter<QuestionValidationType>());
         }
     }
 }

@@ -137,6 +137,9 @@ namespace DND.Common.Data.Helpers
 
         static readonly MethodInfo SetMethod = typeof(DbContext).GetMethod(nameof(DbContext.Set));
 
+        public static IQueryable Set(this DbContext context, Type entityType) =>
+           (IQueryable)SetMethod.MakeGenericMethod(entityType).Invoke(context, null);
+
         public static IQueryable Queryable(this DbContext context, Type entityType) =>
             (IQueryable)SetMethod.MakeGenericMethod(entityType).Invoke(context, null);
         #endregion

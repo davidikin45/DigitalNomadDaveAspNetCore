@@ -23,7 +23,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
         [SetUp]
         public void SetUp()
         {
-            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnection");
             _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
             ApplicationContext.LoggerFactory.ConfigureLogging(s => BuildLogString(s), LoggingCategories.SQL);
 
@@ -54,7 +54,7 @@ namespace DND.IntegrationTestsNUnit.Data.Repositories
 
         public void Seed()
         {
-            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnection");
             using (var seedContext = TestHelper.GetContext<ApplicationContext>(connectionString, false))
             {
                 var cata = new Category() { Name = "Category 1", Description = "Category 1", UrlSlug = "category-1" };

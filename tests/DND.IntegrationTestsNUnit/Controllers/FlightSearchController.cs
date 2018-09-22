@@ -37,7 +37,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
             });
             _mapper = config.CreateMapper();
 
-            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString");
+            var connectionString = TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnection");
 
             _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
 

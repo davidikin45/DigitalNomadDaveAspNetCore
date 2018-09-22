@@ -11,7 +11,7 @@ namespace DND.TestSetup
     public abstract class DbSetupFixture : IntegrationTestDbSetupBase<DbSetupFixture>, IDisposable
     {
         public DbSetupFixture()
-             : base(TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnectionString"))
+             : base(TestHelper.GetConfiguration("Integration").GetConnectionString("DefaultConnection"))
         {
         }
 
