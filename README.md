@@ -42,7 +42,7 @@ This can be achieved in ASP.NET Core by creating a custom view locator implement
 + MVCImplementation
     + Aggregate Root
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/MVC.png "MVC Folder Structure")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/MVC.png?raw=true "MVC Folder Structure")
 
 ###  Bounded Context Assembly
 This can be achieved at an assembly level by creating an Assembly per Bounded Context
@@ -51,7 +51,7 @@ This can be achieved at an assembly level by creating an Assembly per Bounded Co
     + Aggregate Root
         + Entity
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/BC.png "Bounded Context Folder Structure")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/BC.png?raw=true "Bounded Context Folder Structure")
 
 ## Domain Driven Design, Generic Admin MVC UI and Api
 When I started looking into building a generic admin UI and Api that could handle any data model it became clear that the following rules would need to be adhered to when creating the data model. Alot of the rules are the basis of Domain Driven Design.
@@ -105,7 +105,7 @@ For performance reaons an event is only ever fired if there is at least one Hand
 The methods IDomainEvent methods HandlePreCommitCondition and HandlePostCommitCondition can be used for scenarios where you only want to handle PreCommit or PostCommit.\
 Below is the intended design pattern and an example of two IDomainEventHandlers. Note: This is still a work in progress.
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/Domain%20Events%20Diagram.png "Domain Events Diagram")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/Domain%20Events%20Diagram.png?raw=true "Domain Events Diagram")
 
 ```C#
  public class Tag
@@ -202,13 +202,13 @@ Todo
 
 Make generic UI compatible with any complex Dto datastructure. Convention first, configured by model data attributes where necessary.
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericList.png "Generic List")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericList.png?raw=true "Generic List")
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericCreateUpdate.png "Generic Create Update")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericCreateUpdate.png?raw=true "Generic Create Update")
 
 Make generic RESTful API compatible with any complex Dto datastructure. Convention first, configured by model data attributes where necessary.
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericAPI.png "Generic API")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/GenericAPI.png?raw=true "Generic API")
 
 ## Running the tests
 
@@ -269,14 +269,14 @@ Publish DND.Web
 
 Using [Azure DevOps - Previously VSTS](https://azure.microsoft.com/en-us/services/devops/)
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CI.png "Continuous Integration")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CI.png?raw=true "Continuous Integration")
 
 ## Continuous Deployment (CD)
 
 Using [Visual Studio Team Services](https://www.visualstudio.com/team-services/)
 
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CD.png "Continuous Deployment")
-![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CD2.png "Continuous Deployment 2")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CD.png?raw=true "Continuous Deployment")
+![alt text](https://github.com/davidikin45/DigitalNomadDaveAspNetCore/blob/master/docs/CD2.png?raw=true "Continuous Deployment 2")
 
 ## Built With
 
