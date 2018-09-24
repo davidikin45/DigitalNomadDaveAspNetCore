@@ -42,7 +42,7 @@ namespace DND.Common.Data
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(basePath)
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", true)
                 .AddJsonFile($"appsettings.{environmentName}.json", true)
                 .AddEnvironmentVariables();
 
@@ -52,8 +52,11 @@ namespace DND.Common.Data
 
             if (String.IsNullOrWhiteSpace(connstr) == true)
             {
-                throw new InvalidOperationException(
-                    "Could not find a connection string named 'default'.");
+                connstr = "Server = (localdb)\\mssqllocaldb; Database = DummyDb; Trusted_Connection = True; MultipleActiveResultSets = true";
+                return CreateWithConnectionString(connstr, migrationsAssemblyName);
+
+                //throw new InvalidOperationException(
+                //    $"Could not find a connection string named '{connstr}'.");
             }
             else
             {
