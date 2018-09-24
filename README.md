@@ -37,7 +37,13 @@ All web host processes and database creation/teardown have been automated using 
 No database required. No Domain Events fired.
 
 ```
-dotnet test tests\DND.IntegrationTestsXUnit\DND.IntegrationTestsXUnit.csproj
+Execute BatchFiles\Test\UnitTests.bat
+OR
+dotnet test tests\DND.UnitTests.Common\DND.UnitTests.Common.csproj
+dotnet test tests\DND.UnitTests.Blog\DND.UnitTests.Blog.csproj
+dotnet test tests\DND.UnitTests.CMS\DND.UnitTests.CMS.csproj
+dotnet test tests\DND.UnitTests.DynamicForms\DND.UnitTests.DynamicForms.csproj
+dotnet test tests\DND.UnitTests.FlightSearch\DND.UnitTests.FlightSearch.csproj
 ```
 
 ### DND.IntegrationTestsXUnit (TestServer)
@@ -45,6 +51,8 @@ dotnet test tests\DND.IntegrationTestsXUnit\DND.IntegrationTestsXUnit.csproj
 Automatically creates an Integration database on Local\MSSQLLOCALDB, seeds and runs an in process TestServer. On completion database is deleted. Domain Events fired.
 
 ```
+Execute BatchFiles\Test\IntegrationTestsNUnit.bat
+OR
 dotnet test tests\DND.IntegrationTestsXUnit\DND.IntegrationTestsXUnit.csproj
 ```
 ### DND.IntegrationTestsNUnit (Mocking)
@@ -52,6 +60,8 @@ dotnet test tests\DND.IntegrationTestsXUnit\DND.IntegrationTestsXUnit.csproj
 Automatically creates a Integration database on Local\MSSQLLOCALDB and seeds. On completion database is deleted. No Domain Events fired.
 
 ```
+Execute BatchFiles\Test\IntegrationTestsNUnit.bat
+OR
 dotnet test tests\DND.IntegrationTestsNUnit\DND.IntegrationTestsNUnit.csproj
 ```
 ### DND.UITests (SpecFlow & Selenium)
@@ -62,6 +72,8 @@ Automatically creates a Integration database on Local\MSSQLLOCALDB, seeds and la
 Set SeleniumUrl in tests\DND.UITests\app.config
 ```
 ```
+Execute BatchFiles\Test\UITests.bat 
+OR
 dotnet test tests\DND.UITests\DND.UITests.csproj
 ```
 
@@ -102,6 +114,7 @@ Publish DND.Web
 * [Stackify Prefix](https://stackify.com/prefix/) - Runtime performance profiler for .NET Core
 * [Visual Studio Team Services](https://www.visualstudio.com/team-services/) - Continuous Integration (CI) and Continuous Deployment (CD)
 * [Identity Server 4](http://docs.identityserver.io/en/release/) - .NET Core Identity Provider
+* [NCrunch](https://www.ncrunch.net/) - Concurrent testing tool for Visual Studio
 
 ## Authors
 
