@@ -22,7 +22,7 @@ This can be achieved at an assembly level by creating an Assembly per Bounded Co
     + Aggregate Root
         + Entity
 
-![alt text](img/docs/BC.png "Bounded Context Folder Structure")
+![alt text](img/BC.png "Bounded Context Folder Structure")
 
 ## Domain Driven Design, Generic Admin MVC UI and Api
 When I started looking into building a generic admin UI and Api that could handle any data model it became clear that the following rules would need to be adhered to when creating the data model. Alot of the rules are the basis of Domain Driven Design.
