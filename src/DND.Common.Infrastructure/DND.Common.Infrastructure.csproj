@@ -293,12 +293,13 @@
     <Compile Include="OrderByType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\AppSettings.cs" />
+    <Compile Include="Settings\AuthorizationSettings.cs" />
     <Compile Include="Settings\CacheSettings.cs" />
     <Compile Include="Settings\CORSSettings.cs" />
     <Compile Include="Settings\DisplayConventionsDisableSettings.cs" />
     <Compile Include="Settings\EmailSettings.cs" />
     <Compile Include="Settings\EmailTemplates.cs" />
-    <Compile Include="Settings\LoginSettings.cs" />
+    <Compile Include="Settings\AuthenticationSettings.cs" />
     <Compile Include="Settings\PasswordSettings.cs" />
     <Compile Include="Settings\SwitchSettings.cs" />
     <Compile Include="Settings\TokenSettings.cs" />

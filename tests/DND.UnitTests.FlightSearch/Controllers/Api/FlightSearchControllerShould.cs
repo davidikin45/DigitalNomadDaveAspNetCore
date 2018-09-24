@@ -4,7 +4,7 @@ using DND.Common.Testing;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.ViewModels;
 using DND.Interfaces.FlightSearch.ApplicationServices;
-using DND.Web.FlightSearch.MVCImplementation.Api;
+using DND.Web.FlightSearch.Mvc.Api;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

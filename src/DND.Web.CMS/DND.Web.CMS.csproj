@@ -25,26 +25,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MVCImplementation\CarouselItem\Models\" />
-    <Folder Include="MVCImplementation\CarouselItem\ViewComponents\" />
-    <Folder Include="MVCImplementation\CarouselItem\Views\" />
-    <Folder Include="MVCImplementation\ContentHtml\Models\" />
-    <Folder Include="MVCImplementation\ContentHtml\ViewComponents\" />
-    <Folder Include="MVCImplementation\ContentHtml\Views\" />
-    <Folder Include="MVCImplementation\ContentText\ViewComponents\" />
-    <Folder Include="MVCImplementation\Faq\ViewComponents\" />
-    <Folder Include="MVCImplementation\Project\Models\" />
-    <Folder Include="MVCImplementation\Project\ViewComponents\" />
-    <Folder Include="MVCImplementation\Testimonial\Models\" />
-    <Folder Include="MVCImplementation\Testimonial\ViewComponents\" />
-    <Folder Include="MVCImplementation\Testimonial\Views\" />
-    <Folder Include="MVCImplementation\Project\Views\" />
-    <Folder Include="MVCImplementation\MailingList\ViewComponents\" />
-    <Folder Include="MVCImplementation\MailingList\Views\" />
-    <Folder Include="MVCImplementation\Faq\Models\" />
-    <Folder Include="MVCImplementation\Faq\Views\" />
-    <Folder Include="MVCImplementation\ContentText\Models\" />
-    <Folder Include="MVCImplementation\ContentText\Views\" />
+    <Folder Include="Mvc\CarouselItem\Models\" />
+    <Folder Include="Mvc\CarouselItem\ViewComponents\" />
+    <Folder Include="Mvc\CarouselItem\Views\" />
+    <Folder Include="Mvc\ContentHtml\Models\" />
+    <Folder Include="Mvc\ContentHtml\ViewComponents\" />
+    <Folder Include="Mvc\ContentHtml\Views\" />
+    <Folder Include="Mvc\ContentText\ViewComponents\" />
+    <Folder Include="Mvc\Faq\ViewComponents\" />
+    <Folder Include="Mvc\Project\Models\" />
+    <Folder Include="Mvc\Project\ViewComponents\" />
+    <Folder Include="Mvc\Testimonial\Models\" />
+    <Folder Include="Mvc\Testimonial\ViewComponents\" />
+    <Folder Include="Mvc\Testimonial\Views\" />
+    <Folder Include="Mvc\Project\Views\" />
+    <Folder Include="Mvc\MailingList\ViewComponents\" />
+    <Folder Include="Mvc\MailingList\Views\" />
+    <Folder Include="Mvc\Faq\Models\" />
+    <Folder Include="Mvc\Faq\Views\" />
+    <Folder Include="Mvc\ContentText\Models\" />
+    <Folder Include="Mvc\ContentText\Views\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -57,7 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="MVCImplementation\_ViewImports.cshtml">
+    <Content Update="Mvc\_ViewImports.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

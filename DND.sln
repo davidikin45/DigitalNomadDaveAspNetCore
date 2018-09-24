@@ -106,14 +106,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.ApplicationServices", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{F0C97453-A548-48CB-ADE4-623A2CEBFA0B}"
 	ProjectSection(SolutionItems) = preProject
-		docs\CD.png = docs\CD.png
-		docs\CD2.png = docs\CD2.png
-		docs\CI.png = docs\CI.png
-		docs\Domain Events Diagram.png = docs\Domain Events Diagram.png
+		docs\Architecture.md = docs\Architecture.md
+		docs\DevOps.md = docs\DevOps.md
 		docs\Domain Events Diagram.xml = docs\Domain Events Diagram.xml
-		docs\GenericAPI.png = docs\GenericAPI.png
-		docs\GenericCreateUpdate.png = docs\GenericCreateUpdate.png
-		docs\GenericList.png = docs\GenericList.png
+		docs\LearningResources.md = docs\LearningResources.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DND.IntegrationTestsNUnit", "tests\DND.IntegrationTestsNUnit\DND.IntegrationTestsNUnit.csproj", "{CB9CD0EA-14D2-4D17-A7B0-A306DC7DC885}"
@@ -226,12 +222,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Presentation", "0. Prese
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DND.Web.FlightSearch", "src\DND.Web.FlightSearch\DND.Web.FlightSearch.csproj", "{DB29ED77-3757-4570-8265-3EAFDBAB5648}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{F5BA879B-601B-44D9-B93D-3889DAF6F480}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{FBD8FEE7-0D3F-4AC8-BDC0-4260379E004E}"
 	ProjectSection(SolutionItems) = preProject
-		scripts\Data.sql = scripts\Data.sql
-		scripts\DropAllTables.sql = scripts\DropAllTables.sql
-		scripts\Isolation Level.sql = scripts\Isolation Level.sql
-		scripts\Isolations Levels.txt = scripts\Isolations Levels.txt
+		docs\img\BC.png = docs\img\BC.png
+		docs\img\CD.png = docs\img\CD.png
+		docs\img\CD2.png = docs\img\CD2.png
+		docs\img\CI.png = docs\img\CI.png
+		docs\img\Domain Events Diagram.png = docs\img\Domain Events Diagram.png
+		docs\img\GenericAPI.png = docs\img\GenericAPI.png
+		docs\img\GenericCreateUpdate.png = docs\img\GenericCreateUpdate.png
+		docs\img\GenericList.png = docs\img\GenericList.png
+		docs\img\MVC.png = docs\img\MVC.png
 	EndProjectSection
 EndProject
 Global
@@ -755,6 +756,7 @@ Global
 		{C1929FB9-4618-45CD-BC3F-53C8631BEB3D} = {B876A243-D531-4F76-8DCD-E7E20BB5750A}
 		{7CF78152-0B32-4D50-BB0B-8EEE858D45D3} = {C1212A52-56A1-4521-99DF-3D62EFE7A799}
 		{DB29ED77-3757-4570-8265-3EAFDBAB5648} = {7CF78152-0B32-4D50-BB0B-8EEE858D45D3}
+		{FBD8FEE7-0D3F-4AC8-BDC0-4260379E004E} = {F0C97453-A548-48CB-ADE4-623A2CEBFA0B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5B54D31F-CB17-4DF0-B3C0-98E68139F0C2}

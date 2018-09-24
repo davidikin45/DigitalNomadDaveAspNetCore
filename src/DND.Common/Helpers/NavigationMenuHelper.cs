@@ -21,7 +21,7 @@ namespace DND.Common.Helpers
 
         public class NavigationMenuHelper
         {
-            public static string MVCImplementationFolder { get; set; }
+            public static string MvcImplementationFolder { get; set; }
             private static Lazy<object> _menu = new Lazy<dynamic>(() => JsonConvert.DeserializeObject(File.ReadAllText(Server.MapContentPath("navigation.json"))));
 
             public dynamic Menu

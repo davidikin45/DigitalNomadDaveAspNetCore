@@ -3,4 +3,4 @@
 @{
     var Settings = Configuration.GetSection("AppSettings");
 }
-@Html.Partial("~/" + (Settings.GetValue<string>("MVCImplementationFolder")) + "FlightSearch/Views/_Search.cshtml")
+@Html.Partial("~/" + (Settings.GetValue<string>("MvcImplementationFolder")) + "FlightSearch/Views/_Search.cshtml")

@@ -24,12 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MVCImplementation\Author\Models\" />
-    <Folder Include="MVCImplementation\Blog\Models\" />
-    <Folder Include="MVCImplementation\Category\Models\" />
-    <Folder Include="MVCImplementation\Locations\Models\" />
-    <Folder Include="MVCImplementation\Locations\ViewComponents\" />
-    <Folder Include="MVCImplementation\Tag\Models\" />
+    <Folder Include="Mvc\Author\Models\" />
+    <Folder Include="Mvc\Blog\Models\" />
+    <Folder Include="Mvc\Category\Models\" />
+    <Folder Include="Mvc\Locations\Models\" />
+    <Folder Include="Mvc\Locations\ViewComponents\" />
+    <Folder Include="Mvc\Tag\Models\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

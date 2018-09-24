@@ -29,10 +29,10 @@ namespace DND.Common
             var userSettingsSection = Configuration.GetSection("UserSettings");
             var userSettings = userSettingsSection.Get<UserSettings>();
 
-            var loginSettingsSection = Configuration.GetSection("LoginSettings");
-            var loginSettings = loginSettingsSection.Get<LoginSettings>();
+            var authenticationSettingsSection = Configuration.GetSection("AuthenticationSettings");
+            var authenticationSettings = authenticationSettingsSection.Get<AuthenticationSettings>();
             
-            if (loginSettings.Application.Enable || loginSettings.JwtToken.Enable)
+            if (authenticationSettings.Application.Enable || authenticationSettings.JwtToken.Enable)
             {
                services.AddIdentity<TIdentiyDbContext, TUser, IdentityRole>(
                passwordSettings.MaxFailedAccessAttemptsBeforeLockout,

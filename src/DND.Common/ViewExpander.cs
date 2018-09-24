@@ -7,34 +7,34 @@ namespace DND.Common
 {
     public class ViewExpander : IViewLocationExpander
     {
-        private string MVCImplementationFolder { get; set; }
+        private string MvcImplementationFolder { get; set; }
 
-        public ViewExpander(string mvcImplementationFolder)
+        public ViewExpander(string MvcImplementationFolder)
         {
-            MVCImplementationFolder = mvcImplementationFolder;
+            MvcImplementationFolder = MvcImplementationFolder;
         }
 
         private string[] Locations()
         {
             string[] locations = {
-                "~/" + MVCImplementationFolder + "{1}/Views/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "{1}/Views/{0}.cshtml",
 
-                "~/" + MVCImplementationFolder + "Shared/Views/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Shared/Views/Bundles/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Shared/Views/Sidebar/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Shared/Views/CRUD/{0}.cshtml",
-                 "~/" + MVCImplementationFolder + "Shared/Views/Navigation/{0}.cshtml",
-                 "~/" + MVCImplementationFolder + "Shared/Views/Footer/{0}.cshtml",
-                 "~/" + MVCImplementationFolder + "Shared/Views/Alerts/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Shared/Views/CookieConsent/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Shared/Views/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Shared/Views/Bundles/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Shared/Views/Sidebar/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Shared/Views/CRUD/{0}.cshtml",
+                 "~/" + MvcImplementationFolder + "Shared/Views/Navigation/{0}.cshtml",
+                 "~/" + MvcImplementationFolder + "Shared/Views/Footer/{0}.cshtml",
+                 "~/" + MvcImplementationFolder + "Shared/Views/Alerts/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Shared/Views/CookieConsent/{0}.cshtml",
 
-                "~/" + MVCImplementationFolder + "Views/Shared/Bundles/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Views/Shared/Sidebar/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Views/Shared/CRUD/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Views/Shared/Navigation/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Views/Shared/Footer/{0}.cshtml",
-                 "~/" + MVCImplementationFolder + "Views/Shared/Alerts/{0}.cshtml",
-                "~/" + MVCImplementationFolder + "Views/Shared/CookieConsent/{0}.cshtml"
+                "~/" + MvcImplementationFolder + "Views/Shared/Bundles/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Views/Shared/Sidebar/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Views/Shared/CRUD/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Views/Shared/Navigation/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Views/Shared/Footer/{0}.cshtml",
+                 "~/" + MvcImplementationFolder + "Views/Shared/Alerts/{0}.cshtml",
+                "~/" + MvcImplementationFolder + "Views/Shared/CookieConsent/{0}.cshtml"
             };
 
             return locations;

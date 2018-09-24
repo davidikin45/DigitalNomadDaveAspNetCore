@@ -1,6 +1,6 @@
 ﻿using DND.Common.Alerts;
 using DND.TestSetup;
-using DND.Web.MVCImplementation.Contact.Models;
+using DND.Web.Mvc.Contact.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;

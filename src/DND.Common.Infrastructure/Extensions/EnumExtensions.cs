@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
@@ -21,9 +22,9 @@ namespace DND.Common.Infrastructure.Extensions
                 string description = field.Name;
                 string id = field.Name;
 
-                foreach (DescriptionAttribute descriptionAttribute in field.GetCustomAttributes(true).OfType<DescriptionAttribute>())
+                foreach (DisplayAttribute displayAttribute in field.GetCustomAttributes(true).OfType<DisplayAttribute>())
                 {
-                    description = descriptionAttribute.Description;
+                    description = displayAttribute.Name;
                 }
 
                 dictionary.Add(id, description);
@@ -32,15 +33,15 @@ namespace DND.Common.Infrastructure.Extensions
             return dictionary;
         }
 
-        public static string GetDescription(Enum value)
+        public static string Description(Enum value)
         {
             return
                 value
                     .GetType()
                     .GetMember(value.ToString())
                     .FirstOrDefault()
-                    ?.GetCustomAttribute<DescriptionAttribute>()
-                    ?.Description;
+                    ?.GetCustomAttribute<DisplayAttribute>()
+                    ?.Name;
         }
     }
 }

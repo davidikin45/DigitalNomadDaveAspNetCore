@@ -19,24 +19,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
-    <Content Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
-    <EmbeddedResource Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
-    <None Remove="MVCImplementation\DynamicForms\ModelBinders\**" />
+    <Compile Remove="Mvc\DynamicForms\ModelBinders\**" />
+    <Content Remove="Mvc\DynamicForms\ModelBinders\**" />
+    <EmbeddedResource Remove="Mvc\DynamicForms\ModelBinders\**" />
+    <None Remove="Mvc\DynamicForms\ModelBinders\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="MVCImplementation\Author\Api\AuthorsController.cs" />
-    <Compile Remove="MVCImplementation\Author\Controllers\AdminAuthorController.cs" />
-    <Compile Remove="MVCImplementation\Author\Notifications\AuthorsNotifications.cs" />
-    <Compile Remove="MVCImplementation\Blog\Api\BlogPostsController.cs" />
-    <Compile Remove="MVCImplementation\Blog\Controllers\AdminBlogPostController.cs" />
-    <Compile Remove="MVCImplementation\Blog\Notifications\BlogPostsNotifications.cs" />
-    <Compile Remove="MVCImplementation\Category\Api\CategoriesController.cs" />
-    <Compile Remove="MVCImplementation\Category\Notifications\CategoriesNotifications.cs" />
-    <Compile Remove="MVCImplementation\Locations\Api\LocationsController.cs" />
-    <Compile Remove="MVCImplementation\Locations\Controllers\AdminLocationsController.cs" />
-    <Compile Remove="MVCImplementation\Locations\Notifications\LocationsNotifications.cs" />
+    <Compile Remove="Mvc\Author\Api\AuthorsController.cs" />
+    <Compile Remove="Mvc\Author\Controllers\AdminAuthorController.cs" />
+    <Compile Remove="Mvc\Author\Notifications\AuthorsNotifications.cs" />
+    <Compile Remove="Mvc\Blog\Api\BlogPostsController.cs" />
+    <Compile Remove="Mvc\Blog\Controllers\AdminBlogPostController.cs" />
+    <Compile Remove="Mvc\Blog\Notifications\BlogPostsNotifications.cs" />
+    <Compile Remove="Mvc\Category\Api\CategoriesController.cs" />
+    <Compile Remove="Mvc\Category\Notifications\CategoriesNotifications.cs" />
+    <Compile Remove="Mvc\Locations\Api\LocationsController.cs" />
+    <Compile Remove="Mvc\Locations\Controllers\AdminLocationsController.cs" />
+    <Compile Remove="Mvc\Locations\Notifications\LocationsNotifications.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,7 +44,7 @@
     <Content Remove="App_Data\airportsAll.json" />
     <Content Remove="App_Data\countries.json" />
     <Content Remove="ClientApp\tsconfig.app.json" />
-    <Content Remove="MVCImplementation\Shared\Views\EditorTemplates\DestinationType.cshtml" />
+    <Content Remove="Mvc\Shared\Views\EditorTemplates\DestinationType.cshtml" />
     <Content Remove="wwwroot\uploads\gallery\australia-two\GOPR9142 %282%29.JPG" />
     <Content Remove="wwwroot\uploads\gallery\australia-two\San Blas main.txt" />
     <Content Remove="wwwroot\uploads\gallery\australia\GOPR8436 %282%29.JPG" />
@@ -56,12 +56,12 @@
   <ItemGroup>
     <None Remove="App_Data\Regions.csv" />
     <None Remove="App_Data\ffmpeg\ffmpeg.exe" />
-    <None Remove="MVCImplementation\DynamicForms\Views\Embed.js" />
+    <None Remove="Mvc\DynamicForms\Views\Embed.js" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="App_Data\ffmpeg\ffmpeg.exe" />
-    <Content Include="MVCImplementation\DynamicForms\Scripts\IFrameEmbed.js">
+    <Content Include="Mvc\DynamicForms\Scripts\IFrameEmbed.js">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
@@ -88,93 +88,93 @@
 
   <ItemGroup>
     <Folder Include="App_Data\Logs\" />
-    <Folder Include="MVCImplementation\Account\Api\" />
-    <Folder Include="MVCImplementation\Account\ViewComponents\" />
-    <Folder Include="MVCImplementation\Admin\Api\" />
-    <Folder Include="MVCImplementation\Admin\Models\" />
-    <Folder Include="MVCImplementation\Admin\ViewComponents\" />
-    <Folder Include="MVCImplementation\Authentication\Views\" />
-    <Folder Include="MVCImplementation\Author\Api\" />
-    <Folder Include="MVCImplementation\Author\Controllers\" />
-    <Folder Include="MVCImplementation\Author\Models\" />
-    <Folder Include="MVCImplementation\Author\Notifications\" />
-    <Folder Include="MVCImplementation\Author\ViewComponents\" />
-    <Folder Include="MVCImplementation\Author\Views\" />
-    <Folder Include="MVCImplementation\Blog\Api\" />
-    <Folder Include="MVCImplementation\Blog\Notifications\" />
-    <Folder Include="MVCImplementation\BucketList\Api\" />
-    <Folder Include="MVCImplementation\BucketList\Models\" />
-    <Folder Include="MVCImplementation\BucketList\ViewComponents\" />
-    <Folder Include="MVCImplementation\CarouselItem\Api\" />
-    <Folder Include="MVCImplementation\CarouselItem\Controllers\" />
-    <Folder Include="MVCImplementation\CarouselItem\Notifications\" />
-    <Folder Include="MVCImplementation\CarouselItem\Views\" />
-    <Folder Include="MVCImplementation\ContentHtml\Api\" />
-    <Folder Include="MVCImplementation\ContentHtml\Controllers\" />
-    <Folder Include="MVCImplementation\ContentHtml\Notifications\" />
-    <Folder Include="MVCImplementation\ContentText\Api\" />
-    <Folder Include="MVCImplementation\ContentText\Controllers\" />
-    <Folder Include="MVCImplementation\ContentText\Notifications\" />
-    <Folder Include="MVCImplementation\Faq\Api\" />
-    <Folder Include="MVCImplementation\Faq\Controllers\" />
-    <Folder Include="MVCImplementation\Faq\Notifications\" />
-    <Folder Include="MVCImplementation\MailingList\Api\" />
-    <Folder Include="MVCImplementation\MailingList\Controllers\" />
-    <Folder Include="MVCImplementation\MailingList\Models\" />
-    <Folder Include="MVCImplementation\MailingList\Notifications\" />
-    <Folder Include="MVCImplementation\Project\Api\" />
-    <Folder Include="MVCImplementation\Project\Controllers\" />
-    <Folder Include="MVCImplementation\Project\Notifications\" />
-    <Folder Include="MVCImplementation\Tag\Api\" />
-    <Folder Include="MVCImplementation\Tag\Controllers\" />
-    <Folder Include="MVCImplementation\Tag\Models\" />
-    <Folder Include="MVCImplementation\Tag\Notifications\" />
-    <Folder Include="MVCImplementation\Tag\ViewComponents\" />
-    <Folder Include="MVCImplementation\Tag\Views\" />
-    <Folder Include="MVCImplementation\Category\Api\" />
-    <Folder Include="MVCImplementation\Category\Controllers\" />
-    <Folder Include="MVCImplementation\Category\Models\" />
-    <Folder Include="MVCImplementation\Category\Notifications\" />
-    <Folder Include="MVCImplementation\Category\ViewComponents\" />
-    <Folder Include="MVCImplementation\Category\Views\" />
-    <Folder Include="MVCImplementation\ContentHtml\Models\" />
-    <Folder Include="MVCImplementation\ContentText\Models\" />
-    <Folder Include="MVCImplementation\ContentText\Views\" />
-    <Folder Include="MVCImplementation\Countries\Api\" />
-    <Folder Include="MVCImplementation\Countries\Models\" />
-    <Folder Include="MVCImplementation\Countries\ViewComponents\" />
-    <Folder Include="MVCImplementation\Faq\Models\" />
-    <Folder Include="MVCImplementation\Faq\Views\" />
-    <Folder Include="MVCImplementation\FlightSearch\Controllers\" />
-    <Folder Include="MVCImplementation\FlightSearch\Models\" />
-    <Folder Include="MVCImplementation\FlightSearch\ViewComponents\" />
-    <Folder Include="MVCImplementation\Gallery\Api\" />
-    <Folder Include="MVCImplementation\Gallery\Models\" />
-    <Folder Include="MVCImplementation\Gallery\ViewComponents\" />
-    <Folder Include="MVCImplementation\Home\Api\" />
-    <Folder Include="MVCImplementation\Home\Models\" />
-    <Folder Include="MVCImplementation\Home\ViewComponents\" />
-    <Folder Include="MVCImplementation\Locations\Api\" />
-    <Folder Include="MVCImplementation\Locations\Models\" />
-    <Folder Include="MVCImplementation\Locations\Notifications\" />
-    <Folder Include="MVCImplementation\Locations\ViewComponents\" />
-    <Folder Include="MVCImplementation\MailingList\ViewComponents\" />
-    <Folder Include="MVCImplementation\MailingList\Views\" />
-    <Folder Include="MVCImplementation\Manage\Api\" />
-    <Folder Include="MVCImplementation\Manage\ViewComponents\" />
-    <Folder Include="MVCImplementation\Project\Views\" />
-    <Folder Include="MVCImplementation\Services\" />
-    <Folder Include="MVCImplementation\Sidebar\Views\" />
-    <Folder Include="MVCImplementation\Testimonial\Api\" />
-    <Folder Include="MVCImplementation\Testimonial\Controllers\" />
-    <Folder Include="MVCImplementation\Testimonial\Notifications\" />
-    <Folder Include="MVCImplementation\Testimonial\Views\" />
-    <Folder Include="MVCImplementation\TravelMap\Api\" />
-    <Folder Include="MVCImplementation\TravelMap\Models\" />
-    <Folder Include="MVCImplementation\TravelMap\ViewComponents\" />
-    <Folder Include="MVCImplementation\Videos\Api\" />
-    <Folder Include="MVCImplementation\Videos\Models\" />
-    <Folder Include="MVCImplementation\Videos\ViewComponents\" />
+    <Folder Include="Mvc\Account\Api\" />
+    <Folder Include="Mvc\Account\ViewComponents\" />
+    <Folder Include="Mvc\Admin\Api\" />
+    <Folder Include="Mvc\Admin\Models\" />
+    <Folder Include="Mvc\Admin\ViewComponents\" />
+    <Folder Include="Mvc\Authentication\Views\" />
+    <Folder Include="Mvc\Author\Api\" />
+    <Folder Include="Mvc\Author\Controllers\" />
+    <Folder Include="Mvc\Author\Models\" />
+    <Folder Include="Mvc\Author\Notifications\" />
+    <Folder Include="Mvc\Author\ViewComponents\" />
+    <Folder Include="Mvc\Author\Views\" />
+    <Folder Include="Mvc\Blog\Api\" />
+    <Folder Include="Mvc\Blog\Notifications\" />
+    <Folder Include="Mvc\BucketList\Api\" />
+    <Folder Include="Mvc\BucketList\Models\" />
+    <Folder Include="Mvc\BucketList\ViewComponents\" />
+    <Folder Include="Mvc\CarouselItem\Api\" />
+    <Folder Include="Mvc\CarouselItem\Controllers\" />
+    <Folder Include="Mvc\CarouselItem\Notifications\" />
+    <Folder Include="Mvc\CarouselItem\Views\" />
+    <Folder Include="Mvc\ContentHtml\Api\" />
+    <Folder Include="Mvc\ContentHtml\Controllers\" />
+    <Folder Include="Mvc\ContentHtml\Notifications\" />
+    <Folder Include="Mvc\ContentText\Api\" />
+    <Folder Include="Mvc\ContentText\Controllers\" />
+    <Folder Include="Mvc\ContentText\Notifications\" />
+    <Folder Include="Mvc\Faq\Api\" />
+    <Folder Include="Mvc\Faq\Controllers\" />
+    <Folder Include="Mvc\Faq\Notifications\" />
+    <Folder Include="Mvc\MailingList\Api\" />
+    <Folder Include="Mvc\MailingList\Controllers\" />
+    <Folder Include="Mvc\MailingList\Models\" />
+    <Folder Include="Mvc\MailingList\Notifications\" />
+    <Folder Include="Mvc\Project\Api\" />
+    <Folder Include="Mvc\Project\Controllers\" />
+    <Folder Include="Mvc\Project\Notifications\" />
+    <Folder Include="Mvc\Tag\Api\" />
+    <Folder Include="Mvc\Tag\Controllers\" />
+    <Folder Include="Mvc\Tag\Models\" />
+    <Folder Include="Mvc\Tag\Notifications\" />
+    <Folder Include="Mvc\Tag\ViewComponents\" />
+    <Folder Include="Mvc\Tag\Views\" />
+    <Folder Include="Mvc\Category\Api\" />
+    <Folder Include="Mvc\Category\Controllers\" />
+    <Folder Include="Mvc\Category\Models\" />
+    <Folder Include="Mvc\Category\Notifications\" />
+    <Folder Include="Mvc\Category\ViewComponents\" />
+    <Folder Include="Mvc\Category\Views\" />
+    <Folder Include="Mvc\ContentHtml\Models\" />
+    <Folder Include="Mvc\ContentText\Models\" />
+    <Folder Include="Mvc\ContentText\Views\" />
+    <Folder Include="Mvc\Countries\Api\" />
+    <Folder Include="Mvc\Countries\Models\" />
+    <Folder Include="Mvc\Countries\ViewComponents\" />
+    <Folder Include="Mvc\Faq\Models\" />
+    <Folder Include="Mvc\Faq\Views\" />
+    <Folder Include="Mvc\FlightSearch\Controllers\" />
+    <Folder Include="Mvc\FlightSearch\Models\" />
+    <Folder Include="Mvc\FlightSearch\ViewComponents\" />
+    <Folder Include="Mvc\Gallery\Api\" />
+    <Folder Include="Mvc\Gallery\Models\" />
+    <Folder Include="Mvc\Gallery\ViewComponents\" />
+    <Folder Include="Mvc\Home\Api\" />
+    <Folder Include="Mvc\Home\Models\" />
+    <Folder Include="Mvc\Home\ViewComponents\" />
+    <Folder Include="Mvc\Locations\Api\" />
+    <Folder Include="Mvc\Locations\Models\" />
+    <Folder Include="Mvc\Locations\Notifications\" />
+    <Folder Include="Mvc\Locations\ViewComponents\" />
+    <Folder Include="Mvc\MailingList\ViewComponents\" />
+    <Folder Include="Mvc\MailingList\Views\" />
+    <Folder Include="Mvc\Manage\Api\" />
+    <Folder Include="Mvc\Manage\ViewComponents\" />
+    <Folder Include="Mvc\Project\Views\" />
+    <Folder Include="Mvc\Services\" />
+    <Folder Include="Mvc\Sidebar\Views\" />
+    <Folder Include="Mvc\Testimonial\Api\" />
+    <Folder Include="Mvc\Testimonial\Controllers\" />
+    <Folder Include="Mvc\Testimonial\Notifications\" />
+    <Folder Include="Mvc\Testimonial\Views\" />
+    <Folder Include="Mvc\TravelMap\Api\" />
+    <Folder Include="Mvc\TravelMap\Models\" />
+    <Folder Include="Mvc\TravelMap\ViewComponents\" />
+    <Folder Include="Mvc\Videos\Api\" />
+    <Folder Include="Mvc\Videos\Models\" />
+    <Folder Include="Mvc\Videos\ViewComponents\" />
     <Folder Include="EmailTemplates\" />
     <Folder Include="Scripts_Compile\" />
     <Folder Include="wwwroot\css\" />
@@ -193,151 +193,151 @@
 
   <ItemGroup>
     <None Include="ClientApp\tsconfig.app.json" />
-    <None Include="MVCImplementation\Account\Views\AccessDenied.cshtml" />
-    <None Include="MVCImplementation\Account\Views\ConfirmEmail.cshtml" />
-    <None Include="MVCImplementation\Account\Views\ExternalLogin.cshtml" />
-    <None Include="MVCImplementation\Account\Views\ForgotPassword.cshtml" />
-    <None Include="MVCImplementation\Account\Views\ForgotPasswordConfirmation.cshtml" />
-    <None Include="MVCImplementation\Account\Views\Lockout.cshtml" />
-    <None Include="MVCImplementation\Account\Views\Login.cshtml" />
-    <None Include="MVCImplementation\Account\Views\LoginWith2fa.cshtml" />
-    <None Include="MVCImplementation\Account\Views\LoginWithRecoveryCode.cshtml" />
-    <None Include="MVCImplementation\Account\Views\Register.cshtml" />
-    <None Include="MVCImplementation\Account\Views\ResetPassword.cshtml" />
-    <None Include="MVCImplementation\Account\Views\ResetPasswordConfirmation.cshtml" />
-    <None Include="MVCImplementation\Account\Views\SignedOut.cshtml" />
-    <None Include="MVCImplementation\Admin\Views\ClearCache.cshtml" />
-    <None Include="MVCImplementation\Admin\Views\FileManager.cshtml" />
-    <None Include="MVCImplementation\Admin\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Authorization\Views\AccessDenied.cshtml" />
-    <None Include="MVCImplementation\Blog\Views\Post.cshtml" />
-    <None Include="MVCImplementation\Blog\Views\PostList.cshtml" />
-    <None Include="MVCImplementation\Blog\Views\_BlogPostTemplate.cshtml" />
-    <None Include="MVCImplementation\Blog\Views\_DisqusCommentCount.cshtml" />
-    <None Include="MVCImplementation\Blog\Views\_DisqusComments.cshtml" />
-    <None Include="MVCImplementation\BucketList\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Countries\Views\Index.cshtml" />
-    <None Include="MVCImplementation\FlightSearch\Views\Index.cshtml" />
-    <None Include="MVCImplementation\FlightSearch\Views\Results.cshtml" />
-    <None Include="MVCImplementation\FlightSearch\Views\_Search.cshtml" />
-    <None Include="MVCImplementation\Gallery\Views\Gallery.cshtml" />
-    <None Include="MVCImplementation\Gallery\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Gallery\Views\Instagram.cshtml" />
-    <None Include="MVCImplementation\Gallery\Views\_GalleryAjax.cshtml" />
-    <None Include="MVCImplementation\Gallery\Views\_GalleryList.cshtml" />
-    <None Include="MVCImplementation\Home\Views\About.cshtml" />
-    <None Include="MVCImplementation\Home\Views\Contact.cshtml" />
-    <None Include="MVCImplementation\Home\Views\HelpFAQ.cshtml" />
-    <None Include="MVCImplementation\Home\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Home\Views\MyWebsite.cshtml" />
-    <None Include="MVCImplementation\Home\Views\PrivacyPolicy.cshtml" />
-    <None Include="MVCImplementation\Home\Views\Resume.cshtml" />
-    <None Include="MVCImplementation\Home\Views\Spa.cshtml" />
-    <None Include="MVCImplementation\Home\Views\WorkWithMe.cshtml" />
-    <None Include="MVCImplementation\Locations\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Locations\Views\Location.cshtml" />
-    <None Include="MVCImplementation\Locations\Views\_Location.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\ChangePassword.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\Disable2fa.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\EnableAuthenticator.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\ExternalLogins.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\GenerateRecoveryCodes.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\ResetAuthenticator.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\SetPassword.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\TwoFactorAuthentication.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\_Layout.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\_ManageNav.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\_StatusMessage.cshtml" />
-    <None Include="MVCImplementation\Manage\Views\_ViewImports.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Alerts\_Alerts.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Alerts\_Error.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Bundles\_AdminCSS.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Bundles\_AdminJS.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Bundles\_Angular5.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Bundles\_CSS.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Bundles\_JS.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\Carousel\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\ContentHtml\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\ContentText\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\Faq\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\LatestBlogPosts\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\Project\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\Sidebar\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Components\Testimonial\Default.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CookieConsent\_CookieConsent.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\Create.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\Delete.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\Details.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\DynamicFormContainerPage.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\Edit.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\Email.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\List.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\_Create.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\_CreateCollectionItem.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\_Delete.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\_Details.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\_DynamicFormEdit.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\_Edit.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\CRUD\_List.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\DisplayTemplates\DbGeography.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\DisplayTemplates\Enum.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\DisplayTemplates\FileInfo.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\DisplayTemplates\ModelCheckboxOrRadio.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\DisplayTemplates\ModelDropdown.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\DisplayTemplates\ModelRepeater.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\DisplayTemplates\Object.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\DisplayTemplates\Heading.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\DisplayTemplates\IconLink.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\DisplayTemplates\SubmitButton.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\EditorTemplates\Heading.cshtml" />
-    <None Include="MVCImplementation\DynamicForms\Views\EditorTemplates\SubmitButton.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\ByteArray.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\Currency.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\Date.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\DateTime.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\DbGeography.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\EmailAddress.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\Enum.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\FileInfo.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\Html.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\IFormFile.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\Int32.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\ModelCheckboxOrRadio.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\ModelDropdown.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\ModelRepeater.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\ModelRepeaterItem.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\MultilineText.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\Object.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\PhoneNumber.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\ReadOnly.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\String.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\SubmitButton.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\EditorTemplates\Url.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Error.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Footer\_Footer.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Navigation\_AdminNavigation.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Navigation\_Navigation.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarAboutMe.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarAffiliates.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarCategories.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarInstagram.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarLatestBlogPosts.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarLatestPhotos.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarMailingList.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarRSSFeed.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\Sidebar\_SidebarTags.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\_IFrame.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\_Layout.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\_LoginPartial.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\_MailingList.cshtml" />
-    <None Include="MVCImplementation\Shared\Views\_Media.cshtml" />
-    <None Include="MVCImplementation\TravelMap\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Videos\Views\Index.cshtml" />
-    <None Include="MVCImplementation\Videos\Views\_VideoAjax.cshtml" />
-    <None Include="MVCImplementation\Videos\Views\_VideoList.cshtml" />
-    <None Include="MVCImplementation\_ViewImports.cshtml" />
-    <None Include="MVCImplementation\_ViewStart.cshtml" />
+    <None Include="Mvc\Account\Views\AccessDenied.cshtml" />
+    <None Include="Mvc\Account\Views\ConfirmEmail.cshtml" />
+    <None Include="Mvc\Account\Views\ExternalLogin.cshtml" />
+    <None Include="Mvc\Account\Views\ForgotPassword.cshtml" />
+    <None Include="Mvc\Account\Views\ForgotPasswordConfirmation.cshtml" />
+    <None Include="Mvc\Account\Views\Lockout.cshtml" />
+    <None Include="Mvc\Account\Views\Login.cshtml" />
+    <None Include="Mvc\Account\Views\LoginWith2fa.cshtml" />
+    <None Include="Mvc\Account\Views\LoginWithRecoveryCode.cshtml" />
+    <None Include="Mvc\Account\Views\Register.cshtml" />
+    <None Include="Mvc\Account\Views\ResetPassword.cshtml" />
+    <None Include="Mvc\Account\Views\ResetPasswordConfirmation.cshtml" />
+    <None Include="Mvc\Account\Views\SignedOut.cshtml" />
+    <None Include="Mvc\Admin\Views\ClearCache.cshtml" />
+    <None Include="Mvc\Admin\Views\FileManager.cshtml" />
+    <None Include="Mvc\Admin\Views\Index.cshtml" />
+    <None Include="Mvc\Authorization\Views\AccessDenied.cshtml" />
+    <None Include="Mvc\Blog\Views\Post.cshtml" />
+    <None Include="Mvc\Blog\Views\PostList.cshtml" />
+    <None Include="Mvc\Blog\Views\_BlogPostTemplate.cshtml" />
+    <None Include="Mvc\Blog\Views\_DisqusCommentCount.cshtml" />
+    <None Include="Mvc\Blog\Views\_DisqusComments.cshtml" />
+    <None Include="Mvc\BucketList\Views\Index.cshtml" />
+    <None Include="Mvc\Countries\Views\Index.cshtml" />
+    <None Include="Mvc\FlightSearch\Views\Index.cshtml" />
+    <None Include="Mvc\FlightSearch\Views\Results.cshtml" />
+    <None Include="Mvc\FlightSearch\Views\_Search.cshtml" />
+    <None Include="Mvc\Gallery\Views\Gallery.cshtml" />
+    <None Include="Mvc\Gallery\Views\Index.cshtml" />
+    <None Include="Mvc\Gallery\Views\Instagram.cshtml" />
+    <None Include="Mvc\Gallery\Views\_GalleryAjax.cshtml" />
+    <None Include="Mvc\Gallery\Views\_GalleryList.cshtml" />
+    <None Include="Mvc\Home\Views\About.cshtml" />
+    <None Include="Mvc\Home\Views\Contact.cshtml" />
+    <None Include="Mvc\Home\Views\HelpFAQ.cshtml" />
+    <None Include="Mvc\Home\Views\Index.cshtml" />
+    <None Include="Mvc\Home\Views\MyWebsite.cshtml" />
+    <None Include="Mvc\Home\Views\PrivacyPolicy.cshtml" />
+    <None Include="Mvc\Home\Views\Resume.cshtml" />
+    <None Include="Mvc\Home\Views\Spa.cshtml" />
+    <None Include="Mvc\Home\Views\WorkWithMe.cshtml" />
+    <None Include="Mvc\Locations\Views\Index.cshtml" />
+    <None Include="Mvc\Locations\Views\Location.cshtml" />
+    <None Include="Mvc\Locations\Views\_Location.cshtml" />
+    <None Include="Mvc\Manage\Views\ChangePassword.cshtml" />
+    <None Include="Mvc\Manage\Views\Disable2fa.cshtml" />
+    <None Include="Mvc\Manage\Views\EnableAuthenticator.cshtml" />
+    <None Include="Mvc\Manage\Views\ExternalLogins.cshtml" />
+    <None Include="Mvc\Manage\Views\GenerateRecoveryCodes.cshtml" />
+    <None Include="Mvc\Manage\Views\Index.cshtml" />
+    <None Include="Mvc\Manage\Views\ResetAuthenticator.cshtml" />
+    <None Include="Mvc\Manage\Views\SetPassword.cshtml" />
+    <None Include="Mvc\Manage\Views\TwoFactorAuthentication.cshtml" />
+    <None Include="Mvc\Manage\Views\_Layout.cshtml" />
+    <None Include="Mvc\Manage\Views\_ManageNav.cshtml" />
+    <None Include="Mvc\Manage\Views\_StatusMessage.cshtml" />
+    <None Include="Mvc\Manage\Views\_ViewImports.cshtml" />
+    <None Include="Mvc\Shared\Views\Alerts\_Alerts.cshtml" />
+    <None Include="Mvc\Shared\Views\Alerts\_Error.cshtml" />
+    <None Include="Mvc\Shared\Views\Bundles\_AdminCSS.cshtml" />
+    <None Include="Mvc\Shared\Views\Bundles\_AdminJS.cshtml" />
+    <None Include="Mvc\Shared\Views\Bundles\_Angular5.cshtml" />
+    <None Include="Mvc\Shared\Views\Bundles\_CSS.cshtml" />
+    <None Include="Mvc\Shared\Views\Bundles\_JS.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\Carousel\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\ContentHtml\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\ContentText\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\Faq\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\LatestBlogPosts\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\Project\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\Sidebar\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\Components\Testimonial\Default.cshtml" />
+    <None Include="Mvc\Shared\Views\CookieConsent\_CookieConsent.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\Create.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\Delete.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\Details.cshtml" />
+    <None Include="Mvc\DynamicForms\Views\DynamicFormContainerPage.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\Edit.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\Email.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\List.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\_Create.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\_CreateCollectionItem.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\_Delete.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\_Details.cshtml" />
+    <None Include="Mvc\DynamicForms\Views\_DynamicFormEdit.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\_Edit.cshtml" />
+    <None Include="Mvc\Shared\Views\CRUD\_List.cshtml" />
+    <None Include="Mvc\Shared\Views\DisplayTemplates\DbGeography.cshtml" />
+    <None Include="Mvc\Shared\Views\DisplayTemplates\Enum.cshtml" />
+    <None Include="Mvc\Shared\Views\DisplayTemplates\FileInfo.cshtml" />
+    <None Include="Mvc\Shared\Views\DisplayTemplates\ModelCheckboxOrRadio.cshtml" />
+    <None Include="Mvc\Shared\Views\DisplayTemplates\ModelDropdown.cshtml" />
+    <None Include="Mvc\Shared\Views\DisplayTemplates\ModelRepeater.cshtml" />
+    <None Include="Mvc\Shared\Views\DisplayTemplates\Object.cshtml" />
+    <None Include="Mvc\DynamicForms\Views\DisplayTemplates\Heading.cshtml" />
+    <None Include="Mvc\DynamicForms\Views\DisplayTemplates\IconLink.cshtml" />
+    <None Include="Mvc\DynamicForms\Views\DisplayTemplates\SubmitButton.cshtml" />
+    <None Include="Mvc\DynamicForms\Views\EditorTemplates\Heading.cshtml" />
+    <None Include="Mvc\DynamicForms\Views\EditorTemplates\SubmitButton.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\ByteArray.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\Currency.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\Date.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\DateTime.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\DbGeography.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\EmailAddress.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\Enum.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\FileInfo.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\Html.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\IFormFile.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\Int32.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\ModelCheckboxOrRadio.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\ModelDropdown.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\ModelRepeater.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\ModelRepeaterItem.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\MultilineText.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\Object.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\PhoneNumber.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\ReadOnly.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\String.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\SubmitButton.cshtml" />
+    <None Include="Mvc\Shared\Views\EditorTemplates\Url.cshtml" />
+    <None Include="Mvc\Shared\Views\Error.cshtml" />
+    <None Include="Mvc\Shared\Views\Footer\_Footer.cshtml" />
+    <None Include="Mvc\Shared\Views\Navigation\_AdminNavigation.cshtml" />
+    <None Include="Mvc\Shared\Views\Navigation\_Navigation.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarAboutMe.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarAffiliates.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarCategories.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarInstagram.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarLatestBlogPosts.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarLatestPhotos.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarMailingList.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarRSSFeed.cshtml" />
+    <None Include="Mvc\Shared\Views\Sidebar\_SidebarTags.cshtml" />
+    <None Include="Mvc\Shared\Views\_IFrame.cshtml" />
+    <None Include="Mvc\Shared\Views\_Layout.cshtml" />
+    <None Include="Mvc\Shared\Views\_LoginPartial.cshtml" />
+    <None Include="Mvc\Shared\Views\_MailingList.cshtml" />
+    <None Include="Mvc\Shared\Views\_Media.cshtml" />
+    <None Include="Mvc\TravelMap\Views\Index.cshtml" />
+    <None Include="Mvc\Videos\Views\Index.cshtml" />
+    <None Include="Mvc\Videos\Views\_VideoAjax.cshtml" />
+    <None Include="Mvc\Videos\Views\_VideoList.cshtml" />
+    <None Include="Mvc\_ViewImports.cshtml" />
+    <None Include="Mvc\_ViewStart.cshtml" />
     <None Include="wwwroot\FileManager\js\custom.js" />
     <None Include="wwwroot\FileManager\js\directory.js" />
     <None Include="wwwroot\FileManager\js\file.js" />
@@ -400,70 +400,70 @@
     <Content Update="features.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormVerticalNavigationMenu.cshtml">
+    <Content Update="Mvc\DynamicForms\Views\_DynamicFormVerticalNavigationMenu.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormHorizontalNavigationMenuItem.cshtml">
+    <Content Update="Mvc\DynamicForms\Views\_DynamicFormHorizontalNavigationMenuItem.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormVerticalNavigationMenuItem.cshtml">
+    <Content Update="Mvc\DynamicForms\Views\_DynamicFormVerticalNavigationMenuItem.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormHorizontalNavigation.cshtml">
+    <Content Update="Mvc\DynamicForms\Views\_DynamicFormHorizontalNavigation.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormVerticalNavigation.cshtml">
+    <Content Update="Mvc\DynamicForms\Views\_DynamicFormVerticalNavigation.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\DynamicForms\Views\_DynamicFormContainer.cshtml">
+    <Content Update="Mvc\DynamicForms\Views\_DynamicFormContainer.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\Bundles\_IFrameCSS.cshtml">
+    <Content Update="Mvc\Shared\Views\Bundles\_IFrameCSS.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\Bundles\_IFrameJS.cshtml">
+    <Content Update="Mvc\Shared\Views\Bundles\_IFrameJS.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\Boolean.cshtml">
+    <Content Update="Mvc\Shared\Views\DisplayTemplates\Boolean.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\BooleanTextButton.cshtml">
+    <Content Update="Mvc\Shared\Views\DisplayTemplates\BooleanTextButton.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\BooleanYesNoButtons.cshtml">
+    <Content Update="Mvc\Shared\Views\DisplayTemplates\BooleanYesNoButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\BooleanTrueFalseButtons.cshtml">
+    <Content Update="Mvc\Shared\Views\DisplayTemplates\BooleanTrueFalseButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\IFormFile.cshtml">
+    <Content Update="Mvc\Shared\Views\DisplayTemplates\IFormFile.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\ModelCheckboxOrRadioButtons.cshtml">
+    <Content Update="Mvc\Shared\Views\DisplayTemplates\ModelCheckboxOrRadioButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\DisplayTemplates\Slider.cshtml">
+    <Content Update="Mvc\Shared\Views\DisplayTemplates\Slider.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\BooleanTextButton.cshtml">
+    <Content Update="Mvc\Shared\Views\EditorTemplates\BooleanTextButton.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\BooleanYesNoButtons.cshtml">
+    <Content Update="Mvc\Shared\Views\EditorTemplates\BooleanYesNoButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\BooleanTrueFalseButtons.cshtml">
+    <Content Update="Mvc\Shared\Views\EditorTemplates\BooleanTrueFalseButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\Boolean.cshtml">
+    <Content Update="Mvc\Shared\Views\EditorTemplates\Boolean.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\IEnumerable`IFormFile.cshtml">
+    <Content Update="Mvc\Shared\Views\EditorTemplates\IEnumerable`IFormFile.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\ModelCheckboxOrRadioButtons.cshtml">
+    <Content Update="Mvc\Shared\Views\EditorTemplates\ModelCheckboxOrRadioButtons.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="MVCImplementation\Shared\Views\EditorTemplates\Slider.cshtml">
+    <Content Update="Mvc\Shared\Views\EditorTemplates\Slider.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

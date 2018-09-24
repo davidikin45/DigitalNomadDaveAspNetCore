@@ -14,7 +14,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
     using DND.Common.Data.UnitOfWork;
     using DND.Common.Infrastructure.Interfaces.Data;
     using DND.Common.Testing;
-    using DND.Web.FlightSearch.MVCImplementation.Api;
+    using DND.Web.FlightSearch.Mvc.Api;
     using Microsoft.Extensions.Configuration;
     using NUnit.Framework;
 

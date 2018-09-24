@@ -150,9 +150,13 @@ namespace DND.Common
             services.Configure<UserSettings>(userSettingsSection);
             var userSettings = userSettingsSection.Get<UserSettings>();
 
-            var loginSettingsSection = Configuration.GetSection("LoginSettings");
-            services.Configure<LoginSettings>(loginSettingsSection);
-            var loginSettings = loginSettingsSection.Get<LoginSettings>();
+            var authenticationSettingsSection = Configuration.GetSection("AuthenticationSettings");
+            services.Configure<AuthenticationSettings>(authenticationSettingsSection);
+            var authenticationSettings = authenticationSettingsSection.Get<AuthenticationSettings>();
+
+            var authorizationSettingsSection = Configuration.GetSection("AuthorizationSettings");
+            services.Configure<AuthorizationSettings>(authorizationSettingsSection);
+            var authorizationSettings = authorizationSettingsSection.Get<AuthorizationSettings>();
 
             var cacheSettingsSection = Configuration.GetSection("CacheSettings");
             services.Configure<CacheSettings>(cacheSettingsSection);
@@ -227,7 +231,7 @@ namespace DND.Common
 
             services.AddHangfireSqlServer(connectionString);
 
-            if (loginSettings.Application.Enable)
+            if (authenticationSettings.Application.Enable)
             {
                 services.ConfigureApplicationCookie(options =>
                 {
@@ -243,7 +247,7 @@ namespace DND.Common
 
             var authenticationBuilder = services.AddAuthentication();
 
-            if (loginSettings.JwtToken.Enable)
+            if (authenticationSettings.JwtToken.Enable)
             {
                 services.AddJwtAuthentication(
                tokenSettings.Key,
@@ -259,7 +263,7 @@ namespace DND.Common
                 services.AddAntiforgery(o => o.SuppressXFrameOptionsHeader = true);
             }
 
-            if (loginSettings.OpenIdConnectJwtToken.Enable)
+            if (authenticationSettings.OpenIdConnectJwtToken.Enable)
             {
                 //scheme
                 services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
@@ -271,7 +275,7 @@ namespace DND.Common
                 });
             }
 
-            if (loginSettings.OpenIdConnect.Enable)
+            if (authenticationSettings.OpenIdConnect.Enable)
             {
                 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
                 services.Configure<AuthenticationOptions>(options =>
@@ -331,22 +335,22 @@ namespace DND.Common
                 });
             }
 
-            if (loginSettings.Google.Enable)
+            if (authenticationSettings.Google.Enable)
             {
                 authenticationBuilder.AddGoogle("Google", options =>
                 {
-                    options.ClientId = loginSettings.Google.ClientId;
-                    options.ClientSecret = loginSettings.Google.ClientSecret;
+                    options.ClientId = authenticationSettings.Google.ClientId;
+                    options.ClientSecret = authenticationSettings.Google.ClientSecret;
                     options.SignInScheme = IdentityConstants.ExternalScheme;
                 });
             }
 
-            if (loginSettings.Facebook.Enable)
+            if (authenticationSettings.Facebook.Enable)
             {
                 authenticationBuilder.AddFacebook("Facebook", options =>
                 {
-                    options.ClientId = loginSettings.Facebook.ClientId;
-                    options.ClientSecret = loginSettings.Facebook.ClientSecret;
+                    options.ClientId = authenticationSettings.Facebook.ClientId;
+                    options.ClientSecret = authenticationSettings.Facebook.ClientSecret;
                     options.SignInScheme = IdentityConstants.ExternalScheme;
                 });
             }
@@ -355,6 +359,13 @@ namespace DND.Common
             //Can create custom requirements by implementing IAuthorizationRequirement and AuthorizationHandler (Needs to be added to services as scoped)
             services.AddAuthorization(options =>
             {
+                if(authorizationSettings.UserMustBeAuthorizedByDefault)
+                {
+                    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                }
+
                 options.AddPolicy("UserMustBeAdmin", policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
@@ -550,7 +561,7 @@ namespace DND.Common
             //Add Embedded views from other assemblies
             services.Configure<RazorViewEngineOptions>(options =>
             {
-                options.ViewLocationExpanders.Add(new ViewExpander(appSettings.MVCImplementationFolder));
+                options.ViewLocationExpanders.Add(new ViewExpander(appSettings.MvcImplementationFolder));
 
                 //Add Embedded Views from other assemblies
                 //Edit and Continue wont work with these views.
@@ -1006,7 +1017,7 @@ namespace DND.Common
             StaticProperties.HostingEnvironment = HostingEnvironment;
             StaticProperties.Configuration = Configuration;
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-            NavigationMenuHelperExtension.NavigationMenuHelper.MVCImplementationFolder = appSettings.Value.MVCImplementationFolder;
+            NavigationMenuHelperExtension.NavigationMenuHelper.MvcImplementationFolder = appSettings.Value.MvcImplementationFolder;
 
             taskRunner.RunTasksAfterApplicationConfiguration();
         }
