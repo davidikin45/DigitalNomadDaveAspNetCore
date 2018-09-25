@@ -16,7 +16,8 @@ namespace DND.Data
         public DbContext CreateBaseDbContext()
         {
             var builder = new DbContextOptionsBuilder<DynamicFormsContext>();
-            builder.UseSqlServer(ConnectionStrings.GetConnectionString("DefaultConnection"));
+            builder.UseSqlServer(ConnectionStrings.GetConnectionString("DefaultConnection"),
+                options => options.EnableRetryOnFailure());
 
             //EF Core Doesn't support Ambient Transactions
             builder.ConfigureWarnings(x => x.Ignore(RelationalEventId.AmbientTransactionWarning));

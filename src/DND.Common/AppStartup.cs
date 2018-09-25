@@ -52,6 +52,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Serilog;
+using Serilog.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
@@ -78,7 +80,9 @@ namespace DND.Common
     {
         public AppStartup(ILoggerFactory loggerFactory, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
-            Logger = loggerFactory.CreateLogger("Startup");
+            DontDelete();
+
+           Logger = loggerFactory.CreateLogger("Startup");
 
             Configuration = configuration;
             Configuration.PopulateStaticConnectionStrings();
@@ -109,7 +113,21 @@ namespace DND.Common
             ApplicationParts = binAssemblies.Concat(pluginAssemblies).Where(AssemblyBoolFilter).ToList();
         }
 
-        public ILogger Logger { get; }
+        public void DontDelete()
+        {
+            var types = new Type[] {
+                typeof(Serilog.ILogger),
+                typeof(Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme),
+                typeof(Serilog.Sinks.RollingFile.RollingFileSink),
+                };
+
+            Action<LoggerSinkConfiguration> action = (LoggerSinkConfiguration) =>
+            {
+                LoggerSinkConfiguration.Debug();
+            };
+        }
+
+        public Microsoft.Extensions.Logging.ILogger Logger { get; }
         public IHostingEnvironment HostingEnvironment { get; }
         public IConfiguration Configuration { get; }
 

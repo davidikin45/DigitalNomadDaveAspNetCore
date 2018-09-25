@@ -4,6 +4,7 @@ using DND.Common.Alerts;
 using DND.Common.Extensions;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;

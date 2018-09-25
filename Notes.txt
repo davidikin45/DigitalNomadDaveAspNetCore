@@ -9,3 +9,8 @@ EF Creating a good Data Model:
 3. Use collections only for Composition/Owned relationships(1-To-Many, child cannot exist independent of the parent ) not Aggregation/Associated relationshiships(child can exist independently of the parent, reference relationship). Never use a Collection for Navigation purposes!!!!
 4. All Composition and Aggregation Properties should have an associated Id property
 5. Use Complex properties for Aggregation relationships only (Many-To-1, child can exist independently of the parent, reference relationship). e.g Navigation purposes
+
+IIS Express 44300 to 44399
+
+sqllocaldb.exe s MSSQLLocalDB
+sqllocaldb info MSSqlLocalDb

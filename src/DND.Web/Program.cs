@@ -1,4 +1,6 @@
 ﻿using DND.Common;
+using Microsoft.AspNetCore.Hosting;
+using System;
 
 namespace DND.Web
 {
@@ -6,7 +8,9 @@ namespace DND.Web
     {
         public static int Main(string[] args)
         {
+            Console.WriteLine("Starting");
             return RunApp(args);
         }
+
     }
 }

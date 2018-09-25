@@ -397,6 +397,9 @@
     <Content Update="appsettings.Production.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="bundleconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="features.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -466,9 +469,21 @@
     <Content Update="Mvc\Shared\Views\EditorTemplates\Slider.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="navigation-admin.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="navigation.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Certificates\localhost.private.pfx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Certificates\localhost.public.cer">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SigningKeys\private.rsa.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -516,7 +531,7 @@
     <Message Text="Starting PrepareForPublish" Importance="high" />
     <ItemGroup>
       <DocFile Include="bin\$(Configuration)\$(TargetFramework)\*.xml" />
-      <Plugins Include="bin\$(Configuration)\$(TargetFramework)\plugins\*" />
+      <Plugins Include="bin\$(Configuration)\$(TargetFramework)\win7-x86\plugins\*" />
     </ItemGroup>
     <Message Importance="high" Text="Starting publish xml copy" />
     <Copy SourceFiles="@(DocFile)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="false" />

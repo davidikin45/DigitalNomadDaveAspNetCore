@@ -11,7 +11,7 @@ namespace DND.Common
 
         public ViewExpander(string MvcImplementationFolder)
         {
-            MvcImplementationFolder = MvcImplementationFolder;
+            this.MvcImplementationFolder = MvcImplementationFolder;
         }
 
         private string[] Locations()

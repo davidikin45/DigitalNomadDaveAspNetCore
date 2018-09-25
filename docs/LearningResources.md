@@ -48,3 +48,6 @@
 
 ## Pluralsight Courses for Chatbot
 * [Creating Voice and Chatbots That Work Everywhere](https://app.pluralsight.com/library/courses/creating-voice-chatbots-work-everywhere/table-of-contents)
+
+##Pluralsight Courses for Git
+* [Getting Started with Git](https://www.pluralsight.com/courses/git-getting-started)

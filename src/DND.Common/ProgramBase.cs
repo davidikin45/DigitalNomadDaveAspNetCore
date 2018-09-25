@@ -4,6 +4,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,20 @@ namespace DND.Common
             {
                 configEnvironmentBuilder.AddCommandLine(args);
             }
-
             var configEnvironment = configEnvironmentBuilder.Build();
+
+            var appSettingsFileName = "appsettings.json";
+            var appSettingsEnvironmentFilename = "appsettings." + (configEnvironment[WebHostDefaults.EnvironmentKey] ?? "Production") + ".json";
+
+            Console.WriteLine($"Settings:" + Environment.NewLine + 
+                               $"{contentRoot}\\{appSettingsFileName}" + Environment.NewLine + 
+                               $"{contentRoot}\\{appSettingsEnvironmentFilename}");
 
             var config = new ConfigurationBuilder()
            .AddInMemoryCollection(defaults)
            .SetBasePath(contentRoot)
-           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-           .AddJsonFile($"appsettings.{configEnvironment[WebHostDefaults.EnvironmentKey] ?? "Production"}.json", optional: true, reloadOnChange: true)
+           .AddJsonFile(appSettingsFileName, optional: false, reloadOnChange: true)
+           .AddJsonFile(appSettingsEnvironmentFilename, optional: true, reloadOnChange: true)
            .AddEnvironmentVariables("ASPNETCORE_");
 
             if (args != null)
@@ -121,7 +128,7 @@ namespace DND.Common
                 .UseConfiguration(Configuration)
                 .UseSerilog()
                 .UseStartup<TStartup>();
-        
+
         // Only used by EF Core Tooling if IDesignTimeDbContextFactory is not implemented
         // Generally its not good practice to DB in the MVC Project so best to use IDesignTimeDbContextFactory
         //https://wildermuth.com/2017/07/06/Program-cs-in-ASP-NET-Core-2-0
