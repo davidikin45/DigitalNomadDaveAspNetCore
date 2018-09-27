@@ -90,8 +90,9 @@ namespace DND.Common
             HostingEnvironment = hostingEnvironment;
 
             BinPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            Logger.LogInformation($"Bin Folder: {BinPath}");
+            Console.WriteLine($"Bin Folder: {BinPath}");
             PluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), PluginsFolder);
+            Console.WriteLine($"Plugins Folder: {PluginsPath}");
             if (!Directory.Exists(PluginsPath)) Directory.CreateDirectory(PluginsPath);
             AssemblyName = this.GetType().Assembly.GetName().Name;
             AppAssemblyPrefix = configuration.GetValue<string>("AppSettings:AssemblyPrefix");
