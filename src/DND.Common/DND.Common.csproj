@@ -959,6 +959,7 @@
     <Compile Include="Infrastructure\PaginatedList.cs" />
     <Compile Include="Infrastructure\ConfigurationManager.cs" />
     <Compile Include="Infrastructure\DbGeographyModelBinderProvider.cs" />
+    <Compile Include="TagHelpers\DescriptionTagHelper.cs" />
     <Compile Include="ViewExpander.cs" />
     <Compile Include="Infrastructure\ffMpeg.cs" />
     <Compile Include="Infrastructure\HttpContext.cs" />
