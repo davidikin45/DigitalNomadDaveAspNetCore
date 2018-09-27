@@ -87,7 +87,7 @@ namespace DND.Common
             Configuration = configuration;
             Configuration.PopulateStaticConnectionStrings();
 
-            HostingEnvironment = hostingEnvironment;
+            HostingEnvironment = hostingEnvironment; 
 
             BinPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             Console.WriteLine($"Bin Folder: {BinPath}");
