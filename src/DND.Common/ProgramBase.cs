@@ -45,7 +45,7 @@ namespace DND.Common
             var appSettingsFileName = "appsettings.json";
             var appSettingsEnvironmentFilename = "appsettings." + (configEnvironment[WebHostDefaults.EnvironmentKey] ?? "Production") + ".json";
 
-            Console.WriteLine($"Settings:" + Environment.NewLine + 
+            Console.WriteLine($"Loading Settings:" + Environment.NewLine + 
                                $"{contentRoot}\\{appSettingsFileName}" + Environment.NewLine + 
                                $"{contentRoot}\\{appSettingsEnvironmentFilename}");
 
@@ -78,7 +78,7 @@ namespace DND.Common
                 Log.Information("Getting the motors running...");
 
                 var host = CreateWebHostBuilder(args).Build();
-
+ 
                 if (host != null)
                 {
                     //Db initialization

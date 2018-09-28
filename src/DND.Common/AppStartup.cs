@@ -13,6 +13,7 @@ using DND.Common.Helpers;
 using DND.Common.HtmlGenerator;
 using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Settings;
 using DND.Common.Infrastructure.Tasks;
 using DND.Common.Middleware;
@@ -25,6 +26,7 @@ using Hangfire;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -63,6 +65,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace DND.Common
 {
@@ -296,6 +299,66 @@ namespace DND.Common
             {
                 Logger.LogInformation("Configuring JWT Authentication");
 
+                var authenticationBuilder2 = services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                });
+
+                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
+
+                Logger.LogInformation("Configuring Key 1");
+                var signingKeys = new List<SecurityKey>();
+                if (!String.IsNullOrWhiteSpace(tokenSettings.Key))
+                {
+                    //Symmetric
+                    signingKeys.Add(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key)));
+                }
+
+                Logger.LogInformation("Configuring Key 2");
+                if (!String.IsNullOrWhiteSpace(tokenSettings.PublicKeyPath))
+                {
+                    //Assymetric
+                    signingKeys.Add(SigningKey.LoadPublicRsaSigningKey(tokenSettings.PublicKeyPath));
+                }
+
+                Logger.LogInformation("Configuring Key 3");
+                if (!String.IsNullOrWhiteSpace(tokenSettings.PublicCertificatePath))
+                {
+                    //Assymetric
+                    signingKeys.Add(SigningKey.LoadPublicSigningCertificate(tokenSettings.PublicCertificatePath));
+                }
+
+                Logger.LogInformation("validIssuers");
+                var validIssuers = new List<string>();
+                if (!string.IsNullOrEmpty(tokenSettings.ExternalIssuers))
+                {
+                    foreach (var externalIssuer in tokenSettings.ExternalIssuers.Split(','))
+                    {
+                        if (!string.IsNullOrWhiteSpace(externalIssuer))
+                        {
+                            validIssuers.Add(externalIssuer);
+                        }
+                    }
+                }
+
+                Logger.LogInformation("LocalIssuer");
+                if (!string.IsNullOrWhiteSpace(tokenSettings.LocalIssuer))
+                {
+                    validIssuers.Add(tokenSettings.LocalIssuer);
+                }
+
+                Logger.LogInformation("validAudiences");
+                var validAudiences = new List<string>();
+                foreach (var audience in tokenSettings.Audiences.Split(','))
+                {
+                    if (!string.IsNullOrWhiteSpace(audience))
+                    {
+                        validAudiences.Add(audience);
+                    }
+                }
+
+                Logger.LogInformation("AddJwtAuthentication");
                 services.AddJwtAuthentication(
                tokenSettings.Key,
                tokenSettings.PublicKeyPath,

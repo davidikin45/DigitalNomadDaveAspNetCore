@@ -8,7 +8,6 @@ namespace DND.Web
     {
         public static int Main(string[] args)
         {
-            Console.WriteLine("Starting");
             return RunApp(args);
         }
 
