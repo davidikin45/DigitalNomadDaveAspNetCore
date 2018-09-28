@@ -319,6 +319,7 @@ namespace DND.Common
                 if (!String.IsNullOrWhiteSpace(tokenSettings.PublicKeyPath))
                 {
                     //Assymetric
+                    Logger.LogInformation(tokenSettings.PublicKeyPath);
                     signingKeys.Add(SigningKey.LoadPublicRsaSigningKey(tokenSettings.PublicKeyPath));
                 }
 
