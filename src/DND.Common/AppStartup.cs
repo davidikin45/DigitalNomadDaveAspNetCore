@@ -200,7 +200,7 @@ namespace DND.Common
             });
         }
 
-        private void ManipulateTokenSettings(TokenSettings options)
+        private TokenSettings ManipulateTokenSettings(TokenSettings options)
         {
             if (!string.IsNullOrEmpty(options.PrivateKeyPath))
             {
@@ -221,6 +221,8 @@ namespace DND.Common
             {
                 options.PublicCertificatePath = HostingEnvironment.MapContentPath(options.PublicCertificatePath);
             }
+
+            return options;
         }
 
         private void ManipluateEmailTemplateSettings(EmailTemplates options)
@@ -270,10 +272,12 @@ namespace DND.Common
 
             var appSettings = GetSettings<AppSettings>("AppSettings");
             var authenticationSettings = GetSettings<AuthenticationSettings>("AuthenticationSettings");
-            var tokenSettings = GetSettings<TokenSettings>("TokenSettings");
+            var tokenSettings = ManipulateTokenSettings(GetSettings<TokenSettings>("TokenSettings"));
 
             if (authenticationSettings.Application.Enable)
             {
+                Logger.LogInformation("Configuring Cookie Authentication");
+
                 services.ConfigureApplicationCookie(options =>
                 {
                     options.LoginPath = "/Account/Login";
@@ -290,10 +294,12 @@ namespace DND.Common
 
             if (authenticationSettings.JwtToken.Enable)
             {
+                Logger.LogInformation("Configuring JWT Authentication");
+
                 services.AddJwtAuthentication(
                tokenSettings.Key,
-               !string.IsNullOrEmpty(tokenSettings.PublicKeyPath) ? HostingEnvironment.MapContentPath(tokenSettings.PublicKeyPath) : tokenSettings.PublicKeyPath,
-               !string.IsNullOrEmpty(tokenSettings.PublicCertificatePath) ? HostingEnvironment.MapContentPath(tokenSettings.PublicCertificatePath) : tokenSettings.PublicCertificatePath,
+               tokenSettings.PublicKeyPath,
+               tokenSettings.PublicCertificatePath,
                tokenSettings.ExternalIssuers,
                tokenSettings.LocalIssuer,
                tokenSettings.Audiences);
@@ -301,6 +307,8 @@ namespace DND.Common
 
             if (authenticationSettings.OpenIdConnectJwtToken.Enable)
             {
+                Logger.LogInformation("Configuring IdentityServer JWT Authentication");
+
                 //scheme
                 services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
@@ -313,6 +321,8 @@ namespace DND.Common
 
             if (authenticationSettings.OpenIdConnect.Enable)
             {
+                Logger.LogInformation("Configuring OpenIdConnect");
+
                 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
                 services.Configure<AuthenticationOptions>(options =>
                 {
@@ -328,6 +338,7 @@ namespace DND.Common
                     options.Cookie.Name = appSettings.CookieAuthName;
                     options.AccessDeniedPath = "Authorization/AccessDenied";
                 });
+
                 authenticationBuilder.AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
