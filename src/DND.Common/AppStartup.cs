@@ -82,17 +82,17 @@ namespace DND.Common
         {
             DontDelete();
 
-           Logger = loggerFactory.CreateLogger("Startup");
+            Logger = loggerFactory.CreateLogger("Startup");
 
             Configuration = configuration;
             Configuration.PopulateStaticConnectionStrings();
 
-            HostingEnvironment = hostingEnvironment; 
+            HostingEnvironment = hostingEnvironment;
 
             BinPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            Console.WriteLine($"Bin Folder: {BinPath}");
+            Logger.LogInformation($"Bin Folder: {BinPath}");
             PluginsPath = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), PluginsFolder);
-            Console.WriteLine($"Plugins Folder: {PluginsPath}");
+            Logger.LogInformation($"Plugins Folder: {PluginsPath}");
             if (!Directory.Exists(PluginsPath)) Directory.CreateDirectory(PluginsPath);
             AssemblyName = this.GetType().Assembly.GetName().Name;
             AppAssemblyPrefix = configuration.GetValue<string>("AppSettings:AssemblyPrefix");
@@ -101,7 +101,7 @@ namespace DND.Common
             AssemblyStringFilter = (s => (new FileInfo(s)).Name.Contains(AppAssemblyPrefix) || (new FileInfo(s)).Name.Contains(CommonAssemblyPrefix));
 
             //Load Assemblies into current AppDomain
-            var binAssemblies = Directory.EnumerateFiles(BinPath,"*.*", SearchOption.TopDirectoryOnly)
+            var binAssemblies = Directory.EnumerateFiles(BinPath, "*.*", SearchOption.TopDirectoryOnly)
               .Where(file => new[] { ".dll", ".exe" }.Any(file.ToLower().EndsWith))
               .Where(AssemblyStringFilter)
               .Select(Assembly.LoadFrom).ToList();
@@ -145,110 +145,132 @@ namespace DND.Common
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<AppSettings>();
+            ConfigureSettingsServices(services);
+            ConfigureDatabaseServices(services);
+            ConfigureAuthenticationServices(services);
+            ConfigureAuthorizationServices(services);
+            ConfigureSecurityServices(services);
+            ConfigureEmailServices(services);
+            ConfigureCachingServices(services);
+            ConfigureResponseCompressionServices(services);
+            ConfigureMvcServices(services);
+            ConfigureSignalRServices(services);
+            ConfigureApiServices(services);
+        }
 
-            var tokenSettingsSection = Configuration.GetSection("TokenSettings");
-            services.Configure<TokenSettings>(tokenSettingsSection);
-            var tokenSettings = tokenSettingsSection.Get<TokenSettings>();
+        #region Settings
+        public virtual void ConfigureSettingsServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Settings");
 
-            var displayConventionsDisableSettingsSection = Configuration.GetSection("DisplayConventionsDisableSettings");
-            services.Configure<DisplayConventionsDisableSettings>(displayConventionsDisableSettingsSection);
-            var displayConventionsDisableSettings = displayConventionsDisableSettingsSection.Get<DisplayConventionsDisableSettings>();
+            services.AddSingleton(Configuration);
 
-            var CORSSettingsSection = Configuration.GetSection("CORSSettings");
-            services.Configure<CORSSettings>(CORSSettingsSection);
-            var corsSettings = CORSSettingsSection.Get<CORSSettings>();
-
-            var passwordSettingsSection = Configuration.GetSection("PasswordSettings");
-            services.Configure<PasswordSettings>(passwordSettingsSection);
-            var passwordSettings = passwordSettingsSection.Get<PasswordSettings>();
-
-            var userSettingsSection = Configuration.GetSection("UserSettings");
-            services.Configure<UserSettings>(userSettingsSection);
-            var userSettings = userSettingsSection.Get<UserSettings>();
-
-            var authenticationSettingsSection = Configuration.GetSection("AuthenticationSettings");
-            services.Configure<AuthenticationSettings>(authenticationSettingsSection);
-            var authenticationSettings = authenticationSettingsSection.Get<AuthenticationSettings>();
-
-            var authorizationSettingsSection = Configuration.GetSection("AuthorizationSettings");
-            services.Configure<AuthorizationSettings>(authorizationSettingsSection);
-            var authorizationSettings = authorizationSettingsSection.Get<AuthorizationSettings>();
-
-            var cacheSettingsSection = Configuration.GetSection("CacheSettings");
-            services.Configure<CacheSettings>(cacheSettingsSection);
-            var cacheSettings = cacheSettingsSection.Get<CacheSettings>();
-
-            var emailSettingsSection = Configuration.GetSection("EmailSettings");
-            services.Configure<EmailSettings>(emailSettingsSection);
-            var emailSettings = emailSettingsSection.Get<EmailSettings>();
-
-            services.Configure<EmailSettings>(options =>
-            {
-                if (!options.FileSystemFolder.Contains(@":\"))
-                {
-                    options.FileSystemFolder = Path.Combine(BinPath, options.FileSystemFolder);
-                }
-            });
-
-            var emailTemplatesSection = Configuration.GetSection("EmailTemplates");
-            services.Configure<EmailTemplates>(emailTemplatesSection);
-            var emailTemplates = emailTemplatesSection.Get<EmailTemplates>();
-            services.Configure<EmailTemplates>(options =>
-            {
-                if (!string.IsNullOrEmpty(options.Welcome))
-                {
-                    options.Welcome = HostingEnvironment.MapContentPath(options.Welcome);
-                }
-
-                if (!string.IsNullOrEmpty(options.ResetPassword))
-                {
-                    options.ResetPassword = HostingEnvironment.MapContentPath(options.ResetPassword);
-                }
-            });
-
-            var switchSettingsSection = Configuration.GetSection("SwitchSettings");
-            services.Configure<SwitchSettings>(switchSettingsSection);
-            var switchSettings = switchSettingsSection.Get<SwitchSettings>();
-
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<TokenSettings>(Configuration.GetSection("TokenSettings"));
             services.Configure<TokenSettings>(options =>
             {
-                if (!string.IsNullOrEmpty(options.PrivateKeyPath))
-                {
-                    options.PrivateKeyPath = HostingEnvironment.MapContentPath(options.PrivateKeyPath);
-                }
-
-                if (!string.IsNullOrEmpty(options.PublicKeyPath))
-                {
-                    options.PublicKeyPath = HostingEnvironment.MapContentPath(options.PublicKeyPath);
-                }
-
-                if (!string.IsNullOrEmpty(options.PrivateCertificatePath))
-                {
-                    options.PrivateCertificatePath = HostingEnvironment.MapContentPath(options.PrivateCertificatePath);
-                }
-
-                if (!string.IsNullOrEmpty(options.PublicCertificatePath))
-                {
-                    options.PublicCertificatePath = HostingEnvironment.MapContentPath(options.PublicCertificatePath);
-                }
+                ManipulateTokenSettings(options);
             });
 
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(factory =>
+            services.Configure<DisplayConventionsDisableSettings>(Configuration.GetSection("DisplayConventionsDisableSettings"));
+            services.Configure<CORSSettings>(Configuration.GetSection("CORSSettings"));
+            services.Configure<PasswordSettings>(Configuration.GetSection("PasswordSettings"));
+            services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
+            services.Configure<AuthenticationSettings>(Configuration.GetSection("AuthenticationSettings"));
+            services.Configure<AuthorizationSettings>(Configuration.GetSection("AuthorizationSettings"));
+            services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.Configure<EmailSettings>(options =>
             {
-                var actionContext = factory.GetService<IActionContextAccessor>()
-                                           .ActionContext;
-                return new UrlHelper(actionContext);
+                ManipulateEmailSettings(options);
             });
+
+            services.Configure<EmailTemplates>(Configuration.GetSection("EmailTemplates"));
+            services.Configure<EmailTemplates>(options =>
+            {
+                ManipluateEmailTemplateSettings(options);
+            });
+
+            services.Configure<SwitchSettings>(Configuration.GetSection("SwitchSettings"));
+
+            services.Configure<AssemblyProviderOptions>(options =>
+            {
+                options.BinPath = BinPath;
+                options.AssemblyFilter = AssemblyStringFilter;
+            });
+        }
+
+        private void ManipulateTokenSettings(TokenSettings options)
+        {
+            if (!string.IsNullOrEmpty(options.PrivateKeyPath))
+            {
+                options.PrivateKeyPath = HostingEnvironment.MapContentPath(options.PrivateKeyPath);
+            }
+
+            if (!string.IsNullOrEmpty(options.PublicKeyPath))
+            {
+                options.PublicKeyPath = HostingEnvironment.MapContentPath(options.PublicKeyPath);
+            }
+
+            if (!string.IsNullOrEmpty(options.PrivateCertificatePath))
+            {
+                options.PrivateCertificatePath = HostingEnvironment.MapContentPath(options.PrivateCertificatePath);
+            }
+
+            if (!string.IsNullOrEmpty(options.PublicCertificatePath))
+            {
+                options.PublicCertificatePath = HostingEnvironment.MapContentPath(options.PublicCertificatePath);
+            }
+        }
+
+        private void ManipluateEmailTemplateSettings(EmailTemplates options)
+        {
+            if (!string.IsNullOrEmpty(options.Welcome))
+            {
+                options.Welcome = HostingEnvironment.MapContentPath(options.Welcome);
+            }
+
+            if (!string.IsNullOrEmpty(options.ResetPassword))
+            {
+                options.ResetPassword = HostingEnvironment.MapContentPath(options.ResetPassword);
+            }
+        }
+
+        private void ManipulateEmailSettings(EmailSettings options)
+        {
+            if (!options.FileSystemFolder.Contains(@":\"))
+            {
+                options.FileSystemFolder = Path.Combine(BinPath, options.FileSystemFolder);
+            }
+        }
+
+        public TSettings GetSettings<TSettings>(string sectionKey) where TSettings : class
+        {
+            var settingsSection = Configuration.GetSection(sectionKey);
+            return settingsSection.Get<TSettings>();
+        }
+
+        #endregion
+
+        #region Database
+        public virtual void ConfigureDatabaseServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Databases");
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-
             AddDatabases(services, connectionString);
-
             services.AddHangfireSqlServer(connectionString);
+        }
+        #endregion
+
+        #region Authentication
+        public virtual void ConfigureAuthenticationServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Authentication");
+
+            var appSettings = GetSettings<AppSettings>("AppSettings");
+            var authenticationSettings = GetSettings<AuthenticationSettings>("AuthenticationSettings");
+            var tokenSettings = GetSettings<TokenSettings>("TokenSettings");
 
             if (authenticationSettings.Application.Enable)
             {
@@ -260,9 +282,9 @@ namespace DND.Common
             }
 
             services.ConfigureExternalCookie(options =>
-              {
-                  options.Cookie.Name = appSettings.CookieExternalAuthName;
-              });
+            {
+                options.Cookie.Name = appSettings.CookieExternalAuthName;
+            });
 
             var authenticationBuilder = services.AddAuthentication();
 
@@ -275,11 +297,6 @@ namespace DND.Common
                tokenSettings.ExternalIssuers,
                tokenSettings.LocalIssuer,
                tokenSettings.Audiences);
-            }
-
-            if (switchSettings.EnableIFramesGlobal)
-            {
-                services.AddAntiforgery(o => o.SuppressXFrameOptionsHeader = true);
             }
 
             if (authenticationSettings.OpenIdConnectJwtToken.Enable)
@@ -373,12 +390,21 @@ namespace DND.Common
                     options.SignInScheme = IdentityConstants.ExternalScheme;
                 });
             }
+        }
+        #endregion
+
+        #region Authorization
+        public virtual void ConfigureAuthorizationServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Authorization");
+
+            var authorizationSettings = GetSettings<AuthorizationSettings>("AuthorizationSettings");
 
             //Add this to controller or action using Authorize(Policy = "UserMustBeAdmin")
             //Can create custom requirements by implementing IAuthorizationRequirement and AuthorizationHandler (Needs to be added to services as scoped)
             services.AddAuthorization(options =>
             {
-                if(authorizationSettings.UserMustBeAuthorizedByDefault)
+                if (authorizationSettings.UserMustBeAuthorizedByDefault)
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
@@ -433,6 +459,45 @@ namespace DND.Common
             //Scope name as policy
             //https://www.jerriepelser.com/blog/creating-dynamic-authorization-policies-aspnet-core/
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+        }
+        #endregion
+
+        #region Security
+        public virtual void ConfigureSecurityServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Security");
+
+            var switchSettings = GetSettings<SwitchSettings>("SwitchSettings");
+            var corsSettings = GetSettings<CORSSettings>("CORSSettings");
+
+            if (switchSettings.EnableIFramesGlobal)
+            {
+                services.AddAntiforgery(o => o.SuppressXFrameOptionsHeader = true);
+            }
+
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+            });
+
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+            });
+
+            services.ConfigureCorsAllowAnyOrigin("AllowAnyOrigin");
+            services.ConfigureCorsAllowSpecificOrigin("AllowSpecificOrigin", corsSettings.Domains);
+        }
+        #endregion
+
+        #region Email
+        public virtual void ConfigureEmailServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Email");
+
+            var emailSettings = GetSettings<EmailSettings>("EmailSettings");
 
             if (emailSettings.SendEmailsViaSmtp)
             {
@@ -442,19 +507,15 @@ namespace DND.Common
             {
                 services.AddTransient<IEmailService, EmailServiceFileSystem>();
             }
+        }
+        #endregion
 
-            services.Configure<AssemblyProviderOptions>(options =>
-            {
-                options.BinPath = BinPath;
-                options.AssemblyFilter = AssemblyStringFilter;
-            });
+        #region Caching
+        public virtual void ConfigureCachingServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Caching");
 
-            services.Configure<RouteOptions>(options =>
-            {
-                options.ConstraintMap.Add("tokenCheck", typeof(TokenConstraint));
-                options.ConstraintMap.Add("versionCheck", typeof(RouteVersionConstraint));
-            });
-
+            var appSettings = GetSettings<AppSettings>("AppSettings");
             services.AddResponseCaching(options =>
             {
                 options.SizeLimit = appSettings.ResponseCacheSizeMB * 1024 * 1024; //100Mb
@@ -464,6 +525,13 @@ namespace DND.Common
             //https://stackoverflow.com/questions/46492736/asp-net-core-2-0-http-response-caching-middleware-nothing-cached
             //Client Side Cache Time
             services.AddHttpCacheHeaders(opt => opt.MaxAge = 600, opt => opt.MustRevalidate = true);
+        }
+        #endregion
+
+        #region Compression
+        public virtual void ConfigureResponseCompressionServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Response Compression");
 
             //Compression
             services.AddResponseCompression(options =>
@@ -476,8 +544,15 @@ namespace DND.Common
             {
                 options.Level = CompressionLevel.Fastest;
             });
+        }
+        #endregion
 
-            services.AddCookiePolicy(appSettings.CookieConsentName);
+        #region Mvc
+        public virtual void ConfigureMvcServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Mvc");
+
+            var appSettings = GetSettings<AppSettings>("AppSettings");
 
             // Add framework services.
             var mvc = services.AddMvc(options =>
@@ -561,34 +636,46 @@ namespace DND.Common
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            //Automatic Api Validation Response when ApiController attribute is applied.
-            //https://blogs.msdn.microsoft.com/webdev/2018/02/27/asp-net-core-2-1-web-apis/
-            services.Configure<ApiBehaviorOptions>(options =>
+            services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
+
+            services.AddCookiePolicy(appSettings.CookieConsentName);
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(factory =>
             {
-                options.InvalidModelStateResponseFactory = context =>
-                {
-                    return new UnprocessableEntityAngularObjectResult(Messages.RequestInvalid, context.ModelState);
-                };
+                var actionContext = factory.GetService<IActionContextAccessor>()
+                                           .ActionContext;
+                return new UrlHelper(actionContext);
             });
 
-            //Add Controllers from other assemblies
-            foreach (var assembly in ApplicationParts)
-            {
-                mvc.AddApplicationPart(assembly).AddControllersAsServices();
-            }
-
-            //Add Embedded views from other assemblies
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.ViewLocationExpanders.Add(new ViewExpander(appSettings.MvcImplementationFolder));
-
-                //Add Embedded Views from other assemblies
-                //Edit and Continue wont work with these views.
-                foreach (var assembly in ApplicationParts)
-                {
-                    options.FileProviders.Add(new EmbeddedFileProvider(assembly));
-                }
             });
+
+            services.AddCustomModelMetadataProvider();
+            services.AddCustomObjectValidator();
+            services.AddInheritanceValidationAttributeAdapterProvider();
+            services.AddConventionsHtmlGenerator();
+
+            ConfigureMvcModelValidation(services);
+            ConfigureMvcApplicationParts(mvc, services);
+            ConfigureMvcRouting(services);
+        }
+
+        public virtual void ConfigureMvcRouting(IServiceCollection services)
+        {
+            services.Configure<RouteOptions>(options =>
+            {
+                options.ConstraintMap.Add("tokenCheck", typeof(TokenConstraint));
+                options.ConstraintMap.Add("versionCheck", typeof(RouteVersionConstraint));
+            });
+        }
+
+        public virtual void ConfigureMvcModelValidation(IServiceCollection services)
+        {
+            var switchSettings = GetSettings<SwitchSettings>("SwitchSettings");
 
             //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
             //https://stackoverflow.com/questions/46374994/correct-way-to-disable-model-validation-in-asp-net-core-2-mvc
@@ -601,8 +688,54 @@ namespace DND.Common
                     services.Add(new ServiceDescriptor(typeof(IObjectModelValidator), _ => new NonValidatingValidator(), ServiceLifetime.Singleton));
                 }
             }
+        }
+
+        public virtual void ConfigureMvcApplicationParts(IMvcBuilder mvcBuilder, IServiceCollection services)
+        {
+            //Add Controllers from other assemblies
+            foreach (var assembly in ApplicationParts)
+            {
+                mvcBuilder.AddApplicationPart(assembly).AddControllersAsServices();
+            }
+
+            //Add Embedded views from other assemblies
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                //Add Embedded Views from other assemblies
+                //Edit and Continue wont work with these views.
+                foreach (var assembly in ApplicationParts)
+                {
+                    options.FileProviders.Add(new EmbeddedFileProvider(assembly));
+                }
+            });
+        }
+        #endregion
+
+        #region SignalR
+        public virtual void ConfigureSignalRServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring SignalR");
 
             services.AddSignalR();
+        }
+        #endregion
+
+        #region Api
+        public virtual void ConfigureApiServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Api");
+
+            var appSettings = GetSettings<AppSettings>("AppSettings");
+
+            //Automatic Api Validation Response when ApiController attribute is applied.
+            //https://blogs.msdn.microsoft.com/webdev/2018/02/27/asp-net-core-2-1-web-apis/
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    return new UnprocessableEntityAngularObjectResult(Messages.RequestInvalid, context.ModelState);
+                };
+            });
 
             services.AddApiVersioning(option =>
             {
@@ -636,43 +769,11 @@ namespace DND.Common
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 
-            //Url Helper for creating API resource links
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper, UrlHelper>(factory =>
-            {
-                var actionContext = factory.GetService<IActionContextAccessor>().ActionContext;
-                return new UrlHelper(actionContext);
-            });
-
-            services.AddHsts(options =>
-            {
-                options.Preload = true;
-                options.IncludeSubDomains = true;
-                options.MaxAge = TimeSpan.FromDays(60);
-            });
-
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-            });
-
-            services.ConfigureCorsAllowAnyOrigin("AllowAnyOrigin");
-            services.ConfigureCorsAllowSpecificOrigin("AllowSpecificOrigin", corsSettings.Domains);
-
-            services.AddCustomModelMetadataProvider();
-            services.AddCustomObjectValidator();
-            services.AddInheritanceValidationAttributeAdapterProvider();
-            services.AddConventionsHtmlGenerator();
-
-            services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton(Configuration);
-
             string xmlDocumentationFileName = AssemblyName + ".xml";
             var xmlDocumentationPath = Path.Combine(BinPath, xmlDocumentationFileName);
             services.AddSwagger(appSettings.AssemblyPrefix + " API", "", "", "", "v1", xmlDocumentationPath);
         }
+        #endregion
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
@@ -706,6 +807,7 @@ namespace DND.Common
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IOptions<AppSettings> appSettings, IOptions<CacheSettings> cacheSettings,
             IOptions<SwitchSettings> switchSettings, TaskRunner taskRunner, ISignalRHubMapper signalRHubMapper, ILoggerFactory loggerFactory)
         {
+            Logger.LogInformation("Configuring Request Pipeline");
 
             foreach (var publicUploadFolder in appSettings.Value.PublicUploadFolders.Split(','))
             {
@@ -784,7 +886,7 @@ namespace DND.Common
                 //1. download profiler from https://stackify.com/prefix/
                 //2. enable .NET profiler in windows tray
                 //3. access results at http://localhost:2012
-                //app.UseStackifyPrefix();
+                app.UseStackifyPrefix();
             }
 
             if (switchSettings.Value.EnableHelloWorld)

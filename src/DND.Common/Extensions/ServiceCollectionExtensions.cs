@@ -18,6 +18,7 @@ namespace DND.Common.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
            string bearerTokenKey,
            string bearerTokenPublicSigningKeyPath,

@@ -79,7 +79,7 @@ namespace DND.Common
 
                 var host = CreateWebHostBuilder(args).Build();
 
-                if(host != null)
+                if (host != null)
                 {
                     //Db initialization
                     using (var scope = host.Services.CreateScope())
@@ -111,6 +111,8 @@ namespace DND.Common
 
         private static void MigrateDatabases(IServiceProvider services)
         {
+            Log.Information("Migrating Databases");
+
             var taskRunner = services.GetRequiredService<TaskRunner>();
             taskRunner.RunTasksOnWebHostStartup();
         }
