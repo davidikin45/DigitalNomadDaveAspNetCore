@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 
 namespace DND.Common.Infrastructure.Helpers
 {
+    //https://dejanstojanovic.net/aspnet/2018/june/loading-rsa-key-pair-from-pem-files-in-net-core-with-c/
     public static class RsaPEMHelper
     {
         public static void GenerateRsaKeyPairFiles(String publicKeyFilePath, String privateKeyFilePath)
