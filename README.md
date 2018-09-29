@@ -39,11 +39,11 @@ No database required. No Domain Events fired.
 ```
 Execute BatchFiles\Test\UnitTests.bat
 OR
-dotnet test tests\DND.UnitTests.Common\DND.UnitTests.Common.csproj
-dotnet test tests\DND.UnitTests.Blog\DND.UnitTests.Blog.csproj
-dotnet test tests\DND.UnitTests.CMS\DND.UnitTests.CMS.csproj
-dotnet test tests\DND.UnitTests.DynamicForms\DND.UnitTests.DynamicForms.csproj
-dotnet test tests\DND.UnitTests.FlightSearch\DND.UnitTests.FlightSearch.csproj
+dotnet test test\DND.UnitTests.Common\DND.UnitTests.Common.csproj
+dotnet test test\DND.UnitTests.Blog\DND.UnitTests.Blog.csproj
+dotnet test test\DND.UnitTests.CMS\DND.UnitTests.CMS.csproj
+dotnet test test\DND.UnitTests.DynamicForms\DND.UnitTests.DynamicForms.csproj
+dotnet test test\DND.UnitTests.FlightSearch\DND.UnitTests.FlightSearch.csproj
 ```
 
 ### DND.IntegrationTestsXUnit (TestServer)
@@ -53,7 +53,7 @@ Automatically creates an Integration database on Local\MSSQLLOCALDB, seeds and r
 ```
 Execute BatchFiles\Test\IntegrationTestsNUnit.bat
 OR
-dotnet test tests\DND.IntegrationTestsXUnit\DND.IntegrationTestsXUnit.csproj
+dotnet test test\DND.IntegrationTestsXUnit\DND.IntegrationTestsXUnit.csproj
 ```
 ### DND.IntegrationTestsNUnit (Mocking)
 
@@ -62,19 +62,19 @@ Automatically creates a Integration database on Local\MSSQLLOCALDB and seeds. On
 ```
 Execute BatchFiles\Test\IntegrationTestsNUnit.bat
 OR
-dotnet test tests\DND.IntegrationTestsNUnit\DND.IntegrationTestsNUnit.csproj
+dotnet test test\DND.IntegrationTestsNUnit\DND.IntegrationTestsNUnit.csproj
 ```
 ### DND.UITests (SpecFlow & Selenium)
 
 Automatically creates a Integration database on Local\MSSQLLOCALDB, seeds and launches a Kestral Web Host using dotnet run. On completion database is deleted. Domain Events fired.
 
 ```
-Set SeleniumUrl in tests\DND.UITests\app.config
+Set SeleniumUrl in test\DND.UITests\app.config
 ```
 ```
 Execute BatchFiles\Test\UITests.bat 
 OR
-dotnet test tests\DND.UITests\DND.UITests.csproj
+dotnet test test\DND.UITests\DND.UITests.csproj
 ```
 
 ## Deployment

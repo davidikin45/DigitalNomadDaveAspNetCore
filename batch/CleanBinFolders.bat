@@ -74,7 +74,7 @@ set folder="..\..\DND.Infrastructure\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 
-set folder="..\..\..\tests\DND.UnitTests.CMS\bin"
+set folder="..\..\..\test\DND.UnitTests.CMS\bin"
 cd /d %folder%
 for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
 
