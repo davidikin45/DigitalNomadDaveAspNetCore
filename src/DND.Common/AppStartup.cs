@@ -13,7 +13,6 @@ using DND.Common.Helpers;
 using DND.Common.HtmlGenerator;
 using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
-using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Settings;
 using DND.Common.Infrastructure.Tasks;
 using DND.Common.Middleware;
@@ -26,7 +25,6 @@ using Hangfire;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -65,7 +63,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace DND.Common
 {
@@ -545,7 +542,8 @@ namespace DND.Common
 
             //https://stackoverflow.com/questions/46492736/asp-net-core-2-0-http-response-caching-middleware-nothing-cached
             //Client Side Cache Time
-            services.AddHttpCacheHeaders(opt => opt.MaxAge = 600, opt => opt.MustRevalidate = true);
+            //services.AddHttpCacheHeaders(opt => opt.MaxAge = 600, opt => opt.MustRevalidate = true);
+            services.AddHttpCacheHeaders();
         }
         #endregion
 
@@ -592,55 +590,8 @@ namespace DND.Common
                 options.Filters.Add<OperationCancelledExceptionFilter>();
 
                 //options.Filters.Add(typeof(ModelValidationFilter));
-
-                //Accept = Response MIME type client is able to understand.
-                //Accept-Language = Response Language client is able to understand.
-                //Accept-Encoding = Response Compression client is able to understand.
-
-                //Cache-control: no-cache = store response on client browser but recheck with server each request 
-                //Cache-control: no-store = dont store response on client
-                options.CacheProfiles.Add("Cache24HourNoParams", new CacheProfile()
-                {
-                    VaryByHeader = "Accept,Accept-Language,X-Requested-With",
-                    //VaryByQueryKeys = "", Only used for server side caching
-                    Duration = 60 * 60 * 24, // 24 hour,
-                    Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
-                    NoStore = false
-                });
-
-                options.CacheProfiles.Add("Cache24HourParams", new CacheProfile()
-                {
-                    //IIS DynamicCompressionModule and StaticCompressionModule add the Accept-Encoding Vary header.
-                    VaryByHeader = "Accept,Accept-Language,X-Requested-With",
-                    VaryByQueryKeys = new string[] { "*" }, //Only used for server side caching
-                    Duration = 60 * 60 * 24, // 24 hour,
-                    Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
-                    NoStore = false
-                });
-
-                //Prevents returning object representation in default format when request format isn't available
-                options.ReturnHttpNotAcceptable = true;
-
-
-                //Variable resource representations
-                //Use RequestHeaderMatchesMediaTypeAttribute to route for Accept header. Version media types not URI!
-                var jsonOutputFormatter = options.OutputFormatters
-                   .OfType<JsonOutputFormatter>().FirstOrDefault();
-
-                if (jsonOutputFormatter != null)
-                {
-
-                }
-
-                var jsonInputFormatter = options.InputFormatters
-                   .OfType<JsonInputFormatter>().FirstOrDefault();
-                if (jsonInputFormatter != null)
-                {
-
-                }
-
-                options.FormatterMappings.SetMediaTypeMappingForFormat(
-                                           "xml", "application/xml");
+                ConfigureMvcCachingProfiles(options);
+                ConfigureMvcVariableResourceRepresentations(options);
 
             })
             .AddXmlSerializerFormatters() //XML Opt out. Contract Serializer is Opt in
@@ -685,6 +636,65 @@ namespace DND.Common
             ConfigureMvcRouting(services);
         }
 
+        public virtual void ConfigureMvcCachingProfiles(MvcOptions options)
+        {
+            Logger.LogInformation("Configuring Mvc Caching Profiles");
+
+            //Cache-control: no-cache = store response on client browser but recheck with server each request 
+            //Cache-control: no-store = dont store response on client
+            options.CacheProfiles.Add("Cache24HourNoParams", new CacheProfile()
+            {
+                VaryByHeader = "Accept,Accept-Language,X-Requested-With",
+                //VaryByQueryKeys = "", Only used for server side caching
+                Duration = 60 * 60 * 24, // 24 hour,
+                Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
+                NoStore = false
+            });
+
+            options.CacheProfiles.Add("Cache24HourParams", new CacheProfile()
+            {
+                //IIS DynamicCompressionModule and StaticCompressionModule add the Accept-Encoding Vary header.
+                VaryByHeader = "Accept,Accept-Language,X-Requested-With",
+                VaryByQueryKeys = new string[] { "*" }, //Only used for server side caching
+                Duration = 60 * 60 * 24, // 24 hour,
+                Location = ResponseCacheLocation.Any,// Any = Cached on Server, Client and Proxies. Client = Client Only
+                NoStore = false
+            });
+        }
+
+        public virtual void ConfigureMvcVariableResourceRepresentations(MvcOptions options)
+        {
+            Logger.LogInformation("Configuring Mvc Variable Resource Representations");
+
+            //Accept = Response MIME type client is able to understand.
+            //Accept-Language = Response Language client is able to understand.
+            //Accept-Encoding = Response Compression client is able to understand.
+
+
+            //Prevents returning object representation in default format when request format isn't available
+            options.ReturnHttpNotAcceptable = true;
+
+            //Variable resource representations
+            //Use RequestHeaderMatchesMediaTypeAttribute to route for Accept header. Version media types not URI!
+            var jsonOutputFormatter = options.OutputFormatters
+               .OfType<JsonOutputFormatter>().FirstOrDefault();
+
+            if (jsonOutputFormatter != null)
+            {
+
+            }
+
+            var jsonInputFormatter = options.InputFormatters
+               .OfType<JsonInputFormatter>().FirstOrDefault();
+            if (jsonInputFormatter != null)
+            {
+
+            }
+
+            options.FormatterMappings.SetMediaTypeMappingForFormat(
+                           "xml", "application/xml");
+        }
+
         public virtual void ConfigureMvcRouting(IServiceCollection services)
         {
             services.Configure<RouteOptions>(options =>
@@ -696,6 +706,8 @@ namespace DND.Common
 
         public virtual void ConfigureMvcModelValidation(IServiceCollection services)
         {
+            Logger.LogInformation("Configuring Mvc Model Validation");
+
             var switchSettings = GetSettings<SwitchSettings>("SwitchSettings");
 
             //Disable IObjectValidatable and Validation Attributes from being evaluated and populating modelstate
@@ -713,6 +725,8 @@ namespace DND.Common
 
         public virtual void ConfigureMvcApplicationParts(IMvcBuilder mvcBuilder, IServiceCollection services)
         {
+            Logger.LogInformation("Configuring Application Parts");
+
             //Add Controllers from other assemblies
             foreach (var assembly in ApplicationParts)
             {
@@ -806,6 +820,8 @@ namespace DND.Common
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            Logger.LogInformation("Configuring Autofac Modules");
+
             builder.RegisterModule(new AutofacConventionsDependencyInjectionModule() { Paths = new string[] { BinPath, PluginsPath }, Filter = AssemblyStringFilter });
             builder.RegisterModule(new AutofacTasksModule() { Paths = new string[] { BinPath, PluginsPath }, Filter = AssemblyStringFilter });
             builder.RegisterModule(new AutofacDomainEventHandlerModule() { Paths = new string[] { BinPath, PluginsPath }, Filter = AssemblyStringFilter });
