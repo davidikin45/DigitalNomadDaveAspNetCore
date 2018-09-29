@@ -18,5 +18,10 @@ namespace DND.Web.CMS
         {
           
         }
+
+        public override void ConfigureHttpClients(IServiceCollection services)
+        {
+
+        }
     }
 }

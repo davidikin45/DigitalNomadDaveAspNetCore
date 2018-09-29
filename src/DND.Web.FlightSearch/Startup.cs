@@ -18,5 +18,10 @@ namespace DND.Web.FlightSearch
         {
           
         }
+
+        public override void ConfigureHttpClients(IServiceCollection services)
+        {
+
+        }
     }
 }

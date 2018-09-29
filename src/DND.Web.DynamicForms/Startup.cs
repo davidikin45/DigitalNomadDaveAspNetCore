@@ -18,5 +18,10 @@ namespace DND.Web.DynamicForms
         {
    
         }
+
+        public override void ConfigureHttpClients(IServiceCollection services)
+        {
+
+        }
     }
 }

@@ -148,10 +148,13 @@ namespace DND.Common
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            throw new Exception("abc");
+
             ConfigureSettingsServices(services);
             ConfigureDatabaseServices(services);
             ConfigureAuthenticationServices(services);
             ConfigureAuthorizationServices(services);
+
             ConfigureSecurityServices(services);
             ConfigureEmailServices(services);
             ConfigureCachingServices(services);
@@ -159,6 +162,9 @@ namespace DND.Common
             ConfigureMvcServices(services);
             ConfigureSignalRServices(services);
             ConfigureApiServices(services);
+            ConfigureHttpClients(services);
+
+
         }
 
         #region Settings
@@ -298,66 +304,6 @@ namespace DND.Common
             if (authenticationSettings.JwtToken.Enable)
             {
                 Logger.LogInformation("Configuring JWT Authentication");
-
-                var authenticationBuilder2 = services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                });
-
-                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
-
-                Logger.LogInformation("Configuring Key 1");
-                var signingKeys = new List<SecurityKey>();
-                if (!String.IsNullOrWhiteSpace(tokenSettings.Key))
-                {
-                    //Symmetric
-                    signingKeys.Add(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key)));
-                }
-
-                Logger.LogInformation("Configuring Key 2");
-                if (!String.IsNullOrWhiteSpace(tokenSettings.PublicKeyPath))
-                {
-                    //Assymetric
-                    Logger.LogInformation(tokenSettings.PublicKeyPath);
-                    signingKeys.Add(SigningKey.LoadPublicRsaSigningKey(tokenSettings.PublicKeyPath));
-                }
-
-                Logger.LogInformation("Configuring Key 3");
-                if (!String.IsNullOrWhiteSpace(tokenSettings.PublicCertificatePath))
-                {
-                    //Assymetric
-                    signingKeys.Add(SigningKey.LoadPublicSigningCertificate(tokenSettings.PublicCertificatePath));
-                }
-
-                Logger.LogInformation("validIssuers");
-                var validIssuers = new List<string>();
-                if (!string.IsNullOrEmpty(tokenSettings.ExternalIssuers))
-                {
-                    foreach (var externalIssuer in tokenSettings.ExternalIssuers.Split(','))
-                    {
-                        if (!string.IsNullOrWhiteSpace(externalIssuer))
-                        {
-                            validIssuers.Add(externalIssuer);
-                        }
-                    }
-                }
-
-                Logger.LogInformation("LocalIssuer");
-                if (!string.IsNullOrWhiteSpace(tokenSettings.LocalIssuer))
-                {
-                    validIssuers.Add(tokenSettings.LocalIssuer);
-                }
-
-                Logger.LogInformation("validAudiences");
-                var validAudiences = new List<string>();
-                foreach (var audience in tokenSettings.Audiences.Split(','))
-                {
-                    if (!string.IsNullOrWhiteSpace(audience))
-                    {
-                        validAudiences.Add(audience);
-                    }
-                }
 
                 Logger.LogInformation("AddJwtAuthentication");
                 services.AddJwtAuthentication(
@@ -715,7 +661,7 @@ namespace DND.Common
 
             services.AddCookiePolicy(appSettings.CookieConsentName);
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper>(factory =>
             {
@@ -847,6 +793,14 @@ namespace DND.Common
             string xmlDocumentationFileName = AssemblyName + ".xml";
             var xmlDocumentationPath = Path.Combine(BinPath, xmlDocumentationFileName);
             services.AddSwagger(appSettings.AssemblyPrefix + " API", "", "", "", "v1", xmlDocumentationPath);
+        }
+        #endregion
+
+        #region HttpClients
+        //https://www.codemag.com/article/1807041/What%E2%80%99s-New-in-ASP.NET-Core-2.1
+        public virtual void ConfigureHttpClients(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Http Clients");
         }
         #endregion
 
@@ -1219,6 +1173,5 @@ namespace DND.Common
         }
 
         public abstract void AddDatabases(IServiceCollection services, string defaultConnectionString);
-
     }
 }

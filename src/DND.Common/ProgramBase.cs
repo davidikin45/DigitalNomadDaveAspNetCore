@@ -9,6 +9,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DND.Common
 {
@@ -78,25 +79,20 @@ namespace DND.Common
                 Log.Information("Getting the motors running...");
 
                 var host = CreateWebHostBuilder(args).Build();
- 
-                if (host != null)
+
+                //Db initialization
+                using (var scope = host.Services.CreateScope())
                 {
-                    //Db initialization
-                    using (var scope = host.Services.CreateScope())
+                    var services = scope.ServiceProvider;
+                    if(services.GetService<TaskRunner>() != null)
                     {
-                        var services = scope.ServiceProvider;
                         MigrateDatabases(services);
                     }
-
-                    host.Run();
-
-                    return 0;
                 }
-                else
-                {
-                    Log.Fatal("Host terminated unexpectedly");
-                    return 1;
-                }
+
+                host.Run();
+
+                return 0;
             }
             catch (Exception ex)
             {
@@ -119,9 +115,11 @@ namespace DND.Common
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
                 WebHost.CreateDefaultBuilder(args)
-                .UseSetting("detailedErrors", "true")
+                // These two settings allow an error page to be shown rather than throwing exception on startup
+                // Need to be careful putting code after IWebHostBuilder.Build()
                 .CaptureStartupErrors(true)
-                .UseKestrel(options =>
+                //.UseSetting("detailedErrors", "true") // Better to put this in appsettings
+                .UseKestrel((context, options) =>
                 {
                     options.AddServerHeader = false;
                 }

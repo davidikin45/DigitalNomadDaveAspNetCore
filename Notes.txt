@@ -14,3 +14,34 @@ IIS Express 44300 to 44399
 
 sqllocaldb.exe s MSSQLLocalDB
 sqllocaldb info MSSqlLocalDb
+
+
+dotnet tool install dotnet-dev-certs -g
+
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+
+dotnet dev-certs https --export-path ./localhost.private.pfx -p password
+dotnet dev-certs https -ep "localhost.private.pfx" -p password --trust
+
+Will use certificates in the following order
+1. Kestrel > Certificates > Default 
+2. Kestrel > Certificates > Development
+3. StoreName.My, localhost, true
+
+  "Kestrel": {
+    "Certificates": {
+      "Default": {
+        "Path": "Certificates/localhost.private.pfx",
+        "Password": "password"
+      }
+    }
+  }
+
+var basePort = context.Configuration.GetValue<int?>("BASE_PORT") ?? 5000;
+options.ListenAnyIP(basePort + 1, listenOptions =>
+{
+
+listenOptions.UseHttps(StoreName.My, "localhost", true);
+listenOptions.UseHttps();
+});

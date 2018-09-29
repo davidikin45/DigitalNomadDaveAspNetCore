@@ -46,11 +46,7 @@ namespace DND.Common.Infrastructure.Cryptography
             byte[] bytes = HexToByte(privateKeyHex);
             return DecodeRsaPrivateKey(bytes);
         }
-        public static RSACryptoServiceProvider DecodeRsaPrivateKeyBase64(string privateKeyBase64, string password = "")
-        {
-            byte[] bytes = Convert.FromBase64String(privateKeyBase64);
-            return DecodeRsaPrivateKey(bytes);
-        }
+
         public static RSACryptoServiceProvider DecodeRsaPrivateKey(byte[] privateKeyBytes)// PKCS1 
         {
             MemoryStream ms = new MemoryStream(privateKeyBytes);
@@ -144,10 +140,7 @@ namespace DND.Common.Infrastructure.Cryptography
         {
             return DecodeRsaPublicKey(HexToByte(publicKeyHex));
         }
-        public static RSACryptoServiceProvider DecodeRsaPublicKeyFromBase64(string publicKeyBase64)
-        {
-            return DecodeRsaPublicKey(Convert.FromBase64String(publicKeyBase64));
-        }
+
         public static RSACryptoServiceProvider DecodeRsaPublicKey(byte[] publicKeyBytes)   // PKCS1
         {
             MemoryStream ms = new MemoryStream(publicKeyBytes);
@@ -520,18 +513,7 @@ namespace DND.Common.Infrastructure.Cryptography
             return packagePEM(key.GetBytes(), PEMtypes.PEM_PUBLIC);
 
         }
-        public static String ExportPublicKeyToX509Base64(RSACryptoServiceProvider csp)   // x509
-        {
-            // Encoded key
-            AsnKeyBuilder.AsnMessage key = null;
-            // actualKey
-            RSAParameters actualKey = csp.ExportParameters(false);
-            key = AsnKeyBuilder.PublicKeyToX509(actualKey);
 
-            var bytes = key.GetBytes();
-
-            return Convert.ToBase64String(bytes, 0, (int)bytes.Length);
-        }
         public static String ExportPublicKeyToX509Hex(RSACryptoServiceProvider csp)   // x509
         {
             // Encoded key

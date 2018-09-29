@@ -18,5 +18,10 @@ namespace DND.Web.Blog
         {
            
         }
+
+        public override void ConfigureHttpClients(IServiceCollection services)
+        {
+
+        }
     }
 }

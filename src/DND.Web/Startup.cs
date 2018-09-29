@@ -8,6 +8,7 @@ using DND.Interfaces.DynamicForms.ApplicationServices;
 using DND.Interfaces.FlightSearch.ApplicationServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -24,6 +25,11 @@ namespace DND.Web
                 typeof(ICarouselItemApplicationService),
                 typeof(IFormApplicationService),
                 typeof(IFlightSearchApplicationService)};
+        }
+
+        public override void ConfigureHttpClients(IServiceCollection services)
+        {
+            
         }
     }
 }
