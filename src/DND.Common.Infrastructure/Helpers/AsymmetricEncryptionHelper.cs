@@ -1,5 +1,4 @@
-﻿using DND.Common.Infrastructure.Cryptography;
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography;
 
 
@@ -261,41 +260,12 @@ namespace DND.Common.Infrastructure.Helpers
         {
             public static void AssignNewKey(string publicKeyPath, string privateKeyPath)
             {
-                using (var rsa = new RSACryptoServiceProvider(2048))
-                {
-                    rsa.PersistKeyInCsp = false;
-
-                    if (File.Exists(privateKeyPath))
-                    {
-                        File.Delete(privateKeyPath);
-                    }
-
-                    if (File.Exists(publicKeyPath))
-                    {
-                        File.Delete(publicKeyPath);
-                    }
-
-                    var publicKeyfolder = Path.GetDirectoryName(publicKeyPath);
-                    var privateKeyfolder = Path.GetDirectoryName(privateKeyPath);
-
-                    if (!Directory.Exists(publicKeyfolder))
-                    {
-                        Directory.CreateDirectory(publicKeyfolder);
-                    }
-
-                    if (!Directory.Exists(privateKeyfolder))
-                    {
-                        Directory.CreateDirectory(privateKeyfolder);
-                    }
-
-                    File.WriteAllText(publicKeyPath, Crypto.ExportPublicKeyToX509PEM(rsa));
-                    File.WriteAllText(privateKeyPath, Crypto.ExportPrivateKeyToRSAPEM(rsa));
-                }
+                RsaPEMHelper.GenerateRsaKeyPairFiles(publicKeyPath, privateKeyPath);
             }
 
             public static RSAParameters GetPublicKeyRSAParameters(string publicKeyPath)
             {
-                using (var rsa = Crypto.DecodeX509PublicKey(File.ReadAllText(publicKeyPath)))
+                using (var rsa = RsaPEMHelper.PublicKeyFromPemFile(publicKeyPath))
                 {
                     return rsa.ExportParameters(false);
                 }
@@ -303,7 +273,7 @@ namespace DND.Common.Infrastructure.Helpers
 
             public static RSAParameters GetPrivateKeyRSAParameters(string privateKeyPath)
             {
-                using (var rsa = Crypto.DecodeRsaPrivateKey(File.ReadAllText(privateKeyPath)))
+                using (var rsa = RsaPEMHelper.PrivateKeyFromPemFile(privateKeyPath))
                 {
                     return rsa.ExportParameters(true);
                 }
@@ -313,7 +283,7 @@ namespace DND.Common.Infrastructure.Helpers
             {
                 byte[] cipherbytes;
 
-                using (var rsa = Crypto.DecodeX509PublicKey(File.ReadAllText(publicKeyPath)))
+                using (var rsa = RsaPEMHelper.PublicKeyFromPemFile(publicKeyPath))
                 {
 
                     cipherbytes = rsa.Encrypt(dataToEncrypt, false);
@@ -326,7 +296,7 @@ namespace DND.Common.Infrastructure.Helpers
             {
                 byte[] plain;
 
-                using (var rsa = Crypto.DecodeRsaPrivateKey(File.ReadAllText(privateKeyPath)))
+                using (var rsa = RsaPEMHelper.PrivateKeyFromPemFile(privateKeyPath))
                 {
                     plain = rsa.Decrypt(dataToEncrypt, false);
                 }
@@ -336,7 +306,7 @@ namespace DND.Common.Infrastructure.Helpers
 
             public static byte[] CreateDigitalSignature(string privateKeyPath, byte[] hashOfDataToSign)
             {
-                using (var rsa = Crypto.DecodeRsaPrivateKey(File.ReadAllText(privateKeyPath)))
+                using (var rsa = RsaPEMHelper.PrivateKeyFromPemFile(privateKeyPath))
                 {
 
                     var rsaFormatter = new RSAPKCS1SignatureFormatter(rsa);
@@ -348,7 +318,7 @@ namespace DND.Common.Infrastructure.Helpers
 
             public static bool VerifySignature(string publicKeyPath, byte[] hashOfDataToSign, byte[] signature)
             {
-                using (var rsa = Crypto.DecodeX509PublicKey(File.ReadAllText(publicKeyPath)))
+                using (var rsa = RsaPEMHelper.PublicKeyFromPemFile(publicKeyPath))
                 {
                     var rsaDeformatter = new RSAPKCS1SignatureDeformatter(rsa);
                     rsaDeformatter.SetHashAlgorithm("SHA256");
@@ -362,28 +332,20 @@ namespace DND.Common.Infrastructure.Helpers
         {
             public static (string publicKey, string privateKey) AssignNewKey()
             {
-                using (var rsa = new RSACryptoServiceProvider(2048))
-                {
-                    rsa.PersistKeyInCsp = false;
-
-                    var publicKey = Crypto.ExportPublicKeyToX509PEM(rsa);
-                    var privateKey = Crypto.ExportPrivateKeyToRSAPEM(rsa);
-
-                    return (publicKey: publicKey, privateKey: privateKey);
-                }
+                return RsaPEMHelper.GenerateRsaKeyPair();
             }
 
             public static RSAParameters GetPublicKeyRSAParameters(string publicKeyString)
             {
-                using (var rsa = Crypto.DecodeX509PublicKey(publicKeyString))
+                using (var rsa = RsaPEMHelper.PublicKeyFromPem(publicKeyString))
                 {
                     return rsa.ExportParameters(false);
                 }
             }
 
-            public static RSAParameters GetPrivateKeyRSAParameters(string privateKeyPath)
+            public static RSAParameters GetPrivateKeyRSAParameters(string privateKeyString)
             {
-                using (var rsa = Crypto.DecodeRsaPrivateKey(privateKeyPath))
+                using (var rsa = RsaPEMHelper.PrivateKeyFromPem(privateKeyString))
                 {
                     return rsa.ExportParameters(true);
                 }
@@ -393,7 +355,7 @@ namespace DND.Common.Infrastructure.Helpers
             {
                 byte[] cipherbytes;
 
-                using (var rsa = Crypto.DecodeX509PublicKey(publicKeyString))
+                using (var rsa = RsaPEMHelper.PublicKeyFromPem(publicKeyString))
                 {
 
                     cipherbytes = rsa.Encrypt(dataToEncrypt, false);
@@ -406,7 +368,7 @@ namespace DND.Common.Infrastructure.Helpers
             {
                 byte[] plain;
 
-                using (var rsa = Crypto.DecodeRsaPrivateKey(privateKeyString))
+                using (var rsa = RsaPEMHelper.PrivateKeyFromPem(privateKeyString))
                 {
                     plain = rsa.Decrypt(dataToEncrypt, false);
                 }
@@ -416,7 +378,7 @@ namespace DND.Common.Infrastructure.Helpers
 
             public static byte[] CreateDigitalSignature(string privateKeyString, byte[] hashOfDataToSign)
             {
-                using (var rsa = Crypto.DecodeRsaPrivateKey(privateKeyString))
+                using (var rsa = RsaPEMHelper.PrivateKeyFromPem(privateKeyString))
                 {
 
                     var rsaFormatter = new RSAPKCS1SignatureFormatter(rsa);
@@ -428,7 +390,7 @@ namespace DND.Common.Infrastructure.Helpers
 
             public static bool VerifySignature(string publicKeyString, byte[] hashOfDataToSign, byte[] signature)
             {
-                using (var rsa = Crypto.DecodeX509PublicKey(publicKeyString))
+                using (var rsa = RsaPEMHelper.PublicKeyFromPem(publicKeyString))
                 {
                     var rsaDeformatter = new RSAPKCS1SignatureDeformatter(rsa);
                     rsaDeformatter.SetHashAlgorithm("SHA256");
