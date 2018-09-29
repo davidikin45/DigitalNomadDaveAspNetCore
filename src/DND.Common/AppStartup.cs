@@ -298,9 +298,15 @@ namespace DND.Common
 
             if (authenticationSettings.JwtToken.Enable)
             {
-                Logger.LogInformation("Configuring JWT Authentication");
+                Logger.LogInformation($@"Configuring JWT Authentication
+                                       Key:{tokenSettings.Key ?? ""}
+                                       PublicKeyPath: {tokenSettings.PublicKeyPath ?? ""}
+                                       PublicCertificatePath: {tokenSettings.PublicCertificatePath ?? ""}
+                                       ExternalIssuers: {tokenSettings.ExternalIssuers ?? ""}
+                                       LocalIssuer: {tokenSettings.LocalIssuer ?? ""}
+                                       Audiences: {tokenSettings.Audiences ?? ""}
+                                    ");
 
-                Logger.LogInformation("AddJwtAuthentication");
                 services.AddJwtAuthentication(
                tokenSettings.Key,
                tokenSettings.PublicKeyPath,

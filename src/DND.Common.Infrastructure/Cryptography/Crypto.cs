@@ -320,6 +320,8 @@ namespace DND.Common.Infrastructure.Cryptography
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 Debug.Assert(false);
                 return null;
             }
