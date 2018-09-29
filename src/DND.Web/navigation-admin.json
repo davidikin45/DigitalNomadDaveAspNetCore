@@ -140,10 +140,5 @@
     "Controller": "",
     "Action": "/admin/hangfire",
     "LinkText": "Jobs"
-  },
-  {
-    "Controller": "",
-    "Action": "/Glimpse.axd",
-    "LinkText": "Glimpse"
   }
 ]
