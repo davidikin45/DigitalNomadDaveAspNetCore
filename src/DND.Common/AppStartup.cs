@@ -148,13 +148,10 @@ namespace DND.Common
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            throw new Exception("abc");
-
             ConfigureSettingsServices(services);
             ConfigureDatabaseServices(services);
             ConfigureAuthenticationServices(services);
             ConfigureAuthorizationServices(services);
-
             ConfigureSecurityServices(services);
             ConfigureEmailServices(services);
             ConfigureCachingServices(services);
@@ -163,8 +160,6 @@ namespace DND.Common
             ConfigureSignalRServices(services);
             ConfigureApiServices(services);
             ConfigureHttpClients(services);
-
-
         }
 
         #region Settings
