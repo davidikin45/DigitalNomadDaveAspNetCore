@@ -10,6 +10,9 @@ namespace DND.Domain.CMS.ContentTexts.Dtos
 {
     public class ContentTextDto : DtoAggregateRootBase<string>, IHaveCustomMappings
     {
+        [ReadOnlyHiddenInput(ShowForCreate = false, ShowForEdit = true)]
+        public override string Id { get => base.Id; set => base.Id = value; }
+
         [MultilineText(HTML = false, Rows = 7)]
         public string Text { get; set; }
         //[DataType(DataType.Date)]

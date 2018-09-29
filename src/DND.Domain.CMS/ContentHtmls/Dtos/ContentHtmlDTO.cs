@@ -15,11 +15,6 @@ namespace DND.Domain.CMS.ContentHtmls.Dtos
 
         [MultilineText(HTML = true, Rows = 7)]
         public string HTML { get; set; }
-        //[DataType(DataType.Date)]
-        //public DateTime FromDate { get; set; }
-        //[DataType(DataType.Date)]
-        //public DateTime? ToDate { get; set; }
-        //public DbGeography Location { get; set; }
 
         [HiddenInput]
         public bool PreventDelete { get; set; }
