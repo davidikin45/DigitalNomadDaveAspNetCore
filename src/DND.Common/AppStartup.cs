@@ -638,8 +638,6 @@ namespace DND.Common
 
         public virtual void ConfigureMvcCachingProfiles(MvcOptions options)
         {
-            Logger.LogInformation("Configuring Mvc Caching Profiles");
-
             //Cache-control: no-cache = store response on client browser but recheck with server each request 
             //Cache-control: no-store = dont store response on client
             options.CacheProfiles.Add("Cache24HourNoParams", new CacheProfile()
@@ -664,8 +662,6 @@ namespace DND.Common
 
         public virtual void ConfigureMvcVariableResourceRepresentations(MvcOptions options)
         {
-            Logger.LogInformation("Configuring Mvc Variable Resource Representations");
-
             //Accept = Response MIME type client is able to understand.
             //Accept-Language = Response Language client is able to understand.
             //Accept-Encoding = Response Compression client is able to understand.
