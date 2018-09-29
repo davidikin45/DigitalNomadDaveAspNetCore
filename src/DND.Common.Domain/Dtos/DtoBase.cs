@@ -149,7 +149,7 @@ namespace DND.Common.Domain.Dtos
 
         public override int GetHashCode()
         {
-            return (GetType().ToString() + Id.ToString()).GetHashCode();
+            return (GetType().ToString() + ( Id != null ? Id.ToString(): "")).GetHashCode();
         }
     }
 }

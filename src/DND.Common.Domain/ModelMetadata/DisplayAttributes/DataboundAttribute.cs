@@ -283,18 +283,10 @@ namespace DND.Common.Domain.ModelMetadata
 
             modelMetadata.AdditionalValues["Nullable"] = Nullable;
 
-            if (!string.IsNullOrEmpty(FolderFolderId))
-            {
-               // PhysicalFolderPath = Server.GetWwwFolderPhysicalPathById(FolderFolderId);
-            }
-
+            modelMetadata.AdditionalValues["FolderFolderId"] = FolderFolderId;
             modelMetadata.AdditionalValues["PhysicalFolderPath"] = PhysicalFolderPath;
 
-            if (!string.IsNullOrEmpty(FileFolderId))
-            {
-               // PhysicalFilePath = Server.GetWwwFolderPhysicalPathById(FileFolderId);
-            }
-
+            modelMetadata.AdditionalValues["FileFolderId"] = FileFolderId;
             modelMetadata.AdditionalValues["PhysicalFilePath"] = PhysicalFilePath;
 
             modelMetadata.AdditionalValues["Options"] = Options;

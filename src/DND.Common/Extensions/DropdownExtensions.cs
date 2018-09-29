@@ -1,5 +1,6 @@
 ﻿using DND.Common.Data.Helpers;
 using DND.Common.Helpers;
+using DND.Common.Infrastructure;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
@@ -31,7 +32,17 @@ namespace DND.Common.Extensions
             var orderByType = ((string)metadata.AdditionalValues["OrderByType"]);
 
             var physicalFilePath = ((string)metadata.AdditionalValues["PhysicalFilePath"]);
+            var fileFolderId = ((string)metadata.AdditionalValues["FileFolderId"]);
+            if (!string.IsNullOrEmpty(fileFolderId))
+            {
+                physicalFilePath = Server.GetWwwFolderPhysicalPathById(fileFolderId);
+            }
             var physicalFolderPath = ((string)metadata.AdditionalValues["PhysicalFolderPath"]);
+            var folderFolderId = ((string)metadata.AdditionalValues["FolderFolderId"]);
+            if (!string.IsNullOrEmpty(folderFolderId))
+            {
+                physicalFolderPath = Server.GetWwwFolderPhysicalPathById(folderFolderId);
+            }
 
             var nullable = ((bool)metadata.AdditionalValues["Nullable"]);
 
