@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DND.Common.Domain.ModelMetadata;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace DND.Web.Mvc.Contact.Models
         public string Subject { get; set; }
 
         [Required]
+        [MultilineText]
         public string Message { get; set; }
     }
 }
