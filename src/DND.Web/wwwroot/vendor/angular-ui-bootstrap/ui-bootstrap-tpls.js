@@ -2166,13 +2166,7 @@ angular.module('ui.bootstrap.position', [])
         return isFinite(value) ? value : 0;
       },
 
-      /**
-       * Provides the closest positioned ancestor.
-       *
-       * @param {element} element - The element to get the offest parent for.
-       *
-       * @returns {element} The closest positioned ancestor.
-       */
+
       offsetParent: function(elem) {
         elem = this.getRawNode(elem);
 
@@ -2189,14 +2183,6 @@ angular.module('ui.bootstrap.position', [])
         return offsetParent || $document[0].documentElement;
       },
 
-      /**
-       * Provides the scrollbar width, concept from TWBS measureScrollbar()
-       * function in https://github.com/twbs/bootstrap/blob/master/js/modal.js
-       * In IE and Edge, scollbar on body and html element overlay and should
-       * return a width of 0.
-       *
-       * @returns {number} The width of the browser scollbar.
-       */
       scrollbarWidth: function(isBody) {
         if (isBody) {
           if (angular.isUndefined(BODY_SCROLLBAR_WIDTH)) {
@@ -2220,20 +2206,6 @@ angular.module('ui.bootstrap.position', [])
         return SCROLLBAR_WIDTH;
       },
 
-      /**
-       * Provides the padding required on an element to replace the scrollbar.
-       *
-       * @returns {object} An object with the following properties:
-       *   <ul>
-       *     <li>**scrollbarWidth**: the width of the scrollbar</li>
-       *     <li>**widthOverflow**: whether the the width is overflowing</li>
-       *     <li>**right**: the amount of right padding on the element needed to replace the scrollbar</li>
-       *     <li>**rightOriginal**: the amount of right padding currently on the element</li>
-       *     <li>**heightOverflow**: whether the the height is overflowing</li>
-       *     <li>**bottom**: the amount of bottom padding on the element needed to replace the scrollbar</li>
-       *     <li>**bottomOriginal**: the amount of bottom padding currently on the element</li>
-       *   </ul>
-       */
       scrollbarPadding: function(elem) {
         elem = this.getRawNode(elem);
 
@@ -2315,23 +2287,7 @@ angular.module('ui.bootstrap.position', [])
         return scrollParent;
       },
 
-      /**
-       * Provides read-only equivalent of jQuery's position function:
-       * http://api.jquery.com/position/ - distance to closest positioned
-       * ancestor.  Does not account for margins by default like jQuery position.
-       *
-       * @param {element} elem - The element to caclulate the position on.
-       * @param {boolean=} [includeMargins=false] - Should margins be accounted
-       * for, default is false.
-       *
-       * @returns {object} An object with the following properties:
-       *   <ul>
-       *     <li>**width**: the width of the element</li>
-       *     <li>**height**: the height of the element</li>
-       *     <li>**top**: distance to top edge of offset parent</li>
-       *     <li>**left**: distance to left edge of offset parent</li>
-       *   </ul>
-       */
+
       position: function(elem, includeMagins) {
         elem = this.getRawNode(elem);
 
@@ -2639,18 +2595,7 @@ angular.module('ui.bootstrap.position', [])
         return targetElemPos;
       },
 
-      /**
-       * Provides a way to adjust the top positioning after first
-       * render to correctly align element to top after content
-       * rendering causes resized element height
-       *
-       * @param {array} placementClasses - The array of strings of classes
-       * element should have.
-       * @param {object} containerPosition - The object with container
-       * position information
-       * @param {number} initialHeight - The initial height for the elem.
-       * @param {number} currentHeight - The current height for the elem.
-       */
+
       adjustTop: function(placementClasses, containerPosition, initialHeight, currentHeight) {
         if (placementClasses.indexOf('top') !== -1 && initialHeight !== currentHeight) {
           return {
@@ -4891,11 +4836,7 @@ angular.module('ui.bootstrap.pagination', ['ui.bootstrap.paging', 'ui.bootstrap.
   };
 }]);
 
-/**
- * The following features are still outstanding: animation as a
- * function, placement as a function, inside, support for more triggers than
- * just mouse enter/leave, html tooltips, and selector delegation.
- */
+
 angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.stackedMap'])
 
 /**
@@ -4925,31 +4866,16 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
   // The options specified to the provider globally.
   var globalOptions = {};
 
-  /**
-   * `options({})` allows global configuration of all tooltips in the
-   * application.
-   *
-   *   var app = angular.module( 'App', ['ui.bootstrap.tooltip'], function( $tooltipProvider ) {
-   *     // place tooltips left instead of top by default
-   *     $tooltipProvider.options( { placement: 'left' } );
-   *   });
-   */
+
 	this.options = function(value) {
 		angular.extend(globalOptions, value);
 	};
 
-  /**
-   * This allows you to extend the set of trigger mappings available. E.g.:
-   *
-   *   $tooltipProvider.setTriggers( { 'openTrigger': 'closeTrigger' } );
-   */
+
   this.setTriggers = function setTriggers(triggers) {
     angular.extend(triggerMap, triggers);
   };
 
-  /**
-   * This is a helper function for translating camel-case to snake_case.
-   */
   function snake_case(name) {
     var regexp = /[A-Z]/g;
     var separator = '-';
@@ -4958,10 +4884,6 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
     });
   }
 
-  /**
-   * Returns the actual instance of the $tooltip service.
-   * TODO support multiple triggers
-   */
   this.$get = ['$window', '$compile', '$timeout', '$document', '$uibPosition', '$interpolate', '$rootScope', '$parse', '$$stackedMap', function($window, $compile, $timeout, $document, $position, $interpolate, $rootScope, $parse, $$stackedMap) {
     var openedTooltips = $$stackedMap.createNew();
     $document.on('keyup', keypressListener);
@@ -4983,20 +4905,7 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
     return function $tooltip(ttType, prefix, defaultTriggerShow, options) {
       options = angular.extend({}, defaultOptions, globalOptions, options);
 
-      /**
-       * Returns an object of show and hide triggers.
-       *
-       * If a trigger is supplied,
-       * it is used to show the tooltip; otherwise, it will use the `trigger`
-       * option passed to the `$tooltipProvider.options` method; else it will
-       * default to the trigger supplied to this directive factory.
-       *
-       * The hide trigger is based on the show trigger. If the `trigger` option
-       * was passed to the `$tooltipProvider.options` method, it will use the
-       * mapped trigger from `triggerMap` or the passed trigger if the map is
-       * undefined; otherwise, it uses the `triggerMap` value of the show
-       * trigger; else it will just use the show trigger.
-       */
+
       function getTriggers(trigger) {
         var show = (trigger || options.trigger || defaultTriggerShow).split(' ');
         var hide = show.map(function(trigger) {
@@ -5617,11 +5526,7 @@ function ($animate, $sce, $compile, $templateRequest) {
   });
 }]);
 
-/**
- * The following features are still outstanding: popup delay, animation as a
- * function, placement as a function, inside, support for more triggers than
- * just mouse enter/leave, and selector delegatation.
- */
+
 angular.module('ui.bootstrap.popover', ['ui.bootstrap.tooltip'])
 
 .directive('uibPopoverTemplatePopup', function() {
