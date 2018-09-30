@@ -11,12 +11,10 @@ namespace DND.Common.Authorization
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AuthorizationOptions _options;
-        private readonly IConfiguration _configuration;
 
-        public AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options, IConfiguration configuration, RoleManager<IdentityRole> roleManager) : base(options)
+        public AuthorizationPolicyProvider(IOptions<AuthorizationOptions> options, RoleManager<IdentityRole> roleManager) : base(options)
         {
             _options = options.Value;
-            _configuration = configuration;
             _roleManager = roleManager;
         }
 

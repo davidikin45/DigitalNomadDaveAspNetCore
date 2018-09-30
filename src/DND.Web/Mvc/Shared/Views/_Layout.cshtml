@@ -1,26 +1,24 @@
 ﻿@inject IUrlHelper Url
-@inject IConfiguration Configuration
+@inject AppSettings AppSettings
 @inject IHttpContextAccessor HttpContext
-@{
-    var Settings = Configuration.GetSection("AppSettings");
-}
+
 <!DOCTYPE html>
-<html lang="en" ng-app="@(Settings.GetValue<string>("AssemblyPrefix"))" class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page")">
+<html lang="en" ng-app="@(AppSettings.AssemblyPrefix)" class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page")">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>@ViewBag.Description</text>} else {@(Settings.GetValue<String>("SiteDescription"))} ">
-    <meta name="keywords" content="@if (!string.IsNullOrEmpty(ViewBag.Keywords)) {<text>@ViewBag.Keywords, </text>}@(Settings.GetValue<String>("SiteKeyWords"))">
-    <meta name="author" content="@if (!string.IsNullOrEmpty(ViewBag.Author)) {<text>@ViewBag.Author</text>} else {@(Settings.GetValue<String>("SiteAuthor"))}" />
+    <meta name="description" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>@ViewBag.Description</text>} else {@(AppSettings.SiteDescription)} ">
+    <meta name="keywords" content="@if (!string.IsNullOrEmpty(ViewBag.Keywords)) {<text>@ViewBag.Keywords, </text>}@(AppSettings.SiteKeyWords)">
+    <meta name="author" content="@if (!string.IsNullOrEmpty(ViewBag.Author)) {<text>@ViewBag.Author</text>} else {@(AppSettings.SiteAuthor)}" />
 
     <meta property="og:type" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>article</text>} else {<text>website</text>}" />
-    <meta property="og:site_name" content="@(Settings.GetValue<String>("SiteTitle"))">
-    <meta property="fb:app_id" content="@(Settings.GetValue<String>("FacebookAppId"))" />
+    <meta property="og:site_name" content="@(AppSettings.SiteTitle)">
+    <meta property="fb:app_id" content="@(AppSettings.FacebookAppId)" />
 
-    <meta property="og:title" content="@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle @(Settings.GetValue<string>("TitleSeparator")) </text>}@(Settings.GetValue<String>("SiteTitle"))">
-    <meta property="og:description" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>@ViewBag.Description</text>} else {@(Settings.GetValue<String>("SiteDescription"))}">
+    <meta property="og:title" content="@if (!string.IsNullOrEmpty(ViewBag.PageTitle)) {<text>@ViewBag.PageTitle @(AppSettings.TitleSeparator) </text>}@(AppSettings.SiteTitle)">
+    <meta property="og:description" content="@if (!string.IsNullOrEmpty(ViewBag.Description)) {<text>@ViewBag.Description</text>} else {@(AppSettings.SiteDescription)}">
     <meta property="og:url" content="@(Url.Content(HttpContext.HttpContext.Request.Path, true))">
     @if (!string.IsNullOrEmpty(ViewBag.MainImage))
     {
@@ -28,12 +26,12 @@
     }
     else
     {
-        <meta property="og:image" content="@(Url.Content((Settings.GetValue<String>("SiteShareImage")), true))" />
+        <meta property="og:image" content="@(Url.Content((AppSettings.SiteShareImage), true))" />
     }
 
-    @if ((Settings.GetValue<String>("RSSFeed")) == "true")
+    @if (AppSettings.RSSFeed)
     {
-        <link rel="alternate" type="application/rss+xml" title="@(Settings.GetValue<String>("SiteTitle")) RSS Feed" href="/feed" />
+        <link rel="alternate" type="application/rss+xml" title="@(AppSettings.SiteTitle) RSS Feed" href="/feed" />
     }
 
     @if (ViewBag.Admin == true || ViewBag.NoFollow == true)
@@ -51,11 +49,11 @@
             {
             "@@context": "http://schema.org",
             "@@type": "WebSite",
-            "name": "@(Settings.GetValue<String>("SiteTitle"))",
-            "url": "@(Settings.GetValue<String>("SiteUrl"))",
+            "name": "@(AppSettings.SiteTitle)",
+            "url": "@(AppSettings.SiteUrl)",
             "potentialAction": [{
             "@@type": "SearchAction",
-            "target": "@(Settings.GetValue<String>("SiteUrl"))/search?s={search_term_string}",
+            "target": "@(AppSettings.SiteUrl)/search?s={search_term_string}",
             "query-input": "required name=search_term_string"
             }]
             }
@@ -66,13 +64,13 @@
         {
         "@@context": "http://schema.org",
         "@@type": "Organization",
-        "name": "@(Settings.GetValue<String>("SiteTitle"))",
-        "url": "@(Settings.GetValue<String>("SiteUrl"))",
-        "logo": "@(Settings.GetValue<String>("SiteUrl"))/fav-icon196x196.png",
+        "name": "@(AppSettings.SiteTitle)",
+        "url": "@(AppSettings.SiteUrl)",
+        "logo": "@(AppSettings.SiteUrl)/fav-icon196x196.png",
         "sameAs": [
-        "@(Settings.GetValue<String>("FacebookLink"))",
-        "@(Settings.GetValue<String>("InstagramLink"))",
-        "@(Settings.GetValue<String>("LinkedInLink"))"
+        "@(AppSettings.FacebookLink)",
+        "@(AppSettings.InstagramLink)",
+        "@(AppSettings.LinkedInLink)"
         ]
         }
     </script>
@@ -90,7 +88,7 @@
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="favicon-128.png" sizes="128x128" />
-    <meta name="application-name" content="@(Settings.GetValue<String>("SiteTitle"))" />
+    <meta name="application-name" content="@(AppSettings.SiteTitle)" />
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="msapplication-TileImage" content="mstile-144x144.png" />
     <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
@@ -103,12 +101,12 @@
     <base href="/">
     <title>
         @if (!string.IsNullOrEmpty(ViewBag.PageTitle))
-        {<text>@ViewBag.PageTitle @(Settings.GetValue<string>("TitleSeparator")) </text>}@(Settings.GetValue<String>("SiteTitle"))
+        {<text>@ViewBag.PageTitle @(AppSettings.TitleSeparator) </text>}@(AppSettings.SiteTitle)
     </title>
 
-    @Html.GoogleFontAsync(new List<string> { (Settings.GetValue<String>("BodyFont")), (Settings.GetValue<String>("NavBarFont")) }, true, true, true, true, true, true, 2000)
-    @Html.GetFontBodyCSSAsync((Settings.GetValue<String>("BodyFont")))
-    @Html.GetFontNavBarCSSAsync((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")))
+    @Html.GoogleFontAsync(new List<string> { (AppSettings.BodyFont), (AppSettings.NavBarFont) }, true, true, true, true, true, true, 2000)
+    @Html.GetFontBodyCSSAsync((AppSettings.BodyFont))
+    @Html.GetFontNavBarCSSAsync((AppSettings.NavBarFont), (AppSettings.NavBarFontStyleCSS))
 
     @*@Html.GoogleFont((Settings.GetValue<String>("BodyFont")),"", true, false, true, true, true, true)
         @Html.GoogleFont((Settings.GetValue<String>("NavBarFont")), (Settings.GetValue<String>("NavBarFontStyleCSS")), false, true, true, true, true, true)*@
@@ -120,19 +118,19 @@
         @Html.Partial("_AdminCSS")
     }
     @RenderSection("styles", required: false)
-    @if ((ViewBag.Admin == null || !ViewBag.Admin) && !String.IsNullOrWhiteSpace(Settings.GetValue<String>("GoogleAnalyticsTrackingId")))
+    @if ((ViewBag.Admin == null || !ViewBag.Admin) && !String.IsNullOrWhiteSpace(AppSettings.GoogleAnalyticsTrackingId))
     {
-        @(Html.GoogleAnalyticsScript((Settings.GetValue<String>("GoogleAnalyticsTrackingId"))))
+        @(Html.GoogleAnalyticsScript((AppSettings.GoogleAnalyticsTrackingId)))
     }
-    @if ((ViewBag.Admin == null || !ViewBag.Admin) && !String.IsNullOrWhiteSpace(Settings.GetValue<String>("GoogleAdSenseId")))
+    @if ((ViewBag.Admin == null || !ViewBag.Admin) && !String.IsNullOrWhiteSpace(AppSettings.GoogleAdSenseId))
     {
-        @(Html.GoogleAdSenseScript((Settings.GetValue<String>("GoogleAdSenseId"))))
+        @(Html.GoogleAdSenseScript((AppSettings.GoogleAdSenseId)))
     }
 </head>
 <body ng-cloak class="@(ViewBag.LandingPage == true ? "landing-page" : "content-page") @(ViewBag.FullWidthPage == true ? "full-width-page" : "")">
     @if ((ViewBag.Admin == null || !ViewBag.Admin))
     {
-        @(Html.FacebookCommentsScript((Settings.GetValue<String>("FacebookAppId"))))
+        @(Html.FacebookCommentsScript((AppSettings.FacebookAppId)))
     }
     <div id="wrapper">
         <!--Navbar-->
@@ -245,15 +243,15 @@
 
     <!-- SCRIPTS -->
     <script>
-        var InstagramUserId = '@(Settings.GetValue<String>("InstagramUserId"))';
-        var InstagramAccessToken = '@(Settings.GetValue<String>("InstagramAccessToken"))';
+        var InstagramUserId = '@(AppSettings.InstagramUserId)';
+        var InstagramAccessToken = '@(AppSettings.InstagramAccessToken)';
         var cssUrl = '@(Url.Content("~/css/site.all.min.css"))';
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=@((Settings.GetValue<String>("GoogleMapsApiKey")) + "&libraries=places")"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@((AppSettings.GoogleMapsApiKey) + "&libraries=places")"></script>
 
     @Html.Partial("_JS")
-    @if (Settings.GetValue<bool>("AngularApp"))
+    @if (AppSettings.AngularApp)
     {
         @Html.Partial("_Angular5")
     }
@@ -291,9 +289,9 @@
     @Html.PostScrollHeight()
     @Html.DeferredIFrameLoad()
 
-    @if (!String.IsNullOrEmpty((Settings.GetValue<String>("AddThisId"))) && (ViewBag.Admin == null || !ViewBag.Admin))
+    @if (!String.IsNullOrEmpty((AppSettings.AddThisId)) && (ViewBag.Admin == null || !ViewBag.Admin))
     {
-        @Html.AddThisScript((Settings.GetValue<String>("AddThisId")))
+        @Html.AddThisScript((AppSettings.AddThisId))
     }
     @Html.Partial("_Alerts")
     @Html.Partial("_Error")

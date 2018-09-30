@@ -5,6 +5,7 @@ using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Repository;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Infrastructure.Constants;
@@ -25,8 +26,8 @@ namespace DND.Web.Mvc.Locations.Controllers
         private readonly ILocationApplicationService _locationService;
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
-        public LocationsController(ILocationApplicationService locationService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, IConfiguration configuration)
-             : base(mapper, emailService, configuration)
+        public LocationsController(ILocationApplicationService locationService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, AppSettings appSettings)
+             : base(mapper, emailService, appSettings)
         {
             _locationService = locationService;
             _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Domain.DynamicForms.FormSectionSubmissions.Dtos;
 using DND.Interfaces.DynamicForms.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
@@ -11,8 +12,8 @@ namespace DND.Web.DynamicForms.Mvc.FormSectionSubmissions.Controllers
     [Route("admin/forms/form-section-submissions")]
     public class AdminFormSectionSubmissionsController : MvcControllerEntityAuthorizeBase<FormSectionSubmissionDto, FormSectionSubmissionDto, FormSectionSubmissionDto, FormSectionSubmissionDeleteDto, IFormSectionSubmissionApplicationService>
     {
-        public AdminFormSectionSubmissionsController(IFormSectionSubmissionApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)
-             : base(true, service, mapper, emailService, configuration)
+        public AdminFormSectionSubmissionsController(IFormSectionSubmissionApplicationService service, IMapper mapper, IEmailService emailService, AppSettings appSettings)
+             : base(true, service, mapper, emailService, appSettings)
         {
         }
     }

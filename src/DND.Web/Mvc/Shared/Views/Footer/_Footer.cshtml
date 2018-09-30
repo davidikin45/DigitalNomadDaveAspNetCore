@@ -1,15 +1,13 @@
 ﻿
-@inject IConfiguration Configuration
+@inject AppSettings AppSettings
 @inject IHttpContextAccessor HttpContext
-@{
-    var Settings = Configuration.GetSection("AppSettings");
-}
+
  <!--Footer-->
 <footer class="page-footer center-on-small-only @(ViewBag.LandingPage == true ? "landing-page" : "content-page")">
 
     <!--Footer Links-->
     <div class="page-footer-image text-center">
-        <img src="@Url.Content(Settings.GetValue<String>("SiteFooterImage"))" alt="footer" />
+        <img src="@Url.Content(AppSettings.SiteFooterImage)" alt="footer" />
     </div>
     <div class="page-footer-inner">
         <div class="container-fluid">
@@ -21,11 +19,11 @@
                         <a title="RSS Feed" href="@(Url.Action<HomeController>(c => c.Feed()))">
                             <img src="~/images/rss.png" alt="RSS Feed" />
                         </a>
-                        <a title="Instagram" href="@(Settings.GetValue<String>("InstagramLink"))" target="_blank"><img src="~/images/insta.png" alt="Instagram" /></a>
-                        <a title="Facebook" href="@(Settings.GetValue<String>("FacebookLink"))" target="_blank"><img src="~/images/fb.png" alt="Facebook" /></a>
-                        <a title="LinkedIn" href="@(Settings.GetValue<String>("LinkedInLink"))" target="_blank"><img src="~/images/linkedin.png" alt="LinkedIn" /></a>
-                        <a title="GitHub" href="@(Settings.GetValue<String>("GitHubLink"))" target="_blank"><img src="~/images/github.jpg" alt="GitHub" /></a>
-                        <a title="YouTube" href="@(Settings.GetValue<String>("YouTubeLink"))" target="_blank"><img src="~/images/youtube.png" alt="YouTube" /></a>
+                        <a title="Instagram" href="@(AppSettings.InstagramLink)" target="_blank"><img src="~/images/insta.png" alt="Instagram" /></a>
+                        <a title="Facebook" href="@(AppSettings.FacebookLink)" target="_blank"><img src="~/images/fb.png" alt="Facebook" /></a>
+                        <a title="LinkedIn" href="@(AppSettings.LinkedInLink)" target="_blank"><img src="~/images/linkedin.png" alt="LinkedIn" /></a>
+                        <a title="GitHub" href="@(AppSettings.GitHubLink)" target="_blank"><img src="~/images/github.jpg" alt="GitHub" /></a>
+                        <a title="YouTube" href="@(AppSettings.YouTubeLink)" target="_blank"><img src="~/images/youtube.png" alt="YouTube" /></a>
                         @*<a class="logo" href="http://www.skyscanner.net">Powered by <img width="211" height="47" alt="Skyscanner" src="~/images/Skyscanner-Logo-Original-white.png"></a>*@
                     </div>
 
@@ -76,7 +74,7 @@
         <!--Copyright-->
         <div class="footer-copyright">
             <div class="container-fluid">
-                © 2018 Copyright: <a href="@(Settings.GetValue<String>("SiteUrl"))"> @(Settings.GetValue<String>("Domain")).com </a>
+                © 2018 Copyright: <a href="@(AppSettings.SiteUrl)"> @(AppSettings.Domain).com </a>
 
             </div>
         </div>

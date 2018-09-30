@@ -182,7 +182,6 @@
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\FileManager\tmp\" />
     <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\uploads\advertisements\" />
     <Folder Include="wwwroot\uploads\bucket-list\complete\" />
     <Folder Include="wwwroot\uploads\bucket-list\incomplete\" />
@@ -477,6 +476,12 @@
     </Content>
     <Content Update="navigation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Scripts\app\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="wwwroot\js\app\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>
 

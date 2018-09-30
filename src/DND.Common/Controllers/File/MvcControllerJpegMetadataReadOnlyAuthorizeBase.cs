@@ -3,6 +3,7 @@ using DND.Common.Dtos;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Model;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,8 +34,8 @@ namespace DND.Common.Controllers
         public Boolean IncludeSubDirectories { get; set; }
         public String PhysicalPath { get; set; }
 
-        public MvcControllerJpegMetadataReadOnlyAuthorizeBase(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
-        : base(mapper, emailService, configuration)
+        public MvcControllerJpegMetadataReadOnlyAuthorizeBase(string physicalPath, Boolean includeSubDirectories, Boolean admin, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper = null, IEmailService emailService = null, AppSettings appSettings = null)
+        : base(mapper, emailService, appSettings)
         {
             PhysicalPath = physicalPath;
             IncludeSubDirectories = includeSubDirectories;

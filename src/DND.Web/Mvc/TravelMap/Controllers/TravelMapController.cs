@@ -4,6 +4,7 @@ using DND.Common.Dtos;
 using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
@@ -19,8 +20,8 @@ namespace DND.Web.Mvc.TravelMap.Controllers
     {
         private readonly ILocationApplicationService Service;
 
-        public TravelMapController(ILocationApplicationService service, IMapper mapper, IEmailService emailService, IConfiguration configuration)
-            :base(mapper, emailService, configuration)
+        public TravelMapController(ILocationApplicationService service, IMapper mapper, IEmailService emailService, AppSettings appSettings)
+            :base(mapper, emailService, appSettings)
 		{
             Service = service;
         }

@@ -24,20 +24,17 @@ namespace DND.Web.Mvc.Account.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailService _emailSender;
         private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IEmailService emailSender,
-            ILogger<AccountController> logger,
-            IConfiguration configuration)
+            ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
-            _configuration = configuration;
         }
 
         [TempData]

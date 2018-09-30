@@ -6,6 +6,7 @@ using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -33,8 +34,8 @@ namespace DND.Common.Controllers
         public IEntityService Service { get; private set; }
         public Boolean Admin { get; set; }
 
-        public MvcControllerEntityReadOnlyAuthorizeBase(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
-        : base(mapper, emailService, configuration)
+        public MvcControllerEntityReadOnlyAuthorizeBase(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, AppSettings appSettings = null)
+        : base(mapper, emailService, appSettings)
         {
             Admin = admin;
             Service = service;

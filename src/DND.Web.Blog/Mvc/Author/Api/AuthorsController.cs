@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers.Api;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using DND.Domain.Blog.Authors.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
@@ -13,8 +14,8 @@ namespace DND.Web.Blog.Mvc.Author.Api
     [Route("api/blog/authors")]
     public class AuthorsController : ApiControllerEntityAuthorizeBase<AuthorDto, AuthorDto, AuthorDto, AuthorDeleteDto, IAuthorApplicationService>
     {
-        public AuthorsController(IAuthorApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
-            :base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
+        public AuthorsController(IAuthorApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings)
+            :base(service, mapper, emailService, urlHelper, typeHelperService, appSettings)
         {
 
         }

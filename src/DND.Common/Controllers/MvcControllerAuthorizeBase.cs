@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 
@@ -13,8 +14,8 @@ namespace DND.Common.Controllers
 
         }
 
-        public MvcControllerAuthorizeBase(IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
-            :base(mapper, emailService, configuration)
+        public MvcControllerAuthorizeBase(IMapper mapper = null, IEmailService emailService = null, AppSettings appSettings = null)
+            :base(mapper, emailService, appSettings)
         {
          
         }

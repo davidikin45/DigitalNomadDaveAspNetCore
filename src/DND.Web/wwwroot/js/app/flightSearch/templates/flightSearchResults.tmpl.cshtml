@@ -1,12 +1,9 @@
 @using Microsoft.Extensions.Configuration
-@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
-@{
-    var Settings = Configuration.GetSection("AppSettings");
-}
+@inject AppSettings AppSettings
 
 <div class="top-buffer">
     @*<flight-search></flight-search>*@
-    @Html.Partial("~/" + (Settings.GetValue<string>("MvcImplementationFolder")) + "FlightSearch/Views/_Search.cshtml")
+    @Html.Partial("~/" + (AppSettings.MvcImplementationFolder) + "FlightSearch/Views/_Search.cshtml")
     <div class="page-header search-header">
         <h5 ng-show="!vm.isLoading && vm.searchResults.itineraries.length > 0">
             {{vm.searchResults.filteredCount}} of {{vm.searchResults.totalCount}} results

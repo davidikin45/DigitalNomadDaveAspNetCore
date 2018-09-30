@@ -1,5 +1,6 @@
 ﻿using DND.Common.Constants;
 using DND.Common.Helpers;
+using DND.Common.Infrastructure.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -15,21 +16,21 @@ namespace DND.Common.Middleware
     {
         private readonly RequestDelegate _next;
         private IList<string> _validFolders;
-        public IConfiguration Configuration { get; }
+        public AppSettings AppSettings { get; }
         public int CacheDays { get; }
 
         // Must have constructor with this signature, otherwise exception at run time
-        public ContentHandlerMiddleware(RequestDelegate next, IList<string> validFolders, IConfiguration configuration, int cacheDays)
+        public ContentHandlerMiddleware(RequestDelegate next, IList<string> validFolders, AppSettings appSettings, int cacheDays)
         { 
              _next = next;
             _validFolders = validFolders;
-            Configuration = configuration;
+            AppSettings = appSettings;
             CacheDays = cacheDays;
         }
 
         public async Task Invoke(HttpContext context)
         {
-           await new ContentHttpHandler(_validFolders, Configuration, CacheDays).ProcessRequestAsync(context);
+           await new ContentHttpHandler(_validFolders, AppSettings, CacheDays).ProcessRequestAsync(context);
             // await _next.Invoke(context); 
         }
     }
@@ -37,12 +38,12 @@ namespace DND.Common.Middleware
     public class ContentHttpHandler : BaseRangeRequestHandler
     {
         private IList<string> _validFolders;
-        public IConfiguration Configuration { get; }
+        public AppSettings AppSettings { get; }
         private int _cacheDays;
-        public ContentHttpHandler(IList<string> validFolders, IConfiguration configuration, int cacheDays)
+        public ContentHttpHandler(IList<string> validFolders, AppSettings appSettings, int cacheDays)
         {
             _validFolders = validFolders;
-            Configuration = configuration;
+            AppSettings = appSettings;
             _cacheDays = cacheDays;
         }
 
@@ -300,7 +301,7 @@ namespace DND.Common.Middleware
                     }
                     else if (GetRequestedFileInfo(context).IsVideo())
                     {
-                        var converter = new DND.Common.Infrastructure.VideoConverter(DND.Common.Infrastructure.Server.MapContentPath(DND.Common.Infrastructure.ConfigurationManager.AppSettings(Configuration, Folders.FFMpeg)));
+                        var converter = new DND.Common.Infrastructure.VideoConverter(DND.Common.Infrastructure.Server.MapContentPath(AppSettings.FFMpeg));
                         disposableImage = converter.GetPreviewImage(_physicalFilePath).PreviewImage;
                     }
                     else
@@ -496,13 +497,13 @@ namespace DND.Common.Middleware
 
         public Bitmap Watermark(ref Image image, ImageHelper.Watermark waterMark, string waterMarkString, ref bool applied)
         {
-            if (waterMark != ImageHelper.Watermark.None && (bool.Parse(DND.Common.Infrastructure.ConfigurationManager.AppSettings(Configuration, "ImageWatermarkEnabled"))))
+            if (waterMark != ImageHelper.Watermark.None && (AppSettings.ImageWatermarkEnabled))
             {
-                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), int.Parse(DND.Common.Infrastructure.ConfigurationManager.AppSettings(Configuration, "ImageWatermarkMinHeight")), int.Parse(DND.Common.Infrastructure.ConfigurationManager.AppSettings(Configuration, "ImageWatermarkMinWidth")), 10, 10, DND.Common.Infrastructure.ConfigurationManager.AppSettings(Configuration, "ImageWatermark"), ref applied);
+                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), int.Parse(AppSettings.ImageWatermarkMinHeight), int.Parse(AppSettings.ImageWatermarkMinWidth), 10, 10, AppSettings.ImageWatermark, ref applied);
             }
             else if (waterMark != ImageHelper.Watermark.None && watermark)
             {
-                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), 10, 10, DND.Common.Infrastructure.ConfigurationManager.AppSettings(Configuration, "ImageWatermark"), ref applied);
+                return ImageHelper.ApplyWatermark(image, checked((ImageHelper.Watermark)waterMark), 10, 10, AppSettings.ImageWatermark, ref applied);
             }
             return (Bitmap)image;
         }

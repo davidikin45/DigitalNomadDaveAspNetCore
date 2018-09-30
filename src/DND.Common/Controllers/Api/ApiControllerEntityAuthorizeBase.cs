@@ -8,6 +8,7 @@ using DND.Common.Infrastructure.Dtos;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Infrastrucutre.Interfaces.Domain.Dtos;
 using DND.Common.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,8 +41,8 @@ namespace DND.Common.Controllers.Api
         where IEntityService : IApplicationServiceEntity<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
         private ActionEvents actionEvents;
-        public ApiControllerEntityAuthorizeBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, IConfiguration configuration = null)
-        : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
+        public ApiControllerEntityAuthorizeBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, AppSettings appSetings = null)
+        : base(service, mapper, emailService, urlHelper, typeHelperService, appSetings)
         {
             actionEvents = new ActionEvents();
         }

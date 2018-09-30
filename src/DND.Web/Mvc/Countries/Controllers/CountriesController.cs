@@ -4,6 +4,7 @@ using DND.Common.Dtos;
 using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Repository;
 using DND.Domain.Blog.Locations.Dtos;
 using DND.Domain.Blog.Locations.Enums;
@@ -21,8 +22,8 @@ namespace DND.Web.Mvc.Countries.Controllers
     {
         private readonly ILocationApplicationService _locationService;
 
-        public CountriesController(ILocationApplicationService locationService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, IConfiguration configuration)
-             : base(mapper, emailService, configuration)
+        public CountriesController(ILocationApplicationService locationService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, AppSettings appSettings)
+             : base(mapper, emailService, appSettings)
         {
             _locationService = locationService;
         }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,8 +31,8 @@ namespace DND.Common.Controllers.Api
         where IEntityService : IApplicationServiceEntity<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {   
 
-        public ApiControllerEntityBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, IConfiguration configuration = null)
-        : base(service, mapper , emailService, urlHelper, typeHelperService, configuration)
+        public ApiControllerEntityBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, AppSettings appSettings = null)
+        : base(service, mapper , emailService, urlHelper, typeHelperService, appSettings)
         {
           
         }

@@ -8,6 +8,7 @@ using DND.Common.Infrastructure.Dtos;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,8 @@ namespace DND.Common.Controllers
         where IEntityService : IApplicationServiceEntity<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {
         private ActionEvents actionEvents;
-        public MvcControllerEntityAuthorizeBase(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
-        : base(admin, service, mapper, emailService, configuration)
+        public MvcControllerEntityAuthorizeBase(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, AppSettings appSettings = null)
+        : base(admin, service, mapper, emailService, appSettings)
         {
             actionEvents = new ActionEvents();
         }

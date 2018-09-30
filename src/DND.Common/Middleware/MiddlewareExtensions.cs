@@ -1,4 +1,5 @@
 ﻿using DND.Common.Hangfire;
+using DND.Common.Infrastructure.Settings;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -25,9 +26,9 @@ namespace DND.Common.Middleware
         }
 
         public static IApplicationBuilder UseContentHandler(
-           this IApplicationBuilder builder, IConfiguration configuration, List<string> publicUploadFolders, int cacheDays)
+           this IApplicationBuilder builder, AppSettings appSettings, List<string> publicUploadFolders, int cacheDays)
         {
-            return builder.UseMiddleware<ContentHandlerMiddleware>(publicUploadFolders, configuration, cacheDays);
+            return builder.UseMiddleware<ContentHandlerMiddleware>(publicUploadFolders, appSettings, cacheDays);
         }
 
         public static IApplicationBuilder UseResponseCachingCustom(

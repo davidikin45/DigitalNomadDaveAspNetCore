@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,8 +10,8 @@ namespace DND.Common.Controllers.Admin
     public abstract class MvcControllerAdminAuthorizeBase : MvcControllerAuthorizeBase
     {
 
-        public MvcControllerAdminAuthorizeBase(IMapper mapper, IEmailService emailService, IConfiguration configuration)
-             : base(mapper, emailService, configuration)
+        public MvcControllerAdminAuthorizeBase(IMapper mapper, IEmailService emailService, AppSettings appSettings)
+             : base(mapper, emailService, appSettings)
         {
         }
 

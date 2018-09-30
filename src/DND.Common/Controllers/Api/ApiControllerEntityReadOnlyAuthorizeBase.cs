@@ -9,6 +9,7 @@ using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -47,8 +48,8 @@ namespace DND.Common.Controllers.Api
         public IEntityService Service { get; private set; }
         public ITypeHelperService TypeHelperService { get; private set; }
 
-        public ApiControllerEntityReadOnlyAuthorizeBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, IConfiguration configuration = null)
-        : base(mapper, emailService, urlHelper, configuration)
+        public ApiControllerEntityReadOnlyAuthorizeBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, AppSettings appSettings = null)
+        : base(mapper, emailService, urlHelper, appSettings)
         {
             Service = service;
             TypeHelperService = typeHelperService;

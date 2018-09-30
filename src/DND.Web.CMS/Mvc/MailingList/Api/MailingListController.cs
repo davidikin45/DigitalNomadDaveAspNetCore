@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers.Api;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using DND.Domain.CMS.MailingLists.Dtos;
 using DND.Interfaces.CMS.ApplicationServices;
@@ -13,8 +14,8 @@ namespace DND.Web.CMS.Mvc.MailingList.Api
     [Route("api/cms/mailing-list")]
     public class MailingListController : ApiControllerEntityAuthorizeBase<MailingListDto, MailingListDto, MailingListDto, MailingListDeleteDto, IMailingListApplicationService>
     {
-        public MailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
-            : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
+        public MailingListController(IMailingListApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings)
+            : base(service, mapper, emailService, urlHelper, typeHelperService, appSettings)
         {
 
         }

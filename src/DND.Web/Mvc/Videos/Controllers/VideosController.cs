@@ -5,6 +5,7 @@ using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Repository;
 using DND.Infrastructure.Constants;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,8 @@ namespace DND.Web.Mvc.Videos.Controllers
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
 
-        public VideosController(IMapper mapper, IEmailService emailService, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IConfiguration configuration)
-             : base(mapper, emailService, configuration)
+        public VideosController(IMapper mapper, IEmailService emailService, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, AppSettings appSettings)
+             : base(mapper, emailService, appSettings)
         {
             _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;
         }

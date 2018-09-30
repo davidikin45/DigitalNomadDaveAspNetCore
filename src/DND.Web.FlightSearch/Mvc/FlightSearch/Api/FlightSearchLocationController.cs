@@ -2,6 +2,7 @@
 using DND.Common.Controllers.Api;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.ViewModels;
 using DND.Interfaces.FlightSearch.ApplicationServices;
@@ -18,8 +19,8 @@ namespace DND.Web.FlightSearch.Mvc.Api
     {
         private readonly IFlightSearchApplicationService _flightSearchService;
 
-        public FlightSearchLocationController(IFlightSearchApplicationService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, IConfiguration configuration)
-             : base(mapper, emailService, urlHelper, configuration)
+        public FlightSearchLocationController(IFlightSearchApplicationService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings)
+             : base(mapper, emailService, urlHelper, appSettings)
         {
             _flightSearchService = flightSearchService;
         }

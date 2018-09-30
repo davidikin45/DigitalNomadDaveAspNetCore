@@ -86,6 +86,7 @@ namespace DND.Common
 
             Configuration = configuration;
             Configuration.PopulateStaticConnectionStrings();
+            AppSettings = GetSettings<AppSettings>("AppSettings");
 
             HostingEnvironment = hostingEnvironment;
 
@@ -131,6 +132,7 @@ namespace DND.Common
         public Microsoft.Extensions.Logging.ILogger Logger { get; }
         public IHostingEnvironment HostingEnvironment { get; }
         public IConfiguration Configuration { get; }
+        public AppSettings AppSettings { get; }
 
         public string BinPath { get; }
         public string PluginsPath { get; }
@@ -1114,7 +1116,7 @@ namespace DND.Common
                    // ... optionally add more middleware to this branch
                    char[] seperator = { ',' };
                    List<string> publicUploadFolders = appSettings.PublicUploadFolders.Split(seperator).ToList();
-                   appBranch.UseContentHandler(Configuration, publicUploadFolders, cacheSettings.UploadFilesDays);
+                   appBranch.UseContentHandler(AppSettings, publicUploadFolders, cacheSettings.UploadFilesDays);
                });
 
             //Default culture should be set to where the majority of traffic comes from.

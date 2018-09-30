@@ -1,8 +1,5 @@
 ﻿@model BlogPostDto
-@inject IConfiguration Configuration
-@{
-    var Settings = Configuration.GetSection("AppSettings");
-}
+@inject AppSettings appSettings
 
 @{
     var mainPhotoVideoText = FileHelper.GetDirectoryInfo(Server.GetWwwFolderPhysicalPathById(DND.Infrastructure.Constants.Folders.Gallery) + Model.Album).MainPhotoOrVideoOrText();
@@ -64,10 +61,10 @@ else
     },
     "publisher": {
     "@@type": "Organization",
-    "name": "@ConfigurationManager.AppSettings("SiteTitle")",
+    "name": "@appSettings.SiteTitle",
     "logo": {
     "@@type": "ImageObject",
-    "url": "@ConfigurationManager.AppSettings("SiteUrl")/fav-icon196x196.png",
+    "url": "@appSettings.SiteUrl/fav-icon196x196.png",
     "width": 196
     }
     },
@@ -80,7 +77,7 @@ else
         <div class="row">
             <!-- AddThis -->
             <div class="col-12 blog-post-share-links">
-                @Html.AddThisLinks(ConfigurationManager.AppSettings("SiteUrl"), Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), string.Format("{0} | {1}", (string)ViewBag.PageTitle.ToString(), (string)ConfigurationManager.AppSettings("SiteTitle")), Model.ShortDescription, mainImageShare)
+                @Html.AddThisLinks(appSettings.SiteUrl, Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), string.Format("{0} | {1}", (string)ViewBag.PageTitle.ToString(), appSettings.SiteTitle), Model.ShortDescription, mainImageShare)
             </div>
         </div>
         <div class="row">
@@ -108,7 +105,7 @@ else
                 </div>
                 <div class="blog-post-no-of-comments">
 
-                    @(Html.FacebookCommentCount(ConfigurationManager.AppSettings("SiteUrl"), Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug))))<text> Comments</text>
+                    @(Html.FacebookCommentCount(appSettings.SiteUrl, Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug))))<text> Comments</text>
 
                     @*@Html.DisqusCommentCount(Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)))*@
 
@@ -144,7 +141,7 @@ else
         {
             foreach (BlogPostLocationDto location in Model.Locations.OrderBy(l => l.Location.DateCreated))
             {
-                @Html.Partial("~/"+ (Settings.GetValue<string>("MvcImplementationFolder")) +"Locations/Views/_Location.cshtml", location.Location)
+                @Html.Partial("~/"+ (appSettings.MvcImplementationFolder) +"Locations/Views/_Location.cshtml", location.Location)
             }
                 }
 
@@ -166,7 +163,7 @@ else
     <br />
     @*INCLUDE DISQUS *@
 
-    @Html.FacebookCommentsThread(ConfigurationManager.AppSettings("SiteUrl"), Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), Model.Title)
+    @Html.FacebookCommentsThread(appSettings.SiteUrl, Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), Model.Title)
 
     @*@Html.DisqusThread(System.Configuration.ConfigurationManager.AppSettings["DisqusShortName"], System.Configuration.ConfigurationManager.AppSettings["SiteUrl"], Url.RouteUrl<BlogController>(c => c.Post(Model.DateCreated.Year, Model.DateCreated.Month, Model.UrlSlug)), Model.Title)*@
 

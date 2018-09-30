@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Razor;
+﻿using DND.Common.Infrastructure.Settings;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,10 +43,10 @@ namespace DND.Common
 
         public void PopulateValues(ViewLocationExpanderContext context)
         {
-            var appSettings = (IConfiguration)context.ActionContext.HttpContext
-                              .RequestServices.GetService(typeof(IConfiguration));
+            var appSettings = (AppSettings)context.ActionContext.HttpContext
+                              .RequestServices.GetService(typeof(AppSettings));
 
-            context.Values["ActiveViewTheme"] = appSettings["AppSettings:ActiveViewTheme"];
+            context.Values["ActiveViewTheme"] = appSettings.ActiveViewTheme;
         }
 
         public virtual IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)

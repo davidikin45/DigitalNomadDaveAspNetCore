@@ -1,10 +1,6 @@
-﻿@inject IConfiguration Configuration
+﻿@inject AppSettings appSettings
 @{
-    var Settings = Configuration.GetSection("AppSettings");
-}
-
-@{
-    Layout = "/"+ (Settings.GetValue<string>("MvcImplementationFolder")) + "Shared/Views/_Layout.cshtml";
+    Layout = "/"+ (appSettings.MvcImplementationFolder) + "Shared/Views/_Layout.cshtml";
 }
 
 <h2>Manage your account</h2>

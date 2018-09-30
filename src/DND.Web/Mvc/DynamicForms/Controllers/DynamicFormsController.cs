@@ -7,6 +7,7 @@ using DND.Common.Extensions;
 using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using DND.Interfaces.DynamicForms.ApplicationServices;
 using Microsoft.AspNetCore.Hosting;
@@ -34,13 +35,14 @@ namespace DND.Web.Mvc.DynamicForms.Controllers
 
         public DynamicFormsController(
             IMapper mapper, 
-            IEmailService emailService, IConfiguration configuration, 
+            IEmailService emailService, 
+            AppSettings appSettings, 
             IHtmlHelperGeneratorService htmlHelperGeneratorService, 
             ICookieService cookieService, 
             IHostingEnvironment hostingEnvironment,
             IDynamicFormsPresentationService dynamicFormsPresentationService,
             IDynamicFormsApplicationServices dynamicFormsApplicationService)
-            : base(mapper, emailService, configuration)
+            : base(mapper, emailService, appSettings)
         {
             Html = htmlHelperGeneratorService.HtmlHelper("");
             _cookieService = cookieService;

@@ -5,6 +5,7 @@ using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Repository;
 using DND.Infrastructure.Constants;
 using DND.Interfaces.Blog.ApplicationServices;
@@ -24,8 +25,8 @@ namespace DND.Web.Mvc.BucketList.Controllers
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
 
 
-        public BucketListController(IBlogApplicationService blogService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, IConfiguration configuration)
-             : base(mapper, emailService, configuration)
+        public BucketListController(IBlogApplicationService blogService, IMapper mapper, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IEmailService emailService, AppSettings appSettings)
+             : base(mapper, emailService, appSettings)
         {
             _blogService = blogService;
             _fileSystemGenericRepositoryFactory = fileSystemGenericRepositoryFactory;

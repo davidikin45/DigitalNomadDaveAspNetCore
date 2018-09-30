@@ -3,6 +3,7 @@ using DND.Common.ActionResults;
 using DND.Common.Alerts;
 using DND.Common.Extensions;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Infrastructure.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,20 +32,19 @@ namespace DND.Common.Controllers.Api
         public IMapper Mapper { get; }
         public IEmailService EmailService { get; }
         public IUrlHelper UrlHelper { get; }
-        public IConfiguration Configuration { get; }
-
+        public AppSettings AppSettings { get; }
 
         public ApiControllerBase()
         {
 
         }
 
-        public ApiControllerBase(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, IConfiguration configuration = null)
+        public ApiControllerBase(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, AppSettings appSettings = null)
         {
             Mapper = mapper;
             EmailService = emailService;
             UrlHelper = urlHelper;
-            Configuration = configuration;
+            AppSettings = appSettings;
         }
 
         //https://docs.microsoft.com/en-us/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-2.0

@@ -3,6 +3,7 @@ using DND.Common.ActionResults;
 using DND.Common.Alerts;
 using DND.Common.Extensions;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Infrastructure.Validation;
 using DND.Common.Infrastructure.Validation.Errors;
 using DND.Common.Infrastrucutre.Interfaces.Domain.Dtos;
@@ -22,18 +23,18 @@ namespace DND.Common.Controllers
     {
         public IMapper Mapper { get; }
         public IEmailService EmailService { get; }
-        public IConfiguration Configuration { get; }
+        public AppSettings AppSettings { get; }
 
         public MvcControllerBase()
         {
 
         }
 
-        public MvcControllerBase(IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
+        public MvcControllerBase(IMapper mapper = null, IEmailService emailService = null, AppSettings appSettings = null)
         {
             Mapper = mapper;
             EmailService = emailService;
-            Configuration = configuration;
+            AppSettings = appSettings;
         }
 
         //https://docs.microsoft.com/en-us/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-2.0

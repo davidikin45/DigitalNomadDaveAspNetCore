@@ -6,6 +6,7 @@ using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Repository;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Domain.Blog.Categories.Dtos;
@@ -42,8 +43,8 @@ namespace DND.Web.Mvc.Home.Controllers
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
         private readonly IMailingListApplicationService _mailingListService;
 
-        public HomeController(IBlogApplicationService blogService, ILocationApplicationService locationService, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper, IEmailService emailService, IMailingListApplicationService mailingListService, IConfiguration configuration)
-            : base(mapper, emailService, configuration)
+        public HomeController(IBlogApplicationService blogService, ILocationApplicationService locationService, IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper, IEmailService emailService, IMailingListApplicationService mailingListService, AppSettings appSettings)
+            : base(mapper, emailService, appSettings)
         {
             if (blogService == null) throw new ArgumentNullException("blogService");
             _blogService = blogService;
@@ -294,7 +295,7 @@ namespace DND.Web.Mvc.Home.Controllers
               p => new SyndicationItem
                   (
                       p.Title,
-                      HtmlOutputHelper.RelativeToAbsoluteUrls(p.Description, ConfigurationManager.AppSettings(Configuration, "SiteUrl")),
+                      HtmlOutputHelper.RelativeToAbsoluteUrls(p.Description, AppSettings.SiteUrl),
                       new Uri(Url.AbsoluteUrl<BlogController>(c => c.Post(p.DateCreated.Year, p.DateCreated.Month, p.UrlSlug)))
                   )
                  
@@ -307,7 +308,7 @@ namespace DND.Web.Mvc.Home.Controllers
         {
             get
             {
-                return ConfigurationManager.AppSettings(Configuration, "SiteTitle");
+                return AppSettings.SiteTitle;
             }
         }
 
@@ -315,7 +316,7 @@ namespace DND.Web.Mvc.Home.Controllers
         {
             get
             {
-                return ConfigurationManager.AppSettings(Configuration, "SiteDescription");
+                return AppSettings.SiteDescription;
             }
 
         }
@@ -324,7 +325,7 @@ namespace DND.Web.Mvc.Home.Controllers
         {
             get
             {
-                return ConfigurationManager.AppSettings(Configuration, "SiteUrl");
+                return AppSettings.SiteUrl;
             }
 
         }

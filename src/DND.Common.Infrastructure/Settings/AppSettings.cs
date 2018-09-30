@@ -13,7 +13,7 @@
         public string CookieExternalAuthName { get; set; }
         public string CookieTempDataName { get; set; }
         public int ResponseCacheSizeMB { get; set; }
-        public string AngularApp { get; set; }
+        public bool AngularApp { get; set; }
         public string Timezone { get; set; }
         public string TimezoneAbbr { get; set; }
         public string SiteTitle { get; set; }
@@ -24,8 +24,8 @@
         public string SiteShareImage { get; set; }
         public string SiteAboutMeImage { get; set; }
         public string SiteFooterImage { get; set; }
-        public string ImageWatermarkShareEnabled { get; set; }
-        public string ImageWatermarkEnabled { get; set; }
+        public bool ImageWatermarkShareEnabled { get; set; }
+        public bool ImageWatermarkEnabled { get; set; }
         public string ImageWatermark { get; set; }
         public string ImageWatermarkMinWidth { get; set; }
         public string ImageWatermarkMinHeight { get; set; }
@@ -44,7 +44,7 @@
         public string InstagramAccessToken { get; set; }
         public string GoogleAnalyticsTrackingId { get; set; }
         public string GoogleAdSenseId { get; set; }
-        public string RSSFeed { get; set; }
+        public bool RSSFeed { get; set; }
         public string GitHubLink { get; set; }
         public string InstagramLink { get; set; }
         public string FacebookLink { get; set; }

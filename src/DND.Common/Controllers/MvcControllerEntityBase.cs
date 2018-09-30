@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -26,8 +27,8 @@ namespace DND.Common.Controllers
         where TDelete : class
         where IEntityService : IApplicationServiceEntity<TCreate, TRead, TUpdate, TDelete>
     {
-        public MvcControllerEntityBase(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
-        : base(admin, service, mapper, emailService, configuration)
+        public MvcControllerEntityBase(Boolean admin, IEntityService service, IMapper mapper = null, IEmailService emailService = null, AppSettings appSettings = null)
+        : base(admin, service, mapper, emailService, appSettings)
         {
         }
 

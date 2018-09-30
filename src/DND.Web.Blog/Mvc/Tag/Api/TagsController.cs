@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DND.Common.Controllers.Api;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using DND.Domain.Blog.Tags.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
@@ -13,8 +14,8 @@ namespace DND.Web.Blog.Mvc.Tag.Api
     [Route("api/blog/tags")]
     public class TagsController : ApiControllerEntityAuthorizeBase<TagDto, TagDto, TagDto, TagDeleteDto, ITagApplicationService>
     {
-        public TagsController(ITagApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, IConfiguration configuration)
-            : base(service, mapper, emailService, urlHelper, typeHelperService, configuration)
+        public TagsController(ITagApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings)
+            : base(service, mapper, emailService, urlHelper, typeHelperService, appSettings)
         {
 
         }

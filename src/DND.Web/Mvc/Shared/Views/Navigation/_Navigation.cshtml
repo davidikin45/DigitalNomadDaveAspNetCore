@@ -1,12 +1,9 @@
-﻿@inject IConfiguration Configuration
+﻿@inject AppSettings AppSettings
 @inject IHttpContextAccessor HttpContext
-@{
-    var Settings = Configuration.GetSection("AppSettings");
-}
 
 <nav class="navbar fixed-top navbar-dark navbar-expand-md scrolling-navbar @(ViewBag.NavBarTransparent == true ? "navbar-transparent" : "")">
     <div class="container">
-        @(Html.MenuLink<HomeController>(c => c.Index(), Settings.GetValue<string>("SiteTitle"), "navbar-brand ", "", @"<img src=""" + Url.Content(Settings.GetValue<string>("SiteLogoSmall")) + @""" width=""32"" height=""32"" class=""d-inline-block align-top"" alt=""" + Settings.GetValue<string>("SiteTitle") + @""">"))
+        @(Html.MenuLink<HomeController>(c => c.Index(), AppSettings.SiteTitle, "navbar-brand ", "", @"<img src=""" + Url.Content(AppSettings.SiteLogoSmall) + @""" width=""32"" height=""32"" class=""d-inline-block align-top"" alt=""" + AppSettings.SiteTitle + @""">"))
         <div class="navbar-toggler-right">
             <button id="openNav" class="navbar-toggler hidden-lg-up" type="button" onclick="openNav()">
                 <i class="fa fa-bars"></i>

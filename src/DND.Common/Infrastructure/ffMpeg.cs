@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DND.Common.Infrastructure.Settings;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -36,14 +37,14 @@ namespace DND.Common.Infrastructure
             }
         }
 
-        public IConfiguration Configuration { get; }
+        public AppSettings AppSettings { get; }
 
         #endregion
 
         #region Constructors
-        public VideoConverter(IConfiguration configuration)
+        public VideoConverter(AppSettings appSettings)
         {
-            Configuration = configuration;
+            AppSettings = appSettings;
             Initialize();
         }
         public VideoConverter(string folderPath)
@@ -60,7 +61,7 @@ namespace DND.Common.Infrastructure
             //first make sure we have a value for the ffexe file setting
             if (string.IsNullOrEmpty(_ffExe))
             {
-                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg_ExeLocation");
+                object o = AppSettings.FFMpeg_ExeLocation;
                 if (o == null)
                 {
                     throw new Exception("Could not find the location of the ffmpeg exe file.  The path for ffmpeg.exe " +
@@ -89,7 +90,7 @@ namespace DND.Common.Infrastructure
             //now see if we have a temporary place to work
             if (string.IsNullOrEmpty(_WorkingPath))
             {
-                object o = ConfigurationManager.AppSettings(Configuration, "FFMpeg_WorkingPath");
+                object o = AppSettings.FFMpeg_WorkingPath;
                 if (o != null)
                 {
                     _WorkingPath = o.ToString();

@@ -4,6 +4,7 @@ using DND.Common.Extensions;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -25,8 +26,8 @@ namespace DND.Common.Controllers
 
         }
 
-        public MvcControllerHomeBase(IMapper mapper = null, IEmailService emailService = null, IConfiguration configuration = null)
-            : base(mapper, emailService, configuration)
+        public MvcControllerHomeBase(IMapper mapper = null, IEmailService emailService = null, AppSettings appSettings = null)
+            : base(mapper, emailService, appSettings)
         {
 
         }
@@ -53,7 +54,7 @@ namespace DND.Common.Controllers
         //0.4-0.7: Articles and blog entries, category pages, FAQs
         protected async virtual Task<IList<SitemapNode>> GetSitemapNodes(CancellationToken cancellationToken)
         {
-            var siteUrl = ConfigurationManager.AppSettings(Configuration, "SiteUrl");
+            var siteUrl = AppSettings.SiteUrl;
 
             List<SitemapNode> nodes = new List<SitemapNode>();
 

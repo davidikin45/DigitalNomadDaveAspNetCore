@@ -3,6 +3,7 @@ using DND.Common.Controllers;
 using DND.Common.Filters;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using DND.Interfaces.Blog.ApplicationServices;
 using DND.Web.Mvc.Blog.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,8 +20,8 @@ namespace DND.Web.Mvc.Blog.Controllers
     {
         private readonly IBlogApplicationService _blogService;
 
-        public BlogController(IBlogApplicationService blogService, IMapper mapper, IEmailService emailService, IConfiguration configuration)
-            : base(mapper, emailService, configuration)
+        public BlogController(IBlogApplicationService blogService, IMapper mapper, IEmailService emailService, AppSettings appSettings)
+            : base(mapper, emailService, appSettings)
         {
             _blogService = blogService;
         }
