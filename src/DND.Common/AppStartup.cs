@@ -150,6 +150,7 @@ namespace DND.Common
             ConfigureSettingsServices(services);
             ConfigureDatabaseServices(services);
             ConfigureAuthenticationServices(services);
+            ConfigureIdentityServices(services);
             ConfigureAuthorizationServices(services);
             ConfigureSecurityServices(services);
             ConfigureEmailServices(services);
@@ -834,6 +835,15 @@ namespace DND.Common
         public virtual void ConfigureHttpClients(IServiceCollection services)
         {
             Logger.LogInformation("Configuring Http Clients");
+        }
+        #endregion
+
+        #region Identity
+        //https://www.codemag.com/article/1807041/What%E2%80%99s-New-in-ASP.NET-Core-2.1
+        public virtual void ConfigureIdentityServices(IServiceCollection services)
+        {
+            Logger.LogInformation("Configuring Identity");
+
         }
         #endregion
 

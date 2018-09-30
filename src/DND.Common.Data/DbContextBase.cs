@@ -14,11 +14,6 @@ namespace DND.Common.Data
         public DbContextBase(DbContextOptions options)
             : base(options)
         {
-            if(!Database.ProviderName.Contains("InMemory"))
-            {
-                Database.SetCommandTimeout(180);
-            }
-
             _dbContextTimestamps = new DbContextTimestamps();
 
             //context.Set<TEntity>()

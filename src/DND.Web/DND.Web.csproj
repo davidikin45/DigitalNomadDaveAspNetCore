@@ -89,7 +89,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="App_Data\Logs\" />
     <Folder Include="Mvc\Account\Api\" />
     <Folder Include="Mvc\Account\ViewComponents\" />
     <Folder Include="Mvc\Admin\Api\" />
@@ -177,7 +176,7 @@
     <Folder Include="Mvc\Videos\Api\" />
     <Folder Include="Mvc\Videos\Models\" />
     <Folder Include="Mvc\Videos\ViewComponents\" />
-    <Folder Include="EmailTemplates\" />
+    <Folder Include="email_templates\" />
     <Folder Include="Scripts_Compile\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\FileManager\tmp\" />
@@ -486,16 +485,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Certificates\localhost.private.pfx">
+    <None Update="certificates\localhost.private.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Certificates\localhost.public.cer">
+    <None Update="certificates\localhost.public.cer">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SigningKeys\private.rsa.pem">
+    <None Update="signing_keys\private.rsa.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="SigningKeys\public.x509.pem">
+    <None Update="signing_keys\public.x509.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

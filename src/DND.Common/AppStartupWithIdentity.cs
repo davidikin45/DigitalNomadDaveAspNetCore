@@ -19,35 +19,30 @@ namespace DND.Common
 
         }
 
-        public override void ConfigureServices(IServiceCollection services)
+        public override void ConfigureIdentityServices(IServiceCollection services)
         {
-            base.ConfigureServices(services);
+            base.ConfigureIdentityServices(services);
 
-            var passwordSettingsSection = Configuration.GetSection("PasswordSettings");
-            var passwordSettings = passwordSettingsSection.Get<PasswordSettings>();
+            var passwordSettings = GetSettings<PasswordSettings>("PasswordSettings");
+            var userSettings = GetSettings<UserSettings>("UserSettings");
+            var authenticationSettings = GetSettings<AuthenticationSettings>("AuthenticationSettings");
 
-            var userSettingsSection = Configuration.GetSection("UserSettings");
-            var userSettings = userSettingsSection.Get<UserSettings>();
-
-            var authenticationSettingsSection = Configuration.GetSection("AuthenticationSettings");
-            var authenticationSettings = authenticationSettingsSection.Get<AuthenticationSettings>();
-            
             if (authenticationSettings.Application.Enable || authenticationSettings.JwtToken.Enable)
             {
-               services.AddIdentity<TIdentiyDbContext, TUser, IdentityRole>(
-               passwordSettings.MaxFailedAccessAttemptsBeforeLockout,
-               passwordSettings.LockoutMinutes,
-               passwordSettings.RequireDigit,
-               passwordSettings.RequiredLength,
-               passwordSettings.RequiredUniqueChars,
-               passwordSettings.RequireLowercase,
-               passwordSettings.RequireNonAlphanumeric,
-               passwordSettings.RequireUppercase,
-               userSettings.RequireConfirmedEmail,
-               userSettings.RequireUniqueEmail,
-               userSettings.RegistrationEmailConfirmationExprireDays,
-               userSettings.ForgotPasswordEmailConfirmationExpireHours,
-               userSettings.UserDetailsChangeLogoutMinutes);
+                services.AddIdentity<TIdentiyDbContext, TUser, IdentityRole>(
+                passwordSettings.MaxFailedAccessAttemptsBeforeLockout,
+                passwordSettings.LockoutMinutes,
+                passwordSettings.RequireDigit,
+                passwordSettings.RequiredLength,
+                passwordSettings.RequiredUniqueChars,
+                passwordSettings.RequireLowercase,
+                passwordSettings.RequireNonAlphanumeric,
+                passwordSettings.RequireUppercase,
+                userSettings.RequireConfirmedEmail,
+                userSettings.RequireUniqueEmail,
+                userSettings.RegistrationEmailConfirmationExprireDays,
+                userSettings.ForgotPasswordEmailConfirmationExpireHours,
+                userSettings.UserDetailsChangeLogoutMinutes);
             }
         }
 
