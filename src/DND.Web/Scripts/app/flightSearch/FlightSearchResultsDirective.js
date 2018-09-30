@@ -11,8 +11,8 @@
         }
     }
 
-    flightSearchResultsController.$inject = ['flightSearchSvc', '$httpParamSerializer', '$modal', '$scope', '$rootScope'];
-    function flightSearchResultsController(flightSearchSvc, $httpParamSerializer, $modal, $scope, $rootScope) {
+    flightSearchResultsController.$inject = ['flightSearchSvc', '$httpParamSerializer', '$uibModal', '$scope', '$rootScope'];
+    function flightSearchResultsController(flightSearchSvc, $httpParamSerializer, $uibModal, $scope, $rootScope) {
         var vm = this;
         vm.search = search;
         vm.isLoading = false;
@@ -81,7 +81,7 @@
         }
 
         function openFilters() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: '/flightsearch/template/flightSearchFilters.tmpl.cshtml',
                 scope: $scope,
                 controller: controller,

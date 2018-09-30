@@ -16,9 +16,9 @@
 
     window.app.controller('FlightSearchController', FlightSearchController);
 
-    FlightSearchController.$inject = ['$window', '$filter', '$rootScope', '$scope', '$modal', 'flightSearchSvc'];
+    FlightSearchController.$inject = ['$window', '$filter', '$rootScope', '$scope', '$uibModal', 'flightSearchSvc'];
 
-    function FlightSearchController($window, $filter, $rootScope, $scope, $modal, flightSearchSvc) {
+    function FlightSearchController($window, $filter, $rootScope, $scope, $uibModal, flightSearchSvc) {
         var vm = this;
         vm.search = search;
         vm.isLoading = false;
@@ -92,7 +92,7 @@
         }
 
         function openFilterModal() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: '/flightsearch/template/flightSearchFilters.tmpl.cshtml',
                 scope: $scope,
                 controller: FlightSearchController,
@@ -111,7 +111,7 @@
         }
 
         function openSortModal() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: '/flightsearch/template/flightSearchSort.tmpl.cshtml',
                 scope: $scope,
                 controller: FlightSearchController,

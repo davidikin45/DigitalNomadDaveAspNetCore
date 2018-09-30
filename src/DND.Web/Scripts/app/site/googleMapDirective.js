@@ -19,8 +19,8 @@
         }
     }
 
-    googleMapController.$inject = ['$window', '$filter', '$rootScope', '$scope', '$modal','$sce','NgMap'];
-    function googleMapController($window, $filter, $rootScope, $scope, $modal, $sce, NgMap) {
+    googleMapController.$inject = ['$window', '$filter', '$rootScope', '$scope', '$uibModal','$sce','NgMap'];
+    function googleMapController($window, $filter, $rootScope, $scope, $uibModal, $sce, NgMap) {
         var vm = this;
         vm.close = close;
         vm.openGoogleMapModal = openGoogleMapModal;
@@ -34,7 +34,7 @@
         }
 
         function openGoogleMapModal() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: '/site/template/googleMapModal.tmpl.cshtml',
                 scope: $scope,
                 bindToController: true,

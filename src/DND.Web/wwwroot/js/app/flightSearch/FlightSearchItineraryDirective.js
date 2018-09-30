@@ -15,8 +15,8 @@
         }
     }
 
-    controller.$inject = ['$scope', '$modal', 'flightSearchSvc'];
-    function controller($scope, $modal,flightSearchSvc) {
+    controller.$inject = ['$scope', '$uibModal', 'flightSearchSvc'];
+    function controller($scope, $uibModal,flightSearchSvc) {
         var vm = this;
   
         vm.itinerary = $scope.itinerary;
@@ -29,7 +29,7 @@
         }
 
         function map() {
-            $modal.open({
+            $uibModal.open({
                 template: '<itinerary-map itinerary="itinerary" />',
                 scope: angular.extend($scope.$new(true), { itinerary: vm.itinerary })
             });
