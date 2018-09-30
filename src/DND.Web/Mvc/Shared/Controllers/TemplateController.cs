@@ -2,7 +2,7 @@
 
 namespace DND.Web.Mvc.Shared.Controllers
 {
-    public class TemplateController : MvcControllerAngular6ServerTemplateBase
+    public class TemplateController : MvcControllerAngularServerTemplateBase
     {
 
     }
