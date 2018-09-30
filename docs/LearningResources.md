@@ -7,6 +7,9 @@
 ## Pluralsight Courses for Builing a Single Page Application (SPA) with Angular, API and OpenID Connect
 * [Building Business Applications with Angular and ASP.NET Core](https://app.pluralsight.com/library/courses/angular-aspdotnet-core-business-applications/table-of-contents)
 
+## Pluralsight Courses for Builing Console Applications
+* [Building Cross-platform Applications with .NET Core](https://www.pluralsight.com/courses/dotnet-core-building-cross-platform-applications)
+
 ## Pluralsight Courses for Domain Driven Design and Rich Model
 * [Clean Architecture: Patterns, Practices, and Principles](https://app.pluralsight.com/library/courses/clean-architecture-patterns-practices-principles/table-of-contents)
 * [Modern Software Architecture: Domain Models, CQRS, and Event Sourcing](https://app.pluralsight.com/library/courses/modern-software-architecture-domain-models-cqrs-event-sourcing/table-of-contents)
