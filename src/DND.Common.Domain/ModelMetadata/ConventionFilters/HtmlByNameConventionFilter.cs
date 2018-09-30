@@ -10,9 +10,9 @@ namespace DND.Common.Domain.ModelMetadata
     public class HtmlByNameConventionFilter : IDisplayMetadataFilter
     {
         private readonly DisplayConventionsDisableSettings _displayConventionsDisableSettings;
-        public HtmlByNameConventionFilter(IOptions<DisplayConventionsDisableSettings> displayConventionsDisableSettings)
+        public HtmlByNameConventionFilter(DisplayConventionsDisableSettings displayConventionsDisableSettings)
         {
-            _displayConventionsDisableSettings = displayConventionsDisableSettings.Value;
+            _displayConventionsDisableSettings = displayConventionsDisableSettings;
         }
 
         private static readonly HashSet<string> TextAreaFieldNames =

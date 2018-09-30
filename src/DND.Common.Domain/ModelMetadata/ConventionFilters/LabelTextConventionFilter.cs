@@ -13,9 +13,9 @@ namespace DND.Common.Domain.ModelMetadata
     public class LabelTextConventionFilter : IDisplayMetadataFilter
     {
         private readonly DisplayConventionsDisableSettings _displayConventionsDisableSettings;
-        public LabelTextConventionFilter(IOptions<DisplayConventionsDisableSettings> displayConventionsDisableSettings)
+        public LabelTextConventionFilter(DisplayConventionsDisableSettings displayConventionsDisableSettings)
         {
-            _displayConventionsDisableSettings = displayConventionsDisableSettings.Value;
+            _displayConventionsDisableSettings = displayConventionsDisableSettings;
         }
 
         public void TransformMetadata(DisplayMetadataProviderContext context)

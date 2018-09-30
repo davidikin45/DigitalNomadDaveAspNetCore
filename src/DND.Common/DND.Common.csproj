@@ -776,7 +776,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="action.cs" />
     <Compile Include="ActionResults\BetterObjectResult.cs" />
     <Compile Include="ActionResults\BetterJsonResult.cs" />
     <Compile Include="ActionResults\CsvResult.cs" />
@@ -793,7 +792,6 @@
     <Compile Include="APIs\APIConstants.cs" />
     <Compile Include="APIs\Google.cs" />
     <Compile Include="APIs\Instagram.cs" />
-    <Compile Include="APIs\IPLocator.cs" />
     <Compile Include="AppStartupWithIdentity.cs" />
     <Compile Include="Authorization\AnonymousRequirement.cs" />
     <Compile Include="Authorization\AuthorizationPolicyProvider.cs" />

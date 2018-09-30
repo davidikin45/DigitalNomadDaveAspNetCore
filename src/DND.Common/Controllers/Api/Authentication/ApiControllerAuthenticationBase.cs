@@ -37,27 +37,27 @@ namespace DND.Common.Controllers.Api
             RoleManager<IdentityRole> roleManager,
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
-            IOptions<TokenSettings> tokenSettings,
+            TokenSettings tokenSettings,
             IUrlHelper urlHelper,
             IEmailService emailSender,
             IMapper mapper,
-            IOptions<PasswordSettings> passwordSettings,
-            IOptions<EmailTemplates> emailTemplates)
+            PasswordSettings passwordSettings,
+            EmailTemplates emailTemplates)
             :base(mapper, emailSender, urlHelper)
         {
-            _resetPasswordEmailTemplate = emailTemplates.Value.ResetPassword;
+            _resetPasswordEmailTemplate = emailTemplates.ResetPassword;
 
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
 
-            _privateSymmetricKey = tokenSettings.Value.Key;
-            _privateSigningKeyPath = tokenSettings.Value.PrivateKeyPath;
-            _privateSigningCertificatePath = tokenSettings.Value.PrivateCertificatePath;
-            _privateSigningCertificatePassword = tokenSettings.Value.PrivateCertificatePasword;
+            _privateSymmetricKey = tokenSettings.Key;
+            _privateSigningKeyPath = tokenSettings.PrivateKeyPath;
+            _privateSigningCertificatePath = tokenSettings.PrivateCertificatePath;
+            _privateSigningCertificatePassword = tokenSettings.PrivateCertificatePasword;
 
-            _localIssuer = tokenSettings.Value.LocalIssuer;
-            _tokenExpiryMinutes = tokenSettings.Value.ExpiryMinutes;
+            _localIssuer = tokenSettings.LocalIssuer;
+            _tokenExpiryMinutes = tokenSettings.ExpiryMinutes;
         }
 
 

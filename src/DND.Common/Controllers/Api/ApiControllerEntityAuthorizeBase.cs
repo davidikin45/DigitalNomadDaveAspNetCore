@@ -88,7 +88,7 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             var result = await Service.CreateAsync(dto, User.Identity.Name, cts.Token);
             if (result.IsFailure)
@@ -122,7 +122,7 @@ namespace DND.Common.Controllers.Api
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> BulkCreate([FromBody] TCreateDto[] dtos)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             var results = await Service.BulkCreateAsync(dtos, Username, cts.Token);
 
@@ -223,7 +223,7 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             //var exists = await Service.ExistsAsync(cts.Token, id);
 
@@ -281,7 +281,7 @@ namespace DND.Common.Controllers.Api
                 return ApiErrorMessage(Messages.RequestInvalid);
             }
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             var result = await Service.UpdatePartialAsync(id, dtoPatch, Username, cts.Token);
             if (result.IsFailure)
@@ -384,8 +384,7 @@ namespace DND.Common.Controllers.Api
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> DeleteDto(string id, [FromBody] TDeleteDto dto)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
-
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             if (dto == null)
             {
@@ -418,7 +417,7 @@ namespace DND.Common.Controllers.Api
         [ProducesResponseType(typeof(WebApiMessage), 200)]
         public virtual async Task<IActionResult> BulkDelete([FromBody] TDeleteDto[] dtos)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             var results = await Service.BulkDeleteAsync(dtos, Username, cts.Token);
 
@@ -466,7 +465,7 @@ namespace DND.Common.Controllers.Api
                 return ValidationErrors(ModelState);
             }
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             var result = await Service.TriggerActionAsync(id, action, Username, cts.Token);
             if (result.IsFailure)
@@ -502,7 +501,7 @@ namespace DND.Common.Controllers.Api
                 }
             }
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             var results = await Service.TriggerActionsAsync(actions, Username, cts.Token);
 

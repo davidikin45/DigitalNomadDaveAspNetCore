@@ -16,9 +16,9 @@ namespace DND.Common.Infrastructure.Email
         protected EmailSettings Options;
         private readonly ILogger _logger;
 
-        public EmailServiceFileSystem(IOptions<EmailSettings> options, ILogger<EmailServiceFileSystem> logger)
+        public EmailServiceFileSystem(EmailSettings options, ILogger<EmailServiceFileSystem> logger)
         {
-            Options = options.Value;
+            Options = options;
             _logger = logger;
         }
 

@@ -61,7 +61,7 @@ namespace DND.Common.Controllers
         [Route("new")]
         public virtual async Task<ActionResult> Create(TCreateDto dto)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace DND.Common.Controllers
         [Route("edit/{id}")]
         public virtual async Task<ActionResult> Edit(string id)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
             TUpdateDto data = null;
             try
             {
@@ -117,7 +117,7 @@ namespace DND.Common.Controllers
         public virtual async Task<ActionResult> Edit(string id, TUpdateDto dto)
         {
             //dto.Id = id;
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             if (ModelState.IsValid)
             {
@@ -171,7 +171,7 @@ namespace DND.Common.Controllers
         [HttpPost, ActionName("Delete"), Route("delete/{id}")]
         public virtual async Task<ActionResult> DeleteConfirmed(string id, TDeleteDto dto)
         {
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             if (ModelState.IsValid)
             {
@@ -238,7 +238,7 @@ namespace DND.Common.Controllers
                 args = collection.ToExpandoObject();
             }
 
-            var cts = TaskHelper.CreateChildCancellationTokenSource(ClientDisconnectedToken());
+            var cts = TaskHelper.CreateNewCancellationTokenSource();
 
             try
             {

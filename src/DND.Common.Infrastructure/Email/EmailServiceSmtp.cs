@@ -11,7 +11,7 @@ namespace DND.Common.Infrastructure.Email
     public class EmailServiceSmtp : EmailServiceFileSystem
     {
         private EmailServiceFileSystem EmailServiceFileSystem;
-        public EmailServiceSmtp(IOptions<EmailSettings> options, ILogger<EmailServiceSmtp> logger)
+        public EmailServiceSmtp(EmailSettings options, ILogger<EmailServiceSmtp> logger)
             :base(options, logger)
         {
             EmailServiceFileSystem = new EmailServiceFileSystem(options, logger);

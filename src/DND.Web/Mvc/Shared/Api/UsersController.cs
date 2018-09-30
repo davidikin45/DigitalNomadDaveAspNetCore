@@ -5,7 +5,6 @@ using DND.Common.Infrastructure.Settings;
 using DND.Domain.Identity.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace DND.Web.Mvc.Shared.Api
 {
@@ -17,12 +16,12 @@ namespace DND.Web.Mvc.Shared.Api
             RoleManager<IdentityRole> roleManager,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IOptions<TokenSettings> tokenSettings,
+            TokenSettings tokenSettings,
             IUrlHelper urlHelper,
             IEmailService emailSender,
             IMapper mapper,
-            IOptions<PasswordSettings> passwordSettings,
-            IOptions<EmailTemplates> emailTemplates)
+            PasswordSettings passwordSettings,
+            EmailTemplates emailTemplates)
             :base(roleManager, userManager, signInManager, tokenSettings, urlHelper, emailSender, mapper, passwordSettings, emailTemplates)
         {
 

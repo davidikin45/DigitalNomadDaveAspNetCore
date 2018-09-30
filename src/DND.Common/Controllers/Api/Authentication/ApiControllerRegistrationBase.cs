@@ -22,15 +22,15 @@ namespace DND.Common.Controllers.Api
             RoleManager<IdentityRole> roleManager,
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
-            IOptions<TokenSettings> tokenSettings,
+            TokenSettings tokenSettings,
             IUrlHelper urlHelper,
             IEmailService emailSender,
             IMapper mapper,
-            IOptions<PasswordSettings> passwordSettings,
-            IOptions<EmailTemplates> emailTemplates)
+            PasswordSettings passwordSettings,
+            EmailTemplates emailTemplates)
             :base(roleManager, userManager, signInManager, tokenSettings, urlHelper, emailSender, mapper, passwordSettings, emailTemplates)
         {
-            _welcomeEmailTemplate = emailTemplates.Value.Welcome;
+            _welcomeEmailTemplate = emailTemplates.Welcome;
         }
 
         #region Register

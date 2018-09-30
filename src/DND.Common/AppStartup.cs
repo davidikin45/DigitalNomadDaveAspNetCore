@@ -167,38 +167,59 @@ namespace DND.Common
             services.AddSingleton(Configuration);
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<AppSettings>>().Value);
+
             services.Configure<TokenSettings>(Configuration.GetSection("TokenSettings"));
             services.Configure<TokenSettings>(options =>
             {
                 ManipulateTokenSettings(options);
             });
+            services.AddTransient(sp => sp.GetService<IOptions<TokenSettings>>().Value);
 
             services.Configure<DisplayConventionsDisableSettings>(Configuration.GetSection("DisplayConventionsDisableSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<DisplayConventionsDisableSettings>>().Value);
+
             services.Configure<CORSSettings>(Configuration.GetSection("CORSSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<CORSSettings>>().Value);
+
             services.Configure<PasswordSettings>(Configuration.GetSection("PasswordSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<PasswordSettings>>().Value);
+
             services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<UserSettings>>().Value);
+
             services.Configure<AuthenticationSettings>(Configuration.GetSection("AuthenticationSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<AuthenticationSettings>>().Value);
+
             services.Configure<AuthorizationSettings>(Configuration.GetSection("AuthorizationSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<AuthorizationSettings>>().Value);
+
             services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<CacheSettings>>().Value);
+
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.Configure<EmailSettings>(options =>
             {
                 ManipulateEmailSettings(options);
             });
+            services.AddTransient(sp => sp.GetService<IOptions<EmailSettings>>().Value);
 
             services.Configure<EmailTemplates>(Configuration.GetSection("EmailTemplates"));
             services.Configure<EmailTemplates>(options =>
             {
                 ManipluateEmailTemplateSettings(options);
             });
+            services.AddTransient(sp => sp.GetService<IOptions<EmailTemplates>>().Value);
 
             services.Configure<SwitchSettings>(Configuration.GetSection("SwitchSettings"));
+            services.AddTransient(sp => sp.GetService<IOptions<SwitchSettings>>().Value);
 
             services.Configure<AssemblyProviderOptions>(options =>
             {
                 options.BinPath = BinPath;
                 options.AssemblyFilter = AssemblyStringFilter;
             });
+            services.AddTransient(sp => sp.GetService<IOptions<AssemblyProviderOptions>>().Value);
         }
 
         private TokenSettings ManipulateTokenSettings(TokenSettings options)
@@ -845,12 +866,12 @@ namespace DND.Common
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IOptions<AppSettings> appSettings, IOptions<CacheSettings> cacheSettings,
-            IOptions<SwitchSettings> switchSettings, TaskRunner taskRunner, ISignalRHubMapper signalRHubMapper, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, AppSettings appSettings, CacheSettings cacheSettings,
+            SwitchSettings switchSettings, TaskRunner taskRunner, ISignalRHubMapper signalRHubMapper, ILoggerFactory loggerFactory)
         {
             Logger.LogInformation("Configuring Request Pipeline");
 
-            foreach (var publicUploadFolder in appSettings.Value.PublicUploadFolders.Split(','))
+            foreach (var publicUploadFolder in appSettings.PublicUploadFolders.Split(','))
             {
                 var path = env.WebRootPath + publicUploadFolder;
                 if (!Directory.Exists(path))
@@ -899,7 +920,7 @@ namespace DND.Common
                     }
                );
 
-                if (switchSettings.Value.EnableHsts)
+                if (switchSettings.EnableHsts)
                 {
                     //Only ever use HSTS in production!!!!!
                     //https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-2.1&tabs=visual-studio
@@ -907,14 +928,14 @@ namespace DND.Common
                 }
             }
 
-            if (switchSettings.Value.EnableRedirectHttpToHttps)
+            if (switchSettings.EnableRedirectHttpToHttps)
             {
                 //https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-2.1&tabs=visual-studio
                 //picks up port automatically
                 app.UseHttpsRedirection();
             }
 
-            if (switchSettings.Value.EnableRedirectNonWwwToWww)
+            if (switchSettings.EnableRedirectNonWwwToWww)
             {
                 var options = new RewriteOptions();
                 options.AddRedirectToWww();
@@ -930,7 +951,7 @@ namespace DND.Common
                 app.UseStackifyPrefix();
             }
 
-            if (switchSettings.Value.EnableHelloWorld)
+            if (switchSettings.EnableHelloWorld)
             {
                 app.Run(async (context) =>
                 {
@@ -940,7 +961,7 @@ namespace DND.Common
 
             app.UseRequestTasks();
 
-            if (switchSettings.Value.EnableSwagger)
+            if (switchSettings.EnableSwagger)
             {
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
                 app.UseSwagger();
@@ -949,7 +970,7 @@ namespace DND.Common
                 app.UseSwaggerUI(c =>
                 {
 
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", appSettings.Value.AssemblyPrefix + " API V1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", appSettings.AssemblyPrefix + " API V1");
                     c.DocExpansion(DocExpansion.None);
                 });
             }
@@ -969,7 +990,7 @@ namespace DND.Common
             //"text/xml",
             //"application/json",
             //"text/json",
-            if (switchSettings.Value.EnableResponseCompression)
+            if (switchSettings.EnableResponseCompression)
             {
                 //https://www.softfluent.com/blog/dev/Enabling-gzip-compression-with-ASP-NET-Core
                 //Concerning performance, the middleware is about 28% slower than the IIS compression (source). Additionally, IIS or nginx has a threshold for compression to avoid compressing very small files.
@@ -977,12 +998,12 @@ namespace DND.Common
             }
 
             //API rate limiting
-            if (switchSettings.Value.EnableIpRateLimiting)
+            if (switchSettings.EnableIpRateLimiting)
             {
                 app.UseIpRateLimiting();
             }
 
-            if (switchSettings.Value.EnableCors)
+            if (switchSettings.EnableCors)
             {
                 if (HostingEnvironment.IsProduction())
                 {
@@ -994,12 +1015,12 @@ namespace DND.Common
                 }
             }
 
-            if (switchSettings.Value.EnableSignalR)
+            if (switchSettings.EnableSignalR)
             {
                 app.UseSignalR(routes =>
                 {
-                    routes.MapHub<NotificationHub>(appSettings.Value.SignalRUrlPrefix + "/signalr/notifications");
-                    signalRHubMapper.MapHubs(routes, appSettings.Value.SignalRUrlPrefix);
+                    routes.MapHub<NotificationHub>(appSettings.SignalRUrlPrefix + "/signalr/notifications");
+                    signalRHubMapper.MapHubs(routes, appSettings.SignalRUrlPrefix);
                 });
             }
 
@@ -1038,11 +1059,11 @@ namespace DND.Common
             //Firstly, the same cache duration is used for both client and server caches. Secondly, currently there is no easy way to invalidate cache entries.
             //app.UseResponseCaching();
             //Request Header Cache-Control: max-age=0 or no-cache will bypass Response Caching. Postman automatically has setting 'send no-cache header' switched on. This should be switched off to test caching.
-            if (switchSettings.Value.EnableResponseCaching)
+            if (switchSettings.EnableResponseCaching)
             {
-                if (switchSettings.Value.EnableCookieConsent)
+                if (switchSettings.EnableCookieConsent)
                 {
-                    app.UseWhen(context => AreCookiesConsentedCallback(context, appSettings.Value.CookieConsentName) && !IsStreamRequest(context),
+                    app.UseWhen(context => AreCookiesConsentedCallback(context, appSettings.CookieConsentName) && !IsStreamRequest(context),
                       appBranch =>
                       {
                           appBranch.UseResponseCachingCustom(); //Allows Invalidation
@@ -1064,11 +1085,11 @@ namespace DND.Common
             //Works for: PUT, PATCH (Concurrency)s
             //This is Etags
             //Generating ETags is expensive. Putting this after response caching makes sense.
-            if (switchSettings.Value.EnableETags)
+            if (switchSettings.EnableETags)
             {
-                if (switchSettings.Value.EnableCookieConsent)
+                if (switchSettings.EnableCookieConsent)
                 {
-                    app.UseWhen(context => AreCookiesConsentedCallback(context, appSettings.Value.CookieConsentName) && !IsStreamRequest(context),
+                    app.UseWhen(context => AreCookiesConsentedCallback(context, appSettings.CookieConsentName) && !IsStreamRequest(context),
                       appBranch =>
                       {
                           appBranch.UseHttpCacheHeaders();
@@ -1092,13 +1113,13 @@ namespace DND.Common
                {
                    // ... optionally add more middleware to this branch
                    char[] seperator = { ',' };
-                   List<string> publicUploadFolders = appSettings.Value.PublicUploadFolders.Split(seperator).ToList();
-                   appBranch.UseContentHandler(Configuration, publicUploadFolders, cacheSettings.Value.UploadFilesDays);
+                   List<string> publicUploadFolders = appSettings.PublicUploadFolders.Split(seperator).ToList();
+                   appBranch.UseContentHandler(Configuration, publicUploadFolders, cacheSettings.UploadFilesDays);
                });
 
             //Default culture should be set to where the majority of traffic comes from.
             //If the client sends through "en" and the default culture is "en-AU". Instead of falling back to "en" it will fall back to "en-AU".
-            var defaultLanguage = appSettings.Value.DefaultCulture.Split('-')[0];
+            var defaultLanguage = appSettings.DefaultCulture.Split('-')[0];
 
             //Support all formats for numbers, dates, etc.
             var formatCulturesList = new List<string>();
@@ -1124,12 +1145,12 @@ namespace DND.Common
             var supportedFormatCultures = formatCulturesList.Select(x => new CultureInfo(x)).ToArray();
 
             var supportedUICultures = new CultureInfo[] {
-                new CultureInfo(appSettings.Value.DefaultCulture)
+                new CultureInfo(appSettings.DefaultCulture)
             };
 
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
-                DefaultRequestCulture = new RequestCulture(culture: appSettings.Value.DefaultCulture, uiCulture: appSettings.Value.DefaultCulture),
+                DefaultRequestCulture = new RequestCulture(culture: appSettings.DefaultCulture, uiCulture: appSettings.DefaultCulture),
                 // Formatting numbers, dates, etc.
                 SupportedCultures = supportedFormatCultures,
                 // UI strings that we have localized.
@@ -1139,21 +1160,21 @@ namespace DND.Common
             app.UseDefaultFiles();
 
             //versioned files can have large cache expiry time
-            app.UseVersionedStaticFiles(cacheSettings.Value.VersionedStaticFilesDays);
+            app.UseVersionedStaticFiles(cacheSettings.VersionedStaticFilesDays);
 
             //non versioned files
-            app.UseNonVersionedStaticFiles(cacheSettings.Value.NonVersionedStaticFilesDays);
+            app.UseNonVersionedStaticFiles(cacheSettings.NonVersionedStaticFilesDays);
 
             app.UseAuthentication();
 
-            if (switchSettings.Value.EnableHangfire)
+            if (switchSettings.EnableHangfire)
             {
                 // Configure hangfire to use the new JobActivator.
                 GlobalConfiguration.Configuration.UseActivator(new HangfireDependencyInjectionActivator(serviceProvider));
                 app.UseHangfire();
             }
 
-            if (switchSettings.Value.EnableCookieConsent)
+            if (switchSettings.EnableCookieConsent)
             {
                 app.UseCookiePolicy();
             }
@@ -1179,7 +1200,7 @@ namespace DND.Common
             StaticProperties.HostingEnvironment = HostingEnvironment;
             StaticProperties.Configuration = Configuration;
             StaticProperties.HttpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-            NavigationMenuHelperExtension.NavigationMenuHelper.MvcImplementationFolder = appSettings.Value.MvcImplementationFolder;
+            NavigationMenuHelperExtension.NavigationMenuHelper.MvcImplementationFolder = appSettings.MvcImplementationFolder;
 
             taskRunner.RunTasksAfterApplicationConfiguration();
         }

@@ -100,6 +100,12 @@ namespace DND.Common.Helpers
             return Task.WaitAll(tasks, timeout, cts.Token);
         }
 
+        public static CancellationTokenSource CreateNewCancellationTokenSource()
+        {
+            var cts = new CancellationTokenSource();
+            return cts;
+        }
+
         public static CancellationTokenSource CreateChildCancellationTokenSource(params CancellationToken[] tokens)
         {
             var cts = CreateLinkedCancellationTokenSource(tokens);

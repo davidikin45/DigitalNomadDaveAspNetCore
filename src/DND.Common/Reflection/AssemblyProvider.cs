@@ -10,9 +10,9 @@ namespace DND.Common.Reflection
     public class AssemblyProvider : IAssemblyProvider
     {
         private AssemblyProviderOptions Options;
-        public AssemblyProvider(IOptions<AssemblyProviderOptions> options)
+        public AssemblyProvider(AssemblyProviderOptions options)
         {
-            Options = options.Value;
+            Options = options;
         }
 
         public IEnumerable<Assembly> GetAssemblies(IEnumerable<string> paths = null, Func<string, Boolean> filter = null)

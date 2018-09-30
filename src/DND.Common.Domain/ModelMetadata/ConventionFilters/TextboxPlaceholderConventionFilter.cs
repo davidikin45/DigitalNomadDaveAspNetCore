@@ -8,9 +8,9 @@ namespace DND.Common.Domain.ModelMetadata
     public class TextboxPlaceholderConventionFilter : IDisplayMetadataFilter
     {
         private readonly DisplayConventionsDisableSettings _displayConventionsDisableSettings;
-        public TextboxPlaceholderConventionFilter(IOptions<DisplayConventionsDisableSettings> displayConventionsDisableSettings)
+        public TextboxPlaceholderConventionFilter(DisplayConventionsDisableSettings displayConventionsDisableSettings)
         {
-            _displayConventionsDisableSettings = displayConventionsDisableSettings.Value;
+            _displayConventionsDisableSettings = displayConventionsDisableSettings;
         }
 
         public void TransformMetadata(DisplayMetadataProviderContext context)
