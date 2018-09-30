@@ -892,7 +892,7 @@ namespace DND.Common
                 }
             }
 
-            if (env.IsDevelopment() || env.EnvironmentName == "Integration")
+            if (!env.IsProduction())
             {
                 app.UsePing("/ping");
 
