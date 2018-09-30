@@ -2142,30 +2142,14 @@ angular.module('ui.bootstrap.position', [])
 
     return {
 
-      /**
-       * Provides a raw DOM element from a jQuery/jQLite element.
-       *
-       * @param {element} elem - The element to convert.
-       *
-       * @returns {element} A HTML element.
-       */
       getRawNode: function(elem) {
         return elem.nodeName ? elem : elem[0] || elem;
       },
 
-      /**
-       * Provides a parsed number for a style property.  Strips
-       * units and casts invalid numbers to 0.
-       *
-       * @param {string} value - The style value to parse.
-       *
-       * @returns {number} A valid number.
-       */
       parseStyle: function(value) {
         value = parseFloat(value);
         return isFinite(value) ? value : 0;
       },
-
 
       offsetParent: function(elem) {
         elem = this.getRawNode(elem);
@@ -2243,19 +2227,6 @@ angular.module('ui.bootstrap.position', [])
         return overflowRegex.test(elemStyle.overflow + elemStyle.overflowY + elemStyle.overflowX);
       },
 
-      /**
-       * Provides the closest scrollable ancestor.
-       * A port of the jQuery UI scrollParent method:
-       * https://github.com/jquery/jquery-ui/blob/master/ui/scroll-parent.js
-       *
-       * @param {element} elem - The element to find the scroll parent of.
-       * @param {boolean=} [includeHidden=false] - Should scroll style of 'hidden' be considered,
-       *   default is false.
-       * @param {boolean=} [includeSelf=false] - Should the element being passed be
-       * included in the scrollable llokup.
-       *
-       * @returns {element} A HTML element.
-       */
       scrollParent: function(elem, includeHidden, includeSelf) {
         elem = this.getRawNode(elem);
 
@@ -2286,7 +2257,6 @@ angular.module('ui.bootstrap.position', [])
 
         return scrollParent;
       },
-
 
       position: function(elem, includeMagins) {
         elem = this.getRawNode(elem);
@@ -2594,7 +2564,6 @@ angular.module('ui.bootstrap.position', [])
 
         return targetElemPos;
       },
-
 
       adjustTop: function(placementClasses, containerPosition, initialHeight, currentHeight) {
         if (placementClasses.indexOf('top') !== -1 && initialHeight !== currentHeight) {
@@ -4836,7 +4805,6 @@ angular.module('ui.bootstrap.pagination', ['ui.bootstrap.paging', 'ui.bootstrap.
   };
 }]);
 
-
 angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.stackedMap'])
 
 /**
@@ -4866,11 +4834,9 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
   // The options specified to the provider globally.
   var globalOptions = {};
 
-
 	this.options = function(value) {
 		angular.extend(globalOptions, value);
 	};
-
 
   this.setTriggers = function setTriggers(triggers) {
     angular.extend(triggerMap, triggers);
@@ -4904,7 +4870,6 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
 
     return function $tooltip(ttType, prefix, defaultTriggerShow, options) {
       options = angular.extend({}, defaultOptions, globalOptions, options);
-
 
       function getTriggers(trigger) {
         var show = (trigger || options.trigger || defaultTriggerShow).split(' ');
@@ -5525,7 +5490,6 @@ function ($animate, $sce, $compile, $templateRequest) {
     useContentExp: true
   });
 }]);
-
 
 angular.module('ui.bootstrap.popover', ['ui.bootstrap.tooltip'])
 
