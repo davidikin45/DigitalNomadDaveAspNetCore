@@ -4,75 +4,26 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 
 namespace DND.Common
 {
     public abstract class ProgramBase<TStartup> where TStartup : class
     {
-        private static readonly Dictionary<string, string> defaults = new Dictionary<string, string> { {
-                WebHostDefaults.EnvironmentKey, "Development"
-            } };
-
         public static IConfiguration Configuration;
 
         public static IConfiguration BuildWebHostConfiguration(string environment, string contentRoot)
         {
-            return BuildWebHostConfiguration(new string[] { "environment=" + environment }, contentRoot);
-        }
-
-        public static IConfiguration BuildWebHostConfiguration(string[] args, string contentRoot)
-        {
-            //Environment Order ASC
-            //1. Command Line (environment=Development)
-            //2. Environment Variable (ASPNETCORE_ENVIRONMENT=Development). In Azure ASPNETCORE_ENVIRONMENT can be set in Settings --> Application settings
-            //3. Default from Dictionary
-
-            var configEnvironmentBuilder = new ConfigurationBuilder()
-                   .AddInMemoryCollection(defaults)
-                   .AddEnvironmentVariables("ASPNETCORE_");
-
-            if (args != null)
-            {
-                configEnvironmentBuilder.AddCommandLine(args);
-            }
-            var configEnvironment = configEnvironmentBuilder.Build();
-
-            var appSettingsFileName = "appsettings.json";
-            var appSettingsEnvironmentFilename = "appsettings." + (configEnvironment[WebHostDefaults.EnvironmentKey] ?? "Production") + ".json";
-
-            Console.WriteLine($"Loading Settings:" + Environment.NewLine + 
-                               $"{contentRoot}\\{appSettingsFileName}" + Environment.NewLine + 
-                               $"{contentRoot}\\{appSettingsEnvironmentFilename}");
-
-            var config = new ConfigurationBuilder()
-           .AddInMemoryCollection(defaults)
-           .SetBasePath(contentRoot)
-           .AddJsonFile(appSettingsFileName, optional: false, reloadOnChange: true)
-           .AddJsonFile(appSettingsEnvironmentFilename, optional: true, reloadOnChange: true)
-           .AddEnvironmentVariables("ASPNETCORE_");
-
-            if (args != null)
-            {
-                config.AddCommandLine(args);
-            }
-
-            return config.Build();
+            return Config.Build(new string[] { "environment=" + environment }, contentRoot);
         }
 
         public static int RunApp(string[] args)
         {
-            Configuration = BuildWebHostConfiguration(args, Directory.GetCurrentDirectory());
+            Configuration = Config.Build(args, Directory.GetCurrentDirectory());
 
-            Log.Logger = new LoggerConfiguration()
-              .ReadFrom.Configuration(Configuration)
-              .Enrich.FromLogContext()
-              .CreateLogger();
+            Logging.Init(Configuration);
 
             try
             {
@@ -125,9 +76,13 @@ namespace DND.Common
                 }
                 )
                 .UseAutofac()
-                .UseConfiguration(Configuration)
+                .UseConfiguration(Configuration) ////IWebHostBuilder configuration is added to the app's configuration, but the converse isn't true—ConfigureAppConfiguration doesn't affect the IWebHostBuilder configuration
                 .UseSerilog()
                 .UseStartup<TStartup>();
+
+        //WebHostBuilder - https://github.com/aspnet/Hosting/blob/3483a3250535da6f291326f3f5f1e3f66ca09901/src/Microsoft.AspNetCore.Hosting/WebHostBuilder.cs
+        //WebHost.CreateDefaultBuilder(args) - https://github.com/aspnet/MetaPackages/blob/release/2.1/src/Microsoft.AspNetCore/WebHost.cs
+        //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/web-host?view=aspnetcore-2.1
 
         // Only used by EF Core Tooling if IDesignTimeDbContextFactory is not implemented
         // Generally its not good practice to DB in the MVC Project so best to use IDesignTimeDbContextFactory

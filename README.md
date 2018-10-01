@@ -98,7 +98,8 @@ Publish DND.Web
 * [Entity Framework](https://msdn.microsoft.com/en-us/library/aa937723(v=vs.113).aspx) - Microsoft ORM framework
 * [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/) - Microsoft ORM framework
 * [MongoDB](https://www.mongodb.com) - NoSQL database
-* [Serilog](https://serilog.net/) - Logging
+* [Serilog](https://serilog.net/) - Structured Logging
+* [Seq](https://getseq.net/) - Structured Logging Query Engine
 * [Autofac](http://www.autofac.org/) - Dependency injector for .NET
 * [Hangfire](https://rometools.github.io/rome/) - Background job processing
 * [Swagger](https://swagger.io/) - API testing

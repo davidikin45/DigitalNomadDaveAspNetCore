@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\SQLite.3.13.0\build\net45\SQLite.props" Condition="Exists('..\..\packages\SQLite.3.13.0\build\net45\SQLite.props')" />
   <Import Project="..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props" Condition="Exists('..\..\packages\Microsoft.Extensions.Configuration.UserSecrets.2.1.1\build\netstandard2.0\Microsoft.Extensions.Configuration.UserSecrets.props')" />
   <Import Project="..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props" Condition="Exists('..\..\packages\Microsoft.AspNetCore.Mvc.Razor.Extensions.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.props')" />
   <Import Project="..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props" Condition="Exists('..\..\packages\Microsoft.AspNetCore.Razor.Design.2.1.2\build\netstandard2.0\Microsoft.AspNetCore.Razor.Design.props')" />
@@ -81,6 +82,12 @@
     </Reference>
     <Reference Include="Hangfire.Core, Version=1.6.20.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hangfire.Core.1.6.20\lib\net45\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.MemoryStorage.Core, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hangfire.MemoryStorage.Core.1.4.0\lib\net45\Hangfire.MemoryStorage.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.SQLite.Core, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hangfire.SQLite.Core.1.0.2\lib\netstandard1.6\Hangfire.SQLite.Core.dll</HintPath>
     </Reference>
     <Reference Include="Hangfire.SqlServer, Version=1.6.20.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hangfire.SqlServer.1.6.20\lib\net45\Hangfire.SqlServer.dll</HintPath>
@@ -349,8 +356,8 @@
     <Reference Include="Microsoft.CodeAnalysis.Razor, Version=2.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.Razor.2.1.2\lib\net46\Microsoft.CodeAnalysis.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Sqlite, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Data.Sqlite.Core.2.1.0\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
+    <Reference Include="Microsoft.Data.Sqlite, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Data.Sqlite.1.1.1\lib\net451\Microsoft.Data.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.1.0\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
@@ -798,6 +805,7 @@
     <Compile Include="Authorization\AuthorizeIfAny.cs" />
     <Compile Include="Authorization\AuthorizeResourceAttribute.cs" />
     <Compile Include="AutoMapper\AutoMapperConfiguration.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="ConfigureMvcOptions.cs" />
     <Compile Include="Constants\CMS.cs" />
     <Compile Include="Constants\Folders.cs" />
@@ -901,6 +909,7 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ViewResultExtensions.cs" />
     <Compile Include="Filters\AjaxRequestAttribute.cs" />
+    <Compile Include="Logging.cs" />
     <Compile Include="Middleware\ApiErrorHandler.cs" />
     <Compile Include="Filters\ExceptionHandlingFilter.cs" />
     <Compile Include="Filters\FeatureAuthFilter.cs" />
@@ -1085,6 +1094,7 @@
     <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets'))" />
     <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets'))" />
     <Error Condition="!Exists('..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
   </Target>
   <Import Project="..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets" Condition="Exists('..\..\packages\Microsoft.Extensions.FileProviders.Embedded.2.1.1\build\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.targets')" />

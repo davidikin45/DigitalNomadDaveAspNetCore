@@ -66,16 +66,6 @@ using System.Reflection;
 
 namespace DND.Common
 {
-    //http://mygeekjourney.com/asp-net-core/integrating-serilog-asp-net-core/
-    //https://www.carlrippon.com/asp-net-core-logging-with-serilog-and-sql-server/
-    //Logging
-    //Trace = 0
-    //Debug = 1 -- Developement Standard
-    //Information = 2
-    //Warning = 3 -- Production Standard
-    //Error = 4
-    //Critical = 5
-
     public abstract class AppStartup
     {
         public AppStartup(ILoggerFactory loggerFactory, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
