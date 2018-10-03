@@ -10,6 +10,9 @@
 ## Pluralsight Courses for Builing Console Applications
 * [Building Cross-platform Applications with .NET Core](https://www.pluralsight.com/courses/dotnet-core-building-cross-platform-applications)
 
+## Pluralsight Courses for MVC 5 Logging
+* [.NET Logging Done Right: An Opinionated Approach Using Serilog](https://app.pluralsight.com/library/courses/dotnet-logging-using-serilog-opinionated-approach/table-of-contents)
+
 ## Pluralsight Courses for Domain Driven Design and Rich Model
 * [Clean Architecture: Patterns, Practices, and Principles](https://app.pluralsight.com/library/courses/clean-architecture-patterns-practices-principles/table-of-contents)
 * [Modern Software Architecture: Domain Models, CQRS, and Event Sourcing](https://app.pluralsight.com/library/courses/modern-software-architecture-domain-models-cqrs-event-sourcing/table-of-contents)

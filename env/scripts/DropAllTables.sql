@@ -1,7 +1,5 @@
 DROP TABLE Project;
 DROP TABLE Testimonial;
-DROP TABLE BinaryData;
-DROP TABLE [File];
 DROP TABLE BlogPostLocation;
 DROP TABLE BlogPostTag;
 DROP TABLE BlogPost;
@@ -13,13 +11,14 @@ DROP TABLE [Location];
 DROP TABLE ContentHtml;
 DROP TABLE ContentText;
 DROP TABLE Faq;
-DROP TABLE LogAction;
 DROP TABLE MailingList;
+DROP TABLE RoleClaim;
 DROP TABLE UserRole;
 DROP TABLE UserClaim;
 DROP TABLE UserLogin;
 DROP TABLE [Role];
 DROP TABLE [User];
+DROP TABLE __EFMigrationsHistory;
 DROP TABLE __MigrationHistory;
 
 DROP TABLE [HangFire].[Schema];
