@@ -1,4 +1,5 @@
-﻿using DND.Common.Data.Helpers;
+﻿using DND.Common.Data;
+using DND.Common.Data.Helpers;
 using DND.Common.Helpers;
 using DND.Common.Infrastructure;
 using Microsoft.AspNetCore.Html;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DND.Common.Extensions
 {
@@ -144,12 +146,12 @@ namespace DND.Common.Extensions
 
                         Type iQueryableType = typeof(IQueryable<>).MakeGenericType(new[] { dropdownModelType });
 
-                        IEnumerable<Object> query = db.Queryable(dropdownModelType).Cast<Object>();
+                        IQueryable query = db.Queryable(dropdownModelType);
 
                         if (selectedOnly)
                         {
                             var whereClause = LamdaHelper.SearchForEntityByIds(dropdownModelType, ids.Cast<Object>());
-                            query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
+                            query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
                         }
                         else
                         {
@@ -159,31 +161,37 @@ namespace DND.Common.Extensions
                                 foreach (var where in whereClauseEqualsDictionary)
                                 {
                                     var whereClause = LamdaHelper.SearchForEntityByProperty(dropdownModelType, where.Key, where.Value);
-                                    query = (IEnumerable<Object>)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
+                                    query = (IQueryable)typeof(LamdaHelper).GetMethod(nameof(LamdaHelper.Where)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, whereClause });
                                 }
 
                             }
+
+                            if (!string.IsNullOrWhiteSpace(orderByProperty))
+                            {
+                                if (orderByType == "asc")
+                                {
+                                    query = (IQueryable)typeof(Utilities).GetMethod(nameof(Utilities.QueryableOrderBy)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, orderByProperty, true });
+                                }
+                                else
+                                {
+                                    query = (IQueryable)typeof(Utilities).GetMethod(nameof(Utilities.QueryableOrderBy)).MakeGenericMethod(dropdownModelType).Invoke(null, new object[] { query, orderByProperty, false });
+                                }                               
+                            }
                         }
 
-                        if (orderByType == "asc")
-                        {
-                            query = query.ToList().OrderBy(x => pi.GetValue(x, null));
-                        }
-                        else
-                        {
-                            query = query.ToList().OrderByDescending(x => pi.GetValue(x, null));
-                        }
+                        IEnumerable results = query.ToList(dropdownModelType);
 
-                        query.ToList().ForEach(item =>
-
-                        items.Add(new SelectListItem()
+                        foreach (var item in results)
                         {
-                            Text = GetDisplayString(htmlHelper, item, valueProperty),
-                            //Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
-                            //Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
-                            Value = GetDisplayString(htmlHelper, item, keyProperty),
-                            Selected = ids.Contains(GetDisplayString(htmlHelper, item, keyProperty))
-                        }));
+                            items.Add(new SelectListItem()
+                            {
+                                Text = GetDisplayString(htmlHelper, item, valueProperty),
+                                //Value = item.GetPropValue(keyProperty) != null ? item.GetPropValue(keyProperty).ToString() : "",
+                                //Selected = item.GetPropValue(keyProperty) != null && ids.Contains(item.GetPropValue(keyProperty).ToString())
+                                Value = GetDisplayString(htmlHelper, item, keyProperty),
+                                Selected = ids.Contains(GetDisplayString(htmlHelper, item, keyProperty))
+                            });
+                        }
                     }
                 }
                 else

@@ -1,6 +1,8 @@
 ﻿using DND.Common.Data.Helpers;
 using DND.Common.Infrastructure.Helpers;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,6 +17,17 @@ namespace DND.Common.Data
         public static int Count<TSource>(IQueryable<TSource> source)
         {
             return Queryable.Count(source);
+        }
+
+        public static IEnumerable ToList(this IQueryable query, Type type)
+        {
+            var genericListType = typeof(List<>).MakeGenericType(type);
+            var genericTaskType = typeof(Task<>).MakeGenericType(genericListType);
+
+            var resultTask = (typeof(EntityFrameworkQueryableExtensions).GetMethod(nameof(EntityFrameworkQueryableExtensions.ToListAsync)).MakeGenericMethod(type).Invoke(null, new object[] { query, CancellationToken.None }));
+            var result = genericTaskType.GetProperty("Result").GetValue(resultTask);
+
+            return (IEnumerable)result;
         }
 
         public static IOrderedQueryable<T> QueryableOrderBy<T>(this IQueryable<T> items, string property, bool ascending)
