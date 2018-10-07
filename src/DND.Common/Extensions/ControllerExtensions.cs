@@ -43,14 +43,6 @@ namespace DND.Common.Extensions
             }
         }
 
-        public static void AddValidationErrors(this ModelStateDictionary modelState, IValidationErrors errors)
-        {
-            foreach (var error in errors.Errors)
-            {
-                modelState.AddModelError(error.PropertyName, error.PropertyExceptionMessage);
-            }
-        }
-
         public static RedirectToRouteResult RedirectToAction<TController>(this TController controller, Expression<Action<TController>> action) where TController : Controller
         {
             return RedirectToAction((Controller)controller, action);

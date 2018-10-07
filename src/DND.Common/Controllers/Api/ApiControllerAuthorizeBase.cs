@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +21,8 @@ namespace DND.Common.Controllers.Api
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")] // 40
     public abstract class ApiControllerAuthorizeBase : ApiControllerBase
     {
-        public ApiControllerAuthorizeBase()
-        {
-
-        }
-
-        public ApiControllerAuthorizeBase(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null)
-            :base(mapper, emailService, urlHelper)
+        public ApiControllerAuthorizeBase(string resource, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings, IAuthorizationService authorizationService)
+            :base(resource, mapper, emailService, urlHelper, appSettings, authorizationService)
         {
            
         }

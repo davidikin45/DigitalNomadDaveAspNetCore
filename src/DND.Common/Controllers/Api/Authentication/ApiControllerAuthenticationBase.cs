@@ -5,6 +5,7 @@ using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Settings;
 using DND.Common.JwtTokens;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -34,6 +35,7 @@ namespace DND.Common.Controllers.Api
         private readonly int _tokenExpiryMinutes;
 
         public ApiControllerAuthenticationBase(
+            string resource,
             RoleManager<IdentityRole> roleManager,
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
@@ -42,8 +44,10 @@ namespace DND.Common.Controllers.Api
             IEmailService emailSender,
             IMapper mapper,
             PasswordSettings passwordSettings,
-            EmailTemplates emailTemplates)
-            :base(mapper, emailSender, urlHelper)
+            EmailTemplates emailTemplates,
+            AppSettings appSettings,
+            IAuthorizationService authorizationService)
+            :base(resource, mapper, emailSender, urlHelper, appSettings, authorizationService)
         {
             _resetPasswordEmailTemplate = emailTemplates.ResetPassword;
 

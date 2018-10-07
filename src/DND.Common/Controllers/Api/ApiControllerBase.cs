@@ -2,10 +2,13 @@
 using DND.Common.ActionResults;
 using DND.Common.Alerts;
 using DND.Common.Extensions;
+using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Settings;
 using DND.Common.Infrastructure.Validation;
+using DND.Common.Infrastructure.Validation.Errors;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
@@ -29,9 +32,14 @@ namespace DND.Common.Controllers.Api
     [ApiController]
     public abstract class ApiControllerBase : Controller
     {
+        public string Resource { get; }
         public IMapper Mapper { get; }
         public IEmailService EmailService { get; }
         public IUrlHelper UrlHelper { get; }
+
+        //a style known as imperative authorization rather than declarative authorization 
+        public IAuthorizationService AuthorizationService { get; }
+
         public AppSettings AppSettings { get; }
 
         public ApiControllerBase()
@@ -39,12 +47,23 @@ namespace DND.Common.Controllers.Api
 
         }
 
-        public ApiControllerBase(IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, AppSettings appSettings = null)
+        public ApiControllerBase(string resource, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings, IAuthorizationService authorizationService)
         {
+            Resource = resource;
             Mapper = mapper;
             EmailService = emailService;
             UrlHelper = urlHelper;
             AppSettings = appSettings;
+            AuthorizationService = authorizationService;
+        }
+
+        public void AuthorizeOperationAsync(string operation)
+        {
+            var authorizationResult = AuthorizationService.AuthorizeAsync(User, Resource + operation).Result;
+            if (!authorizationResult.Succeeded)
+            {
+                throw new UnauthorizedErrors(new GeneralError(String.Format(Messages.UnauthorisedResourceOperation, Resource + operation)));
+            }
         }
 
         //https://docs.microsoft.com/en-us/aspnet/core/migration/claimsprincipal-current?view=aspnetcore-2.0

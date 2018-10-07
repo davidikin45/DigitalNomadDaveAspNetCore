@@ -2,6 +2,7 @@
 using DND.Common.ActionResults;
 using DND.Common.Alerts;
 using DND.Common.Extensions;
+using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Settings;
 using DND.Common.Infrastructure.Validation;
@@ -67,18 +68,6 @@ namespace DND.Common.Controllers
             return JsonResult;
         }
 
-        protected virtual BetterJsonResult BetterJsonError(string message, ValidationErrors errors, int errorStatusCode = 400)
-        {
-            var JsonResult = new BetterJsonResult(message);
-            JsonResult.ErrorStatusCode = errorStatusCode;
-            foreach (var databaseValidationError in errors.Errors)
-            {
-                JsonResult.AddError(databaseValidationError.PropertyExceptionMessage);
-            }
-
-            return JsonResult;
-        }
-
         protected virtual BetterJsonResult BetterJsonError(string message, string errorMessage, int errorStatusCode = 400)
         {
             var JsonResult = new BetterJsonResult(message);
@@ -119,11 +108,6 @@ namespace DND.Common.Controllers
         protected BetterJsonResult ValidationErrors(ModelStateDictionary modelState)
         {
             return BetterJsonError("The request is invalid.", modelState);
-        }
-
-        protected BetterJsonResult ValidationErrors(ValidationErrors errors)
-        {
-            return BetterJsonError("The request is invalid.", errors);
         }
 
         protected BetterJsonResult OperationCancelledError(OperationCanceledException ex)
@@ -174,15 +158,7 @@ namespace DND.Common.Controllers
 
         protected void HandleUpdateException(Exception ex)
         {
-            if (ex is ValidationErrors)
-            {
-                var propertyErrors = (ValidationErrors)ex;
-                ModelState.AddValidationErrors(propertyErrors);
-            }
-            else
-            {
-                ModelState.AddModelError("", Messages.UnknownError);
-            }
+            ModelState.AddModelError("", Messages.UnknownError);
         }
 
         protected virtual ActionResult RedirectToHome()

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
 using DND.Common.Infrastructure.Interfaces.DomainServices;
+using DND.Common.Infrastructure.Users;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,8 @@ namespace DND.Common.Implementation.ApplicationServices
     {
         protected virtual TDomainService DomainService { get; }
 
-        public ApplicationServiceEntityReadOnlyBase(TDomainService domainService, IMapper mapper)
-           : base(mapper)
+        public ApplicationServiceEntityReadOnlyBase(string serviceName, TDomainService domainService, IMapper mapper, IAuthorizationService authorizationService, IUserService userService)
+           : base(serviceName, mapper, authorizationService, userService)
         {
             DomainService = domainService;
         }

@@ -31,8 +31,8 @@ namespace DND.Common.Controllers.Api
         where IEntityService : IApplicationServiceEntity<TCreateDto, TReadDto, TUpdateDto, TDeleteDto>
     {   
 
-        public ApiControllerEntityBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, AppSettings appSettings = null)
-        : base(service, mapper , emailService, urlHelper, typeHelperService, appSettings)
+        public ApiControllerEntityBase(string resource, IEntityService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings, IAuthorizationService authorizationService)
+        : base(resource, service, mapper , emailService, urlHelper, typeHelperService, appSettings, authorizationService)
         {
           
         }

@@ -23,7 +23,7 @@ namespace DND.DomainServices.CMS.ContentHtmls.Services
             var dbEntity = await GetByIdAsync(entity.Id, cancellationToken);
             if (dbEntity != null && dbEntity.PreventDelete)
             {
-               throw new ServiceValidationErrors(new GeneralError("This CMS content cannot be deleted"));
+                return Result.ObjectValidationFail("This CMS content cannot be deleted");
             }
 
             return await base.DeleteAsync(cancellationToken, entity, deletedBy);

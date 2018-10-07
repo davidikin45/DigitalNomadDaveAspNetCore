@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DND.Common.Infrastructure.Validation.Errors;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace DND.Common.Infrastructure.Validation
 {
@@ -23,6 +25,20 @@ namespace DND.Common.Infrastructure.Validation
             ErrorType = errorType;
             ObjectValidationErrors = objectValidationErrors;
             NewRowVersion = newRowVersion;
+        }
+
+        public static Result ObjectValidationFail(string errorMessage)
+        {
+            var list = new List<ValidationResult>();
+            list.Add(new ValidationResult(errorMessage));
+            return ObjectValidationFail(list);
+        }
+
+        public static Result ObjectValidationFail(string errorMessage, IEnumerable<string> memberNames)
+        {
+            var list = new List<ValidationResult>();
+            list.Add(new ValidationResult(errorMessage, memberNames));
+            return ObjectValidationFail(list);
         }
 
         public static Result<T> ObjectValidationFail<T>(string errorMessage)
@@ -105,6 +121,30 @@ namespace DND.Common.Infrastructure.Validation
         public static Result<T> Unauthorized<T>(IEnumerable<ValidationResult> unauthorizedErrors)
         {
             return new Result<T>(default(T), false, Validation.ErrorType.Unauthorized, unauthorizedErrors, null);
+        }
+
+        public static Result DatabaseErrors(IEnumerable<DbEntityValidationResult> errors)
+        {
+            var list = new List<ValidationResult>();
+
+            foreach (var err in errors.SelectMany(dbEntityValidationResult => dbEntityValidationResult.ValidationErrors))
+            {
+                list.Add(new ValidationResult(err.ErrorMessage, new string[] { err.PropertyName }));
+            }
+
+            return new Result(false, Validation.ErrorType.DatabaseValidationFailed, list, null);
+        }
+
+        public static Result<T> DatabaseErrors<T>(IEnumerable<DbEntityValidationResult> errors)
+        {
+            var list = new List<ValidationResult>();
+
+            foreach (var err in errors.SelectMany(dbEntityValidationResult => dbEntityValidationResult.ValidationErrors))
+            {
+                list.Add(new ValidationResult(err.ErrorMessage, new string[] { err.PropertyName }));
+            }
+
+            return new Result<T>(default(T), false, Validation.ErrorType.DatabaseValidationFailed, list, null);
         }
 
         public static Result Fail(ErrorType errorType)

@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace DND.Common.Authorization
 {
-    public class AnonymousRequirement : IAuthorizationRequirement
+    public class AnonymousAuthorizationRequirement : IAuthorizationRequirement
     {
 
     }
 
-    public class AnonymousHandler : AuthorizationHandler<AnonymousRequirement>
+    public class AnonymousAuthorizationHandler : AuthorizationHandler<AnonymousAuthorizationRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AnonymousRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AnonymousAuthorizationRequirement requirement)
         {
            context.Succeed(requirement);
             return Task.CompletedTask;

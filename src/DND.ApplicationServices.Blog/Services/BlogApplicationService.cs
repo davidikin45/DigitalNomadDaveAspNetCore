@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Infrastructure.Users;
 using DND.Interfaces.Blog.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DND.ApplicationServices.Blog.Services
 {
@@ -15,8 +17,10 @@ namespace DND.ApplicationServices.Blog.Services
             IBlogPostApplicationService blogPostApplicationService,
             ICategoryApplicationService categoryApplicationService,
             ITagApplicationService tagApplicationService,
-            IAuthorApplicationService authorApplicationService)
-            : base(mapper)
+            IAuthorApplicationService authorApplicationService, 
+            IAuthorizationService authorizationService,
+            IUserService userService)
+            : base("blog.", mapper, authorizationService, userService)
         {
             BlogPostApplicationService = blogPostApplicationService;
             CategoryApplicationService = categoryApplicationService;

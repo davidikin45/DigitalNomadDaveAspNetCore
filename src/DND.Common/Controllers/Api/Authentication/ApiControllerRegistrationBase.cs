@@ -3,6 +3,7 @@ using DND.Common.Dtos.Authentication;
 using DND.Common.Extensions;
 using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,6 +20,7 @@ namespace DND.Common.Controllers.Api
         private readonly string _welcomeEmailTemplate;
 
         public ApiControllerRegistrationBase(
+            string resource,
             RoleManager<IdentityRole> roleManager,
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
@@ -27,8 +29,10 @@ namespace DND.Common.Controllers.Api
             IEmailService emailSender,
             IMapper mapper,
             PasswordSettings passwordSettings,
-            EmailTemplates emailTemplates)
-            :base(roleManager, userManager, signInManager, tokenSettings, urlHelper, emailSender, mapper, passwordSettings, emailTemplates)
+            EmailTemplates emailTemplates,
+            AppSettings appSettings,
+            IAuthorizationService authorizationService)
+            :base(resource, roleManager, userManager, signInManager, tokenSettings, urlHelper, emailSender, mapper, passwordSettings, emailTemplates, appSettings, authorizationService)
         {
             _welcomeEmailTemplate = emailTemplates.Welcome;
         }

@@ -5,6 +5,7 @@ using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using DND.Domain.DynamicForms.FormSubmissions.Dtos;
 using DND.Interfaces.DynamicForms.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -14,8 +15,8 @@ namespace DND.Web.DynamicForms.Mvc.LookupTables.Api
     [Route("api/forms/form-submissions")]
     public class FormSubmissionController : ApiControllerEntityAuthorizeBase<FormSubmissionDto, FormSubmissionDto, FormSubmissionDto, FormSubmissionDeleteDto, IFormSubmissionApplicationService>
     {
-        public FormSubmissionController(IFormSubmissionApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings)
-            : base(service, mapper, emailService, urlHelper, typeHelperService, appSettings)
+        public FormSubmissionController(IFormSubmissionApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings, IAuthorizationService authorizationService)
+            : base("forms.form-submissions.", service, mapper, emailService, urlHelper, typeHelperService, appSettings, authorizationService)
         {
 
         }

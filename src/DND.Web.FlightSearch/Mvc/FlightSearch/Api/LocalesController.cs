@@ -5,6 +5,7 @@ using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Settings;
 using DND.Domain.FlightSearch.Locales.Dtos;
 using DND.Interfaces.FlightSearch.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -32,8 +33,8 @@ namespace DND.Web.FlightSearch.Mvc.Api
     {
         private readonly ILocaleApplicationService _localeService;
 
-        public LocalesController(ILocaleApplicationService localeService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings)
-             : base(mapper, emailService, urlHelper, appSettings)
+        public LocalesController(ILocaleApplicationService localeService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings, IAuthorizationService authorizationService)
+             : base("flight-search.locales.", mapper, emailService, urlHelper, appSettings, authorizationService)
         {
             _localeService = localeService;
         }

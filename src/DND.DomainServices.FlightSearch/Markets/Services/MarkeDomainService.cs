@@ -1,5 +1,6 @@
 ﻿using DND.Common.DomainServices;
 using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
+using DND.Common.Infrastructure.Validation;
 using DND.Common.Infrastructure.Validation.Errors;
 using DND.Domain.Skyscanner.Model;
 using DND.DomainServices.SearchEngines;
@@ -25,14 +26,14 @@ namespace DND.DomainServices.FlightSearch.Markets.Services
             return await marketSearchEngine.GetMarketByIDAsync(id, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Country>> GetByLocale(string locale, CancellationToken cancellationToken)
+        public async Task<Result<List<Country>>> GetByLocale(string locale, CancellationToken cancellationToken)
         {
             if (locale == null)
-                throw new ValidationErrors(new GeneralError("Invaid Request"));
+                return Result.ObjectValidationFail<List<Country>>("Invaid Request");
 
             var marketSearchEngine = new LocaleMarketCurrencySearchEngine("skyscanner");
 
-            return (await marketSearchEngine.GetMarketsByLocaleAsync(locale, cancellationToken).ConfigureAwait(false)).Countries;
+            return Result.Ok((await marketSearchEngine.GetMarketsByLocaleAsync(locale, cancellationToken).ConfigureAwait(false)).Countries);
         }
    
     }

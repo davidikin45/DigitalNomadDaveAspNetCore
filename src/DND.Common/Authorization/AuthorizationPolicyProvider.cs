@@ -38,7 +38,7 @@ namespace DND.Common.Authorization
 
                 if(allowAnonymousAccess)
                 {
-                    policy = new AuthorizationPolicyBuilder().AddRequirements(new AnonymousRequirement()).Build();
+                    policy = new AuthorizationPolicyBuilder().AddRequirements(new AnonymousAuthorizationRequirement()).Build();
                 }
                 else
                 {
@@ -50,6 +50,11 @@ namespace DND.Common.Authorization
             }
 
             return policy;
+        }
+
+        public new Task<AuthorizationPolicy> GetDefaultPolicyAsync()
+        {
+            return base.GetDefaultPolicyAsync();
         }
     }
 }

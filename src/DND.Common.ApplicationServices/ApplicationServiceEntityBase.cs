@@ -4,8 +4,10 @@ using DND.Common.Infrastructure.Dtos;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
 using DND.Common.Infrastructure.Interfaces.DomainServices;
+using DND.Common.Infrastructure.Users;
 using DND.Common.Infrastructure.Validation;
 using DND.Common.Infrastrucutre.Interfaces.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.SignalR;
@@ -28,20 +30,14 @@ namespace DND.Common.Implementation.ApplicationServices
 
         private readonly IHubContext<ApiNotificationHub<TReadDto>> HubContext;
 
-        public ApplicationServiceEntityBase(TDomainService domainService, IMapper mapper, IHubContext<ApiNotificationHub<TReadDto>> hubContext)
-          : this(domainService, mapper)
+        public ApplicationServiceEntityBase(string serviceName, TDomainService domainService, IMapper mapper, IAuthorizationService authorizationService, IUserService userService, IHubContext<ApiNotificationHub<TReadDto>> hubContext)
+          : this(serviceName, domainService, mapper, authorizationService, userService)
         {
             HubContext = hubContext;
         }
 
-        public ApplicationServiceEntityBase(TDomainService domainService, IMapper mapper)
-           : base(domainService, mapper)
-        {
-
-        }
-
-        public ApplicationServiceEntityBase(TDomainService domainService)
-           : base(domainService)
+        public ApplicationServiceEntityBase(string serviceName, TDomainService domainService, IMapper mapper, IAuthorizationService authorizationService, IUserService userService)
+           : base(serviceName, domainService, mapper, authorizationService, userService)
         {
 
         }
@@ -112,6 +108,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
+                        return Result.ObjectValidationFail<TReadDto>(result.ObjectValidationErrors);
+                    case ErrorType.DatabaseValidationFailed:
                         return Result.ObjectValidationFail<TReadDto>(result.ObjectValidationErrors);
                     case ErrorType.ObjectDoesNotExist:
                         return Result.ObjectDoesNotExist<TReadDto>();
@@ -219,6 +217,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return result;
+                    case ErrorType.DatabaseValidationFailed:
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;
                     case ErrorType.ConcurrencyConflict:
@@ -260,6 +260,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.DatabaseValidationFailed:
                         return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;
@@ -303,6 +305,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return result;
+                    case ErrorType.DatabaseValidationFailed:
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;
                     case ErrorType.ConcurrencyConflict:
@@ -344,6 +348,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.DatabaseValidationFailed:
                         return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;
@@ -584,6 +590,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return result;
+                    case ErrorType.DatabaseValidationFailed:
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;
                     case ErrorType.ConcurrencyConflict:
@@ -610,6 +618,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.DatabaseValidationFailed:
                         return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;
@@ -687,6 +697,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 {
                     case ErrorType.ObjectValidationFailed:
                         return result;
+                    case ErrorType.DatabaseValidationFailed:
+                        return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;
                     case ErrorType.ConcurrencyConflict:
@@ -707,6 +719,8 @@ namespace DND.Common.Implementation.ApplicationServices
                 switch (result.ErrorType)
                 {
                     case ErrorType.ObjectValidationFailed:
+                        return result;
+                    case ErrorType.DatabaseValidationFailed:
                         return result;
                     case ErrorType.ObjectDoesNotExist:
                         return result;

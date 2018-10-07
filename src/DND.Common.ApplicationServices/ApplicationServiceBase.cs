@@ -1,7 +1,12 @@
 ﻿using AutoMapper;
+using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Users;
+using DND.Common.Infrastructure.Validation.Errors;
 using DND.Common.Interfaces.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,11 +18,17 @@ namespace DND.Common.Implementation.ApplicationServices
         private readonly IFileSystemGenericRepositoryFactory _fileSystemGenericRepositoryFactory;
         public IMapper Mapper { get; }
 
-        public ApplicationServiceBase(IMapper mapper)
-        {
-            Mapper = mapper;
-        }
+        public string ServiceName { get; }
+        public IAuthorizationService AuthorizationService { get; }
+        public IUserService UserService { get; }
 
+        public ApplicationServiceBase(string serviceName, IMapper mapper, IAuthorizationService authorizationService, IUserService userService)
+        {
+            ServiceName = serviceName;
+            Mapper = mapper;
+            AuthorizationService = authorizationService;
+            UserService = userService;
+        }
 
         public ApplicationServiceBase(IFileSystemGenericRepositoryFactory fileSystemGenericRepositoryFactory, IMapper mapper)
             : this(fileSystemGenericRepositoryFactory)
@@ -34,6 +45,24 @@ namespace DND.Common.Implementation.ApplicationServices
         public ApplicationServiceBase()
         {
 
+        }
+
+        public async void AuthorizeOperationAsync(string operation)
+        {
+            var authorizationResult = await AuthorizationService.AuthorizeAsync(UserService.User, ServiceName + operation);
+            if (!authorizationResult.Succeeded)
+            {
+                throw new UnauthorizedErrors(new GeneralError(String.Format(Messages.UnauthorisedServiceOperation, ServiceName + operation)));
+            }
+        }
+
+        public async void AuthorizeResourceOperationAsync(string operation, object resource)
+        {
+            var authorizationResult = await AuthorizationService.AuthorizeAsync(UserService.User, resource, new OperationAuthorizationRequirement() { Name = ServiceName + operation });
+            if (!authorizationResult.Succeeded)
+            {
+                throw new UnauthorizedErrors(new GeneralError(String.Format(Messages.UnauthorisedServiceOperation, ServiceName + operation)));
+            }
         }
 
         public IFileSystemGenericRepositoryFactory FileSytemGenericRepositoryFactory

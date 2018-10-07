@@ -5,6 +5,7 @@ using DND.Common.Infrastructure.Settings;
 using DND.Common.Interfaces.Services;
 using DND.Domain.DynamicForms.Questions.Dtos;
 using DND.Interfaces.DynamicForms.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -14,8 +15,8 @@ namespace DND.Web.DynamicForms.Mvc.Questions.Api
     [Route("api/forms/questions")]
     public class QuestionsController : ApiControllerEntityAuthorizeBase<QuestionDto, QuestionDto, QuestionDto, QuestionDeleteDto, IQuestionApplicationService>
     {
-        public QuestionsController(IQuestionApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings)
-            : base(service, mapper, emailService, urlHelper, typeHelperService, appSettings)
+        public QuestionsController(IQuestionApplicationService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings, IAuthorizationService authorizationService)
+            : base("forms.questions.", service, mapper, emailService, urlHelper, typeHelperService, appSettings, authorizationService)
         {
 
         }

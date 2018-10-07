@@ -1,4 +1,5 @@
 ﻿using DND.Common.Alerts;
+using DND.Common.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;

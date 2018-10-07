@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using DND.Common.ApplicationServices.SignalR;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Infrastructure.Users;
 using DND.Domain.Blog.BlogPosts;
 using DND.Domain.Blog.BlogPosts.Dtos;
 using DND.Interfaces.Blog.ApplicationServices;
 using DND.Interfaces.Blog.DomainServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,8 @@ namespace DND.ApplicationServices.Blog.BlogPosts.Services
 {
     public class BlogPostApplicationService : ApplicationServiceEntityBase<BlogPost, BlogPostDto, BlogPostDto, BlogPostDto, BlogPostDeleteDto, IBlogPostDomainService>, IBlogPostApplicationService
     {
-        public BlogPostApplicationService(IBlogPostDomainService domainService, IMapper mapper, IHubContext<ApiNotificationHub<BlogPostDto>> hubContext)
-        : base(domainService, mapper, hubContext)
+        public BlogPostApplicationService(IBlogPostDomainService domainService, IMapper mapper, IAuthorizationService authorizationService, IUserService userService, IHubContext<ApiNotificationHub<BlogPostDto>> hubContext)
+        : base("blog.blog-posts.", domainService, mapper, authorizationService, userService, hubContext)
         {
 
         }

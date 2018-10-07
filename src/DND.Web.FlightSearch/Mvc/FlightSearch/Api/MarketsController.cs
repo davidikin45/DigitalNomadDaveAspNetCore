@@ -5,6 +5,7 @@ using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Settings;
 using DND.Domain.FlightSearch.Markets.Dtos;
 using DND.Interfaces.FlightSearch.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -32,8 +33,8 @@ namespace DND.Web.FlightSearch.Mvc.Api
     {
         private readonly IMarketApplicationService _marketService;
 
-        public MarketsController(IMarketApplicationService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings)
-             : base(mapper, emailService, urlHelper, appSettings)
+        public MarketsController(IMarketApplicationService marketService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings, IAuthorizationService authorizationService)
+             : base("flight-search.markets.", mapper, emailService, urlHelper, appSettings, authorizationService)
         {
             _marketService = marketService;
         }
@@ -54,7 +55,12 @@ namespace DND.Web.FlightSearch.Mvc.Api
 
             var response = await _marketService.GetByLocale(locale, cts.Token);
 
-            var list = response.ToList();
+            if(!response.IsSuccess)
+            {
+                return ValidationErrors(response);
+            }
+
+            var list = response.Value.ToList();
 
             return Success(list);
         }

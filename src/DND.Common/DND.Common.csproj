@@ -794,7 +794,6 @@
     <Compile Include="Alerts\AlertDecoratorResult.cs" />
     <Compile Include="Alerts\AlertExtensions.cs" />
     <Compile Include="Alerts\Envelope.cs" />
-    <Compile Include="Alerts\Messages.cs" />
     <Compile Include="Alerts\WebApiMessage.cs" />
     <Compile Include="APIs\APIConstants.cs" />
     <Compile Include="APIs\Google.cs" />
@@ -804,6 +803,7 @@
     <Compile Include="Authorization\AuthorizationPolicyProvider.cs" />
     <Compile Include="Authorization\AuthorizeIfAny.cs" />
     <Compile Include="Authorization\AuthorizeResourceAttribute.cs" />
+    <Compile Include="Authorization\ResourceOwnerAuthorizationHandler.cs" />
     <Compile Include="AutoMapper\AutoMapperConfiguration.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="ConfigureMvcOptions.cs" />
@@ -966,6 +966,7 @@
     <Compile Include="Infrastructure\PaginatedList.cs" />
     <Compile Include="Infrastructure\ConfigurationManager.cs" />
     <Compile Include="Infrastructure\DbGeographyModelBinderProvider.cs" />
+    <Compile Include="Middleware\MvcErrorHandler.cs" />
     <Compile Include="TagHelpers\DescriptionTagHelper.cs" />
     <Compile Include="ViewExpander.cs" />
     <Compile Include="Infrastructure\ffMpeg.cs" />

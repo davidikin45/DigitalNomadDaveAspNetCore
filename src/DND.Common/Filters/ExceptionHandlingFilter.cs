@@ -1,4 +1,5 @@
 ﻿using DND.Common.Alerts;
+using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Validation.Errors;
 using DND.Common.Middleware;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace DND.Common.Filters
             LogException(context);
             if (context.HttpContext.Request.Path.ToString().StartsWith("/api"))
             {
-                var result = ApiErrorHandler.HandleApiException(context.Exception, _logger);
+                var result = ApiErrorHandler.HandleApiException(context.HttpContext.User, context.Exception, _logger);
                 if (result.exceptionHandled)
                 {
                     context.ExceptionHandled = true;
@@ -34,15 +35,24 @@ namespace DND.Common.Filters
                     context.Result = objectResult;
                 }
             }
+            else
+            {
+                var result = MvcErrorHandler.HandleException(context.HttpContext.User, context.Exception, _logger);
+                if (result.exceptionHandled)
+                {
+                    context.ExceptionHandled = true;
+                    context.Result = result.result;
+                }
+            }
         }
 
         private void LogException(ExceptionContext context)
         {
-            if (context.Exception is ValidationErrors)
+            if (context.Exception is UnauthorizedErrors)
             {
 
             }
-            if (context.Exception is TimeoutException)
+            else if (context.Exception is TimeoutException)
             {
 
             }

@@ -10,5 +10,7 @@ namespace DND.Common.Infrastrucutre.Interfaces.Domain
         string UserModified { get; set; }
         DateTime? DateDeleted { get; set; }
         string UserDeleted { get; set; }
+
+        string UserOwner { get; set; }
     }
 }

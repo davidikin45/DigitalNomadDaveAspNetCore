@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using DND.Common.ActionResults;
+using DND.Common.Infrastructure.Validation;
 using DND.Common.Testing;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.ViewModels;
 using DND.Interfaces.FlightSearch.ApplicationServices;
 using DND.Web.FlightSearch.Mvc.Api;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -26,13 +28,15 @@ namespace DND.UnitTests.Controllers.Api
         {
             var expected = new FlightSearchRequestDto();
             var mockService = new Mock<IFlightSearchApplicationService>();
-            mockService.Setup(s => s.SearchAsync(It.IsAny<FlightSearchRequestDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(new FlightSearchResponseDto(new List<ItineraryDto>(), 0, 10, 1));
+            mockService.Setup(s => s.SearchAsync(It.IsAny<FlightSearchRequestDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(Result.Ok(new FlightSearchResponseDto(new List<ItineraryDto>(), 0, 10, 1)));
+
+            var mockAuthorizationService = new Mock<IAuthorizationService>();
 
             var mockMapper = new Mock<IMapper>();
             mockMapper.Setup(x => x.Map<FlightSearchClientRequestForm, FlightSearchRequestDto>(It.IsAny<FlightSearchClientRequestForm>()))
                 .Returns(expected);
 
-            _controller = new FlightSearchController(mockService.Object, mockMapper.Object, null, null, null);
+            _controller = new FlightSearchController(mockService.Object, mockMapper.Object, null, null, null, mockAuthorizationService.Object);
             _controller.MockCurrentUser("1", "d.ikin@test.com", IdentityConstants.ApplicationScheme);
         }
 

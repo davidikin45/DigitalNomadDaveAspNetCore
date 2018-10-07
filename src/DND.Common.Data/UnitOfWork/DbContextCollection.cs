@@ -10,6 +10,7 @@ using DND.Common.Infrastructure.Helpers;
 using DND.Common.Infrastructure.Interfaces.Data;
 using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
 using DND.Common.Infrastructure.Interfaces.DomainEvents;
+using DND.Common.Infrastructure.Validation;
 using DND.Common.Infrastructure.Validation.Errors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -146,7 +147,7 @@ namespace DND.Common.Data.UnitOfWork
             return list;
         }
 
-        public void PreCommit()
+        public Result PreCommit()
         {
             if (_disposed)
                 throw new ObjectDisposedException("DbContextCollection");
@@ -178,7 +179,8 @@ namespace DND.Common.Data.UnitOfWork
                     var errors = GetValidationErrors(dbContext.dbContext, dbContext.domainEvents, true);
                     if (errors.Count() > 0)
                     {
-                        throw new DatabaseValidationErrors(errors);
+                        return Result.DatabaseErrors(errors);
+                        //throw new DatabaseValidationErrors(errors);
                         //ThrowEnhancedValidationException(errors);
                     }
                 }
@@ -202,9 +204,11 @@ namespace DND.Common.Data.UnitOfWork
 
             if (lastError != null)
                 lastError.Throw(); // Re-throw while maintaining the exception's original stack track
+
+            return Result.Ok();
         }
 
-        public int Commit()
+        public Result<int> Commit()
         {
             if (_disposed)
                 throw new ObjectDisposedException("DbContextCollection");
@@ -236,7 +240,8 @@ namespace DND.Common.Data.UnitOfWork
                     var errors = GetValidationErrors(dbContext.dbContext, dbContext.domainEvents, false);
                     if (errors.Count() > 0)
                     {
-                        throw new DatabaseValidationErrors(errors);
+                        return Result.DatabaseErrors<int>(errors);
+                        //throw new DatabaseValidationErrors(errors);
                     }
                 }
             }
@@ -294,15 +299,15 @@ namespace DND.Common.Data.UnitOfWork
             if (lastError != null)
                 lastError.Throw(); // Re-throw while maintaining the exception's original stack track
 
-            return c;
+            return Result.Ok(c);
         }
 
-        public Task PreCommitAsync()
+        public Task<Result> PreCommitAsync()
         {
             return PreCommitAsync(CancellationToken.None);
         }
 
-        public async Task PreCommitAsync(CancellationToken cancelToken)
+        public async Task<Result> PreCommitAsync(CancellationToken cancelToken)
         {
             if (cancelToken == null)
                 throw new ArgumentNullException("cancelToken");
@@ -322,7 +327,8 @@ namespace DND.Common.Data.UnitOfWork
                     var errors = GetValidationErrors(dbContext.dbContext, dbContext.domainEvents, true);
                     if (errors.Count() > 0)
                     {
-                        throw new DatabaseValidationErrors(errors);
+                        return Result.DatabaseErrors(errors);
+                        //throw new DatabaseValidationErrors(errors);
                         //ThrowEnhancedValidationException(errors);
                     }
                 }
@@ -348,14 +354,15 @@ namespace DND.Common.Data.UnitOfWork
             if (lastError != null)
                 lastError.Throw(); // Re-throw while maintaining the exception's original stack track
 
+            return Result.Ok();
         }
 
-        public Task<int> CommitAsync()
+        public Task<Result<int>> CommitAsync()
         {
             return CommitAsync(CancellationToken.None);
         }
 
-        public async Task<int> CommitAsync(CancellationToken cancelToken)
+        public async Task<Result<int>> CommitAsync(CancellationToken cancelToken)
         {
             if (cancelToken == null)
                 throw new ArgumentNullException("cancelToken");
@@ -375,7 +382,8 @@ namespace DND.Common.Data.UnitOfWork
                     var errors = GetValidationErrors(dbContext.dbContext, dbContext.domainEvents, false);
                     if (errors.Count() > 0)
                     {
-                        throw new DatabaseValidationErrors(errors);
+                        return Result.DatabaseErrors<int>(errors);
+                        //throw new DatabaseValidationErrors(errors);
                     }
                 }
             }
@@ -432,7 +440,7 @@ namespace DND.Common.Data.UnitOfWork
             if (lastError != null)
                 lastError.Throw(); // Re-throw while maintaining the exception's original stack track
 
-            return c;
+            return Result.Ok(c);
         }
 
         public void Rollback()

@@ -6,6 +6,7 @@ using DND.Common.Infrastructure.Settings;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.ViewModels;
 using DND.Interfaces.FlightSearch.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
@@ -14,13 +15,13 @@ using System.Threading.Tasks;
 namespace DND.Web.FlightSearch.Mvc.Api
 {
     [ApiVersion("1.0")]
-    [Route("api/flight-search-location")]
+    [Route("api/flight-search/location")]
     public class FlightSearchLocationController : ApiControllerBase
     {
         private readonly IFlightSearchApplicationService _flightSearchService;
 
-        public FlightSearchLocationController(IFlightSearchApplicationService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings)
-             : base(mapper, emailService, urlHelper, appSettings)
+        public FlightSearchLocationController(IFlightSearchApplicationService flightSearchService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings, IAuthorizationService authorizationService)
+             : base("flight.search.location.", mapper, emailService, urlHelper, appSettings, authorizationService)
         {
             _flightSearchService = flightSearchService;
         }

@@ -1,4 +1,5 @@
 ﻿using DND.Common.Infrastructure.Interfaces.ApplicationServices;
+using DND.Common.Infrastructure.Validation;
 using DND.Domain.FlightSearch.Markets.Dtos;
 using System.Collections.Generic;
 using System.Threading;
@@ -8,7 +9,7 @@ namespace DND.Interfaces.FlightSearch.ApplicationServices
 {
     public interface IMarketApplicationService : IApplicationService
     {
-        Task<IEnumerable<MarketDto>> GetByLocale(string locale, CancellationToken cancellationToken);
+        Task<Result<List<MarketDto>>> GetByLocale(string locale, CancellationToken cancellationToken);
         Task<MarketDto> GetAsync(string id, CancellationToken cancellationToken);
     }
 }

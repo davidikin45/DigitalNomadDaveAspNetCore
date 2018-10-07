@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -436,12 +437,12 @@ namespace DND.Common
             //Can create custom requirements by implementing IAuthorizationRequirement and AuthorizationHandler (Needs to be added to services as scoped)
             services.AddAuthorization(options =>
             {
-                if (authorizationSettings.UserMustBeAuthorizedByDefault)
-                {
-                    options.DefaultPolicy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-                }
+
+                //https://ondrejbalas.com/authorization-options-in-asp-net-core/
+                //The default policy will only be executed on requests prior to entering protected actions such as those wrapped by an [Authorize] attribute.
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
 
                 options.AddPolicy("UserMustBeAdmin", policyBuilder =>
                 {
@@ -487,7 +488,9 @@ namespace DND.Common
                 });
             });
 
-            services.AddSingleton<IAuthorizationHandler, AnonymousHandler>();
+            //https://docs.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-2.1&tabs=aspnetcore2x
+            services.AddSingleton<IAuthorizationHandler, ResourceOwnerAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, AnonymousAuthorizationHandler>();
             //Scope name as policy
             //https://www.jerriepelser.com/blog/creating-dynamic-authorization-policies-aspnet-core/
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
@@ -586,6 +589,7 @@ namespace DND.Common
             Logger.LogInformation("Configuring Mvc");
 
             var appSettings = GetSettings<AppSettings>("AppSettings");
+            var authorizationSettings = GetSettings<AuthorizationSettings>("AuthorizationSettings");
 
             // Add framework services.
             var mvc = services.AddMvc(options =>
@@ -606,6 +610,16 @@ namespace DND.Common
                 //options.Filters.Add(typeof(ModelValidationFilter));
                 ConfigureMvcCachingProfiles(options);
                 ConfigureMvcVariableResourceRepresentations(options);
+
+                if (authorizationSettings.UserMustBeAuthorizedByDefault)
+                {
+                    //https://ondrejbalas.com/authorization-options-in-asp-net-core/
+                    //The authorization filter will be executed on any request that enters the MVC middleware and maps to a valid action.
+                    var globalPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                    options.Filters.Add(new AuthorizeFilter(globalPolicy));
+                }
 
             })
             .AddXmlSerializerFormatters() //XML Opt out. Contract Serializer is Opt in

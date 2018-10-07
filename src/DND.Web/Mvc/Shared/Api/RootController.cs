@@ -2,6 +2,8 @@
 using DND.Common.Controllers.Api;
 using DND.Common.Dtos;
 using DND.Common.Infrastructure.Email;
+using DND.Common.Infrastructure.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -11,8 +13,8 @@ namespace DND.Web.Mvc.Shared.Api
     [Route("api")]
     public class RootController : ApiControllerBase
     {
-        public RootController(IMapper mapper, IEmailService emailService, IUrlHelper urlHelper)
-            : base(mapper, emailService, urlHelper)
+        public RootController(IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings, IAuthorizationService authorizationService)
+            : base("api.", mapper, emailService, urlHelper, appSettings, authorizationService)
         {
 
         }

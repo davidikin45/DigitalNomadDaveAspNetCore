@@ -1,6 +1,7 @@
 ﻿using DND.Common.DomainServices;
 using DND.Common.Extensions;
 using DND.Common.Infrastructure.Interfaces.Data.UnitOfWork;
+using DND.Common.Infrastructure.Validation;
 using DND.Common.Infrastructure.Validation.Errors;
 using DND.Domain.FlightSearch.Search.Dtos;
 using DND.Domain.Skyscanner.Model;
@@ -21,13 +22,13 @@ namespace DND.DomainServices.FlightSearch.Search.Services
 
         }
 
-        public async Task<FlightSearchResponseDto> SearchAsync(FlightSearchRequestDto request, CancellationToken cancellationToken)
+        public async Task<Result<FlightSearchResponseDto>> SearchAsync(FlightSearchRequestDto request, CancellationToken cancellationToken)
         {
             if (request == null)
-                throw new ValidationErrors(new GeneralError("Invaid Request"));
+                return Result.ObjectValidationFail<FlightSearchResponseDto>("Invaid Request");
 
             if (!request.IsValid())
-                throw new ObjectValidationErrors(request.Validate());
+                return Result.ObjectValidationFail<FlightSearchResponseDto>(request.Validate());
 
             var flightSearchEngine = new FlightSearchEngine("skyscanner");
 
@@ -76,16 +77,16 @@ namespace DND.DomainServices.FlightSearch.Search.Services
 
             response.Request = request;
 
-            return response;
+            return Result.Ok(response);
         }
 
-        public async Task<LocationAutoSuggestResponseDto> LocationAutoSuggestAsync(LocationAutoSuggestRequestDto request, CancellationToken cancellationToken)
+        public async Task<Result<LocationAutoSuggestResponseDto>> LocationAutoSuggestAsync(LocationAutoSuggestRequestDto request, CancellationToken cancellationToken)
         {
             if (request == null)
-                throw new ValidationErrors(new GeneralError("Invaid Request"));
+                return Result.ObjectValidationFail<LocationAutoSuggestResponseDto>("Invaid Request");
 
             if (!request.IsValid())
-                throw new ObjectValidationErrors(request.Validate());
+                return Result.ObjectValidationFail<LocationAutoSuggestResponseDto>(request.Validate());
 
             var response = new LocationAutoSuggestResponseDto();
 
@@ -129,16 +130,16 @@ namespace DND.DomainServices.FlightSearch.Search.Services
                 response.Locations.Add(new LocationResponseDto { PlaceId = "nearest", PlaceName = "Nearest Airport" });
             }
 
-            return response;
+            return Result.Ok(response);
         }
 
-        public async Task<LocationResponseDto> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken)
+        public async Task<Result<LocationResponseDto>> GetLocationAsync(LocationRequestDto request, CancellationToken cancellationToken)
         {
             if (request == null)
-                throw new ValidationErrors(new GeneralError("Invaid Request"));
+                return Result.ObjectValidationFail<LocationResponseDto>("Invaid Request");
 
             if (!request.IsValid())
-                throw new ObjectValidationErrors(request.Validate());
+                return Result.ObjectValidationFail<LocationResponseDto>(request.Validate());
 
             var locationSearchEngine = new LocationSearchEngine("skyscanner");
 
@@ -146,7 +147,7 @@ namespace DND.DomainServices.FlightSearch.Search.Services
 
             var location = new LocationResponseDto { PlaceId = p.PlaceId.Replace("-sky", ""), PlaceName = p.PlaceName, CityId = p.CityId.Replace("-sky", ""), CountryId = p.CountryId.Replace("-sky", ""), CountryName = p.CountryName, RegionId = "" };
 
-            return location;
+            return Result.Ok(location);
         }
     }
 }

@@ -5,6 +5,7 @@ using DND.Common.Infrastructure.Email;
 using DND.Common.Infrastructure.Settings;
 using DND.Domain.FlightSearch.Currencies.Dtos;
 using DND.Interfaces.FlightSearch.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -33,8 +34,8 @@ namespace DND.Web.FlightSearch.Mvc.Api
         private readonly ICurrencyApplicationService _currencyService;
 
 
-        public CurrenciesController(ICurrencyApplicationService currencyService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings)
-             : base(mapper, emailService, urlHelper, appSettings)
+        public CurrenciesController(ICurrencyApplicationService currencyService, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, AppSettings appSettings, IAuthorizationService authorizationService)
+             : base("flightsearch.currencies.", mapper, emailService, urlHelper, appSettings, authorizationService)
         {
             _currencyService = currencyService;
         }

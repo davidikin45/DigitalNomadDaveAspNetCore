@@ -95,7 +95,12 @@ namespace Toptal.Common.Data.UnitOfWork
                 // decide when the changes should be saved.
                 if (!_nested)
                 {
-                    c = CommitInternal();
+                    var result = CommitInternal();
+                    if(!result.IsSuccess)
+                    {
+                        return result;
+                    }
+                    c = result.Value;
                 }
                 else
                 {
@@ -133,7 +138,13 @@ namespace Toptal.Common.Data.UnitOfWork
             {
                 if (!_nested)
                 {
-                    c = await CommitInternalAsync(cancelToken).ConfigureAwait(false);
+                    var result = await CommitInternalAsync(cancelToken).ConfigureAwait(false);
+                    if(!result.IsSuccess)
+                    {
+                        return result;
+                    }
+
+                    c = result.Value;
                 }
                 else
                 {
@@ -189,22 +200,22 @@ namespace Toptal.Common.Data.UnitOfWork
             return Result.ConcurrencyConflict<int>(errors, ((IEntityConcurrencyAware)databaseValues).RowVersion);
         }
 
-        private void PreCommitInternal()
+        private Result PreCommitInternal()
         {
-            _dbContexts.PreCommit();
+            return _dbContexts.PreCommit();
         }
 
-        private Task PreCommitInternalAsync(CancellationToken cancelToken)
+        private Task<Result> PreCommitInternalAsync(CancellationToken cancelToken)
         {
             return _dbContexts.PreCommitAsync();
         }
 
-        private int CommitInternal()
+        private Result<int> CommitInternal()
         {
             return _dbContexts.Commit();
         }
 
-        private Task<int> CommitInternalAsync(CancellationToken cancelToken)
+        private Task<Result<int>> CommitInternalAsync(CancellationToken cancelToken)
         {
             return _dbContexts.CommitAsync(cancelToken);
         }

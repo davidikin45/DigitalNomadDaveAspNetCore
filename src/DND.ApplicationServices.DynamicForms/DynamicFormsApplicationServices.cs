@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Infrastructure.Users;
 using DND.Interfaces.DynamicForms.ApplicationServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DND.ApplicationServices.DynamicForms
 {
@@ -19,8 +21,10 @@ namespace DND.ApplicationServices.DynamicForms
             IFormSectionSubmissionApplicationService formSectionSubmissionApplicationService,
             ILookupTableApplicationService lookupTableApplicationService,
             IQuestionApplicationService questionApplicationService,
-            ISectionApplicationService sectionApplicationService)
-            : base(mapper)
+            ISectionApplicationService sectionApplicationService,
+            IAuthorizationService authorizationService,
+            IUserService userService)
+            : base("forms.", mapper, authorizationService, userService)
         {
             FormApplicationService = formApplicationService;
             FormSubmissionApplicationService = formSubmissionApplicationService;

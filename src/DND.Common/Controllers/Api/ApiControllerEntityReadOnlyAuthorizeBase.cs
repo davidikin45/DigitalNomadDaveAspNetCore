@@ -48,8 +48,8 @@ namespace DND.Common.Controllers.Api
         public IEntityService Service { get; private set; }
         public ITypeHelperService TypeHelperService { get; private set; }
 
-        public ApiControllerEntityReadOnlyAuthorizeBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, AppSettings appSettings = null)
-        : base(mapper, emailService, urlHelper, appSettings)
+        public ApiControllerEntityReadOnlyAuthorizeBase(string resource, IEntityService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings, IAuthorizationService authorizationService)
+        : base(resource, mapper, emailService, urlHelper, appSettings, authorizationService)
         {
             Service = service;
             TypeHelperService = typeHelperService;

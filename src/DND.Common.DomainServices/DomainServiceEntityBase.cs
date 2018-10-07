@@ -40,7 +40,11 @@ namespace DND.Common.DomainServices
                     return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
                 }
 
-                unitOfWork.Complete();
+                var saveResult = unitOfWork.Complete();
+                if (saveResult.IsFailure)
+                {
+                    return Result.ObjectValidationFail<TEntity>(saveResult.ObjectValidationErrors);
+                }
 
                 return Result.Ok(entity);
             }
@@ -56,7 +60,11 @@ namespace DND.Common.DomainServices
                     return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
                 }
 
-                await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                var saveResult = await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                if (saveResult.IsFailure)
+                {
+                    return Result.ObjectValidationFail<TEntity>(saveResult.ObjectValidationErrors);
+                }
 
                 return Result.Ok(entity);
             }
@@ -185,7 +193,7 @@ namespace DND.Common.DomainServices
                             return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
                         }
 
-                        unitOfWork.Complete();
+                       return unitOfWork.Complete();
                     }
                 }
             }
@@ -213,7 +221,7 @@ namespace DND.Common.DomainServices
                             return Result.ObjectValidationFail<TEntity>(validationResult.ObjectValidationErrors);
                         }
 
-                        await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
+                      return await unitOfWork.CompleteAsync(cancellationToken).ConfigureAwait(false);
                     }
                 }
             }

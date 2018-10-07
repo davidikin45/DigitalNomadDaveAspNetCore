@@ -13,8 +13,10 @@ namespace DND.IntegrationTestsNUnit.Controllers
     using DND.Common.Data.Repository.GenericEF;
     using DND.Common.Data.UnitOfWork;
     using DND.Common.Infrastructure.Interfaces.Data;
+    using DND.Common.Infrastructure.Users;
     using DND.Common.Testing;
     using DND.Web.FlightSearch.Mvc.Api;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.Extensions.Configuration;
     using NUnit.Framework;
 
@@ -41,6 +43,10 @@ namespace DND.IntegrationTestsNUnit.Controllers
 
             _context = TestHelper.GetContext<ApplicationContext>(connectionString, false);
 
+            var mockUserService = new Mock<IUserService>();
+
+            var mockAuthorizationService = new Mock<IAuthorizationService>();
+
             var mockDbContextFactory = new Mock<IDbContextFactory<ApplicationContext>>();
             mockDbContextFactory.Setup(c => c.CreateDbContext()).Returns(_context);
 
@@ -50,7 +56,7 @@ namespace DND.IntegrationTestsNUnit.Controllers
 
             _identityContext = TestHelper.GetContext<IdentityContext>(connectionString, false);
 
-            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(_dbContextFactoryProducer, new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper), _mapper, null, null, null);
+            _controller = new FlightSearchController(new FlightSearchApplicationService(new FlightSearchDomainService(new UnitOfWorkScopeFactory(_dbContextFactoryProducer, new AmbientDbContextLocator(), new GenericRepositoryFactory())), _mapper, mockAuthorizationService.Object, mockUserService.Object), _mapper, null, null, null, mockAuthorizationService.Object);
         }
 
         [TearDown]

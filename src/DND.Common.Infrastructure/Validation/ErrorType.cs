@@ -7,6 +7,7 @@
         ObjectValidationFailed,
         ConcurrencyConflict,
         EmailSendFailed,
-        Unauthorized
+        Unauthorized,
+        DatabaseValidationFailed
     }
 }

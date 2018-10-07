@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DND.Common.Implementation.ApplicationServices;
+using DND.Common.Infrastructure.Users;
 using DND.Domain.FlightSearch.Currencies.Dtos;
 using DND.Interfaces.FlightSearch.ApplicationServices;
 using DND.Interfaces.FlightSearch.DomainServices;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,8 +16,8 @@ namespace DND.ApplicationServices.FlightSearch.Currencies.Services
     {
         protected ICurrencyDomainService DomainService { get; }
 
-        public CurrencyApplicationService(ICurrencyDomainService domainService, IMapper mapper)
-            : base(mapper)
+        public CurrencyApplicationService(ICurrencyDomainService domainService, IMapper mapper, IAuthorizationService authorizationService, IUserService userService)
+            : base("flight-search.currencies.", mapper, authorizationService, userService)
         {
             DomainService = domainService;
         }

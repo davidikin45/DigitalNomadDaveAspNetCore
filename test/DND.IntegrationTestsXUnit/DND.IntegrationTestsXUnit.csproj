@@ -151,6 +151,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DND.Common.Infrastructure\DND.Common.Infrastructure.csproj">
+      <Project>{7A9B9FA9-4D57-4FA9-BF94-668CDD35F648}</Project>
+      <Name>DND.Common.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DND.Common.Testing\DND.Common.Testing.csproj">
       <Project>{A0EAD9D2-235A-4C64-B534-A581067704E0}</Project>
       <Name>DND.Common.Testing</Name>

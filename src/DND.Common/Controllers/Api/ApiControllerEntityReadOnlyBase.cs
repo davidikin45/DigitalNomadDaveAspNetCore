@@ -28,8 +28,8 @@ namespace DND.Common.Controllers.Api
         where IEntityService : IApplicationServiceEntityReadOnly<TDto>
     {   
 
-        public ApiControllerEntityReadOnlyBase(IEntityService service, IMapper mapper = null, IEmailService emailService = null, IUrlHelper urlHelper = null, ITypeHelperService typeHelperService = null, AppSettings appSettings = null)
-        : base(service, mapper, emailService, urlHelper, typeHelperService, appSettings)
+        public ApiControllerEntityReadOnlyBase(string resource, IEntityService service, IMapper mapper, IEmailService emailService, IUrlHelper urlHelper, ITypeHelperService typeHelperService, AppSettings appSettings, IAuthorizationService authorizationService)
+        : base(resource, service, mapper, emailService, urlHelper, typeHelperService, appSettings, authorizationService)
         {
  
         }
