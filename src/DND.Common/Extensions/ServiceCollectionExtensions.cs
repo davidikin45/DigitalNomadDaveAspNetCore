@@ -210,7 +210,7 @@ namespace DND.Common.Extensions
             where TUser : class
             where TRole : class
         {
-            IdentityBuilder builder = services.AddIdentityCore<TUser>(options =>
+            services.AddIdentityCore<TUser>(options =>
             {
                 options.Password.RequireDigit = requireDigit;
                 options.Password.RequiredLength = requiredLength;
@@ -225,8 +225,8 @@ namespace DND.Common.Extensions
                 options.Lockout.AllowedForNewUsers = true;
                 options.Lockout.MaxFailedAccessAttempts = maxFailedAccessAttemptsBeforeLockout;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutMinutes);
-            });
-            builder = new IdentityBuilder(builder.UserType, typeof(TRole), builder.Services)
+            })
+            .AddRoles<TRole>()
                 .AddEntityFrameworkStores<TContext>()
                 .AddDefaultTokenProviders()
                 .AddTokenProvider<EmailConfirmationTokenProvider<TUser>>("emailconf")
