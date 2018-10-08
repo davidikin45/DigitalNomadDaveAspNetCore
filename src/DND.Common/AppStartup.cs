@@ -333,6 +333,7 @@ namespace DND.Common
 
                 //https://wildermuth.com/2017/08/19/Two-AuthorizationSchemes-in-ASP-NET-Core-2
                 services.AddJwtAuthentication(
+               true,
                tokenSettings.Key,
                tokenSettings.PublicKeyPath,
                tokenSettings.PublicCertificatePath,

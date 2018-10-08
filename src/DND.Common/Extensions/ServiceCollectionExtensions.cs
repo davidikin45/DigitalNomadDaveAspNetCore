@@ -1,6 +1,7 @@
 ﻿using DND.Common.Infrastructure;
 using DND.Common.Infrastructure.Helpers;
 using DND.Common.Swagger;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,7 @@ namespace DND.Common.Extensions
     {
 
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
+            bool defaultScheme,
            string bearerTokenKey,
            string bearerTokenPublicSigningKeyPath,
            string bearerTokenPublicSigningCertificatePath,
@@ -28,11 +30,16 @@ namespace DND.Common.Extensions
            string bearerTokenLocalIssuer,
            string bearerTokenAudiences)
         {
-            var authenticationBuilder = services.AddAuthentication(options =>
+            var authenticationBuilder = services.AddAuthentication();
+
+            if (defaultScheme)
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            });
+                services.Configure<AuthenticationOptions>(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                });
+            }
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
 
