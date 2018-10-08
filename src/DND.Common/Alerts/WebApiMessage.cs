@@ -27,6 +27,11 @@ namespace DND.Common.Alerts
             return new WebApiMessage(message, errors.ToArray());
         }
 
+        private WebApiMessage()
+        {
+
+        }
+
         private WebApiMessage(string message, string[] errors)
         {
             this.Message = message;
@@ -107,7 +112,7 @@ namespace DND.Common.Alerts
 
         [DataMember]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IDictionary<string, List<AngularFormattedValidationError>> ModelState { get; private set; }
+        public Dictionary<string, List<AngularFormattedValidationError>> ModelState { get; private set; }
 
         public override string ToString()
         {

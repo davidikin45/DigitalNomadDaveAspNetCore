@@ -28,7 +28,7 @@ namespace DND.Common.Middleware
                     if (exceptionHandlerFeature != null)
                     {
                         var logger = loggerFactory.CreateLogger("Global exception logger");
-                        var response = ApiErrorHandler.HandleApiExceptionGlobal(exceptionHandlerFeature.Error, showExceptionMessage, logger);
+                        var response = ApiErrorHandler.HandleApiExceptionGlobal(exceptionHandlerFeature.Error, showExceptionMessage);
                         context.Response.StatusCode = response.statusCode;
                         context.Response.ContentType = "application/json";
                         await context.Response.WriteAsync(response.message.ToString());

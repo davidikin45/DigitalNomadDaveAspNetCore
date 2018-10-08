@@ -1,7 +1,6 @@
 ﻿using AspNetCoreRateLimit;
 using Autofac;
 using DND.Common.ActionResults;
-using DND.Common.Alerts;
 using DND.Common.Authorization;
 using DND.Common.Constraints;
 using DND.Common.DependencyInjection.Autofac.Modules;
@@ -141,7 +140,10 @@ namespace DND.Common
             ConfigureSettingsServices(services);
             ConfigureDatabaseServices(services);
             ConfigureAuthenticationServices(services);
+
+            //This will override defaultauthentication
             ConfigureIdentityServices(services);
+
             ConfigureAuthorizationServices(services);
             ConfigureSecurityServices(services);
             ConfigureEmailServices(services);
@@ -284,6 +286,14 @@ namespace DND.Common
         #region Authentication
         public virtual void ConfigureAuthenticationServices(IServiceCollection services)
         {
+            //https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/identity-2x?view=aspnetcore-2.1#cookie-based-authentication
+            //Define a default scheme in 2.0 if one of the following conditions is true:
+            //You use the [Authorize] attribute or authorization policies without specifying schemes
+
+            //IdentityConstants.ApplicationScheme = "Identity.Application"
+            //CookieAuthenticationDefaults.AuthenticationScheme = "Cookies"
+            //JwtBearerDefaults.AuthenticationScheme = "Bearer"
+
             Logger.LogInformation("Configuring Authentication");
 
             var appSettings = GetSettings<AppSettings>("AppSettings");
@@ -306,7 +316,10 @@ namespace DND.Common
                 options.Cookie.Name = appSettings.CookieExternalAuthName;
             });
 
-            var authenticationBuilder = services.AddAuthentication();
+            var authenticationBuilder = services.AddAuthentication(options => {
+                //options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; //Default for everything
+            });
 
             if (authenticationSettings.JwtToken.Enable)
             {
@@ -318,6 +331,7 @@ namespace DND.Common
                                        $"LocalIssuer: {tokenSettings.LocalIssuer ?? ""}" + Environment.NewLine +
                                        $"Audiences: {tokenSettings.Audiences ?? ""}");
 
+                //https://wildermuth.com/2017/08/19/Two-AuthorizationSchemes-in-ASP-NET-Core-2
                 services.AddJwtAuthentication(
                tokenSettings.Key,
                tokenSettings.PublicKeyPath,
@@ -354,7 +368,7 @@ namespace DND.Common
                     options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme; // Challenge scheme is how user should login if they arent already logged in.
                 });
 
-                //authetication scheme
+                //authetication scheme seperate to application cookie
                 authenticationBuilder.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, (options) =>
                 {
                     options.Cookie.Name = appSettings.CookieAuthName;
@@ -900,11 +914,17 @@ namespace DND.Common
             {
                 app.UsePing("/ping");
 
+                //Imortant: Must be before exception handling
+                //1. download profiler from https://stackify.com/prefix/
+                //2. enable .NET profiler in windows tray
+                //3. access results at http://localhost:2012
+                app.UseStackifyPrefix();
+
                 // Non Api
                 app.UseWhen(context => !context.Request.Path.ToString().StartsWith("/api"),
                     appBranch =>
                     {
-                        app.UseDeveloperExceptionPage();
+                        appBranch.UseDeveloperExceptionPage();
                     }
                );
 
@@ -957,14 +977,6 @@ namespace DND.Common
                 options.AddRedirectToWww();
                 //options.AddRedirectToHttps(StatusCodes.Status307TemporaryRedirect); // Does not pick up port automatically
                 app.UseRewriter(options);
-            }
-
-            if (env.IsDevelopment())
-            {
-                //1. download profiler from https://stackify.com/prefix/
-                //2. enable .NET profiler in windows tray
-                //3. access results at http://localhost:2012
-                app.UseStackifyPrefix();
             }
 
             if (switchSettings.EnableHelloWorld)

@@ -23,12 +23,12 @@ namespace DND.Common.Dtos
         { get; set; }
 
         [JsonIgnore]
-        public IEnumerable<T> Data
+        public List<T> Data
         {
             get { return Rows; }
         }
 
-        public IList<T> Rows
+        public List<T> Rows
         { get; set; }
 
         public int Total

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,34 @@ namespace DND.Common.Controllers.Api
         public IActionResult Unauthorized_401()
         {
             return Unauthorized();
+        }
+
+        [Route("challenge")]
+        [HttpGet]
+        public IActionResult ChallengeDefault()
+        {
+            return Challenge();
+        }
+
+        [Route("challenge-bearer")]
+        [HttpGet]
+        public IActionResult Challenge_Bearer()
+        {
+            return Challenge(JwtBearerDefaults.AuthenticationScheme);
+        }
+
+        [Route("forbid")]
+        [HttpGet]
+        public IActionResult ForbidDefault()
+        {
+            return Forbid();
+        }
+
+        [Route("forbid-bearer")]
+        [HttpGet]
+        public IActionResult Forbid_Bearer()
+        {
+            return Forbid(JwtBearerDefaults.AuthenticationScheme);
         }
 
         [Route("forbidden")]

@@ -13,7 +13,7 @@ namespace DND.Common.Middleware
 {
     public static class MvcErrorHandler
     {
-        public static (IActionResult result, bool exceptionHandled) HandleException(ClaimsPrincipal user, Exception exception, ILogger logger)
+        public static (IActionResult result, bool exceptionHandled) HandleException(ClaimsPrincipal user, Exception exception)
         {
             bool exceptionHandled = false;
             IActionResult result = null;

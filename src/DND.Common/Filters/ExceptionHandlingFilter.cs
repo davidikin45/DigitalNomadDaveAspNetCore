@@ -24,7 +24,7 @@ namespace DND.Common.Filters
             LogException(context);
             if (context.HttpContext.Request.Path.ToString().StartsWith("/api"))
             {
-                var result = ApiErrorHandler.HandleApiException(context.HttpContext.User, context.Exception, _logger);
+                var result = ApiErrorHandler.HandleApiException(context.HttpContext.User, context.Exception);
                 if (result.exceptionHandled)
                 {
                     context.ExceptionHandled = true;
@@ -37,7 +37,7 @@ namespace DND.Common.Filters
             }
             else
             {
-                var result = MvcErrorHandler.HandleException(context.HttpContext.User, context.Exception, _logger);
+                var result = MvcErrorHandler.HandleException(context.HttpContext.User, context.Exception);
                 if (result.exceptionHandled)
                 {
                     context.ExceptionHandled = true;
@@ -50,19 +50,19 @@ namespace DND.Common.Filters
         {
             if (context.Exception is UnauthorizedErrors)
             {
-
+                _logger.LogInformation(Messages.Unauthorised);
             }
             else if (context.Exception is TimeoutException)
             {
-
+                _logger.LogInformation(Messages.RequestTimedOut);
             }
             else if (context.Exception is OperationCanceledException)
             {
-
+                _logger.LogInformation(Messages.RequestCancelled);
             }
             else
             {
-                _logger.LogError(context.Exception, Messages.UnknownError);
+                _logger.LogInformation(Messages.UnknownError);
             }
         }
     }

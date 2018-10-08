@@ -11,7 +11,7 @@ namespace DND.Common.Middleware
 {
     public static class ApiErrorHandler
     {
-        public static (WebApiMessage message, int statusCode, bool exceptionHandled) HandleApiException(ClaimsPrincipal user, Exception exception, ILogger logger)
+        public static (WebApiMessage message, int statusCode, bool exceptionHandled) HandleApiException(ClaimsPrincipal user, Exception exception)
         {
             bool exceptionHandled = false;
             int statusCode = (int)HttpStatusCode.InternalServerError;
@@ -26,7 +26,6 @@ namespace DND.Common.Middleware
                 {
                     errorList.Add(validationError.PropertyExceptionMessage);
                 }
-                logger.LogInformation(Messages.Unauthorised);
 
                 messageObject = WebApiMessage.CreateWebApiMessage(Messages.Unauthorised, errorList);
                 if(user.Identity.IsAuthenticated)
@@ -45,7 +44,6 @@ namespace DND.Common.Middleware
 
                 var errorList = new List<string>();
                 errorList.Add(Messages.RequestCancelled);
-                logger.LogInformation(Messages.RequestCancelled);
 
                 messageObject = WebApiMessage.CreateWebApiMessage(Messages.RequestCancelled, errorList);
                 statusCode = (int)HttpStatusCode.BadRequest;
@@ -55,7 +53,6 @@ namespace DND.Common.Middleware
             {
                 var errorList = new List<string>();
                 errorList.Add(Messages.RequestTimedOut);
-                logger.LogInformation(Messages.RequestTimedOut);
 
                 messageObject = WebApiMessage.CreateWebApiMessage(Messages.RequestTimedOut, errorList);
                 statusCode = (int)HttpStatusCode.GatewayTimeout;
@@ -69,7 +66,7 @@ namespace DND.Common.Middleware
             return (messageObject, statusCode, exceptionHandled);
         }
 
-        public static (WebApiMessage message, int statusCode, bool exceptionHandled) HandleApiExceptionGlobal(Exception exception, bool showExceptionMessage, ILogger logger)
+        public static (WebApiMessage message, int statusCode, bool exceptionHandled) HandleApiExceptionGlobal(Exception exception, bool showExceptionMessage)
         {
             bool exceptionHandled = true;
             int statusCode = (int)HttpStatusCode.InternalServerError;
@@ -85,8 +82,6 @@ namespace DND.Common.Middleware
             {
                 errorList.Add(exception.Message);
             }
-
-            logger.LogError(500, exception, exception.Message);
 
             messageObject = WebApiMessage.CreateWebApiMessage(Messages.UnknownError, errorList);
             statusCode = (int)HttpStatusCode.InternalServerError;

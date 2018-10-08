@@ -190,6 +190,63 @@ namespace DND.Common.Extensions
             });
         }
 
+        public static void AddIdentityCore<TContext, TUser, TRole>(this IServiceCollection services,
+        int maxFailedAccessAttemptsBeforeLockout,
+        int lockoutMinutes,
+        bool requireDigit,
+        int requiredLength,
+        int requiredUniqueChars,
+        bool requireLowercase,
+        bool requireNonAlphanumeric,
+        bool requireUppercase,
+
+        //user
+        bool requireConfirmedEmail,
+        bool requireUniqueEmail,
+        int registrationEmailConfirmationExprireDays,
+        int forgotPasswordEmailConfirmationExpireHours,
+        int userDetailsChangeLogoutMinutes)
+            where TContext : DbContext
+            where TUser : class
+            where TRole : class
+        {
+            IdentityBuilder builder = services.AddIdentityCore<TUser>(options =>
+            {
+                options.Password.RequireDigit = requireDigit;
+                options.Password.RequiredLength = requiredLength;
+                options.Password.RequiredUniqueChars = requiredUniqueChars;
+                options.Password.RequireLowercase = requireLowercase;
+                options.Password.RequireNonAlphanumeric = requireNonAlphanumeric;
+                options.Password.RequireUppercase = requireUppercase;
+                options.User.RequireUniqueEmail = requireUniqueEmail;
+                options.SignIn.RequireConfirmedEmail = requireConfirmedEmail;
+                options.Tokens.EmailConfirmationTokenProvider = "emailconf";
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = maxFailedAccessAttemptsBeforeLockout;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(lockoutMinutes);
+            });
+            builder = new IdentityBuilder(builder.UserType, typeof(TRole), builder.Services)
+                .AddEntityFrameworkStores<TContext>()
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<EmailConfirmationTokenProvider<TUser>>("emailconf")
+                .AddPasswordValidator<DoesNotContainPasswordValidator<TUser>>();
+
+            //registration email confirmation days
+            services.Configure<EmailConfirmationTokenProviderOptions>(options =>
+           options.TokenLifespan = TimeSpan.FromDays(registrationEmailConfirmationExprireDays));
+
+            //forgot password hours
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            options.TokenLifespan = TimeSpan.FromHours(forgotPasswordEmailConfirmationExpireHours));
+
+            //Security stamp validator validates every x minutes and will log out user if account is changed. e.g password change
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(userDetailsChangeLogoutMinutes);
+            });
+        }
+
         public static IServiceCollection AddSwagger(this IServiceCollection services, string apiName, string description, string contactName, string contactWebsite, string version, string xmlDocumentationPath)
         {
             services.AddSwaggerGen(c =>

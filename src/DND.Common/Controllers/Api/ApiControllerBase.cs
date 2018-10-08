@@ -57,7 +57,7 @@ namespace DND.Common.Controllers.Api
             AuthorizationService = authorizationService;
         }
 
-        public void AuthorizeOperationAsync(string operation)
+        protected void AuthorizeOperationAsync(string operation)
         {
             var authorizationResult = AuthorizationService.AuthorizeAsync(User, Resource + operation).Result;
             if (!authorizationResult.Succeeded)
@@ -271,7 +271,7 @@ namespace DND.Common.Controllers.Api
 
         protected virtual IActionResult Forbidden()
         {
-            return ApiErrorMessage(Messages.Unauthorised, Messages.Unauthorised, 403);
+            return ApiErrorMessage(Messages.Forbidden, Messages.Forbidden, 403);
         }
 
     }
