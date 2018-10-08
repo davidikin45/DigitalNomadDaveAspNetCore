@@ -21,8 +21,7 @@ namespace DND.Common.Extensions
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
-            bool defaultScheme,
+        public static AuthenticationBuilder AddJwtAuthentication(this AuthenticationBuilder authenticationBuilder,
            string bearerTokenKey,
            string bearerTokenPublicSigningKeyPath,
            string bearerTokenPublicSigningCertificatePath,
@@ -30,17 +29,6 @@ namespace DND.Common.Extensions
            string bearerTokenLocalIssuer,
            string bearerTokenAudiences)
         {
-            var authenticationBuilder = services.AddAuthentication();
-
-            if (defaultScheme)
-            {
-                services.Configure<AuthenticationOptions>(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                });
-            }
-
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // keep original claim types
 
             var signingKeys = new List<SecurityKey>();
@@ -89,7 +77,7 @@ namespace DND.Common.Extensions
             }
 
             //https://developer.okta.com/blog/2018/03/23/token-authentication-aspnetcore-complete-guide
-            authenticationBuilder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, cfg =>
+            return authenticationBuilder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, cfg =>
             {
                 cfg.SaveToken = true;
                 cfg.TokenValidationParameters = new TokenValidationParameters()
@@ -106,10 +94,7 @@ namespace DND.Common.Extensions
 
                     IssuerSigningKeys = signingKeys
                 };
-            }
-             );
-
-            return services;
+            });
         }
 
         public static void AddCookiePolicy(this IServiceCollection services, string cookieConsentName)
@@ -156,12 +141,12 @@ namespace DND.Common.Extensions
         bool requireUniqueEmail,
         int registrationEmailConfirmationExprireDays,
         int forgotPasswordEmailConfirmationExpireHours,
-        int userDetailsChangeLogoutMinutes) 
+        int userDetailsChangeLogoutMinutes)
             where TContext : DbContext
             where TUser : class
             where TRole : class
-        {       
-            services.AddIdentity<TUser, TRole>(options => 
+        {
+            services.AddIdentity<TUser, TRole>(options =>
             {
                 options.Password.RequireDigit = requireDigit;
                 options.Password.RequiredLength = requiredLength;

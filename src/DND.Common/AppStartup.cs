@@ -24,6 +24,7 @@ using Hangfire;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -316,10 +317,7 @@ namespace DND.Common
                 options.Cookie.Name = appSettings.CookieExternalAuthName;
             });
 
-            var authenticationBuilder = services.AddAuthentication(options => {
-                //options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; //Default for everything
-            });
+            var authenticationBuilder = services.AddAuthentication();
 
             if (authenticationSettings.JwtToken.Enable)
             {
@@ -331,15 +329,20 @@ namespace DND.Common
                                        $"LocalIssuer: {tokenSettings.LocalIssuer ?? ""}" + Environment.NewLine +
                                        $"Audiences: {tokenSettings.Audiences ?? ""}");
 
+                services.Configure<AuthenticationOptions>(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                });
+
                 //https://wildermuth.com/2017/08/19/Two-AuthorizationSchemes-in-ASP-NET-Core-2
-                services.AddJwtAuthentication(
-               true,
-               tokenSettings.Key,
-               tokenSettings.PublicKeyPath,
-               tokenSettings.PublicCertificatePath,
-               tokenSettings.ExternalIssuers,
-               tokenSettings.LocalIssuer,
-               tokenSettings.Audiences);
+                authenticationBuilder.AddJwtAuthentication(
+                   tokenSettings.Key,
+                   tokenSettings.PublicKeyPath,
+                   tokenSettings.PublicCertificatePath,
+                   tokenSettings.ExternalIssuers,
+                   tokenSettings.LocalIssuer,
+                   tokenSettings.Audiences);
             }
 
             if (authenticationSettings.OpenIdConnectJwtToken.Enable)
