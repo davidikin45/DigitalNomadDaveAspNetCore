@@ -71,6 +71,10 @@ yarn global add serve
 serve -s build
 ```
 
+## New Projects with .NET Core
+* [dotnet new react -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react?view=aspnetcore-2.1&tabs=visual-studio)
+* [dotnet new reactredux -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react-with-redux?view=aspnetcore-2.1)
+
 ## Playground
 * https://jscomplete.com/repl
 
@@ -92,6 +96,8 @@ Lets you write modern JavaScript code that still works in older browsers.
 * [React.js: Getting Started](https://www.pluralsight.com/courses/react-js-getting-started)
 * [A Practical Start with React](https://app.pluralsight.com/library/courses/react-practical-start/table-of-contents)
 * [Building a Website with React and ASP.NET Core](https://www.pluralsight.com/courses/aspdotnet-core-react-building-website)
+
+
 
 ## Authors
 
