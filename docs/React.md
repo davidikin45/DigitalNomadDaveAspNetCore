@@ -60,6 +60,17 @@ npm run build
 ```
 3. app will be output to my-app\build
 
+## Running Production Build
+1. Open a command prompt and direct to the my-app directory.
+2. Install static server
+```
+yarn global add serve
+```
+3. Launch the static server
+```
+serve -s build
+```
+
 ## Playground
 * https://jscomplete.com/repl
 
@@ -79,6 +90,7 @@ Lets you write modern JavaScript code that still works in older browsers.
 
 ## PluralSight Courses
 * [React.js: Getting Started](https://www.pluralsight.com/courses/react-js-getting-started)
+* [Building a Website with React and ASP.NET Core](https://www.pluralsight.com/courses/aspdotnet-core-react-building-website)
 
 ## Authors
 
