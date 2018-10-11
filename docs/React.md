@@ -77,6 +77,9 @@ Lets you write modular code and bundle it together into small packages to optimi
 Lets you write modern JavaScript code that still works in older browsers.
 * [Babel](http://babeljs.io/)
 
+## PluralSight Courses
+* [React.js: Getting Started](https://www.pluralsight.com/courses/react-js-getting-started)
+
 ## Authors
 
 * **David Ikin**
