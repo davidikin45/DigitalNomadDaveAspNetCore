@@ -2,10 +2,14 @@
 ## Setting up Environment
 1. [Download and install Visual Studio Code](https://code.visualstudio.com/)
 2. [Download and install Node.js](https://nodejs.org/en/download/)
-3. Open Visual Studio Code
-4. Open extensions (Ctrl+Shift+X) 
-5. Install the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension
-6. Install [Chrome React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+3. Open command prompt and run
+```
+npm install npm@latest -g
+```
+4. Open Visual Studio Code
+5. Open extensions (Ctrl+Shift+X) 
+6. Install the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension
+7. Install [Chrome React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 
 ## Creating a new App with NPM and Git Repository
 1. To create a new app open a command line and use the [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) command where my-app is the name of the new app.
