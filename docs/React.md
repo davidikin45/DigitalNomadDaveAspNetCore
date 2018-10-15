@@ -113,6 +113,18 @@ serve -s build
 | 1-way data binding | 2-way data binding      |    1-way data binding |
 | UI in JavaScript | UI in HTML      |    UI in HTML |
 
+## Import/Export Module Components
+```
+export component;
+import {component} from "./module";
+
+export default component;
+import comp from "./module";
+
+export default component, x;
+import comp, {x} from "./module";
+```
+
 ## New Projects with .NET Core
 * [dotnet new react -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react?view=aspnetcore-2.1&tabs=visual-studio)
 * [dotnet new reactredux -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react-with-redux?view=aspnetcore-2.1)
