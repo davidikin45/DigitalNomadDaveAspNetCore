@@ -8,7 +8,7 @@ npm install npm@latest -g
 ```
 4. Open Visual Studio Code
 5. Click File > Auto Save
-6. Click View > Integrated Terminal
+6. Click View > Terminal
 7. Open extensions (Ctrl+Shift+X) 
 8. Install the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension
 9. Install [Chrome React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
@@ -18,7 +18,7 @@ npm install npm@latest -g
 ```
 npx create-react-app my-app --use-npm
 ```
-2. To generate the build scripts run the following commands. Alternatively will depend on react-scripts.
+2. To generate the build scripts and config run the following commands. Alternatively will depend on react-scripts.
 ```
 cd my-app
 npm run eject
@@ -55,12 +55,25 @@ code .
 }
 ```
 
-## Launching App for Development
+## Launching App for Development from Command Prompt
 1. Open a command prompt and direct to the my-app directory.
 2. To launch the app on http://localhost:3000/ run the npm start command.
 ```
 cd my-app
 npm install
+npm start
+```
+
+## Launching App for Development with Visual Studio Code
+1. Open a command prompt and direct to the my-app directory.
+2. Launch Visual Studio Code
+
+```
+code .
+```
+3.  Click View > Terminal
+4. Run the following command
+```
 npm start
 ```
 
