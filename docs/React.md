@@ -7,11 +7,17 @@
 5. Install the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension
 6. Install [Chrome React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 
-## Creating a new App and Git Repository
+## Creating a new App with NPM and Git Repository
 1. To create a new app open a command line and use the [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) command where my-app is the name of the new app.
 ```
-npx create-react-app my-app
+npx create-react-app my-app --use-npm
 ```
+2. To generate the build scripts run the following commands. Alternatively will depend on react-scripts.
+```
+cd my-app
+npm run eject
+```
+
 ## Setting up App for Development
 1. Open a command prompt and direct to the my-app directory.
 2. Launch Visual Studio Code by running the following command
@@ -70,6 +76,9 @@ yarn global add serve
 ```
 serve -s build
 ```
+
+## React Workflow
+ JSX > Babel > React JavaScript > React Dom > Html
 
 ## New Projects with .NET Core
 * [dotnet new react -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react?view=aspnetcore-2.1&tabs=visual-studio)
