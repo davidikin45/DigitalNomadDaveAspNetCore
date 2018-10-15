@@ -18,7 +18,15 @@ npm install npm@latest -g
 ```
 npx create-react-app my-app --use-npm
 ```
-2. To generate the build scripts and config run the following commands. Alternatively will depend on react-scripts.
+2. To install bootstrap
+```
+npm install bootstrap@4
+```
+3. Add the following import to src/index.js
+```
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+```
+4. To generate the build scripts and config run the following commands. Alternatively will depend on react-scripts.
 ```
 cd my-app
 npm run eject
