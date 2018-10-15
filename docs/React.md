@@ -80,6 +80,20 @@ serve -s build
 ## React Workflow
  JSX > Babel > React JavaScript > React Dom > Html
 
+## React Component
+1. Props
+2. State
+3. Render
+
+## React vs Angular vs Vue
+| React        | Angular           | Vue  |
+| ------------- |:-------------:| --------:|
+| Library     | Framework | Library |
+| Facebook      | Google      |   Community |
+| MIT | MIT      |    MIT |
+| 1-way data binding | 2-way data binding      |    1-way data binding |
+| UI in JavaScript | UI in HTML      |    UI in HTML |
+
 ## New Projects with .NET Core
 * [dotnet new react -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react?view=aspnetcore-2.1&tabs=visual-studio)
 * [dotnet new reactredux -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react-with-redux?view=aspnetcore-2.1)
