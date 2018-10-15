@@ -14,6 +14,7 @@ npm install npm@latest -g
 8. Install the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension
 9. Install the [Simple React Snippets](https://marketplace.visualstudio.com/items?itemName=burkeholland.simple-react-snippets) (See below for commands)
 10. Install [Chrome React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+11. Install [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) 
 
 ## Creating a new App with create-react-react, npm and git repo
 1. To create a new app open a command line and use the [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) command where my-app is the name of the new app.
@@ -23,8 +24,9 @@ npx create-react-app my-app --use-npm
 2. Install extra packages
 ```
 npm install bootstrap@4
-npm install --save prop-types
-npm install --save react-router-dom
+npm install prop-types
+npm install react-router-dom
+npm install axios
 ```
 3. Add the following import to src/index.js
 ```
@@ -191,7 +193,6 @@ class App extends Component {
 export default App;
 
 ```
-
 
 ## React Development Workflow
  JSX > Babel (react-scripts) > React JavaScript (react) > React Dom (react-dom) > Html
@@ -368,6 +369,257 @@ npm test
 * New concept around state and UI updates
 * State stored outside of components
 * Action 1 > 1 Dispatcher 1 > m Store  > 1 View
+
+## React Api calls using axios
+1. Install axios
+```
+npm install axios
+import axios from 'axios'
+```
+2. Make api calls from componentDidMount()
+3. Example call
+```
+axios.get('/data/data.json')
+.then((result) => {
+	this.setState({
+		appData: result.data,
+		isLoading: false
+	});
+})
+.catch(error => {
+if(error.response)
+{
+	console.log(error.responderEnd);
+}
+});
+```
+4. Render Json using
+```
+{JSON.Stringify(this.state.appData)}
+```
+5. Loop over collection
+```
+{this.state.appData.map(item => ( <Component key={item.id} />))}
+```
+
+## Redux Thunk
+1. Install axios and redux thunk
+```
+npm install axios
+npm install redux react-redux redux-axios-middleware react-router-redux redux-thunk redux-devtools-extension --save
+```
+2. Create the following directories
+```
+\redux
+\redux\reducers
+\redux\actions
+```
+3. Create a redux\configureStore.js file and put in the following contents.
+```
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+import reducers from './reducers';
+import axios from 'axios';
+import axiosMiddleware from 'redux-axios-middleware';
+
+import { composeWithDevTools } from 'redux-devtools-extension';
+
+const restUrl = '';
+
+let middleware = [
+    thunk,
+    axiosMiddleware(axios.create({baseURL:restUrl}))
+];
+
+export default function configureStore(initialState = {}) {
+
+    const composeEnhancers = composeWithDevTools({
+        // Specify name here, actionsBlacklist, actionsCreators and other options if needed
+    });
+
+    return createStore(
+        reducers,
+        initialState,
+         composeEnhancers(
+            applyMiddleware(...middleware))
+    );
+}
+```
+4. Example action\speakers.js
+```
+export const SPEAKER_LOAD = 'SPEAKER_LOAD';
+export const SPEAKER_LOAD_SUCCESS = 'SPEAKER_LOAD_SUCCESS';
+export const SPEAKER_LOAD_FAIL = 'SPEAKER_LOAD_FAIL';
+
+export function speakersFetchData() {
+    return {
+        type: SPEAKER_LOAD,
+        payload: {
+            request:{
+                url:'/data/speakers.json'
+            } 
+        }
+    }
+}
+```
+5. Example reducers\speakers.js
+```
+import {SPEAKER_LOAD, SPEAKER_LOAD_FAIL, SPEAKER_LOAD_SUCCESS} from "../actions/speakers";
+
+export function speakers(state = {
+    data: [],
+    isLoading: true,
+    hasErrored: false,
+    errorMessage: ""
+}, action) {
+    switch (action.type) {
+
+        case SPEAKER_LOAD: {
+            return Object.assign({}, state, {
+                isLoading: true,
+                hasErrored: false
+            });
+        }
+
+        case SPEAKER_LOAD_SUCCESS: {
+            return Object.assign({}, state, {
+                data: action.payload.data,
+                isLoading: false,
+                hasErrored: false
+            });
+        }
+
+        case SPEAKER_LOAD_FAIL: {
+            return Object.assign({}, state, {
+                isLoading: false,
+                hasErrored: true,
+                errorMessage: action.error.message
+            });
+        }
+
+        default:
+            return state;
+    }
+}
+```
+6. Create a reducers\index.js file and put in the following contents.
+```
+import { combineReducers } from 'redux';
+import {speakers} from './speakers';
+
+export default combineReducers({
+    speakers
+})
+```
+7. update index.js to include the Provider element
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+
+import { Provider } from 'react-redux';
+import configureStore from "./redux/configureStore";
+const store = configureStore(window.__STATE__);
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+    document.getElementById('root'));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+serviceWorker.unregister();
+```
+8. Dispatching action in a component
+```
+import React, {Component} from 'react';
+
+import SpeakersHeader from './SpeakersHeader';
+import SpeakerList from './SpeakerList';
+
+import { connect } from 'react-redux';
+import { speakersFetchData } from "../../redux/actions/speakers"
+
+class SpeakersRedux extends Component {
+    state = {
+        isLoading: true,
+        appData: []
+    };
+
+    componentDidMount() {
+        this.props.speakersFetchData();
+    }
+
+    render() {
+        if (this.props.isLoading) {
+             return <span><i>Loading...</i></span>
+         }
+         else if (this.props.hasErrored) {
+            return <span><b>Failed to load data:{this.props.errorMessage}</b></span>
+        }
+         else {
+            return (
+                <div>
+                    <SpeakersHeader/>
+                    <SpeakerList speakers={this.props.speakers} />
+                     {/*<span>{JSON.stringify(this.state.appData)}</span>*/}
+                 </div>
+             );
+         }
+    }
+} 
+
+const mapStateToProps = (state) => {
+    return{
+        speakers: state.speakers.data,
+        hasErrored: state.speakers.hasErrored,
+        isLoading: state.speakers.isLoading,
+        errorMessage: state.speakers.errorMessage
+    };
+};
+
+export default connect(mapStateToProps,{speakersFetchData})(SpeakersRedux)
+```
+9. Install [Redux Dev Tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) 
+
+## Mocking Api with (json-server)[https://github.com/typicode/json-server]
+1. Install json-server using the following command
+```
+npm install -g json-server
+npm install npm-run-all --save-dev
+```
+2. create a new db.json file
+```
+{
+	"table1":[
+		{},
+		{}
+	],
+	"table2":[
+		{},
+		{}
+	]
+}
+```
+3. create a new db-routes.json file
+```
+{
+    "/api/*": "/$1"
+}
+'''
+4. to package.json add the following script executions
+```
+    "apiserver": "json-server --routes src/db-routes.json --watch src/db.json --port 4000",
+    "startapiserver": "npm-run-all --parallel start apiserver"
+```
+5. launch with the following command
+```
+npm run startjsonserver
+```
 
 ## New Projects with .NET Core
 * [dotnet new react -o my-new-app](https://docs.microsoft.com/en-us/aspnet/core/client-side/spa/react?view=aspnetcore-2.1&tabs=visual-studio)
