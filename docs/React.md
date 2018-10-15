@@ -7,10 +7,11 @@
 npm install npm@latest -g
 ```
 4. Open Visual Studio Code
-5. Click View > Integrated Terminal
-6. Open extensions (Ctrl+Shift+X) 
-7. Install the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension
-8. Install [Chrome React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+5. Click File > Auto Save
+6. Click View > Integrated Terminal
+7. Open extensions (Ctrl+Shift+X) 
+8. Install the [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) extension
+9. Install [Chrome React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 
 ## Creating a new App with create-react-react, npm and git repo
 1. To create a new app open a command line and use the [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) command where my-app is the name of the new app.
