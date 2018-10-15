@@ -81,7 +81,7 @@ yarn global add serve
 serve -s build
 ```
 
-## React Workflow
+## React Development Workflow
  JSX > Babel (react-scripts) > React JavaScript (react) > React Dom (react-dom) > Html
 
 ## React Component
