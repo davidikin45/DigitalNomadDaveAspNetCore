@@ -407,6 +407,7 @@ if(error.response)
 ```
 npm install axios
 npm install redux react-redux redux-axios-middleware react-router-redux redux-thunk redux-devtools-extension --save
+npm install redux-immutable-state-invariant --save-dev
 ```
 2. Create the following directories
 ```
